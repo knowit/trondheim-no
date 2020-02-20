@@ -43,7 +43,7 @@ module.exports = {
         content: true,
         populate: true,
         navigation: true,
-        globals: false
+        globals: true
       }
     }
   ],

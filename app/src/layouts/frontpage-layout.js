@@ -1,24 +1,16 @@
-/**
- * Layout component that queries for data
- * with Gatsby's useStaticQuery component
- *
- * See: https://www.gatsbyjs.org/docs/use-static-query/
- */
 
 import React from "react"
 import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
+import Header from "../components/header"
+import Navigation from "../components/navigation"
+import "../style/frontpage-layout.css"
 
-import Header from "./header"
-import Navigation from "./navigation"
-import "./layout.css"
-
-const Layout = ({ children }) => {
+const FrontpageLayout = ({ children }) => {
   return (
     <>
       <Navigation></Navigation>
       <main id="page-wrap">
-        <Header siteTitle="Hello" />
+        <Header siteTitle="OFFISIELT NETTSTED FOR" />
         <div
           style={{
             margin: `0 auto`,
@@ -38,8 +30,8 @@ const Layout = ({ children }) => {
   )
 }
 
-Layout.propTypes = {
+FrontpageLayout.propTypes = {
   children: PropTypes.node.isRequired,
 }
 
-export default Layout
+export default FrontpageLayout
