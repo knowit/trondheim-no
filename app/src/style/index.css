@@ -1,3 +1,29 @@
 *{
   font-family: 'PT Sans',Arial,'Arial Unicode MS',Helvetica,sans-serif;
 }
+
+#header-container{
+  display: block;
+  width: 100%;
+  background-color: black;
+}
+
+#header-image{
+  display: block;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 100%;
+  padding-top: 40%;
+  
+}
+
+#header-subtext{
+  display: flex;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 10pt;
+  height: 46px;
+  width: 100%;
+}

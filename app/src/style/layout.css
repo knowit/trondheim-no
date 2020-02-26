@@ -1,0 +1,17 @@
+#layout-container{
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+#children-container{
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+}

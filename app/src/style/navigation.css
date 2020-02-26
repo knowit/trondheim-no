@@ -15,7 +15,7 @@
   height: 100%;
   padding: 0;
 }
-.logo{
+.logo, .logo img{
   position: absolute;
   display: inline-block;
   background-color: white;
@@ -32,5 +32,52 @@
   font-size: 14pt;
   height: 100%;
   padding-top: 15px;
+}
+
+.menu-container{
+  margin-left: 14%;
+  position: relative;
+  display: block;
+  float: left;
+  height: 50px;
+  width: 50px;
+  top: 50%;
+  transform: translate(0, -50%);
+  padding-top: 2px;
+}
+.burger-container{
+  position: absolute;
+  display: block;
+  margin: 0;
+  left: 50%;                        
+  transform: translate(-50%, 0);
+  width: 34px;
+  height: 32px;
+  margin-bottom: -10px;
+}
+.burger-bar {
+  width: 100%;
+  height: 6px;
+  background-color: white;
+  margin: 3px 0;
+}
+.menu-text-container{
+  color: white;
+  font-size: 9pt;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  left: 50%;                        
+  transform: translate(-50%, -2px);
+  height: 20px;
+}
+.drop-menu-container{
+  display: block;
+  position: absolute;
+  top: 100%;
+  width: 250px;
+  height: 500px;
+  background-color: grey;
+  z-index: 999999999;
 }
 

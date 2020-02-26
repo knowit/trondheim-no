@@ -1,29 +1,16 @@
 import React from "react"
-import { Link, StaticQuery, graphql } from "gatsby"
+import { Link } from "gatsby"
 import "../style/navigation.css"
 import { BurgerMenu } from "./menu.js"
 
+export default class Navigation extends React.Component {
 
-
-export default () => (
-  <StaticQuery
-    query={graphql`
-  query {
-    allFlamelinkFrontPageContent {
-      edges {
-        node {
-          imageDeck {
-            image {
-              url
-            }
-            title
-          }
-        }
-      }
-    }
+  constructor(props) {
+    super(props);
   }
-  `}
-    render={data => (
+
+  render() {
+    return (
       <div class="navigation-container">
 
         <BurgerMenu></BurgerMenu>
@@ -32,13 +19,13 @@ export default () => (
           <Link id="trondheimno-link" to="/">TRONDHEIM.NO</Link>
 
           <div class="logo">
-            <img alt="logo" src={data.allFlamelinkFrontPageContent.edges[0].node.imageDeck.find(function (img) {
-              return img.title === "Logo"
-            }).image[0].url}></img>
+            <img alt="logo" src={this.props.logoUrl}></img>
           </div>
         </div>
       </div>
-    )}
-  />
-)
+    )
+  }
+
+}
+
 

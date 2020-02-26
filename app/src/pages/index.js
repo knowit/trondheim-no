@@ -1,15 +1,42 @@
 import React from "react"
-import { Link } from "gatsby"
-import SEO from "../components/seo"
+import { StaticQuery, graphql } from "gatsby"
 import "../style/index.css"
-import FrontpageLayout from "../layouts/frontpage-layout"
+
 
 const IndexPage = () => (
-  <div id="outer-container">
-    <FrontpageLayout>
-      <Link to="/">Go back to the homepage</Link>
-    </FrontpageLayout>
-  </div>
+  <StaticQuery
+    query={graphql`
+  query {
+    allFlamelinkFrontPageContent {
+      edges {
+        node {
+          imageDeck {
+            image {
+              url
+            }
+            title
+          }
+        }
+      }
+    }
+  }
+  `}
+    render={data => (
+      <div id="outer-container">
+        <div id="header-container">
+
+          <div id="header-image"
+            style={{
+              backgroundImage: "url(" + data.allFlamelinkFrontPageContent.edges[0].node.imageDeck
+                .find(function (img) { return img.title === "Bybro" }).image[0].url + ")"
+            }}></div>
+
+          <div id="header-subtext"><span>Vinterstemning ved Gamle bybro og bryggene langs Nidelva. Foto: Aziz Nasuti.</span></div>
+
+        </div>
+      </div>
+    )}
+  />
 )
 
 export default IndexPage

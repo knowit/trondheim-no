@@ -1,6 +1,6 @@
 
 import React from 'react';
-import "../style/menu.css"
+import "../style/navigation.css"
 
 export class BurgerMenu extends React.Component {
 
