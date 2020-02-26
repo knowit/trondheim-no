@@ -4,7 +4,7 @@
   width: 100%;
   height: 55px;
   background-color: black;
-  z-index: 99999999999;
+  z-index: 99999;
 }
 
 .logo-container{
@@ -45,6 +45,9 @@
   transform: translate(0, -50%);
   padding-top: 2px;
 }
+.menu-container:hover{
+  cursor: pointer;
+}
 .burger-container{
   position: absolute;
   display: block;
@@ -77,7 +80,32 @@
   top: 100%;
   width: 250px;
   height: 500px;
-  background-color: grey;
+  background-color: white;
   z-index: 999999999;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0 0 0;
+}
+.drop-menu-item-container{
+  display: flex;
+  border-bottom: 1px solid rgb(0, 183, 255);
+  width: 80%;
+  height: 30px;
+  margin: 8px auto auto auto;
+  padding: 0;
+  text-align: left;
+  font-size: 14pt;
+  color: rgb(41, 41, 41);
+  z-index: 99999999999;
+}
+.drop-menu-item-container:hover{
+  background-color: black;
+  color: white;
+}
+
+.drop-menu-item-container a{
+  color: inherit;
+  text-decoration: none;
+  display: block;
 }
 

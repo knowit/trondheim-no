@@ -4,8 +4,8 @@ import "../style/navigation.css"
 
 export class BurgerMenu extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       showMenu: false,
@@ -47,7 +47,14 @@ export class BurgerMenu extends React.Component {
           this.state.showMenu
             ? (
               <div className="drop-menu-container">
-                Hello world
+                {this.props.menuData.map(function (node, key) {
+                  console.log(node)
+                  return (
+                    <div class="drop-menu-item-container">
+                      <a href={node.node.slug}>{node.node.navigationTitle}</a>
+                    </div>
+                  )
+                })}
               </div>
             )
             : (

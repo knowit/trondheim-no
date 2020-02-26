@@ -7,25 +7,36 @@ export default ({ children }) => (
   <StaticQuery
     query={graphql`
   query {
+    allFlamelinkListingPageContent {
+      edges {
+        node {
+          slug
+          localTitle
+          navigationTitle
+        }
+      }
+    }
     allFlamelinkFrontPageContent {
       edges {
         node {
           imageDeck {
+            title
             image {
               url
             }
-            title
           }
         }
       }
     }
   }
-  `}
+`}
     render={data => (
       <div id="layout-container">
         <Navigation id="navbar"
           logoUrl={data.allFlamelinkFrontPageContent.edges[0].node.imageDeck
             .find(function (img) { return img.title === "Logo" }).image[0].url}
+
+          menuData={data.allFlamelinkListingPageContent.edges}
         ></Navigation>
 
         <div id="children-container">

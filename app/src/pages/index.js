@@ -63,7 +63,6 @@ const IndexPage = () => (
                   }}></div>
                   <h2><a class="navigation-box-title" href={"/" + node.node.slug}>{node.node.navigationTitle}</a></h2>
                   <h4>{node.node.navigationSubtitle}</h4>
-
                 </div>
               )
             })}

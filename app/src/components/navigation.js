@@ -13,7 +13,7 @@ export default class Navigation extends React.Component {
     return (
       <div class="navigation-container">
 
-        <BurgerMenu></BurgerMenu>
+        <BurgerMenu menuData={this.props.menuData}></BurgerMenu>
 
         <div class="logo-container">
           <Link id="trondheimno-link" to="/">TRONDHEIM.NO</Link>
