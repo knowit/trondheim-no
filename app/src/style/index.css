@@ -28,7 +28,6 @@
 }
 
 h1, h3{
-  display: flex;
   justify-content: center;
   text-align: center;
   color: white;
@@ -47,4 +46,67 @@ h1{
   text-align: center;
   font-weight: 600;
   padding-top: 10px;
+}
+
+h2 {
+    margin-top: 10px;
+    font-size: 28pt;
+    text-align: center;
+    letter-spacing: 2px;
+    font-weight: 100;
+    padding-top: 20px;
+}
+
+#content-container{
+  display: block;
+  justify-content: center;
+  align-items: center;
+}
+
+#navigation-menu-container{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  margin: 10px auto;
+}
+
+.navigation-box-container{
+  flex: 1;
+  max-width: 370px;
+  width: 370px;
+  min-width: 370px;
+  height: 420px;
+  margin: 10px;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+}
+
+.navigation-box-thumbnail{
+  width: 100%;
+  height: 70%;
+  display: block;
+  background-repeat: no-repeat;
+  background-size: 130%;
+  background-position: center;
+}
+
+.navigation-box-title{
+  color: rgba(20, 70, 170, 1);
+  text-decoration: none;
+  letter-spacing: 3px;
+}
+
+.navigation-box-title:hover{
+  color: rgb(10, 33, 90);
+  text-decoration: none;
+}
+
+h4{
+  text-align: center;
+  font-weight: 500;
+  font-size: 13pt;
+  margin-top: 14px;
+  letter-spacing: 1px;
+  overflow: hidden;
 }
