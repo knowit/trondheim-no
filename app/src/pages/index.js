@@ -29,7 +29,12 @@ const IndexPage = () => (
             style={{
               backgroundImage: "url(" + data.allFlamelinkFrontPageContent.edges[0].node.imageDeck
                 .find(function (img) { return img.title === "Bybro" }).image[0].url + ")"
-            }}></div>
+            }}>
+
+            <h3><span>OFFISIELT NETTSTED FOR</span></h3>
+            <h1><span>TRONDHEIM</span></h1>
+
+          </div>
 
           <div id="header-subtext"><span>Vinterstemning ved Gamle bybro og bryggene langs Nidelva. Foto: Aziz Nasuti.</span></div>
 
