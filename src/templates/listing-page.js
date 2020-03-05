@@ -43,7 +43,7 @@ const ListingPage = () => (
 
           <div id="articles-header">
             <h2>{data.allFlamelinkListingPageContent.edges[0].node.localTitle}</h2>
-              <p>{data.allFlamelinkListingPageContent.edges[0].node.textOnPage}</p>
+            <p>{data.allFlamelinkListingPageContent.edges[0].node.textOnPage}</p>
           </div>
 
           <div id="articles-container">
@@ -53,15 +53,17 @@ const ListingPage = () => (
               return (
                 <div class="article-container">
                   <div class="article-thumbnail" style={{ backgroundImage: "url(" + node.node.thumbnail[0].url + ")" }}></div>
-                  <h2><a href={node.node.parentContent.slug + "/" + node.node.slug}>{node.node.title}</a></h2>
-                  <div class="tags-container">
-                    {node.node.tags.map(function (tag, key) {
-                      return (
-                        <div class="tag">
-                          <a>{tag}</a>
-                        </div>
-                      )
-                    })}
+                  <div class="article-info-container">
+                    <h2><a href={node.node.parentContent.slug + "/" + node.node.slug}>{node.node.title}</a></h2>
+                    <div class="tags-container">
+                      {node.node.tags.map(function (tag, key) {
+                        return (
+                          <div class="tag">
+                            <a>{tag}</a>
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
                 </div>
               )
