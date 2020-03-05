@@ -10,6 +10,7 @@ export default ({ children }) => (
     allFlamelinkListingPageContent (filter: { flamelink_locale: { eq: "no" } }) {
       edges {
         node {
+          id
           slug
           localTitle
           navigationTitle
@@ -19,6 +20,7 @@ export default ({ children }) => (
     allFlamelinkFrontPageContent (filter: { flamelink_locale: { eq: "no" } }) {
       edges {
         node {
+          id
           imageDeck {
             title
             image {
