@@ -10,6 +10,7 @@ const IndexPage = () => (
       allFlamelinkListingPageContent (filter: { flamelink_locale: { eq: "no" } }) {
         edges {
           node {
+            id
             navigationTitle
             navigationSubtitle
             slug
@@ -22,6 +23,7 @@ const IndexPage = () => (
       allFlamelinkFrontPageContent {
         edges {
           node {
+            id
             imageDeck {
               title
               image {

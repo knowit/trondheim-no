@@ -11,19 +11,22 @@ exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
   const result = await graphql(`
     query {
-      allFlamelinkArticleContent {
+      allFlamelinkArticleContent (filter: { flamelink_locale: { eq: "no" } }) {
         edges {
           node {
+            id
             slug
             parentContent {
+              id
               slug
             }
           }
         }
       }
-      allFlamelinkListingPageContent {
+      allFlamelinkListingPageContent (filter: { flamelink_locale: { eq: "no" } }) {
         edges {
           node {
+            id
             slug
           }
         }
