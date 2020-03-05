@@ -1,3 +1,8 @@
+
+require("dotenv").config({
+  path: `.env.${process.env.NODE_ENV}`,
+})
+
 module.exports = {
   siteMetadata: {
     title: `Gatsby Default Starter`,
@@ -12,9 +17,11 @@ module.exports = {
       resolve: 'gatsby-source-flamelink',
       options: {
         firebaseConfig: {
-          pathToServiceAccount: 'C:/Users/levis/Documents/Github/trondheim-demo/app/service-account.json',
-          databaseURL: 'https://trondheimno-demo.firebaseio.com',
-          storageBucket: 'trondheimno-demo.appspot.com'
+          projectId: process.env.GATSBY_FLAMELINK_PROJECT_ID,
+          clientEmail: process.env.GATSBY_FLAMELINK_CLIENT_EMAIL,
+          privateKey: process.env.GATSBY_FLAMELINK_PRIVATE_KEY,
+          databaseURL: process.env.GATSBY_FLAMELINK_DATABASE_URL,
+          storageBucket: process.env.GATSBY_FLAMELINK_STORAGE_BUCKET
         },
         dbType: 'cf',
         environment: 'production',
