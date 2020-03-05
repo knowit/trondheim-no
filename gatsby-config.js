@@ -19,7 +19,7 @@ module.exports = {
         firebaseConfig: {
           projectId: process.env.GATSBY_FLAMELINK_PROJECT_ID,
           clientEmail: process.env.GATSBY_FLAMELINK_CLIENT_EMAIL,
-          privateKey: process.env.GATSBY_FLAMELINK_PRIVATE_KEY,
+          privateKey: process.env.GATSBY_FLAMELINK_PRIVATE_KEY.replace(/\\n/g, '\n'),
           databaseURL: process.env.GATSBY_FLAMELINK_DATABASE_URL,
           storageBucket: process.env.GATSBY_FLAMELINK_STORAGE_BUCKET
         },
