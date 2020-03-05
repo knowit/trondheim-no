@@ -7,7 +7,7 @@ export default ({ children }) => (
   <StaticQuery
     query={graphql`
   query {
-    allFlamelinkListingPageContent {
+    allFlamelinkListingPageContent (filter: { flamelink_locale: { eq: "no" } }) {
       edges {
         node {
           slug
@@ -16,7 +16,7 @@ export default ({ children }) => (
         }
       }
     }
-    allFlamelinkFrontPageContent {
+    allFlamelinkFrontPageContent (filter: { flamelink_locale: { eq: "no" } }) {
       edges {
         node {
           imageDeck {

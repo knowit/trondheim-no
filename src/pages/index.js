@@ -7,7 +7,7 @@ const IndexPage = () => (
   <StaticQuery
     query={graphql`
     query {
-      allFlamelinkListingPageContent {
+      allFlamelinkListingPageContent (filter: { flamelink_locale: { eq: "no" } }) {
         edges {
           node {
             navigationTitle
