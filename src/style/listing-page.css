@@ -1,0 +1,103 @@
+#outer-container{
+  background-color: rgb(228, 228, 228);
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+#inner-container{
+  background-color: white;
+  display:block;
+  height: 100%;
+  width: 75%;
+  margin: auto;
+  padding: 20px;
+}
+
+#articles-header{
+  display:block;
+  width: 100%;
+  height: 200px;
+  margin: 0 10px;
+}
+
+
+#articles-header h2{
+  width: 100%;
+  height: 60px;
+  color: black;
+  letter-spacing: 0px;
+  text-align: left;
+  font-size: 26pt;
+}
+
+#articles-container{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: left;
+  background-color: inherit;
+  width: 100%;
+  height: 100%;
+}
+
+.article-container{
+  margin: 10px auto;
+  display: block;
+  border: 1px solid rgb(194, 194, 194);
+  width: 350px;
+  min-height: 350px;
+}
+
+.article-thumbnail{
+  display: block;
+  width: 100%;
+  height: 70%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+.article-container h2{
+  display: block;
+  width: 100%;
+  height: 50px;
+  color: rgba(20, 70, 170, 1);
+  text-decoration: none;
+  letter-spacing: 0px;
+  font-size: 22pt;
+  text-align: left;
+  margin: 0;
+}
+
+.article-container h2:hover{
+  color: rgb(10, 33, 90);
+  text-decoration: none;
+}
+
+.article-container h2 a{
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.tags-container{
+  display: flex;
+  flex-flow: row wrap;
+  width: 100%;
+  height: 10%;
+}
+
+.tag{
+  background-color: rgb(189, 189, 189);
+  height: 20px;
+  min-width: 50px;
+  margin: 4px;
+  padding: 0 4px;
+}
+
+.tag a{
+  font-style: italic;
+  color: rgb(61, 61, 61);
+  font-size: 11pt;
+  letter-spacing: 0;
+}
+
