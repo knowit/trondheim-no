@@ -96,8 +96,6 @@ exports.createPages = async ({ graphql, actions }) => {
   })
 
 
-
-
   // Create Listing Pages
   result.data.allFlamelinkListingPageContent.edges
     .filter(({ node }) => { return node.flamelink_locale === "no" }) // To avoid duplicates
@@ -150,10 +148,8 @@ exports.createPages = async ({ graphql, actions }) => {
     .filter(({ node }) => { return node.flamelink_locale === "no" })
     .forEach(({ node }) => {
 
-      const nodeSlug = node.slug;
-
       createPage({
-        path: nodeSlug,
+        path: node.parentContent.slug + "/" + node.slug,
         component: path.resolve('./src/templates/article.js'),
         context: {
           // Pass context data here (Remove queries from article.js)
