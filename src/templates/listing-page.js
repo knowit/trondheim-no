@@ -71,4 +71,5 @@ const ListingPage = ({ pageContext }) => {
   )
 }
 
+
 export default ListingPage;

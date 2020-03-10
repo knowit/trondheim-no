@@ -52,18 +52,20 @@ exports.createPages = async ({ graphql, actions }) => {
       }
     }
     allFlamelinkFrontPageContent {
-      nodes {
-        flamelink_id
-        flamelink_locale
-        headerFocusWord
-        headerText
-        id
-        navigationText
-        imageDeck {
-          image {
-            url
+      edges {
+        node {
+          flamelink_id
+          flamelink_locale
+          headerFocusWord
+          headerText
+          id
+          imageDeck {
+            title
+            image {
+              url
+            }
           }
-          title
+          navigationText
         }
       }
     }
@@ -75,6 +77,26 @@ exports.createPages = async ({ graphql, actions }) => {
     reporter.panicOnBuild(`Error while running GraphQL query.`)
     return
   }
+
+  // Create Front Page
+
+  createPage({
+    path: '/',
+    component: path.resolve(`./src/pages/home.js`),
+    context: {
+      no: {
+        node: result.data.allFlamelinkFrontPageContent.edges.find(({ node }) => { return node.flamelink_locale === "no" }).node,
+        listingPages: result.data.allFlamelinkListingPageContent.edges.filter(({ node }) => { return node.flamelink_locale === "no" }),
+      },
+      no: {
+        node: result.data.allFlamelinkFrontPageContent.edges.find(({ node }) => { return node.flamelink_locale === "en-US" }).node,
+        listingPages: result.data.allFlamelinkListingPageContent.edges.filter(({ node }) => { return node.flamelink_locale === "en-US" }),
+      },
+    }
+  })
+
+
+
 
   // Create Listing Pages
   result.data.allFlamelinkListingPageContent.edges
@@ -134,7 +156,7 @@ exports.createPages = async ({ graphql, actions }) => {
         path: nodeSlug,
         component: path.resolve('./src/templates/article.js'),
         context: {
-
+          // Pass context data here (Remove queries from article.js)
         }
       })
     })
