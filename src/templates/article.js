@@ -1,6 +1,13 @@
 import React from "react"
-export default () => {
+
+
+const ArticlePage = ({ pageContext }) => {
   return (
-    <div></div>
+    <div id="outer-container">
+      {pageContext.no.node.title}
+    </div>
   )
 }
+
+export default ArticlePage
+

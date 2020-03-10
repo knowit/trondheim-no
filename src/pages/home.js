@@ -2,7 +2,7 @@ import React from "react"
 import "../style/index.css"
 
 
-const IndexPage = ({ pageContext }) => {
+const HomePage = ({ pageContext }) => {
   return (
     <div id="outer-container">
       <div id="header-container">
@@ -45,4 +45,4 @@ const IndexPage = ({ pageContext }) => {
   )
 }
 
-export default IndexPage
+export default HomePage

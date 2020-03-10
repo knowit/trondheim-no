@@ -88,7 +88,7 @@ exports.createPages = async ({ graphql, actions }) => {
         node: result.data.allFlamelinkFrontPageContent.edges.find(({ node }) => { return node.flamelink_locale === "no" }).node,
         listingPages: result.data.allFlamelinkListingPageContent.edges.filter(({ node }) => { return node.flamelink_locale === "no" }),
       },
-      no: {
+      en: {
         node: result.data.allFlamelinkFrontPageContent.edges.find(({ node }) => { return node.flamelink_locale === "en-US" }).node,
         listingPages: result.data.allFlamelinkListingPageContent.edges.filter(({ node }) => { return node.flamelink_locale === "en-US" }),
       },
@@ -145,14 +145,25 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Create Article Pages
   result.data.allFlamelinkArticleContent.edges
-    .filter(({ node }) => { return node.flamelink_locale === "no" })
+    .filter(({ node }) => { return node.flamelink_locale === "no" }) // To avoid duplicates
     .forEach(({ node }) => {
+
+      const nodeId = node.flamelink_id;
 
       createPage({
         path: node.parentContent.slug + "/" + node.slug,
         component: path.resolve('./src/templates/article.js'),
         context: {
           // Pass context data here (Remove queries from article.js)
+          no: {
+            node: node
+          },
+          en: {
+            node: result.data.allFlamelinkArticleContent.edges.find(({ node, key }) => {
+              return node.flamelink_locale === "en-US" && node.flamelink_id === nodeId;
+            }).node
+          }
+
         }
       })
     })
