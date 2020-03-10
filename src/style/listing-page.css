@@ -17,8 +17,9 @@
 #articles-header{
   display:block;
   width: 100%;
-  height: 200px;
+  height: auto;
   margin: 0 10px;
+  overflow: hidden;
 }
 
 
@@ -30,6 +31,66 @@
   text-align: left;
   font-size: 26pt;
 }
+
+#map-button{
+  display: block;
+  margin: 10px 0;
+  height: 26px;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  text-decoration: underline;
+  align-items: center;
+  padding-top: 10px;
+  background-color: rgb(17, 108, 228);
+}
+#map-button:hover{
+  text-decoration: none;
+  cursor: pointer;
+  background-color: rgb(0, 132, 255);
+}
+
+#english-button{
+  display: block;
+  margin: 15px 0;
+  height: 26px;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  text-decoration: underline;
+  align-items: center;
+  padding-top: 10px;
+  background-color: rgb(12, 116, 35);
+  margin-bottom: 50px;
+}
+#english-button:hover{
+  text-decoration: none;
+  cursor: pointer;
+  background-color: rgb(0, 132, 255);
+}
+
+#all-tags-container{
+  display: flex;
+  flex-wrap: row wrap;
+  flex-flow: wrap;
+  
+}
+
+#sort-container{
+  display: flex;
+  flex-flow: wrap;
+  flex-wrap: row wrap;
+  float: right;
+}
+
+.distinct-tag{
+  padding: 4px;
+  margin: 0 5px 0 0;
+  border: 1px solid rgb(220, 220, 220);
+  cursor: pointer;
+}
+
+
 
 #articles-container{
   display: flex;
@@ -44,12 +105,10 @@
 .article-container{
   margin: 10px auto;
   display: flex;
-  flex: content;
-  flex-basis: 1;
-  flex-direction: column-reverse;
   flex-flow: column;
   border: 1px solid rgb(194, 194, 194);
   width: 340px;
+  max-width: 340px;
   min-height: 350px;
   padding: 10px;
   overflow-y: hidden;
@@ -102,11 +161,11 @@
 }
 
 .tag{
-  background-color: rgb(189, 189, 189);
+  background-color: rgb(225, 225, 225);
   height: 20px;
   min-width: 50px;
   margin: 4px;
-  padding: 0 4px;
+  padding: 2px 6px;
 }
 
 .tag a{

@@ -9,43 +9,134 @@ const path = require(`path`)
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
+
+  // Retrieve all data to build sites
   const result = await graphql(`
-    query {
-      allFlamelinkArticleContent (filter: { flamelink_locale: { eq: "no" } }) {
-        edges {
-          node {
-            id
-            slug
-            parentContent {
-              id
-              slug
-            }
+  query {
+    allFlamelinkListingPageContent {
+      edges {
+        node {
+          id
+          slug
+          thumbnail {
+            url
           }
+          flamelink_id
+          flamelink_locale
+          localTitle
+          navigationTitle
+          navigationSubtitle
+          textOnPage
         }
       }
-      allFlamelinkListingPageContent (filter: { flamelink_locale: { eq: "no" } }) {
-        edges {
-          node {
+    }
+    allFlamelinkArticleContent {
+      edges {
+        node {
+          flamelink_locale
+          flamelink_id
+          address
+          id
+          openingHours
+          parentContent {
             id
             slug
+          }
+          slug
+          title
+          tags
+          thumbnail {
+            url
           }
         }
       }
     }
+    allFlamelinkFrontPageContent {
+      nodes {
+        flamelink_id
+        flamelink_locale
+        headerFocusWord
+        headerText
+        id
+        navigationText
+        imageDeck {
+          image {
+            url
+          }
+          title
+        }
+      }
+    }
+  }
   `)
 
-  result.data.allFlamelinkListingPageContent.edges.forEach(({ node }) => {
-    createPage({
-      path: node.slug,
-      component: path.resolve(`./src/templates/listing-page.js`),
-    })
-  })
+  // Handle errors
+  if (result.errors) {
+    reporter.panicOnBuild(`Error while running GraphQL query.`)
+    return
+  }
 
-  result.data.allFlamelinkArticleContent.edges.forEach(({ node }) => {
-    createPage({
-      path: node.parentContent.slug + "/" + node.slug,
-      component: path.resolve(`./src/templates/listing-page.js`),
+  // Create Listing Pages
+  result.data.allFlamelinkListingPageContent.edges
+    .filter(({ node }) => { return node.flamelink_locale === "no" }) // To avoid duplicates
+    .forEach(({ node }) => {
+      const nodeId = node.flamelink_id;
+      const nodeSlug = node.slug;
+
+
+      var articles_no = result.data.allFlamelinkArticleContent.edges.filter(({ node, key }) => {
+        return node.flamelink_locale === "no" && node.parentContent.slug === nodeSlug
+      });
+      var tags_no = []
+      articles_no.map(({ node, key }) => {
+        tags_no = tags_no.concat(node.tags);
+      })
+      tags_no = [...new Set(tags_no)];
+
+      var articles_en = result.data.allFlamelinkArticleContent.edges.filter(({ node, key }) => {
+        return node.flamelink_locale === "en" && node.parentContent.slug === nodeSlug
+      });
+      var tags_en = []
+      articles_en.map(({ node, key }) => {
+        tags_en = tags_en.concat(node.tags);
+      })
+      tags_en = [...new Set(tags_en)];
+
+      createPage({
+        path: nodeSlug,
+        component: path.resolve(`./src/templates/listing-page.js`),
+        context: {
+          no: {
+            node: node,
+            articles: articles_no,
+            tags: tags_no,
+          },
+          en: {
+            node: result.data.allFlamelinkListingPageContent.edges.find(({ node, key }) => {
+              return node.flamelink_locale === "en-US" && node.flamelink_id === nodeId;
+            }).node,
+            articles: articles_en,
+            tags: tags_en,
+          },
+        },
+      })
     })
-  })
+
+
+  // Create Article Pages
+  result.data.allFlamelinkArticleContent.edges
+    .filter(({ node }) => { return node.flamelink_locale === "no" })
+    .forEach(({ node }) => {
+
+      const nodeSlug = node.slug;
+
+      createPage({
+        path: nodeSlug,
+        component: path.resolve('./src/templates/article.js'),
+        context: {
+
+        }
+      })
+    })
 
 }

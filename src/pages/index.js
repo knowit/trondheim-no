@@ -42,7 +42,7 @@ const IndexPage = () => (
           <div id="header-image"
             style={{
               backgroundImage: "url(" + data.allFlamelinkFrontPageContent.edges[0].node.imageDeck
-                .find(function (img) { return img.title === "Bybro" }).image[0].url + ")"
+                .find(function (img, key) { return img.title === "Bybro" }).image[0].url + ")"
             }}>
 
             <h3>OFFISIELT NETTSTED FOR</h3>
