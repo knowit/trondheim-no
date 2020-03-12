@@ -11,7 +11,7 @@ const Article = ({pageContext}) => {
       <div id="inner-container">
         <h2>{pageContext.no.node.title}</h2>
         <ReactMarkdown source={pageContext.no.node.content.content}></ReactMarkdown>
-        <Map/>
+        <Map locationString={pageContext.no.node.address}/>
       </div>
     </div>
   )
