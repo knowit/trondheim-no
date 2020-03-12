@@ -158,6 +158,7 @@ exports.createPages = async ({ graphql, actions }) => {
         component: path.resolve('./src/templates/article.js'),
         context: {
           // Pass context data here (Remove queries from article.js)
+          defaultCenter: {lat: 63.430529, lng: 10.4005522},
           no: {
             node: node
           },
