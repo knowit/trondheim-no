@@ -48,6 +48,9 @@ exports.createPages = async ({ graphql, actions }) => {
           thumbnail {
             url
           }
+          content {
+            content
+          }
         }
       }
     }

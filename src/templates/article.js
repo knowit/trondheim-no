@@ -1,13 +1,16 @@
 import React from "react"
+import { StaticQuery, graphql } from "gatsby"
+import "../style/article.css"
 
+const ReactMarkdown = require("react-markdown")
 
-const ArticlePage = ({ pageContext }) => {
+const Article = ({pageContext}) => {
   return (
-    <div id="outer-container">
-      {pageContext.no.node.title}
+    <div>
+      <h2>{pageContext.no.node.title}</h2>
+      <ReactMarkdown source={pageContext.no.node.content.content}></ReactMarkdown>
     </div>
   )
 }
 
-export default ArticlePage
-
+export default Article
