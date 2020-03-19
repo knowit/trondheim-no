@@ -81,11 +81,11 @@ exports.createPages = async ({ graphql, actions }) => {
     return
   }
 
-  // Create Front Page
 
+  // Create Front Page
   createPage({
     path: '/',
-    component: path.resolve(`./src/pages/home.js`),
+    component: path.resolve(`./src/templates/home.js`),
     context: {
       no: {
         node: result.data.allFlamelinkFrontPageContent.edges.find(({ node }) => { return node.flamelink_locale === "no" }).node,
@@ -158,7 +158,7 @@ exports.createPages = async ({ graphql, actions }) => {
         component: path.resolve('./src/templates/article.js'),
         context: {
           // Pass context data here (Remove queries from article.js)
-          defaultCenter: {lat: 63.430529, lng: 10.4005522},
+          defaultCenter: { lat: 63.430529, lng: 10.4005522 },
           no: {
             node: node
           },
