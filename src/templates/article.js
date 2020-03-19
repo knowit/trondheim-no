@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from "gatsby"
-import "../style/article.css"
+import styles from "../style/article.module.css"
 import Map from "../components/map.js"
 
 const ReactMarkdown = require("react-markdown")
@@ -34,7 +34,7 @@ function ContactInfo(props) {
       </Link></p>)
   }
   console.log(elements);
-  if(elements.length > 0) return <div><h4>{getLocalWord(props.localization,"contactInfo","no")}</h4><div>{elements}</div></div>
+  if(elements.length > 0) return <div><h3 className={styles.subheading}>{getLocalWord(props.localization,"contactInfo","no")}</h3><div>{elements}</div></div>
   else return "";
 }
 

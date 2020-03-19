@@ -6,8 +6,9 @@ img {
     max-width: 100%;
 }
 
-h4 {
+.subheading {
     color: black;
     text-align: left;
     margin-bottom: 1em;
+    font-weight: bold;
 }
