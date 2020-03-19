@@ -51,6 +51,27 @@ exports.createPages = async ({ graphql, actions }) => {
           content {
             content
           }
+          contactInfo {
+            emailAddress
+            textToShow
+            telephoneNumber
+            linkToWebsite
+          }
+        }
+      }
+    }
+    allFlamelinkArticleLocalizationContent(filter: {flamelink_locale: {eq: "no"}}) {
+      edges {
+        node {
+          id
+          translations {
+            translations {
+              uniqueKey
+              language
+              word
+            }
+            key
+          }
         }
       }
     }
@@ -159,6 +180,7 @@ exports.createPages = async ({ graphql, actions }) => {
         context: {
           // Pass context data here (Remove queries from article.js)
           defaultCenter: {lat: 63.430529, lng: 10.4005522},
+          localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
           no: {
             node: node
           },
