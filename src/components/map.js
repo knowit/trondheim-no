@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {withScriptjs, withGoogleMap, GoogleMap, Marker} from 'react-google-maps';
-import "../style/map.css"
+import styles from "../style/map.module.css"
 import axios from "axios"
 
 class Map extends Component {
@@ -9,11 +9,11 @@ class Map extends Component {
         super(props);
     }
 
-    getLocation(locationString){
+    async getLocation(locationString){
         console.log("locationString: " + locationString);
         
         URL = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input="+ locationString + "&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=" + process.env.GATSBY_GOOGLE_API; 
-        axios.get(URL)
+        await axios.get(URL)
         .then(response => {
             this.location = response.data.candidates[0];
             console.log(this.location);
@@ -27,7 +27,7 @@ class Map extends Component {
 
     render() {
         //FIXME: This might not return in time for the position to be set after.
-        this.getLocation(this.props.locationString);
+        //this.getLocation(this.props.locationString);
         const MapView = withScriptjs(withGoogleMap(props => (
             <GoogleMap
                 defaultCenter = { this.location.geometry.location}
@@ -37,7 +37,7 @@ class Map extends Component {
             </GoogleMap>
         )));
     return(
-        <div className="mapContainer">
+        <div className={styles.mapContainer}>
             <MapView
             containerElement={ <div style={{ height: `400px`, width: '100%' }} /> }
             mapElement={ <div style={{ height: `100%` }} /> }
