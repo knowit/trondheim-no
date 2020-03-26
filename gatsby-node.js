@@ -159,7 +159,7 @@ exports.createPages = async ({ graphql, actions }) => {
             defaultCenter: { lat: 63.430529, lng: 10.4005522 },
             localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
             node: node,
-
+            locale: locale,
           }
         })
         return node
