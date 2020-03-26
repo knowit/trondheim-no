@@ -10,12 +10,12 @@ const HomePage = ({ pageContext }) => {
 
         <div id="header-image"
           style={{
-            backgroundImage: "url(" + pageContext.content.imageDeck
+            backgroundImage: "url(" + pageContext.node.imageDeck
               .find(function (img, key) { return img.title === "Bybro" }).image[0]?.url + ")"
           }}>
 
-          <h3>{pageContext.content.headerText}</h3>
-          <h1>{pageContext.content.headerFocusWord}</h1>
+          <h3>{pageContext.node.headerText}</h3>
+          <h1>{pageContext.node.headerFocusWord}</h1>
 
         </div>
 
@@ -24,7 +24,7 @@ const HomePage = ({ pageContext }) => {
       </div>
 
       <div id="content-container">
-        <h2>{pageContext.content.navigationText}</h2>
+        <h2>{pageContext.node.navigationText}</h2>
 
         <div id="navigation-menu-container">
           {pageContext.listingPages.map(function (node, key) {
@@ -33,7 +33,7 @@ const HomePage = ({ pageContext }) => {
                 <div class="navigation-box-thumbnail" style={{
                   backgroundImage: "url(" + node.thumbnail[0]?.url + ")"
                 }}></div>
-                <h2><a class="navigation-box-title" href={"/" + node.slug}>{node.navigationTitle}</a></h2>
+                <h2><a class="navigation-box-title" href={`/${pageContext.slugLocale}${node.slug}`}>{node.navigationTitle}</a></h2>
                 <h4>{node.navigationSubtitle}</h4>
               </div>
             )
