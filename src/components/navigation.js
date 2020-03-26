@@ -3,29 +3,18 @@ import { Link } from "gatsby"
 import "../style/navigation.css"
 import { BurgerMenu } from "./menu.js"
 
-export default class Navigation extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
+export default ({ layoutContext }) => (
+  <div class="navigation-container">
 
-  render() {
-    return (
-      <div class="navigation-container">
+    <BurgerMenu layoutContext={layoutContext}></BurgerMenu>
 
-        <BurgerMenu menuData={this.props.menuData}></BurgerMenu>
+    <div class="logo-container">
+      <Link id="trondheimno-link" to="/">TRONDHEIM.NO</Link>
 
-        <div class="logo-container">
-          <Link id="trondheimno-link" to="/">TRONDHEIM.NO</Link>
-
-          <div class="logo">
-            <img alt="logo" src={this.props.logoUrl}></img>
-          </div>
-        </div>
+      <div class="logo">
+        <img alt="logo" src={layoutContext.logoUrl}></img>
       </div>
-    )
-  }
-
-}
-
-
+    </div>
+  </div>
+)

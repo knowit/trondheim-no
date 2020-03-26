@@ -1,12 +1,6 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/node-apis/
- */
 
 // You can delete this file if you're not using it
 const path = require(`path`)
-
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
@@ -109,6 +103,30 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const defaultLocale = 'no'
 
+  // Create menu content
+  var menuListingPages = new Map()
+  result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
+    let locale = node.flamelink_locale
+    if (!Array.from(menuListingPages.keys()).includes(locale)) {
+      menuListingPages.set(locale, new Array())
+    }
+    menuListingPages.get(locale).push({
+      localTitle: node.localTitle,
+      slug: node.slug
+    })
+  })
+  const menuLogoUrl = result.data.allFlamelinkFrontPageContent.edges[0].node.imageDeck
+    .find(function (img) { return img.title === "Logo" }).image[0].url
+
+  function layoutContext(locale) {
+    return {
+      menuData: menuListingPages.get(locale),
+      logoUrl: menuLogoUrl,
+      locale: locale,
+    }
+  }
+
+
   // Create Front Page
   result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
 
@@ -125,11 +143,11 @@ exports.createPages = async ({ graphql, actions }) => {
       context: {
         node: node,
         slugLocale: (locale === defaultLocale) ? '' : `${locale.split('-')[0]}/`,
-        listingPages: listingPages
+        listingPages: listingPages,
+        layoutContext: layoutContext(locale)
       }
     })
   })
-
 
   // Create Listing Pages
   result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
@@ -140,8 +158,6 @@ exports.createPages = async ({ graphql, actions }) => {
     const slugLocale = ((locale === defaultLocale) ? '' : `${locale.split('-')[0]}/`)
 
     var tags = []
-
-
 
     // Create Article Pages
     var articles = result.data.allFlamelinkArticleContent.edges
@@ -159,7 +175,7 @@ exports.createPages = async ({ graphql, actions }) => {
             defaultCenter: { lat: 63.430529, lng: 10.4005522 },
             localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
             node: node,
-
+            layoutContext: layoutContext(locale),
           }
         })
         return node
@@ -175,9 +191,9 @@ exports.createPages = async ({ graphql, actions }) => {
         slugLocale: slugLocale,
         tags: tags,
         articles: articles,
+        layoutContext: layoutContext(locale),
       },
     })
 
   })
-
 }

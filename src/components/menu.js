@@ -39,7 +39,7 @@ export class BurgerMenu extends React.Component {
           <div class="burger-bar"></div>
         </div>
         <div class="menu-text-container">
-          MENY
+          {(this.props.layoutContext.locale === 'no') ? 'MENY' : 'MENU'}
         </div>
 
 
@@ -47,11 +47,10 @@ export class BurgerMenu extends React.Component {
           this.state.showMenu
             ? (
               <div className="drop-menu-container">
-                {this.props.menuData.map(function (node, key) {
-                  console.log(node)
+                {this.props.layoutContext.menuData.map(function (node, key) {
                   return (
                     <div class="drop-menu-item-container">
-                      <a href={node.node.slug}>{node.node.navigationTitle}</a>
+                      <a href={node.slug}>{node.title}</a>
                     </div>
                   )
                 })}
