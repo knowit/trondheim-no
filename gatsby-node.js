@@ -7,6 +7,7 @@
 // You can delete this file if you're not using it
 const path = require(`path`)
 
+
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
 
@@ -35,7 +36,6 @@ exports.createPages = async ({ graphql, actions }) => {
         node {
           flamelink_locale
           flamelink_id
-          address
           id
           openingHours
           parentContent {
@@ -82,22 +82,28 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
 
-  // Create Front Page
-  createPage({
-    path: '/',
-    component: path.resolve(`./src/templates/home.js`),
-    context: {
-      no: {
-        node: result.data.allFlamelinkFrontPageContent.edges.find(({ node }) => { return node.flamelink_locale === "no" }).node,
-        listingPages: result.data.allFlamelinkListingPageContent.edges.filter(({ node }) => { return node.flamelink_locale === "no" }),
-      },
-      en: {
-        node: result.data.allFlamelinkFrontPageContent.edges.find(({ node }) => { return node.flamelink_locale === "en-US" }).node,
-        listingPages: result.data.allFlamelinkListingPageContent.edges.filter(({ node }) => { return node.flamelink_locale === "en-US" }),
-      },
-    }
-  })
+  const defaultLocale = 'no'
 
+
+  // Create Front Page
+  result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
+
+    const locale = node.flamelink_locale
+    const localizedPath = (locale === defaultLocale) ? '/' : `/${locale.split('-')[0]}/`
+
+    const listingPages = result.data.allFlamelinkListingPageContent.edges.filter(({ node }) => {
+      return node.flamelink_locale === locale
+    }).map(node => node.node)
+
+    createPage({
+      path: localizedPath,
+      component: path.resolve(`./src/templates/home.js`),
+      context: {
+        content: node,
+        listingPages: listingPages
+      }
+    })
+  })
 
   // Create Listing Pages
   result.data.allFlamelinkListingPageContent.edges
@@ -137,7 +143,7 @@ exports.createPages = async ({ graphql, actions }) => {
           en: {
             node: result.data.allFlamelinkListingPageContent.edges.find(({ node, key }) => {
               return node.flamelink_locale === "en-US" && node.flamelink_id === nodeId;
-            }).node,
+            }),
             articles: articles_en,
             tags: tags_en,
           },
@@ -165,7 +171,7 @@ exports.createPages = async ({ graphql, actions }) => {
           en: {
             node: result.data.allFlamelinkArticleContent.edges.find(({ node, key }) => {
               return node.flamelink_locale === "en-US" && node.flamelink_id === nodeId;
-            }).node
+            })
           }
 
         }

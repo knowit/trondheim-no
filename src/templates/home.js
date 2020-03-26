@@ -10,12 +10,12 @@ const HomePage = ({ pageContext }) => {
 
         <div id="header-image"
           style={{
-            backgroundImage: "url(" + pageContext.no.node.imageDeck
+            backgroundImage: "url(" + pageContext.content.imageDeck
               .find(function (img, key) { return img.title === "Bybro" }).image[0].url + ")"
           }}>
 
-          <h3>{pageContext.no.node.headerText}</h3>
-          <h1>{pageContext.no.node.headerFocusWord}</h1>
+          <h3>{pageContext.content.headerText}</h3>
+          <h1>{pageContext.content.headerFocusWord}</h1>
 
         </div>
 
@@ -24,17 +24,17 @@ const HomePage = ({ pageContext }) => {
       </div>
 
       <div id="content-container">
-        <h2>{pageContext.no.node.navigationText}</h2>
+        <h2>{pageContext.content.navigationText}</h2>
 
         <div id="navigation-menu-container">
-          {pageContext.no.listingPages.map(function (node, key) {
+          {pageContext.listingPages.map(function (node, key) {
             return (
               <div class="navigation-box-container">
                 <div class="navigation-box-thumbnail" style={{
-                  backgroundImage: "url(" + node.node.thumbnail[0].url + ")"
+                  backgroundImage: "url(" + node.thumbnail[0].url + ")"
                 }}></div>
-                <h2><a class="navigation-box-title" href={"/" + node.node.slug}>{node.node.navigationTitle}</a></h2>
-                <h4>{node.node.navigationSubtitle}</h4>
+                <h2><a class="navigation-box-title" href={"/" + node.slug}>{node.navigationTitle}</a></h2>
+                <h4>{node.navigationSubtitle}</h4>
               </div>
             )
           })}
