@@ -35,7 +35,6 @@ exports.createPages = async ({ graphql, actions }) => {
         node {
           flamelink_locale
           flamelink_id
-          address
           id
           openingHours
           parentContent {
@@ -56,6 +55,11 @@ exports.createPages = async ({ graphql, actions }) => {
             textToShow
             telephoneNumber
             linkToWebsite
+          }
+          address {
+            lat
+            lng
+            address
           }
         }
       }
