@@ -1,6 +1,7 @@
 import React from "react"
 import "../style/listing-page.css"
 import Layout from "../layouts/layout"
+import { Link } from "gatsby"
 
 
 const ListingPage = ({ pageContext }) => {
@@ -14,7 +15,11 @@ const ListingPage = ({ pageContext }) => {
             <h2>{pageContext.node.localTitle}</h2>
             <p>{pageContext.node.textOnPage}</p>
             <div id="map-button">Vis stedene i kart</div>
-            <div id="english-button">This page in English</div>
+            <Link
+              id="english-button"
+              to={((pageContext.layoutContext.locale === 'no') ? `/en/` : `/`)}>
+              {(pageContext.layoutContext.locale === 'no') ? 'This page in English' : 'Se siden på norsk'}
+            </Link>
           </div>
 
 

@@ -1,6 +1,8 @@
 
 import React from 'react';
 import "../style/navigation.css"
+import { Link } from 'gatsby';
+import ReactCountryFlag from "react-country-flag"
 
 export class BurgerMenu extends React.Component {
 
@@ -49,14 +51,30 @@ export class BurgerMenu extends React.Component {
               <div className="drop-menu-container">
                 {this.props.layoutContext.menuData.map(function (node, key) {
                   return (
-                    <div class="drop-menu-item-container">
-                      <a href={node.slug}>{node.title}</a>
-                    </div>
+                    <Link className="drop-menu-item-container"
+                      to={(node.locale === 'no') ? `/${node.slug}` : `/en/${node.slug}`}>
+                      {node.title}
+                    </Link>
                   )
                 })}
-                <div class="drop-menu-item-container">
-                  <a href="#/">{(this.props.layoutContext.locale === 'no') ? 'English' : 'Norsk'}</a>
-                </div>
+
+                <Link
+                  className="drop-menu-item-container"
+                  to={(this.props.layoutContext.locale === 'no') ? `/en/` : `/`}>
+
+                  <ReactCountryFlag
+                    className="drop-menu-item-flag"
+                    countryCode={(this.props.layoutContext.locale !== 'no') ? 'NO' : 'GB'}
+                    svg
+                    style={{
+                      width: '1em',
+                      height: '1em',
+                    }}
+                    title="flag" />
+
+                  {(this.props.layoutContext.locale === 'no') ? `English` : `Norsk`}
+
+                </Link>
               </div>
             )
             : (

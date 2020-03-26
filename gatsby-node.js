@@ -114,7 +114,8 @@ exports.createPages = async ({ graphql, actions }) => {
     }
     menuListingPages.get(locale).push({
       title: node.localTitle,
-      slug: node.slug
+      slug: node.slug,
+      locale: node.flamelink_locale,
     })
   })
   const menuLogoUrl = result.data.allFlamelinkFrontPageContent.edges[0].node.imageDeck
@@ -155,10 +156,10 @@ exports.createPages = async ({ graphql, actions }) => {
   result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
 
     const nodeSlug = node.slug;
+    const nodeTitle = node.localTitle
     const locale = node.flamelink_locale
     const localizedPath = ((locale === defaultLocale) ? '/' : `/${locale.split('-')[0]}/`) + nodeSlug
     const slugLocale = ((locale === defaultLocale) ? '' : `${locale.split('-')[0]}/`)
-
     var tags = []
 
     // Create Article Pages
