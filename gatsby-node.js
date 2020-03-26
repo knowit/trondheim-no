@@ -37,7 +37,9 @@ exports.createPages = async ({ graphql, actions }) => {
           flamelink_locale
           flamelink_id
           id
-          openingHours
+          openingHours {
+            content
+          }
           parentContent {
             id
             slug
