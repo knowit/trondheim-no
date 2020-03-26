@@ -20,10 +20,17 @@ class Map extends Component {
         }
     }
 
+    createPersistentGoogleLink(){
+        if(this.props.persistentDisabled) return "";
+        else {
+            return <a href={this.getGoogleLink(true)} style={{width: '68px', height: '26px', cursor: 'pointer', marginLeft: '5px', marginRight: '5px', position: "absolute", left:"0", bottom:"0", zIndex:"1000001"}}></a>
+        }
+    }
+
     render() {
         const MapView = withScriptjs(withGoogleMap(props => (
             <div style={{position: "relative"}}>
-                <a href={this.getGoogleLink(true)} style={{width: '68px', height: '26px', cursor: 'pointer', marginLeft: '5px', marginRight: '5px', position: "absolute", left:"0", bottom:"0", zIndex:"1000001"}}></a>
+                {this.createPersistentGoogleLink()}
                 <GoogleMap
                     defaultCenter = {this.props.location}
                     defaultZoom = { 17 }
