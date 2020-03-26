@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {withScriptjs, withGoogleMap, GoogleMap, Marker} from 'react-google-maps';
-import "../style/map.css"
+import styles from "../style/map.module.css"
 import axios from "axios"
 
 class Map extends Component {
@@ -9,35 +9,38 @@ class Map extends Component {
         super(props);
     }
 
-    getLocation(locationString){
-        console.log("locationString: " + locationString);
-        
-        URL = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input="+ locationString + "&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=" + process.env.GATSBY_GOOGLE_API; 
-        axios.get(URL)
-        .then(response => {
-            this.location = response.data.candidates[0];
-            console.log(this.location);
-        })
-        .catch(error => {
-            console.log("Error Thrown");
-            console.log(error.message);
-        })
+    getGoogleLink(trueIfAddress){
+        var address = this.props.address;
+        var location = this.props.location;
+        var baseURL = "https://www.google.com/maps/search/?api=1"
+        if(trueIfAddress){
+            return baseURL + "&query=" + encodeURI(address);
+        } else {
+            return baseURL + "&query=" + location.lat + "," + location.lng;
+        }
     }
 
+    createPersistentGoogleLink(){
+        if(this.props.persistentDisabled) return "";
+        else {
+            return <a href={this.getGoogleLink(true)} style={{width: '68px', height: '26px', cursor: 'pointer', marginLeft: '5px', marginRight: '5px', position: "absolute", left:"0", bottom:"0", zIndex:"1000001"}}></a>
+        }
+    }
 
     render() {
-        //FIXME: This might not return in time for the position to be set after.
-        this.getLocation(this.props.locationString);
         const MapView = withScriptjs(withGoogleMap(props => (
-            <GoogleMap
-                defaultCenter = { this.location.geometry.location}
-                defaultZoom = { 17 }
-            >
-                <Marker position={this.location.geometry.location} />
-            </GoogleMap>
+            <div style={{position: "relative"}}>
+                {this.createPersistentGoogleLink()}
+                <GoogleMap
+                    defaultCenter = {this.props.location}
+                    defaultZoom = { 17 }
+                >
+                    <Marker position={this.props.location} />
+                </GoogleMap>
+            </div>
         )));
     return(
-        <div className="mapContainer">
+        <div className={styles.mapContainer}>
             <MapView
             containerElement={ <div style={{ height: `400px`, width: '100%' }} /> }
             mapElement={ <div style={{ height: `100%` }} /> }
