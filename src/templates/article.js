@@ -53,10 +53,10 @@ const Article = ({pageContext}) => {
   return (
     <div id="outer-container">
       <div id="inner-container">
-        <h2>{pageContext.no.node.title}</h2>
-        <ReactMarkdown source={pageContext.no.node.content.content}></ReactMarkdown>
-        <ContactInfo node={pageContext.no.node} localization={pageContext.localization}/>
-        <Map location={{lat: pageContext.no.node.address.lat, lng: pageContext.no.node.address.lng}} address={pageContext.no.node.address.address} persistentDisabled={false} />
+        <h2>{pageContext.node.title}</h2>
+        <ReactMarkdown source={pageContext.node.content.content}></ReactMarkdown>
+        <ContactInfo node={pageContext.node} localization={pageContext.localization}/>
+        <Map location={{lat: pageContext.node.address.lat, lng: pageContext.node.address.lng}} address={pageContext.node.address.address} persistentDisabled={false} />
       </div>
     </div>
   )
