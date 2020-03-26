@@ -109,3 +109,8 @@
   display: block;
 }
 
+.drop-menu-item-flag{
+  margin-right: 3px;
+  padding-top: 2px;
+}
+

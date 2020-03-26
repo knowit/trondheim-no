@@ -1,6 +1,8 @@
 
 import React from 'react';
 import "../style/navigation.css"
+import { Link } from 'gatsby';
+import ReactCountryFlag from "react-country-flag"
 
 export class BurgerMenu extends React.Component {
 
@@ -39,7 +41,7 @@ export class BurgerMenu extends React.Component {
           <div class="burger-bar"></div>
         </div>
         <div class="menu-text-container">
-          MENY
+          {(this.props.layoutContext.locale === 'no') ? 'MENY' : 'MENU'}
         </div>
 
 
@@ -47,14 +49,32 @@ export class BurgerMenu extends React.Component {
           this.state.showMenu
             ? (
               <div className="drop-menu-container">
-                {this.props.menuData.map(function (node, key) {
-                  console.log(node)
+                {this.props.layoutContext.menuData.map(function (node, key) {
                   return (
-                    <div class="drop-menu-item-container">
-                      <a href={node.node.slug}>{node.node.navigationTitle}</a>
-                    </div>
+                    <Link className="drop-menu-item-container"
+                      to={(node.locale === 'no') ? `/${node.slug}` : `/en/${node.slug}`}>
+                      {node.title}
+                    </Link>
                   )
                 })}
+
+                <Link
+                  className="drop-menu-item-container"
+                  to={(this.props.layoutContext.locale === 'no') ? `/en/` : `/`}>
+
+                  <ReactCountryFlag
+                    className="drop-menu-item-flag"
+                    countryCode={(this.props.layoutContext.locale !== 'no') ? 'NO' : 'GB'}
+                    svg
+                    style={{
+                      width: '1em',
+                      height: '1em',
+                    }}
+                    title="flag" />
+
+                  {(this.props.layoutContext.locale === 'no') ? `English` : `Norsk`}
+
+                </Link>
               </div>
             )
             : (
