@@ -54,6 +54,9 @@ export class BurgerMenu extends React.Component {
                     </div>
                   )
                 })}
+                <div class="drop-menu-item-container">
+                  <a href="#/">{(this.props.layoutContext.locale === 'no') ? 'English' : 'Norsk'}</a>
+                </div>
               </div>
             )
             : (
