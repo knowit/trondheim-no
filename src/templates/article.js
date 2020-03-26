@@ -48,6 +48,17 @@ function ContactInfo(props) {
   else return "";
 }
 
+function OpeningHours(props) {
+  const elements = [];
+  var locale = props.locale;
+  if(props.node.openingHours && props.node.openingHours.content){
+    elements.push(<h3 className={styles.subheading}>{getLocalWord(props.localization,"openingHours",locale)}</h3>);
+    elements.push(<ReactMarkdown source={props.node.openingHours.content}></ReactMarkdown>)
+  }
+  if(elements.length>0) return <div>{elements}</div>
+  else return "";
+}
+
 const Article = ({pageContext}) => {
   console.log(pageContext);
   return (
@@ -55,6 +66,7 @@ const Article = ({pageContext}) => {
       <div id="inner-container">
         <h2>{pageContext.node.title}</h2>
         <ReactMarkdown source={pageContext.node.content.content}></ReactMarkdown>
+        <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale}/>
         <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale}/>
         <Map location={{lat: pageContext.node.address.lat, lng: pageContext.node.address.lng}} address={pageContext.node.address.address} persistentDisabled={false} />
       </div>
