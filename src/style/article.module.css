@@ -1,0 +1,22 @@
+p {
+    margin-bottom: 1em;
+}
+
+img {
+    max-width: 100%;
+}
+
+.subheading {
+    color: black;
+    text-align: left;
+    margin-bottom: 1em;
+    font-size: 24px;
+}
+
+.contactInfo {
+    margin-bottom: 0.5em;
+}
+
+.contactInfoHeader {
+    font-weight: bold;
+}

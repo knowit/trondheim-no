@@ -51,6 +51,32 @@ exports.createPages = async ({ graphql, actions }) => {
           content {
             content
           }
+          contactInfo {
+            emailAddress
+            textToShow
+            telephoneNumber
+            linkToWebsite
+          }
+          address {
+            lat
+            lng
+            address
+          }
+        }
+      }
+    }
+    allFlamelinkArticleLocalizationContent(filter: {flamelink_locale: {eq: "no"}}) {
+      edges {
+        node {
+          id
+          translations {
+            translations {
+              uniqueKey
+              language
+              word
+            }
+            key
+          }
         }
       }
     }
@@ -130,14 +156,13 @@ exports.createPages = async ({ graphql, actions }) => {
           context: {
             // Pass context data here (Remove queries from article.js)
             defaultCenter: { lat: 63.430529, lng: 10.4005522 },
+            localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
             node: node,
 
           }
         })
         return node
       })
-
-
 
     // Create Listing Page
     tags = [...new Set(tags)]
@@ -152,4 +177,5 @@ exports.createPages = async ({ graphql, actions }) => {
     })
 
   })
+
 }
