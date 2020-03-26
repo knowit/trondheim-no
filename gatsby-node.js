@@ -137,6 +137,7 @@ exports.createPages = async ({ graphql, actions }) => {
     const nodeSlug = node.slug;
     const locale = node.flamelink_locale
     const localizedPath = ((locale === defaultLocale) ? '/' : `/${locale.split('-')[0]}/`) + nodeSlug
+    const slugLocale = ((locale === defaultLocale) ? '' : `${locale.split('-')[0]}/`)
 
     var tags = []
 
@@ -171,6 +172,7 @@ exports.createPages = async ({ graphql, actions }) => {
       component: path.resolve(`./src/templates/listing-page.js`),
       context: {
         node: node,
+        slugLocale: slugLocale,
         tags: tags,
         articles: articles,
       },
