@@ -1,5 +1,6 @@
 import React from "react"
 import "../style/listing-page.css"
+import LocalizationHelper from "../helpers/helpers"
 
 
 const ListingPage = ({ pageContext }) => {
@@ -11,20 +12,20 @@ const ListingPage = ({ pageContext }) => {
         <div id="articles-header">
           <h2>{pageContext.node.localTitle}</h2>
           <p>{pageContext.node.textOnPage}</p>
-          <div id="map-button">Vis stedene i kart</div>
-          <div id="english-button">This page in English</div>
+          <div id="map-button">{LocalizationHelper.getLocalWord(pageContext.localization,"showOnMap", pageContext.locale)}</div>
+          <div id="english-button">{LocalizationHelper.getLocalWord(pageContext.localization,"changeLanguage", pageContext.locale)}</div>
         </div>
 
 
 
         <div id="all-tags-container">
           <div class="distinct-tag">
-            ALLE
+          {LocalizationHelper.getLocalWord(pageContext.localization,"all", pageContext.locale)}
               </div>
           {pageContext.tags.map(function (tag, key) {
             return (
               <div class="distinct-tag">
-                {tag.toUpperCase()}
+                {tag}
               </div>
             )
           })}
@@ -34,10 +35,10 @@ const ListingPage = ({ pageContext }) => {
 
         <div id="sort-container">
 
-          <div class="distinct-tag">STANDARD</div>
-          <div class="distinct-tag">TITTEL</div>
-          <div class="distinct-tag">DATO</div>
-          <div class="distinct-tag">TILFELDIG</div>
+          <div class="distinct-tag">{LocalizationHelper.getLocalWord(pageContext.localization,"standard", pageContext.locale)}</div>
+          <div class="distinct-tag">{LocalizationHelper.getLocalWord(pageContext.localization,"title", pageContext.locale)}</div>
+          <div class="distinct-tag">{LocalizationHelper.getLocalWord(pageContext.localization,"date", pageContext.locale)}</div>
+          <div class="distinct-tag">{LocalizationHelper.getLocalWord(pageContext.localization,"random", pageContext.locale)}</div>
 
         </div>
 

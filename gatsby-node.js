@@ -82,6 +82,21 @@ exports.createPages = async ({ graphql, actions }) => {
         }
       }
     }
+    allFlamelinkListingPageLocalizationContent(filter: {flamelink_locale: {eq: "no"}}) {
+      edges {
+        node {
+          id
+          translations {
+            translations {
+              uniqueKey
+              language
+              word
+            }
+            key
+          }
+        }
+      }
+    }
     allFlamelinkFrontPageContent {
       edges {
         node {
@@ -177,6 +192,8 @@ exports.createPages = async ({ graphql, actions }) => {
         slugLocale: slugLocale,
         tags: tags,
         articles: articles,
+        localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
+        locale: locale,
       },
     })
 
