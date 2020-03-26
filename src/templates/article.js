@@ -2,15 +2,16 @@ import React from "react"
 import { Link } from "gatsby"
 import styles from "../style/article.module.css"
 import Map from "../components/map.js"
+import Layout from "../layouts/layout"
 
 const ReactMarkdown = require("react-markdown")
 
 function getLocalWord(localizationArray, key, locale) {
   for (let i = 0; i < localizationArray.length; i++) {
-    if (localizationArray[i].key === key) {
+    if (localizationArray[i].key.toLowerCase() === key.toLowerCase()) {
       for (let j = 0; j < localizationArray[i].translations.length; j++) {
         const element = localizationArray[i].translations[j];
-        if (element.language === locale) {
+        if (element.language.toLowerCase() === locale.toLowerCase()) {
           return element.word;
         }
       }
@@ -21,7 +22,7 @@ function getLocalWord(localizationArray, key, locale) {
 
 function ContactInfo(props) {
   const elements = [];
-  var locale = "no";
+  var locale = props.locale;
   if (props.node.contactInfo.emailAddress) {
     elements.push(
       <div className={styles.contactInfo}>
@@ -56,7 +57,7 @@ const Article = ({ pageContext }) => {
         <div id="inner-container">
           <h2>{pageContext.node.title}</h2>
           <ReactMarkdown source={pageContext.node.content.content}></ReactMarkdown>
-          <ContactInfo node={pageContext.node} localization={pageContext.localization} />
+          <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <Map location={{ lat: pageContext.node.address.lat, lng: pageContext.node.address.lng }} address={pageContext.node.address.address} persistentDisabled={false} />
         </div>
       </div>

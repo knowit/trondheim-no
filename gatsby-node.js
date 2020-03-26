@@ -31,7 +31,9 @@ exports.createPages = async ({ graphql, actions }) => {
           flamelink_locale
           flamelink_id
           id
-          openingHours
+          openingHours {
+            content
+          }
           parentContent {
             id
             slug
@@ -111,7 +113,7 @@ exports.createPages = async ({ graphql, actions }) => {
       menuListingPages.set(locale, new Array())
     }
     menuListingPages.get(locale).push({
-      localTitle: node.localTitle,
+      title: node.localTitle,
       slug: node.slug
     })
   })
@@ -176,6 +178,7 @@ exports.createPages = async ({ graphql, actions }) => {
             localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
             node: node,
             layoutContext: layoutContext(locale),
+            locale: locale,
           }
         })
         return node

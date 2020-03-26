@@ -1,5 +1,6 @@
 import React from "react"
 import "../style/listing-page.css"
+import Layout from "../layouts/layout"
 
 
 const ListingPage = ({ pageContext }) => {
