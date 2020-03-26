@@ -11,7 +11,7 @@ const HomePage = ({ pageContext }) => {
         <div id="header-image"
           style={{
             backgroundImage: "url(" + pageContext.content.imageDeck
-              .find(function (img, key) { return img.title === "Bybro" }).image[0].url + ")"
+              .find(function (img, key) { return img.title === "Bybro" }).image[0]?.url + ")"
           }}>
 
           <h3>{pageContext.content.headerText}</h3>
@@ -31,7 +31,7 @@ const HomePage = ({ pageContext }) => {
             return (
               <div class="navigation-box-container">
                 <div class="navigation-box-thumbnail" style={{
-                  backgroundImage: "url(" + node.thumbnail[0].url + ")"
+                  backgroundImage: "url(" + node.thumbnail[0]?.url + ")"
                 }}></div>
                 <h2><a class="navigation-box-title" href={"/" + node.slug}>{node.navigationTitle}</a></h2>
                 <h4>{node.navigationSubtitle}</h4>

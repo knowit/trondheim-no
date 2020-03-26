@@ -9,8 +9,8 @@ const ListingPage = ({ pageContext }) => {
       <div id="inner-container">
 
         <div id="articles-header">
-          <h2>{pageContext.no.node.localTitle}</h2>
-          <p>{pageContext.no.node.textOnPage}</p>
+          <h2>{pageContext.node.localTitle}</h2>
+          <p>{pageContext.node.textOnPage}</p>
           <div id="map-button">Vis stedene i kart</div>
           <div id="english-button">This page in English</div>
         </div>
@@ -21,7 +21,7 @@ const ListingPage = ({ pageContext }) => {
           <div class="distinct-tag">
             ALLE
               </div>
-          {pageContext.no.tags.map(function (tag, key) {
+          {pageContext.tags.map(function (tag, key) {
             return (
               <div class="distinct-tag">
                 {tag.toUpperCase()}
@@ -44,14 +44,14 @@ const ListingPage = ({ pageContext }) => {
 
 
         <div id="articles-container">
-          {pageContext.no.articles.map(function (node, key) {
+          {pageContext.articles.map(function (node, key) {
             return (
               <div class="article-container">
-                <div class="article-thumbnail" style={{ backgroundImage: "url(" + node.node.thumbnail[0].url + ")" }}></div>
+                <div class="article-thumbnail" style={{ backgroundImage: "url(" + node.thumbnail[0]?.url + ")" }}></div>
                 <div class="article-info-container">
-                  <h2><a href={pageContext.no.node.slug + "/" + node.node.slug}>{node.node.title}</a></h2>
+                  <h2><a href={pageContext.node.slug + "/" + node.slug}>{node.title}</a></h2>
                   <div class="tags-container">
-                    {node.node.tags.map(function (tag, key) {
+                    {node.tags.map(function (tag, key) {
                       return (
                         <div class="tag">
                           <a>{tag}</a>

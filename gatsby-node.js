@@ -81,9 +81,7 @@ exports.createPages = async ({ graphql, actions }) => {
     return
   }
 
-
   const defaultLocale = 'no'
-
 
   // Create Front Page
   result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
@@ -104,6 +102,62 @@ exports.createPages = async ({ graphql, actions }) => {
       }
     })
   })
+
+
+
+
+  // Create Listing Pages
+  result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
+
+    const nodeId = node.flamelink_id;
+    const nodeSlug = node.slug;
+    const locale = node.flamelink_locale
+    const localizedPath = ((locale === defaultLocale) ? '/' : `/${locale.split('-')[0]}/`) + nodeSlug
+
+    var tags = []
+
+
+
+    // Create Article Pages
+    var articles = result.data.allFlamelinkArticleContent.edges
+      .filter(({ node }) => node.parentContent.slug === nodeSlug)
+      .map(node => node.node)
+      .map(node => {
+
+        tags = tags.concat(node.tags)
+
+        createPage({
+          path: localizedPath + "/" + node.slug,
+          component: path.resolve('./src/templates/article.js'),
+          context: {
+            // Pass context data here (Remove queries from article.js)
+            defaultCenter: { lat: 63.430529, lng: 10.4005522 },
+            node: node,
+
+          }
+        })
+        return node
+      })
+
+
+
+    // Create Listing Page
+    tags = [...new Set(tags)]
+    createPage({
+      path: localizedPath,
+      component: path.resolve(`./src/templates/listing-page.js`),
+      context: {
+        node: node,
+        tags: tags,
+        articles: articles,
+      },
+    })
+
+  })
+
+
+
+  /*
 
   // Create Listing Pages
   result.data.allFlamelinkListingPageContent.edges
@@ -177,5 +231,7 @@ exports.createPages = async ({ graphql, actions }) => {
         }
       })
     })
+
+    */
 
 }
