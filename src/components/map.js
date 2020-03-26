@@ -9,31 +9,13 @@ class Map extends Component {
         super(props);
     }
 
-    async getLocation(locationString){
-        console.log("locationString: " + locationString);
-        
-        URL = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input="+ locationString + "&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=" + process.env.GATSBY_GOOGLE_API; 
-        await axios.get(URL)
-        .then(response => {
-            this.location = response.data.candidates[0];
-            console.log(this.location);
-        })
-        .catch(error => {
-            console.log("Error Thrown");
-            console.log(error.message);
-        })
-    }
-
-
     render() {
-        //FIXME: This might not return in time for the position to be set after.
-        //this.getLocation(this.props.locationString);
         const MapView = withScriptjs(withGoogleMap(props => (
             <GoogleMap
-                defaultCenter = { this.location.geometry.location}
+                defaultCenter = {this.props.location}
                 defaultZoom = { 17 }
             >
-                <Marker position={this.location.geometry.location} />
+                <Marker position={this.props.location} />
             </GoogleMap>
         )));
     return(
