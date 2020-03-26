@@ -9,14 +9,28 @@ class Map extends Component {
         super(props);
     }
 
+    getGoogleLink(trueIfAddress){
+        var address = this.props.address;
+        var location = this.props.location;
+        var baseURL = "https://www.google.com/maps/search/?api=1"
+        if(trueIfAddress){
+            return baseURL + "&query=" + encodeURI(address);
+        } else {
+            return baseURL + "&query=" + location.lat + "," + location.lng;
+        }
+    }
+
     render() {
         const MapView = withScriptjs(withGoogleMap(props => (
-            <GoogleMap
-                defaultCenter = {this.props.location}
-                defaultZoom = { 17 }
-            >
-                <Marker position={this.props.location} />
-            </GoogleMap>
+            <div style={{position: "relative"}}>
+                <a href={this.getGoogleLink(true)} style={{width: '68px', height: '26px', cursor: 'pointer', marginLeft: '5px', marginRight: '5px', position: "absolute", left:"0", bottom:"0", zIndex:"1000001"}}></a>
+                <GoogleMap
+                    defaultCenter = {this.props.location}
+                    defaultZoom = { 17 }
+                >
+                    <Marker position={this.props.location} />
+                </GoogleMap>
+            </div>
         )));
     return(
         <div className={styles.mapContainer}>
