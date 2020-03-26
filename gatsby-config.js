@@ -31,11 +31,5 @@ module.exports = {
         globals: true
       }
     },
-    {
-      resolve: `gatsby-plugin-layout`,
-      options: {
-        component: require.resolve(`./src/layouts/layout.js`),
-      },
-    },
   ],
 }
