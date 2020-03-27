@@ -14,7 +14,7 @@ const HomePage = ({ pageContext }) => {
             style={{
               backgroundImage: "url(" + pageContext.node.imageDeck
                 .find(function (img, key) { return img.title === "Bybro" }).image[0]?.url + ")"
-            }}>
+            }} crossOrigin="anonymous">
 
             <h3>{pageContext.node.headerText}</h3>
             <h1>{pageContext.node.headerFocusWord}</h1>

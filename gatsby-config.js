@@ -31,6 +31,7 @@ module.exports = {
         globals: true
       }
     },
+    'gatsby-plugin-offline',
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -63,18 +64,6 @@ module.exports = {
           },
         ],
       },
-    },
-    {
-      resolve: 'gatsby-plugin-offline',
-      options: {
-        importWorkboxFrom: `local`,
-        globDirectory: 'public',
-        globPatterns: ['*/**'],
-        cacheId: `gatsby-plugin-offline`,
-        skipWaiting: true,
-        clientsClaim: true,
-        directoryIndex: 'index.html',
-      }
     },
   ],
 }
