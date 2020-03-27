@@ -40,7 +40,7 @@ module.exports = {
         lang: `no`,
         background_color: `#f7f0eb`,
         theme_color: `#000000`,
-        display: `minimal-ui`,
+        display: `standalone`,
         scope: '/',
         icons: [
           {
@@ -67,9 +67,13 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-offline',
       options: {
-        workboxConfig: {
-          globPatterns: ['**/*']
-        }
+        importWorkboxFrom: `local`,
+        globDirectory: 'public',
+        globPatterns: ['*/**'],
+        cacheId: `gatsby-plugin-offline`,
+        skipWaiting: true,
+        clientsClaim: true,
+        directoryIndex: 'index.html',
       }
     },
   ],

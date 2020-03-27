@@ -29,7 +29,7 @@ const HomePage = ({ pageContext }) => {
           <h2>{pageContext.node.navigationText}</h2>
 
           <div id="navigation-menu-container">
-            {pageContext.listingPages.map(function (node, key) {
+            {pageContext.listingPages.map(function (node, { key }) {
               return (
                 <div class="navigation-box-container">
                   <div class="navigation-box-thumbnail" style={{
