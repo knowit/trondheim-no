@@ -31,5 +31,47 @@ module.exports = {
         globals: true
       }
     },
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: `Offisielt nettsted for Trondheim`,
+        short_name: `Trondheim.no`,
+        start_url: `/`,
+        lang: `no`,
+        background_color: `#f7f0eb`,
+        theme_color: `#000000`,
+        display: `standalone`,
+        cache_busting_mode: 'none',
+        crossOrigin: `anonymous`,
+        icons: [
+          {
+            src: `/images/logo192.png`,
+            sizes: `192x192`,
+            type: `image/png`,
+          },
+          {
+            src: `/images/logo512.png`,
+            sizes: `512x512`,
+            type: `image/png`,
+          },
+        ],
+        localize: [
+          {
+            start_url: `/en/`,
+            lang: `en-US`,
+            name: `The official website for Trondheim`,
+            short_name: `Trondheim.no`,
+          },
+        ],
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-offline',
+      options: {
+        workboxConfig: {
+          globPatterns: ['**/*']
+        }
+      }
+    },
   ],
 }

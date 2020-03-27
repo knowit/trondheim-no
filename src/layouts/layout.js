@@ -8,5 +8,6 @@ export default ({ children, layoutContext }) => (
     <div id="children-container">
       {children}
     </div>
+    <link rel="manifest" href="/manifest.json"></link>
   </div>
 )
