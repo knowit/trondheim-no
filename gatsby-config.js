@@ -5,9 +5,9 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
-    author: `@gatsbyjs`,
+    title: `Trondheim.no`,
+    description: `Offisielt nettsted for Trondheim`,
+    author: `@trondheim`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -42,7 +42,7 @@ module.exports = {
         theme_color: `#000000`,
         display: `standalone`,
         cache_busting_mode: 'none',
-        crossOrigin: `anonymous`,
+        crossOrigin: `use-credentials`,
         icons: [
           {
             src: `/images/logo192.png`,
