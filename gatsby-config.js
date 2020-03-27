@@ -40,17 +40,16 @@ module.exports = {
         lang: `no`,
         background_color: `#f7f0eb`,
         theme_color: `#000000`,
-        display: `standalone`,
-        cache_busting_mode: 'none',
-        crossOrigin: `use-credentials`,
+        display: `minimal-ui`,
+        scope: '/',
         icons: [
           {
-            src: `/images/logo192.png`,
+            src: `src/images/logo192.png`,
             sizes: `192x192`,
             type: `image/png`,
           },
           {
-            src: `/images/logo512.png`,
+            src: `src/images/logo512.png`,
             sizes: `512x512`,
             type: `image/png`,
           },
