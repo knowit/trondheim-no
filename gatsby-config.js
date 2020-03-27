@@ -44,12 +44,12 @@ module.exports = {
         scope: '/',
         icons: [
           {
-            src: `src/images/logo192.png`,
+            src: `images/logo192.png`,
             sizes: `192x192`,
             type: `image/png`,
           },
           {
-            src: `src/images/logo512.png`,
+            src: `images/logo512.png`,
             sizes: `512x512`,
             type: `image/png`,
           },
