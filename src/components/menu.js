@@ -52,7 +52,7 @@ export class BurgerMenu extends React.Component {
                 {this.props.layoutContext.menuData.map(function (node, key) {
                   return (
                     <Link className="drop-menu-item-container"
-                      to={(node.locale === 'no') ? `/${node.slug}` : `/en/${node.slug}`}>
+                      to={node.path}>
                       {node.title}
                     </Link>
                   )
@@ -60,7 +60,7 @@ export class BurgerMenu extends React.Component {
 
                 <Link
                   className="drop-menu-item-container"
-                  to={(this.props.layoutContext.locale === 'no') ? `/en/` : `/`}>
+                  to={(this.props.layoutContext.locale === 'no') ? this.props.layoutContext.localizedPaths.en : this.props.layoutContext.localizedPaths.no}>
 
                   <ReactCountryFlag
                     className="drop-menu-item-flag"

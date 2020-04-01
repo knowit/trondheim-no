@@ -35,7 +35,7 @@ const HomePage = ({ pageContext }) => {
                   <div class="navigation-box-thumbnail" style={{
                     backgroundImage: "url(" + node.thumbnail[0]?.url + ")"
                   }}></div>
-                  <h2><a class="navigation-box-title" href={`/${pageContext.slugLocale}${node.slug}`}>{node.navigationTitle}</a></h2>
+                  <h2><a class="navigation-box-title" href={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>{node.navigationTitle}</a></h2>
                   <h4>{node.navigationSubtitle}</h4>
                 </div>
               )

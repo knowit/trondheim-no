@@ -17,8 +17,7 @@ const ListingPage = ({ pageContext }) => {
             <div id="map-button">{LocalizationHelper.getLocalWord(pageContext.localization, "showOnMap", pageContext.locale)}</div>
             <Link
               id="english-button"
-              to={((pageContext.layoutContext.locale === 'no') ? `/en/` : `/`)}>
-              {/*(pageContext.layoutContext.locale === 'no') ? 'This page in English' : 'Se siden på norsk'*/}
+              to={((pageContext.layoutContext.locale === 'no') ? pageContext.layoutContext.localizedPaths.en : pageContext.layoutContext.localizedPaths.no)}>
               {LocalizationHelper.getLocalWord(pageContext.localization, "changeLanguage", pageContext.locale)}
             </Link>
           </div>
@@ -55,7 +54,7 @@ const ListingPage = ({ pageContext }) => {
                 <div class="article-container">
                   <div class="article-thumbnail" style={{ backgroundImage: "url(" + node.thumbnail[0]?.url + ")" }}></div>
                   <div class="article-info-container">
-                    <h2><a href={`/${pageContext.slugLocale}${pageContext.node.slug}/${node.slug}`}>{node.title}</a></h2>
+                    <h2><a href={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.title}</a></h2>
                     <div class="tags-container">
                       {node.tags.map(function (tag, key) {
                         return (

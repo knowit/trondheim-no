@@ -1,6 +1,7 @@
 
 // You can delete this file if you're not using it
 const path = require(`path`)
+const defaultLocale = 'no'
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
@@ -12,6 +13,9 @@ exports.createPages = async ({ graphql, actions }) => {
       edges {
         node {
           id
+          _fl_meta_ {
+            fl_id
+          }
           slug
           thumbnail {
             url
@@ -28,6 +32,9 @@ exports.createPages = async ({ graphql, actions }) => {
     allFlamelinkArticleContent {
       edges {
         node {
+          _fl_meta_ {
+            fl_id
+          }
           flamelink_locale
           flamelink_id
           id
@@ -35,6 +42,9 @@ exports.createPages = async ({ graphql, actions }) => {
             content
           }
           parentContent {
+            _fl_meta_ {
+              fl_id
+            }
             id
             slug
           }
@@ -94,6 +104,9 @@ exports.createPages = async ({ graphql, actions }) => {
     allFlamelinkFrontPageContent {
       edges {
         node {
+          _fl_meta_ {
+            fl_id
+          }
           flamelink_id
           flamelink_locale
           headerFocusWord
@@ -118,103 +131,193 @@ exports.createPages = async ({ graphql, actions }) => {
     return
   }
 
-  const defaultLocale = 'no'
 
-  // Create menu content
-  var menuListingPages = new Map()
-  result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
-    let locale = node.flamelink_locale
-    if (!Array.from(menuListingPages.keys()).includes(locale)) {
-      menuListingPages.set(locale, new Array())
+  // Helper class to map paths in different locales
+  class TreeNode {
+    constructor(id, parent = null) {
+      this.id = id;
+      this.parent = parent;
+      this.children = new Map();
+      this.slugs = new Map();
     }
-    menuListingPages.get(locale).push({
-      title: node.localTitle,
-      slug: node.slug,
-      locale: node.flamelink_locale,
-    })
-  })
-  const menuLogoUrl = result.data.allFlamelinkFrontPageContent.edges[0].node.imageDeck
-    .find(function (img) { return img.title === "Logo" }).image[0].url
-
-  function layoutContext(locale) {
-    return {
-      menuData: menuListingPages.get(locale),
-      logoUrl: menuLogoUrl,
-      locale: locale,
+    addChild(treeNode) {
+      this.children.set(treeNode.id, treeNode)
+    }
+    addChildSlug(id, locale, slug) {
+      if (!this.children.has(id)) {
+        this.addChild(new TreeNode(id, this))
+      }
+      this.children.get(id).setSlug(locale, slug)
+    }
+    getChild(id) {
+      return this.children.get(id)
+    }
+    setSlug(locale, slug) {
+      this.slugs.set(locale, slug)
+    }
+    getSlug(locale) {
+      return this.slugs.get(locale)
+    }
+    getPath(locale) {
+      let slug = this.getSlug(locale)
+      if (this.parent == null) {
+        return `/${slug}${(slug === '') ? '' : '/'}`
+      }
+      else {
+        return `${this.parent.getPath(locale)}${slug}/`
+      }
+    }
+    getLocalizedPaths() {
+      let paths = new Map()
+      Array.from(this.slugs.keys()).forEach(key => {
+        paths.set(key.split('-')[0], this.getPath(key))
+      })
+      return Array.from(paths).reduce((obj, [key, value]) => {
+        obj[key] = value;
+        return obj;
+      }, {});
     }
   }
 
 
-  // Create Front Page
+
+
+  let root;
+
   result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
+    const id = node._fl_meta_.fl_id
+    const locale = node.flamelink_locale
+    const slug = (locale === defaultLocale) ? '' : locale.split('-')[0]
+
+    // Set frontpage as root of tree
+    if (!root) {
+      root = new TreeNode(id)
+    }
+    root.setSlug(locale, slug)
+  })
+
+  result.data.allFlamelinkListingPageContent.edges.map(({ node }) =>
+    root.addChildSlug(node._fl_meta_.fl_id, node.flamelink_locale, node.slug)
+  )
+
+  result.data.allFlamelinkArticleContent.edges.map(({ node }) =>
+    root.getChild(node.parentContent._fl_meta_.fl_id).addChildSlug(node._fl_meta_.fl_id, node.flamelink_locale, node.slug)
+  )
+
+  function getListingPagePath(id, locale) {
+    return root.getChild(id).getPath(locale)
+  }
+
+
+
+
+
+
+  // Generate menu data for every locale
+  var menuListingPages = new Map()
+  result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
 
     const locale = node.flamelink_locale
-    const localizedPath = (locale === defaultLocale) ? '/' : `/${locale.split('-')[0]}/`
+
+    if (!menuListingPages.has(locale)) {
+      menuListingPages.set(locale, new Array())
+    }
+
+    menuListingPages.get(locale).push({
+      title: node.localTitle,
+      slug: node.slug,
+      locale: locale,
+      path: getListingPagePath(node._fl_meta_.fl_id, locale)
+    })
+  })
+
+  // Menu logo is universal for every page
+  const menuLogoUrl = result.data.allFlamelinkFrontPageContent.edges[0].node.imageDeck
+    .find(function (img) { return img.title === "Logo" }).image[0].url
+
+
+
+  function layoutContext(locale, localizedPaths) {
+    console.log(localizedPaths)
+    return {
+      menuData: menuListingPages.get(locale),
+      logoUrl: menuLogoUrl,
+      locale: locale,
+      localizedPaths: localizedPaths, // Paths to the same page for different locales
+    }
+  }
+
+
+  // Create front page
+  result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
+    const locale = node.flamelink_locale
 
     const listingPages = result.data.allFlamelinkListingPageContent.edges.filter(({ node }) => {
       return node.flamelink_locale === locale
-    }).map(node => node.node)
+    }).map(node => {
+      createListingPage(node.node)
+      return node.node
+    })
 
     createPage({
-      path: localizedPath,
+      path: root.getPath(locale),
       component: path.resolve(`./src/templates/home.js`),
       context: {
         node: node,
-        slugLocale: (locale === defaultLocale) ? '' : `${locale.split('-')[0]}/`,
+        slug: root.getSlug(locale),
         listingPages: listingPages,
-        layoutContext: layoutContext(locale)
+        layoutContext: layoutContext(locale, root.getLocalizedPaths())
       }
     })
   })
 
-  // Create Listing Pages
-  result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
 
-    const nodeSlug = node.slug;
-    const nodeTitle = node.localTitle
+  function createListingPage(node) {
+
+    const id = node._fl_meta_.fl_id
+    const slug = node.slug;
     const locale = node.flamelink_locale
-    const localizedPath = ((locale === defaultLocale) ? '/' : `/${locale.split('-')[0]}/`) + nodeSlug
-    const slugLocale = ((locale === defaultLocale) ? '' : `${locale.split('-')[0]}/`)
+
     var tags = []
 
     // Create Article Pages
     var articles = result.data.allFlamelinkArticleContent.edges
-      .filter(({ node }) => node.parentContent.slug === nodeSlug)
+      .filter(({ node }) => node.parentContent.slug === slug)
       .map(node => node.node)
       .map(node => {
 
         tags = tags.concat(node.tags)
 
         createPage({
-          path: localizedPath + "/" + node.slug,
+          path: root.getChild(id).getChild(node._fl_meta_.fl_id).getPath(node.flamelink_locale),
           component: path.resolve('./src/templates/article.js'),
           context: {
             // Pass context data here (Remove queries from article.js)
             defaultCenter: { lat: 63.430529, lng: 10.4005522 },
             localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
             node: node,
-            layoutContext: layoutContext(locale),
+            layoutContext: layoutContext(locale, root.getChild(id).getChild(node._fl_meta_.fl_id).getLocalizedPaths()),
             locale: locale,
           }
         })
         return node
       })
 
+
     // Create Listing Page
     tags = [...new Set(tags)]
     createPage({
-      path: localizedPath,
+      path: root.getChild(id).getPath(locale),
       component: path.resolve(`./src/templates/listing-page.js`),
       context: {
         node: node,
-        slugLocale: slugLocale,
+        parentPath: root.getPath(locale),
         tags: tags,
         articles: articles,
         localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
         locale: locale,
-        layoutContext: layoutContext(locale),
+        layoutContext: layoutContext(locale, root.getChild(id).getLocalizedPaths()),
       },
     })
-
-  })
+  }
 }
