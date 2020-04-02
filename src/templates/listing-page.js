@@ -53,7 +53,7 @@ const ListingPage = ({ pageContext }) => {
             {pageContext.articles.map(function (node, key) {
               return (
                 <div class="article-container">
-                  <Img className="article-thumbnail" fluid={node.thumbnail[0].localFile.childImageSharp.fluid} />
+                  <Img className="article-thumbnail" fluid={node.thumbnail[0]?.localFile.childImageSharp.fluid} />
                   <div class="article-info-container">
                     <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.title}</Link></h2>
                     <div class="tags-container">
