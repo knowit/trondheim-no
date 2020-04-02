@@ -54,7 +54,7 @@ const ListingPage = ({ pageContext }) => {
                 <div class="article-container">
                   <div class="article-thumbnail" style={{ backgroundImage: "url(" + node.thumbnail[0]?.url + ")" }}></div>
                   <div class="article-info-container">
-                    <h2><a href={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.title}</a></h2>
+                    <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.title}</Link></h2>
                     <div class="tags-container">
                       {node.tags.map(function (tag, key) {
                         return (
