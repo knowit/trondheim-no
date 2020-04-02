@@ -21,12 +21,6 @@ export default ({ layoutContext }) => {
   }
   `)
 
-
-  function test() {
-    console.log(data)
-    return data.file.childImageSharp.fluid
-  }
-
   return <div class="navigation-container">
 
     <BurgerMenu layoutContext={layoutContext}></BurgerMenu>
@@ -35,7 +29,7 @@ export default ({ layoutContext }) => {
       <Link id="trondheimno-link" to={(layoutContext.locale === 'no') ? '/' : `/${layoutContext.locale.split('-')[0]}/`}>TRONDHEIM.NO</Link>
 
       <div class="logo">
-        <Img fluid={test(data)} alt="Trondheim logo" />
+        <Img fluid={data.file.childImageSharp.fluid} alt="Trondheim logo" />
       </div>
     </div>
   </div>
