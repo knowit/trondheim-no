@@ -1,7 +1,8 @@
 // this is the service worker which intercepts all http requests
+/*
 self.addEventListener('fetch', function fetcher(event) {
   var request = event.request;
-  // check if request 
+  // check if request
   if (request.url.indexOf('storage.googleapis.com') > -1) {
     // asset detected
     event.respondWith(
@@ -13,3 +14,5 @@ self.addEventListener('fetch', function fetcher(event) {
   }
   // otherwise: ignore event
 });
+
+*/
