@@ -68,10 +68,8 @@ const ListingPage = ({ pageContext }) => {
                 </div>
               )
             })}
-
           </div>
         </div>
-
       </div>
     </Layout>
   )
