@@ -3,6 +3,7 @@ import "../style/listing-page.css"
 import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
 import { Link } from "gatsby"
+import Img from "gatsby-image"
 
 
 const ListingPage = ({ pageContext }) => {
@@ -52,7 +53,7 @@ const ListingPage = ({ pageContext }) => {
             {pageContext.articles.map(function (node, key) {
               return (
                 <div class="article-container">
-                  <div class="article-thumbnail" style={{ backgroundImage: "url(" + node.thumbnail[0]?.url + ")" }}></div>
+                  <Img className="article-thumbnail" fluid={node.thumbnail[0].localFile.childImageSharp.fluid} />
                   <div class="article-info-container">
                     <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.title}</Link></h2>
                     <div class="tags-container">

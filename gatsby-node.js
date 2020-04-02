@@ -59,7 +59,13 @@ exports.createPages = async ({ graphql, actions }) => {
           title
           tags
           thumbnail {
-            url
+            localFile {
+              childImageSharp {
+                fluid (quality: 90) {
+                  src
+                }
+              }
+            }
           }
           content {
             content
