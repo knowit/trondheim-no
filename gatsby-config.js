@@ -69,9 +69,8 @@ module.exports = {
       resolve: `gatsby-plugin-offline`,
       options: {
         precachePages: [`/*`],
-        workboxConfig: {
-          globPatterns: ['**/*']
-        }
+        appendScript: require.resolve(`sw.js`),
+        importWorkboxFrom: `cdn`,
       },
     },
   ],
