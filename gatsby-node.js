@@ -18,7 +18,14 @@ exports.createPages = async ({ graphql, actions }) => {
           }
           slug
           thumbnail {
-            url
+            localFile {
+              name
+              childImageSharp {
+                fluid(quality: 90) {
+                  src
+                }
+              }
+            }
           }
           flamelink_id
           flamelink_locale

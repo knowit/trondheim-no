@@ -21,6 +21,7 @@ export default ({ layoutContext }) => {
   }
   `)
 
+
   return <div class="navigation-container">
 
     <BurgerMenu layoutContext={layoutContext}></BurgerMenu>

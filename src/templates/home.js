@@ -3,10 +3,7 @@ import "../style/index.css"
 import Layout from "../layouts/layout"
 import { Link, useStaticQuery, graphql } from "gatsby"
 import BackgroundImage from 'gatsby-background-image'
-
-
-
-
+import Img from 'gatsby-image'
 
 export default ({ pageContext }) => {
   const data = useStaticQuery(graphql`
@@ -47,9 +44,9 @@ export default ({ pageContext }) => {
           {pageContext.listingPages.map(function (node, { key }) {
             return (
               <div class="navigation-box-container">
-                <div class="navigation-box-thumbnail" style={{
-                  backgroundImage: "url(" + node.thumbnail[0]?.url + ")"
-                }}></div>
+                <Img className="navigation-box-thumbnail"
+                  fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
+                  alt="thumbnail" />
                 <h2><Link class="navigation-box-title" to={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>{node.navigationTitle}</Link></h2>
                 <h4>{node.navigationSubtitle}</h4>
               </div>
