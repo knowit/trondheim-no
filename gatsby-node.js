@@ -78,6 +78,8 @@ exports.createPages = async ({ graphql, actions }) => {
           }
           address {
             address
+            lat
+            lng
           }
           latLong {
             latitude
