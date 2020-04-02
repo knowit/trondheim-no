@@ -1,6 +1,7 @@
 import React from "react"
 import "../style/index.css"
 import Layout from "../layouts/layout"
+import { Link } from "gatsby"
 
 
 const HomePage = ({ pageContext }) => {
@@ -35,7 +36,7 @@ const HomePage = ({ pageContext }) => {
                   <div class="navigation-box-thumbnail" style={{
                     backgroundImage: "url(" + node.thumbnail[0]?.url + ")"
                   }}></div>
-                  <h2><a class="navigation-box-title" href={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>{node.navigationTitle}</a></h2>
+                  <h2><Link class="navigation-box-title" to={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>{node.navigationTitle}</Link></h2>
                   <h4>{node.navigationSubtitle}</h4>
                 </div>
               )
