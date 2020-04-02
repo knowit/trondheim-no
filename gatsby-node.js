@@ -18,7 +18,14 @@ exports.createPages = async ({ graphql, actions }) => {
           }
           slug
           thumbnail {
-            url
+            localFile {
+              name
+              childImageSharp {
+                fluid(quality: 90) {
+                  src
+                }
+              }
+            }
           }
           flamelink_id
           flamelink_locale
@@ -52,7 +59,13 @@ exports.createPages = async ({ graphql, actions }) => {
           title
           tags
           thumbnail {
-            url
+            localFile {
+              childImageSharp {
+                fluid (quality: 90) {
+                  src
+                }
+              }
+            }
           }
           content {
             content
@@ -64,9 +77,11 @@ exports.createPages = async ({ graphql, actions }) => {
             linkToWebsite
           }
           address {
-            lat
-            lng
             address
+          }
+          latLong {
+            latitude
+            longitude
           }
         }
       }
@@ -116,6 +131,13 @@ exports.createPages = async ({ graphql, actions }) => {
             title
             image {
               url
+              localFile {
+                childImageSharp {
+                  fluid {
+                    base64
+                  }
+                }
+              }
             }
           }
           navigationText
@@ -231,16 +253,10 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   })
 
-  // Menu logo is universal for every page
-  const menuLogoUrl = result.data.allFlamelinkFrontPageContent.edges[0].node.imageDeck
-    .find(function (img) { return img.title === "Logo" }).image[0].url
-
-
 
   function layoutContext(locale, localizedPaths) {
     return {
       menuData: menuListingPages.get(locale),
-      logoUrl: menuLogoUrl,
       locale: locale,
       localizedPaths: localizedPaths, // Paths to the same page for different locales
     }

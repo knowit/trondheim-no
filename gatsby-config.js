@@ -31,7 +31,6 @@ module.exports = {
         globals: true
       }
     },
-    'gatsby-plugin-offline',
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -43,6 +42,7 @@ module.exports = {
         theme_color: `#000000`,
         display: `standalone`,
         scope: '/',
+        cache_busting_mode: 'none',
         icons: [
           {
             src: `images/logo192.png`,
@@ -63,6 +63,15 @@ module.exports = {
             short_name: `Trondheim.no`,
           },
         ],
+      },
+    },
+    {
+      resolve: `gatsby-plugin-offline`,
+      options: {
+        precachePages: [`/*`],
+        workboxConfig: {
+          globPatterns: ['**/*']
+        }
       },
     },
   ],
