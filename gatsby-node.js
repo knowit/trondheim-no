@@ -238,7 +238,6 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
   function layoutContext(locale, localizedPaths) {
-    console.log(localizedPaths)
     return {
       menuData: menuListingPages.get(locale),
       logoUrl: menuLogoUrl,
