@@ -4,11 +4,11 @@ import styles from "../style/map.module.css"
 
 class Map extends Component {
 
-    getGoogleLink(trueIfAddress) {
+    getGoogleLink() {
         var address = this.props.address;
         var location = this.props.location;
         var baseURL = "https://www.google.com/maps/search/?api=1"
-        if (trueIfAddress) {
+        if (this.props.address) {
             return baseURL + "&query=" + encodeURI(address);
         } else {
             return baseURL + "&query=" + location.lat + "," + location.lng;
@@ -18,11 +18,14 @@ class Map extends Component {
     createPersistentGoogleLink() {
         if (this.props.persistentDisabled) return "";
         else {
-            return <a href={this.getGoogleLink(true)} style={{ width: '68px', height: '26px', cursor: 'pointer', marginLeft: '5px', marginRight: '5px', position: "absolute", left: "0", bottom: "0", zIndex: "1000001" }}></a>
+            return <a href={this.getGoogleLink()} style={{ width: '68px', height: '26px', cursor: 'pointer', marginLeft: '5px', marginRight: '5px', position: "absolute", left: "0", bottom: "0", zIndex: "1000001" }}></a>
         }
     }
 
     render() {
+
+        if(!this.props.location) return "";
+
         const MapView = withScriptjs(withGoogleMap(props => (
             <div style={{ position: "relative" }}>
                 {this.createPersistentGoogleLink()}

@@ -8,6 +8,9 @@ import LocalizationHelper from "../helpers/helpers"
 const ReactMarkdown = require("react-markdown")
 
 function ContactInfo(props) {
+
+  if(!props.node.contactInfo) return "";
+
   const elements = [];
   var locale = props.locale;
   if (props.node.contactInfo.emailAddress) {
@@ -47,6 +50,22 @@ function OpeningHours(props) {
   else return "";
 }
 
+function GetLocation(pageContext) {
+  if(pageContext.node.latLong && pageContext.node.latLong.latitude && pageContext.node.latLong.longitude) {
+    console.log({lat: Number(pageContext.node.latLong.latitude), lng: Number(pageContext.node.latLong.longitude)})
+    return {lat: Number(pageContext.node.latLong.latitude), lng: Number(pageContext.node.latLong.longitude)};
+  }
+  if(pageContext.node.address && pageContext.node.address.lat && pageContext.node.address.lng) {
+    return {lat: pageContext.node.address.lat, lng: pageContext.node.address.lng};
+  }
+  return false;
+}
+
+function GetAddress(pageContext) {
+  if(pageContext.node.address && pageContext.node.address.address) return pageContext.node.address.address;
+  return false;
+}
+
 const Article = ({ pageContext }) => {
   console.log(pageContext);
   return (
@@ -55,10 +74,10 @@ const Article = ({ pageContext }) => {
       <div id="outer-container">
         <div id="inner-container">
           <h2>{pageContext.node.title}</h2>
-          <ReactMarkdown source={pageContext.node.content.content}></ReactMarkdown>
+          {pageContext.node.content && <ReactMarkdown source={pageContext.node.content.content}></ReactMarkdown>}
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale}/>
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
-          <Map location={{ lat: pageContext.node.address.lat, lng: pageContext.node.address.lng }} address={pageContext.node.address.address} persistentDisabled={false} />
+          <Map location={GetLocation(pageContext)} address={GetAddress(pageContext)} persistentDisabled={false} />
         </div>
       </div>
     </Layout>
