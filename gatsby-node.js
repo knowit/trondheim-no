@@ -116,6 +116,13 @@ exports.createPages = async ({ graphql, actions }) => {
             title
             image {
               url
+              localFile {
+                childImageSharp {
+                  fluid {
+                    base64
+                  }
+                }
+              }
             }
           }
           navigationText
@@ -231,10 +238,13 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   })
 
+  /*
   // Menu logo is universal for every page
   const menuLogoUrl = result.data.allFlamelinkFrontPageContent.edges[0].node.imageDeck
     .find(function (img) { return img.title === "Logo" }).image[0].url
+    */
 
+  const menuLogoUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAIAAAAC64paAAAACXBIWXMAAAsSAAALEgHS3X78AAADPElEQVQ4y2VUS2sTURS+aTImkyaZJNWkSZrJpJ07iaAu1EqpCxEt6Kq46sad4M4f0ZXgAwotQq3io5VWEDeCi4rFotUq6krrqyL4rJmbZ01mMpPJeO5kah/CZTh3zvnu+c53zr2IJDFJita3ZYiEF4nQQwSRJDBJiNQQMOHxWsz6QhvAa8gIlgOZnCdbGkyWjvFgyFyWRCTqSm46BdkWj+UY5MFyVCoe4Wvnw5WhhDIaUkbClVMx5VKwOMDLUSsgto5H9mExqbA/nd/dXexNG9+cpolgAVKdCLbs5k9nYR8NKPQJxMaLyKKKSRwX9qbVW37lStBUkUkcpo60eVZ76DU1a6sg9QYHK7+r2wKL/zKLwBbAygRXHd5hfGTMOjKrqPHa3XjuMWsIto2lbbWzHeq0H4qSO6U1cArLEak0wDeBbRUZ75j67YDxlTLXn7D6nBcM47tTnQkYbxl60KqjPBSXOzIkBbQFEbRVxkO0NtkBSWjoNU574FUnOfU611j0qJOB5g8npQMBJlKnODksAZCCc2ymcjpGwRplC4b2yKvd9ZlFh1lwqFMBfZGlXnCp1Lt6JppjsxY4IZaO8lCPMhbU51h90QMiQWag14purlAi+it344VbX/CArYyESsd5aBuAcXmwCxqrjIX0Zx7diqhP+5slqjBwMb65VFDhPWMsM8YSo816adsPChYYaLuzlZNxSqxu09afsvU7/ubvtuavNhgV/aWHeldtb3V4e87bop0WZX+mdjFM3YQKBrJr93yNN4xyOQiCGR8Y9SZnfHaZBqIqgGCTIBio3WoVjOShlPHJZf5BQA+QUCfNP8/qj6lUzVxbfToARZl5h7HsKkGrI9gC20OC83u6YRhrF8J0PKGfCqISLLC0cgUZX1y1c2Hgkt/ZA8msIRFtMEwczLYyHgQ3pZdzwLd+v12bbTcbVns1pM74YcIK/QLp3AS2ZzuPxcKBdGu8YLahK+pVDgzKfMVZ7BPyaVzoTa9djA1Xkv7qsuo/nAL9yido/2CVhxK1UetKQsIuTLZeyY3vAfCJSrI/K/sycPuK/YLsy8qB1mOAtzw7/4FbEsDTkxJJXIJyqCGI9jOyCYz/Ai1cV2aIPvNoAAAAAElFTkSuQmCC'
 
 
   function layoutContext(locale, localizedPaths) {
