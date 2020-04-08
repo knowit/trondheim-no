@@ -47,6 +47,9 @@ exports.createPages = async ({ graphql, actions }) => {
           id
           openingHours {
             content
+            childMdx {
+              body
+            }
           }
           parentContent {
             _fl_meta_ {
@@ -69,6 +72,9 @@ exports.createPages = async ({ graphql, actions }) => {
           }
           content {
             content
+            childMdx {
+              body
+            }
           }
           contactInfo {
             emailAddress
