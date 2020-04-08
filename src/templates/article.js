@@ -4,7 +4,7 @@ import styles from "../style/article.module.css"
 import Map from "../components/map.js"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
-import { MDXRenderer } from "gatsby-plugin-mdx"
+import { MDXRenderer } from "gatsby-mdx-fix"
 import { MDXProvider } from "@mdx-js/react"
 import { Online } from "react-detect-offline"
 
@@ -47,7 +47,7 @@ function OpeningHours(props) {
     elements.push(<h3 className={styles.subheading}>{LocalizationHelper.getLocalWord(props.localization, "openingHours", locale)}</h3>);
     elements.push(
       <MDXProvider>
-        <MDXRenderer title="Article">{props.node.openingHours.childMdx.body}</MDXRenderer>
+        <MDXRenderer title="Article">{props.node.openingHours.childMdx.code.body}</MDXRenderer>
       </MDXProvider>
     )
   }
@@ -80,7 +80,7 @@ const Article = ({ pageContext }) => {
         <div id="inner-container">
           <h2>{pageContext.node.title}</h2>
           <MDXProvider>
-            <MDXRenderer title="Article">{pageContext.node.content.childMdx.body}</MDXRenderer>
+            <MDXRenderer title="Article">{pageContext.node.content.childMdx.code.body}</MDXRenderer>
           </MDXProvider>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />

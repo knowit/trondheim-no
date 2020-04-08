@@ -15,7 +15,7 @@ module.exports = {
     `gatsby-plugin-sharp`,
     `gatsby-remark-images`,
     {
-      resolve: `gatsby-plugin-mdx`,
+      resolve: `gatsby-mdx-fix`,
       options: {
         extensions: ['.mdx', '.md'],
         gatsbyRemarkPlugins: [
@@ -29,6 +29,7 @@ module.exports = {
         ],
       },
     },
+    `gatsby-mdx-fix`,
     {
       resolve: `gatsby-remark-images`,
       options: {
@@ -104,7 +105,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-offline`,
       options: {
-        precachePages: [`/*`],
+        precachePages: [`/*`, `/images/*`],
         workboxConfig: {
           globPatterns: ['**/*']
         }

@@ -48,7 +48,9 @@ exports.createPages = async ({ graphql, actions }) => {
           openingHours {
             content
             childMdx {
-              body
+              code{
+                body
+              }
             }
           }
           parentContent {
@@ -73,7 +75,9 @@ exports.createPages = async ({ graphql, actions }) => {
           content {
             content
             childMdx {
-              body
+              code{
+                body
+              }
             }
           }
           contactInfo {
