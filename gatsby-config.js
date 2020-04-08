@@ -11,40 +11,36 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [
+          `gatsby-remark-relative-images`,
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 800,
+              linkImagesToOriginal: false,
+              sizeByPixelDensity: true,
+              showCaptions: true
+            }
+          },
+        ]
+      }
+    },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    `gatsby-remark-images`,
     {
       resolve: `gatsby-mdx-fix`,
       options: {
         extensions: ['.mdx', '.md'],
         gatsbyRemarkPlugins: [
+          `gatsby-remark-relative-images`,
           {
             resolve: `gatsby-remark-images`,
             options: {
               maxWidth: 860,
               backgroundColor: 'none',
-            },
-          },
-        ],
-      },
-    },
-    `gatsby-mdx-fix`,
-    {
-      resolve: `gatsby-remark-images`,
-      options: {
-        maxWidth: 860,
-        backgroundColor: 'none',
-      },
-    },
-    {
-      resolve: `gatsby-transformer-remark`,
-      options: {
-        plugins: [
-          {
-            resolve: `gatsby-remark-images`,
-            options: {
-              maxWidth: 800,
             },
           },
         ],
@@ -105,7 +101,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-offline`,
       options: {
-        precachePages: [`/*`, `/images/*`],
+        precachePages: [`/*`],
         workboxConfig: {
           globPatterns: ['**/*']
         }
