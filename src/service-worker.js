@@ -1,12 +1,14 @@
-workbox.routing.registerRoute(
-  new RegExp('^https://trondheim.no/images/'),
-  new workbox.strategies.CacheFirst({
-    cacheName: 'image-cache',
+import { registerRoute } from 'workbox-routing';
+import { NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+
+registerRoute(
+  'https://trondheim.no/images/*',
+  new CacheFirst({
     plugins: [
-      new workbox.cacheableResponse.Plugin({
-        statuses: [0, 200],
+      new CacheableResponsePlugin({
+        statuses: [0, 200]
       })
     ]
-  })
+  }),
 );
-

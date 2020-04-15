@@ -39,7 +39,11 @@
     "react-helmet": "^5.2.1",
     "react-typography": "^0.16.19",
     "typography": "^0.16.19",
-    "typography-theme-kirkham": "^0.16.19"
+    "typography-theme-kirkham": "^0.16.19",
+    "workbox-cacheable-response": "^5.1.2",
+    "workbox-precaching": "^5.1.2",
+    "workbox-routing": "^5.1.2",
+    "workbox-strategies": "^5.1.2"
   },
   "devDependencies": {
     "prettier": "^1.19.1"
