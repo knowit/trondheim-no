@@ -1,5 +1,5 @@
 
-var cacheNames = ['precache-v2'];
+var cacheNames = ['gatsby-plugin-offline-precache-v2'];
 var urlsToPrefetch = [
   'https://www.trondheim.no/images/severdig/bryggene-2.png',
   'https://www.trondheim.no/images/severdig/bryggene-3.png'
