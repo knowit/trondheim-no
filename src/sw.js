@@ -1,4 +1,10 @@
 
+// Force development builds
+workbox.setConfig({ debug: true });
+// The most verbose - displays all logs.
+workbox.core.setLogLevel(workbox.core.LOG_LEVELS.debug);
+
+
 var cacheNames = ['external-resources'];
 var urlsToPrefetch = [
   'https://www.trondheim.no/images/severdig/bryggene-2.png',
