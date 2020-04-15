@@ -6,15 +6,24 @@ var static_urls = [
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
+
     caches.open('external-cache').then(function (cache) {
+
       cache.addAll(static_urls.map(function (urlToPrefetch) {
         console.log(urlToPrefetch);
-        return new Request(urlToPrefetch, { mode: 'cors' });
-      })).catch(function (error) {
-        console.error(error);
-      }).then(function () {
-        console.log('All fetched and cached');
-      });
+        return new Request(urlToPrefetch, { mode: 'no-cors' });
+      }))
+
+        .catch(function (error) {
+          console.error(error);
+        })
+
+        .then(function () {
+          console.log('All fetched and cached');
+        });
+
+
+
     })
   );
 });
