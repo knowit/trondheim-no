@@ -1,6 +1,3 @@
-import { registerRoute } from 'workbox-routing';
-import { CacheFirst } from 'workbox-strategies';
-import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 var cacheNames = ['external-resources'];
 var urlsToPrefetch = [
@@ -8,18 +5,6 @@ var urlsToPrefetch = [
   'https://www.trondheim.no/images/severdig/bryggene-2.png',
   'https://www.trondheim.no/images/severdig/bryggene-3.png'
 ];
-
-registerRoute(
-  new RegExp('^https://www\\.trondheim\\.no/images/'),
-  new CacheFirst({
-    cacheName: 'external-resources',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      })
-    ]
-  })
-);
 
 
 self.addEventListener('install', function (event) {
