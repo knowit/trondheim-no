@@ -6,7 +6,7 @@ self.addEventListener('install', function (event) {
       console.log("Cached stuff")
       return cache.addAll(
         [
-          'https://trondheim.no/images/severdig/bryggene-2.png',
+          '^https://trondheim.no/images/severdig/bryggene-2.png',
         ]
       );
     }
