@@ -1,8 +1,8 @@
 
-var cacheNames = ['v1'];
+var cacheNames = ['precache-v2'];
 var urlsToPrefetch = [
-  'https://trondheim.no/images/severdig/bryggene-2.png',
-  'https://trondheim.no/images/severdig/bryggene-3.png'
+  'https://www.trondheim.no/images/severdig/bryggene-2.png',
+  'https://www.trondheim.no/images/severdig/bryggene-3.png'
 ];
 
 self.addEventListener('install', function (event) {
