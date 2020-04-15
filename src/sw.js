@@ -2,9 +2,9 @@
 
 var cacheNames = ['external-resources'];
 var urlsToPrefetch = [
-  '^https://firebasestorage.googleapis.com/v0/b/trondheimno-demo.appspot.com/o/flamelink%2Fmedia%2Fbryggene-1.png?alt=media&token=d9969a07-2c01-49dd-8b55-47c03327704c',
-  '^https://www.trondheim.no/images/severdig/bryggene-2.png',
-  '^https://www.trondheim.no/images/severdig/bryggene-3.png'
+  'https://firebasestorage.googleapis.com/v0/b/trondheimno-demo.appspot.com/o/flamelink%2Fmedia%2Fbryggene-1.png?alt=media&token=d9969a07-2c01-49dd-8b55-47c03327704c',
+  'https://www.trondheim.no/images/severdig/bryggene-2.png',
+  'https://www.trondheim.no/images/severdig/bryggene-3.png'
 ];
 
 self.addEventListener('install', function (event) {
