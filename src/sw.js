@@ -1,6 +1,4 @@
 
-var fetch = require("node-fetch")
-
 var cacheNames = ['external-resources'];
 var urlsToPrefetch = [
   'https://firebasestorage.googleapis.com/v0/b/trondheimno-demo.appspot.com/o/flamelink%2Fmedia%2Fbryggene-1.png?alt=media&token=d9969a07-2c01-49dd-8b55-47c03327704c',
