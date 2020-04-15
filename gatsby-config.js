@@ -47,6 +47,13 @@ module.exports = {
       },
     },
     {
+      resolve: `gatsby-plugin-remote-images`,
+      options: {
+        nodeType: 'allFile',
+        imagePath: 'edges[].node.url',
+      },
+    },
+    {
       resolve: 'gatsby-source-flamelink',
       options: {
         firebaseConfig: {
@@ -104,7 +111,8 @@ module.exports = {
         precachePages: [`/*`],
         workboxConfig: {
           globPatterns: ['**/*']
-        }
+        },
+        appendScript: require.resolve(`./src/service-worker.js`),
       },
     },
   ],
