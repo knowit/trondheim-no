@@ -1,5 +1,5 @@
 
-var cacheNames = ['gatsby-plugin-offline-precache-v2-https://admiring-fermi-e03981.netlify.com/'];
+var cacheNames = ['external-resources'];
 var urlsToPrefetch = [
   'https://www.trondheim.no/images/severdig/bryggene-2.png',
   'https://www.trondheim.no/images/severdig/bryggene-3.png'
@@ -13,7 +13,7 @@ self.addEventListener('install', function (event) {
 
       urlsToPrefetch.map(function (urlToPrefetch) {
         console.log(urlToPrefetch);
-        const request = new Request(urlToPrefetch, { mode: 'no-cors' });
+        const request = new Request(urlToPrefetch, { mode: 'cors' });
         // Assume `cache` is an open instance of the Cache class.
         fetch(request).then(response => cache.put(request, response));
       })
