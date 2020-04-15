@@ -1,38 +1,23 @@
 
 
-var cacheNames = ['external-resources'];
+var CACHE_NAME = 'my-site-cache-v1';
 var urlsToPrefetch = [
   'https://www.trondheim.no/images/severdig/bryggene-2.png',
   'https://www.trondheim.no/images/severdig/bryggene-3.png'
 ];
 
 self.addEventListener('install', function (event) {
+  // Perform install steps
   event.waitUntil(
-    caches.open(cacheNames).then(function (cache) {
-
-      console.log('Service Worker: Caching Files');
-
-      urlsToPrefetch.map(function (urlToPrefetch) {
-        console.log(urlToPrefetch);
-        const request = new Request(urlToPrefetch, { mode: 'no-cors' });
-        // Assume `cache` is an open instance of the Cache class.
-        fetch(request).then(response => cache.put(request, response));
+    caches.open(CACHE_NAME)
+      .then(function (cache) {
+        console.log('Opened cache');
+        // Magic is here. Look the  mode: 'no-cors' part.
+        cache.addAll(urlsToPrefetch.map(function (urlToPrefetch) {
+          return new Request(urlToPrefetch, { mode: 'no-cors' });
+        })).then(function () {
+          console.log('All resources have been fetched and cached.');
+        });
       })
-    })
-  );
-});
-
-self.addEventListener('fetch', function (event) {
-  console.log('Service Worker: Fetching');
-  event.respondWith(
-    caches.match(event.request)
-      .then(function (response) {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      }
-      )
   );
 });
