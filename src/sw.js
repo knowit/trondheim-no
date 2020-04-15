@@ -25,7 +25,7 @@ self.addEventListener('install', function (event) {
 self.addEventListener('fetch', function (event) {
   console.log('Service Worker: Fetching');
   event.respondWith(
-    caches.match("https://www.trondheim.no" + event.request)
+    caches.match(event.request)
       .then(function (response) {
         // Cache hit - return response
         if (response) {
