@@ -112,7 +112,7 @@ module.exports = {
         workboxConfig: {
           globPatterns: ['**/*']
         },
-        appendScript: require.resolve(`./src/service-worker.js`),
+        appendScript: require.resolve(`./src/sw.js`),
       },
     },
   ],
