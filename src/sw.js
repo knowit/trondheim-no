@@ -16,7 +16,14 @@ self.addEventListener('install', function (event) {
         console.log(urlToPrefetch);
         const request = new Request(urlToPrefetch, { mode: 'no-cors' });
         // Assume `cache` is an open instance of the Cache class.
-        fetch(request).then(response => {
+        fetch(urlToPrefetch, {
+          mode: 'no-cors',
+          method: 'GET',
+          headers: {
+            Accept: 'image/png',
+          },
+        },
+        ).then(response => {
           cache.put(request, response)
           console.log(response)
         });
