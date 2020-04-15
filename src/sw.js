@@ -1,29 +1,37 @@
 
-var static_urls = [
+var cacheNames = ['v1'];
+var urlsToPrefetch = [
   'https://trondheim.no/images/severdig/bryggene-2.png',
   'https://trondheim.no/images/severdig/bryggene-3.png'
 ];
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
+    caches.open(cacheNames).then(function (cache) {
 
-    caches.open('external-cache').then(function (cache) {
+      console.log('Service Worker: Caching Files');
 
-      cache.addAll(static_urls.map(function (urlToPrefetch) {
+      urlsToPrefetch.map(function (urlToPrefetch) {
         console.log(urlToPrefetch);
-        return new Request(urlToPrefetch, { mode: 'no-cors' });
-      }))
-
-        .catch(function (error) {
-          console.error(error);
-        })
-
-        .then(function () {
-          console.log('All fetched and cached');
-        });
-
-
-
+        const request = new Request(urlToPrefetch, { mode: 'no-cors' });
+        // Assume `cache` is an open instance of the Cache class.
+        fetch(request).then(response => cache.put(request, response));
+      })
     })
+  );
+});
+
+self.addEventListener('fetch', function (event) {
+  console.log('Service Worker: Fetching');
+  event.respondWith(
+    caches.match(event.request)
+      .then(function (response) {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      }
+      )
   );
 });
