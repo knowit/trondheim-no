@@ -23,7 +23,7 @@ self.addEventListener('install', function (event) {
 });
 
 self.addEventListener('fetch', function (event) {
-  console.log('Service Worker: Fetching');
+  console.log('Service Worker: Fetching ' + event.request);
   event.respondWith(
     caches.match(event.request)
       .then(function (response) {
