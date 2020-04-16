@@ -6,29 +6,44 @@ var urlsToPrefetch = [
   'https://www.trondheim.no/images/severdig/bryggene-3.png'
 ];
 
+const query = `
+  query{
+    allFlamelinkArticleContent{
+      edges{
+        node{
+          title
+        }
+      }
+    }
+  }
+`
+
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheNames).then(function (cache) {
+      fetch(`../__graphql?query=${query}`, { mode: 'no-cors' })
+        .then(response => console.log(response)).then(response => {
+          console.log('Service Worker: Caching Files');
 
-      console.log('Service Worker: Caching Files');
-
-      urlsToPrefetch.map(function (urlToPrefetch) {
-        console.log(urlToPrefetch);
-        const request = new Request(urlToPrefetch, { mode: 'no-cors' });
-        // Assume `cache` is an open instance of the Cache class.
-        fetch(urlToPrefetch, {
-          mode: 'no-cors',
-          method: 'GET',
-          headers: {
-            Accept: 'image/png',
-          },
-        },
-        ).then(response => {
-          cache.put(request, response)
-          console.log(response)
-        });
-      })
+          urlsToPrefetch.map(function (urlToPrefetch) {
+            console.log(urlToPrefetch);
+            const request = new Request(urlToPrefetch, { mode: 'no-cors' });
+            // Assume `cache` is an open instance of the Cache class.
+            fetch(urlToPrefetch, {
+              mode: 'no-cors',
+              method: 'GET',
+              headers: {
+                Accept: 'image/png',
+              },
+            },
+            ).then(response => {
+              cache.put(request, response)
+              console.log(response)
+            });
+          })
+        })
+        .catch(error => console.error(error));
     })
   );
 });
