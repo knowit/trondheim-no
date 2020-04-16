@@ -42,11 +42,11 @@ self.addEventListener('install', function (event) {
             .then(urlsToPrefetch => {
 
               urlsToPrefetch.map(function (urlToPrefetch) {
-                const request = new Request(urlToPrefetch, { mode: 'cors' });
+                const request = new Request(urlToPrefetch, { mode: 'no-cors' });
 
                 // Fetch individual google maps locations url and cache it
                 fetch(urlToPrefetch, {
-                  mode: 'cors',
+                  mode: 'no-cors',
                   method: 'GET',
                 },
                 ).then(response => {
