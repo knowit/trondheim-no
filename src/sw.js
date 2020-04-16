@@ -33,7 +33,7 @@ self.addEventListener('install', function (event) {
             }).then(_ => {
 
               fetch(`../external/locations.txt`, { mode: 'no-cors' })
-                .then(response => text())
+                .then(response => response.text())
                 .then(text => {
                   var object = JSON.parse(text)
                   object.map(entry => {
