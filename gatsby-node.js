@@ -160,6 +160,15 @@ exports.createPages = async ({ graphql, actions }) => {
         }
       }
     }
+
+    allMarkdownRemark {
+      edges {
+        node {
+          rawMarkdownBody
+        }
+      }
+    }
+
   }
   `)
 
@@ -168,8 +177,6 @@ exports.createPages = async ({ graphql, actions }) => {
     reporter.panicOnBuild(`Error while running GraphQL query.`)
     return
   }
-
-  var external_resources = ""
 
 
   // Helper class to map paths in different locales
@@ -221,12 +228,17 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
   function extract_image_urls(markdownBody) {
-    var result = markdownBody.match(/(?<=\!\[]\()(.*)(?=\))/g)
-    return result
+    var result = markdownBody.matchAll(/!\[[^\]]*\]\((?<filename>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g)
+
+    var array = []
+
+    let r = result.next()
+    while (!r.done) {
+      array.push(r.value.groups.filename)
+      r = result.next()
+    }
+    return array
   }
-
-
-
 
   let root;
 
@@ -287,6 +299,10 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
 
+
+  var external_resources = ""
+
+
   // Create front page
   result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
     const locale = node.flamelink_locale
@@ -323,8 +339,9 @@ exports.createPages = async ({ graphql, actions }) => {
       .filter(({ node }) => node.parentContent.slug === slug)
       .map(node => node.node)
       .map(node => {
-
+        // Check for external image urls in markdown body
         var urls = extract_image_urls(node.content.childMarkdownRemark.rawMarkdownBody)
+
         if (urls !== null) {
           urls.map(url => {
             external_resources = external_resources + `\n${url}`
@@ -364,9 +381,14 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   }
 
+
+
+  // Save all external resource urls to be precached by service worker
+
   fs.writeFile('./static/external/sources.txt', external_resources, (error) => {
     if (error) {
       throw error
     }
   })
+
 }
