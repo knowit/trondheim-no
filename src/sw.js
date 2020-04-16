@@ -6,17 +6,7 @@ var urlsToPrefetch = [
   'https://www.trondheim.no/images/severdig/bryggene-3.png'
 ];
 
-const query = `
-  query{
-    allFlamelinkArticleContent{
-      edges{
-        node{
-          title
-        }
-      }
-    }
-  }
-`
+const query = `query{allFlamelinkArticleContent{edges{node{title}}}}`
 
 
 self.addEventListener('install', function (event) {
