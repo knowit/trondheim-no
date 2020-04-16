@@ -16,12 +16,9 @@ self.addEventListener('install', function (event) {
         })
         .then(_ => {
 
-          console.log(urlsToPrefetch)
-
-          console.log('Service Worker: Caching Files');
+          console.log('Service Worker: Caching external resources');
 
           urlsToPrefetch.map(function (urlToPrefetch) {
-            console.log(urlToPrefetch);
             const request = new Request(urlToPrefetch, { mode: 'no-cors' });
             // Assume `cache` is an open instance of the Cache class.
             fetch(urlToPrefetch, {
@@ -33,7 +30,6 @@ self.addEventListener('install', function (event) {
             },
             ).then(response => {
               cache.put(request, response)
-              console.log(response)
             });
           })
         })
@@ -44,14 +40,11 @@ self.addEventListener('install', function (event) {
 
 self.addEventListener('fetch', function (event) {
   console.log('Service Worker: Fetching ');
-  console.log(event.request)
   event.respondWith(
     caches.match(event.request)
       .then(function (response) {
         // Cache hit - return response
         if (response) {
-          console.log("Response:")
-          console.log(response)
           return response;
         }
         return fetch(event.request);
