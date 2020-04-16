@@ -17,7 +17,9 @@ self.addEventListener('install', function (event) {
 
         .then(reader => {
 
-          console.log(reader.read())
+          reader.read().then(({ done, value }) => {
+            console.log(value)
+          })
 
         })
 
