@@ -17,7 +17,7 @@ self.addEventListener('install', function (event) {
 
         .then(text => {
 
-          console.log(text)
+          console.log(text.split('\n'))
 
         })
 
