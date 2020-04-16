@@ -12,8 +12,11 @@ const query = `query{allFlamelinkArticleContent{edges{node{title}}}}`
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheNames).then(function (cache) {
-      fetch(`../__graphql?query=${query}`, { mode: 'no-cors' })
+      fetch(`../external/sources.txt`, { mode: 'no-cors' })
         .then(response => console.log(response)).then(response => {
+
+          console.log(response)
+
           console.log('Service Worker: Caching Files');
 
           urlsToPrefetch.map(function (urlToPrefetch) {

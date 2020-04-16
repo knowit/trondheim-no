@@ -1,6 +1,7 @@
 
 // You can delete this file if you're not using it
 const path = require(`path`)
+const fs = require('fs')
 const defaultLocale = 'no'
 
 exports.createPages = async ({ graphql, actions }) => {
@@ -78,6 +79,9 @@ exports.createPages = async ({ graphql, actions }) => {
               code{
                 body
               }
+            }
+            childMarkdownRemark{
+              rawMarkdownBody
             }
           }
           contactInfo {
@@ -165,6 +169,8 @@ exports.createPages = async ({ graphql, actions }) => {
     return
   }
 
+  var external_resources = ""
+
 
   // Helper class to map paths in different locales
   class TreeNode {
@@ -211,6 +217,12 @@ exports.createPages = async ({ graphql, actions }) => {
         return obj;
       }, {});
     }
+  }
+
+
+  function extract_image_urls(markdownBody) {
+    var result = markdownBody.match(/(?<=\!\[]\()(.*)(?=\))/g)
+    return result
   }
 
 
@@ -298,7 +310,6 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   })
 
-
   function createListingPage(node) {
 
     const id = node._fl_meta_.fl_id
@@ -313,8 +324,14 @@ exports.createPages = async ({ graphql, actions }) => {
       .map(node => node.node)
       .map(node => {
 
-        tags = tags.concat(node.tags)
+        var urls = extract_image_urls(node.content.childMarkdownRemark.rawMarkdownBody)
+        if (urls !== null) {
+          urls.map(url => {
+            external_resources = external_resources + `\n${url}`
+          })
+        }
 
+        tags = tags.concat(node.tags)
         createPage({
           path: root.getChild(id).getChild(node._fl_meta_.fl_id).getPath(node.flamelink_locale),
           component: path.resolve('./src/templates/article.js'),
@@ -329,7 +346,6 @@ exports.createPages = async ({ graphql, actions }) => {
         })
         return node
       })
-
 
     // Create Listing Page
     tags = [...new Set(tags)]
@@ -347,4 +363,10 @@ exports.createPages = async ({ graphql, actions }) => {
       },
     })
   }
+
+  fs.writeFile('./static/external/sources.txt', external_resources, (error) => {
+    if (error) {
+      throw error
+    }
+  })
 }
