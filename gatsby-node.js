@@ -160,15 +160,6 @@ exports.createPages = async ({ graphql, actions }) => {
         }
       }
     }
-
-    allMarkdownRemark {
-      edges {
-        node {
-          rawMarkdownBody
-        }
-      }
-    }
-
   }
   `)
 
@@ -301,6 +292,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
   var external_resources = ""
+  var locations = []
 
 
   // Create front page
@@ -348,6 +340,8 @@ exports.createPages = async ({ graphql, actions }) => {
           })
         }
 
+        locations.push(node.address)
+
         tags = tags.concat(node.tags)
         createPage({
           path: root.getChild(id).getChild(node._fl_meta_.fl_id).getPath(node.flamelink_locale),
@@ -390,5 +384,7 @@ exports.createPages = async ({ graphql, actions }) => {
       throw error
     }
   })
+
+  fs.writeFile('./static/external/locations.txt', JSON.stringify(locations), (error) => { })
 
 }

@@ -1,6 +1,7 @@
 
 var cacheNames = ['external-resources'];
 var urlsToPrefetch = [];
+var locationUrlsToPrefetch = []
 
 const query = `query{allFlamelinkArticleContent{edges{node{title}}}}`
 
@@ -15,7 +16,6 @@ self.addEventListener('install', function (event) {
           urlsToPrefetch = text.split('\n')
         })
         .then(_ => {
-
           console.log('Service Worker: Caching external resources');
 
           urlsToPrefetch.map(function (urlToPrefetch) {
@@ -30,6 +30,26 @@ self.addEventListener('install', function (event) {
             },
             ).then(response => {
               cache.put(request, response)
+            }).then(_ => {
+
+              fetch(`../external/locations.txt`, { mode: 'no-cors' })
+                .then(response => text())
+                .then(text => {
+                  var object = JSON.parse(text)
+                  object.map(entry => {
+                    var baseURL = "https://www.google.com/maps/search/?api=1"
+                    if (entry.address) {
+                      locationUrlsToPrefetch.push(baseURL + "&query=" + encodeURI(address))
+                    } else {
+                      locationUrlsToPrefetch.push(baseURL + "&query=" + entry.lat + "," + entry.lng)
+                    }
+
+                  })
+                }).then(_ => {
+                  console.log(locationUrlsToPrefetch)
+                })
+                .catch(error => console.error(error))
+
             });
           })
         })
