@@ -21,7 +21,7 @@ self.addEventListener('install', function (event) {
 
           urlsToPrefetch.map(function (urlToPrefetch) {
             console.log(urlToPrefetch);
-            const request = new Request(urlToPrefetch, { mode: 'no-cors' });
+            const request = new Request(urlToPrefetch, { mode: 'cors' });
             // Assume `cache` is an open instance of the Cache class.
             fetch(urlToPrefetch, {
               mode: 'no-cors',
