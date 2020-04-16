@@ -13,7 +13,7 @@ self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheNames).then(function (cache) {
       fetch(`../external/sources.txt`, { mode: 'no-cors' })
-        .then(response => response.body.text())
+        .then(response => response.text())
 
         .then(text => {
 
