@@ -35,18 +35,18 @@ self.addEventListener('install', function (event) {
           })
         })
         .then(_ => {
-          // Fetch external image urls from stored file
+          // Fetch external google maps location urls from stored file
           fetch(`../external/locationurls.txt`, { mode: 'no-cors' })
             .then(response => response.text())
             .then(text => text.split('\n'))
             .then(urlsToPrefetch => {
 
               urlsToPrefetch.map(function (urlToPrefetch) {
-                const request = new Request(urlToPrefetch, { mode: 'no-cors' });
+                const request = new Request(urlToPrefetch, { mode: 'cors' });
 
                 // Fetch individual google maps locations url and cache it
                 fetch(urlToPrefetch, {
-                  mode: 'no-cors',
+                  mode: 'cors',
                   method: 'GET',
                 },
                 ).then(response => {
