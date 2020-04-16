@@ -39,7 +39,7 @@ self.addEventListener('install', function (event) {
                   object.map(entry => {
                     var baseURL = "https://www.google.com/maps/search/?api=1"
                     if (entry.address) {
-                      locationUrlsToPrefetch.push(baseURL + "&query=" + encodeURI(address))
+                      locationUrlsToPrefetch.push(baseURL + "&query=" + encodeURI(entry.address))
                     } else {
                       locationUrlsToPrefetch.push(baseURL + "&query=" + entry.lat + "," + entry.lng)
                     }
