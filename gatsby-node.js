@@ -1,6 +1,7 @@
 
 // You can delete this file if you're not using it
 const path = require(`path`)
+const fs = require('fs')
 const defaultLocale = 'no'
 
 exports.createPages = async ({ graphql, actions }) => {
@@ -47,6 +48,11 @@ exports.createPages = async ({ graphql, actions }) => {
           id
           openingHours {
             content
+            childMdx {
+              code{
+                body
+              }
+            }
           }
           parentContent {
             _fl_meta_ {
@@ -69,6 +75,14 @@ exports.createPages = async ({ graphql, actions }) => {
           }
           content {
             content
+            childMdx {
+              code{
+                body
+              }
+            }
+            childMarkdownRemark{
+              rawMarkdownBody
+            }
           }
           contactInfo {
             emailAddress
@@ -146,6 +160,15 @@ exports.createPages = async ({ graphql, actions }) => {
         }
       }
     }
+
+    allMarkdownRemark {
+      edges {
+        node {
+          rawMarkdownBody
+        }
+      }
+    }
+
   }
   `)
 
@@ -204,7 +227,18 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
 
+  function extract_image_urls(markdownBody) {
+    var result = markdownBody.matchAll(/!\[[^\]]*\]\((?<filename>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g)
 
+    var array = []
+
+    let r = result.next()
+    while (!r.done) {
+      array.push(r.value.groups.filename)
+      r = result.next()
+    }
+    return array
+  }
 
   let root;
 
@@ -265,6 +299,10 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
 
+
+  var external_resources = ""
+
+
   // Create front page
   result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
     const locale = node.flamelink_locale
@@ -288,7 +326,6 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   })
 
-
   function createListingPage(node) {
 
     const id = node._fl_meta_.fl_id
@@ -302,9 +339,16 @@ exports.createPages = async ({ graphql, actions }) => {
       .filter(({ node }) => node.parentContent.slug === slug)
       .map(node => node.node)
       .map(node => {
+        // Check for external image urls in markdown body
+        var urls = extract_image_urls(node.content.childMarkdownRemark.rawMarkdownBody)
+
+        if (urls !== null) {
+          urls.map(url => {
+            external_resources = external_resources + `\n${url}`
+          })
+        }
 
         tags = tags.concat(node.tags)
-
         createPage({
           path: root.getChild(id).getChild(node._fl_meta_.fl_id).getPath(node.flamelink_locale),
           component: path.resolve('./src/templates/article.js'),
@@ -319,7 +363,6 @@ exports.createPages = async ({ graphql, actions }) => {
         })
         return node
       })
-
 
     // Create Listing Page
     tags = [...new Set(tags)]
@@ -337,4 +380,15 @@ exports.createPages = async ({ graphql, actions }) => {
       },
     })
   }
+
+
+
+  // Save all external resource urls to be precached by service worker
+
+  fs.writeFile('./static/external/sources.txt', external_resources, (error) => {
+    if (error) {
+      throw error
+    }
+  })
+
 }
