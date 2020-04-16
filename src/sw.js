@@ -15,7 +15,7 @@ self.addEventListener('install', function (event) {
       fetch(`../external/sources.txt`, { mode: 'no-cors' })
         .then(response => console.log(response)).then(response => {
 
-          console.log(response)
+          console.log(response.body)
 
           console.log('Service Worker: Caching Files');
 
