@@ -292,7 +292,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
   var external_resources = ""
-  var locations = []
+  var location_urls = ""
 
 
   // Create front page
@@ -331,6 +331,7 @@ exports.createPages = async ({ graphql, actions }) => {
       .filter(({ node }) => node.parentContent.slug === slug)
       .map(node => node.node)
       .map(node => {
+
         // Check for external image urls in markdown body
         var urls = extract_image_urls(node.content.childMarkdownRemark.rawMarkdownBody)
 
@@ -340,7 +341,14 @@ exports.createPages = async ({ graphql, actions }) => {
           })
         }
 
-        locations.push(node.address)
+        // Add google maps location url to be cached
+        var baseURL = "https://www.google.com/maps/search/?api=1"
+        if (node.address.address) {
+          location_urls = location_urls + "\n" + baseURL + "&query=" + encodeURI(node.address.address).toString()
+        }
+        else if (node.address.lat && node.address.lng) {
+          location_urls = location_urls + "\n" + baseURL + "&query=" + node.address.lat + "," + node.address.lng
+        }
 
         tags = tags.concat(node.tags)
         createPage({
@@ -385,6 +393,10 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   })
 
-  fs.writeFile('./static/external/locations.txt', JSON.stringify(locations), (error) => { })
+  fs.writeFile('./static/external/locationurls.txt', location_urls, (error) => {
+    if (error) {
+      throw error
+    }
+  })
 
 }

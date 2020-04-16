@@ -10,17 +10,18 @@ self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheNames).then(function (cache) {
 
+      // Fetch external image urls from stored file
       fetch(`../external/sources.txt`, { mode: 'no-cors' })
         .then(response => response.text())
-        .then(text => {
-          urlsToPrefetch = text.split('\n')
-        })
-        .then(_ => {
+        .then(text => text.split('\n'))
+        .then(urlsToPrefetch => {
+
           console.log('Service Worker: Caching external resources');
 
           urlsToPrefetch.map(function (urlToPrefetch) {
             const request = new Request(urlToPrefetch, { mode: 'no-cors' });
-            // Assume `cache` is an open instance of the Cache class.
+
+            // Fetch individual external image url and cache it
             fetch(urlToPrefetch, {
               mode: 'no-cors',
               method: 'GET',
@@ -30,28 +31,29 @@ self.addEventListener('install', function (event) {
             },
             ).then(response => {
               cache.put(request, response)
-            }).then(_ => {
-
-              fetch(`../external/locations.txt`, { mode: 'no-cors' })
-                .then(response => response.text())
-                .then(text => {
-                  var object = JSON.parse(text)
-                  object.map(entry => {
-                    var baseURL = "https://www.google.com/maps/search/?api=1"
-                    if (entry.address) {
-                      locationUrlsToPrefetch.push(baseURL + "&query=" + encodeURI(entry.address))
-                    } else {
-                      locationUrlsToPrefetch.push(baseURL + "&query=" + entry.lat + "," + entry.lng)
-                    }
-
-                  })
-                }).then(_ => {
-                  console.log(locationUrlsToPrefetch)
-                })
-                .catch(error => console.error(error))
-
-            });
+            })
           })
+        })
+        .then(_ => {
+          // Fetch external image urls from stored file
+          fetch(`../external/locationurls.txt`, { mode: 'no-cors' })
+            .then(response => response.text())
+            .then(text => text.split('\n'))
+            .then(urlsToPrefetch => {
+
+              urlsToPrefetch.map(function (urlToPrefetch) {
+                const request = new Request(urlToPrefetch, { mode: 'no-cors' });
+
+                // Fetch individual google maps locations url and cache it
+                fetch(urlToPrefetch, {
+                  mode: 'no-cors',
+                  method: 'GET',
+                },
+                ).then(response => {
+                  cache.put(request, response)
+                })
+              })
+            })
         })
         .catch(error => console.error(error));
     })
