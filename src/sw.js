@@ -13,7 +13,17 @@ self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheNames).then(function (cache) {
       fetch(`../external/sources.txt`, { mode: 'no-cors' })
-        .then(response => console.log(response.body)).then(response => {
+        .then(response => response.body.getReader())
+
+        .then(reader => {
+
+          console.log(reader.read())
+
+        })
+
+
+
+        .then(response => {
 
           console.log('Service Worker: Caching Files');
 
