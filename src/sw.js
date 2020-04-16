@@ -1,10 +1,6 @@
 
 var cacheNames = ['external-resources'];
-var urlsToPrefetch = [
-  'https://firebasestorage.googleapis.com/v0/b/trondheimno-demo.appspot.com/o/flamelink%2Fmedia%2Fbryggene-1.png?alt=media&token=d9969a07-2c01-49dd-8b55-47c03327704c',
-  'https://www.trondheim.no/images/severdig/bryggene-2.png',
-  'https://www.trondheim.no/images/severdig/bryggene-3.png'
-];
+var urlsToPrefetch = [];
 
 const query = `query{allFlamelinkArticleContent{edges{node{title}}}}`
 
@@ -12,18 +8,15 @@ const query = `query{allFlamelinkArticleContent{edges{node{title}}}}`
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheNames).then(function (cache) {
+
       fetch(`../external/sources.txt`, { mode: 'no-cors' })
         .then(response => response.text())
-
         .then(text => {
-
-          console.log(text.split('\n'))
-
+          urlsToPrefetch = text.split('\n')
         })
+        .then(_ => {
 
-
-
-        .then(response => {
+          console.log(urlsToPrefetch)
 
           console.log('Service Worker: Caching Files');
 
