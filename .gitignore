@@ -6,8 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # Resources
-static/external
-static/maps
+static/external/
+static/maps/
 
 # Environment
 .env.*
