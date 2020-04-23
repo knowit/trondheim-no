@@ -293,7 +293,6 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
   var external_resources = ""
-  var location_urls = ""
 
 
   // Create front page
@@ -343,13 +342,28 @@ exports.createPages = async ({ graphql, actions }) => {
         }
 
         // Add google maps location url to be cached
-        var baseURL = "https://www.google.com/maps/search/?api=1"
+        var address = node.address.address
+        var location = { lat: Number(node.latLong.latitude), lng: Number(node.latLong.longitude) }
+        var baseURL = "https://maps.googleapis.com/maps/api/staticmap?"
+
         if (node.address.address) {
-          location_urls = location_urls + "\n" + baseURL + "&query=" + encodeURI(node.address.address).toString()
+          baseURL = baseURL + "center=" + encodeURI(address);
+        } else {
+          baseURL = baseURL + "center=" + location.lat + "," + location.lng;
         }
-        else if (node.address.lat && node.address.lng) {
-          location_urls = location_urls + "\n" + baseURL + "&query=" + node.address.lat + "," + node.address.lng
+
+        baseURL = baseURL + "&size=600x400&zoom=14&maptype=roadmap&markers=color:red|"
+
+        if (node.address.address) {
+          baseURL = baseURL + encodeURI(address);
+        } else {
+          baseURL = baseURL + location.lat + "," + location.lng;
         }
+        baseURL = baseURL + "&key=" + process.env.GATSBY_GOOGLE_API
+
+        external_resources = external_resources + `\n${baseURL}`
+
+
 
         tags = tags.concat(node.tags)
         createPage({
@@ -389,12 +403,6 @@ exports.createPages = async ({ graphql, actions }) => {
   // Save all external resource urls to be precached by service worker
 
   fs.writeFile('./static/external/sources.txt', external_resources, (error) => {
-    if (error) {
-      throw error
-    }
-  })
-
-  fs.writeFile('./static/external/locationurls.txt', location_urls, (error) => {
     if (error) {
       throw error
     }

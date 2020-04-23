@@ -6,7 +6,6 @@ import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import { MDXRenderer } from "gatsby-mdx-fix"
 import { MDXProvider } from "@mdx-js/react"
-import { Online } from "react-detect-offline"
 
 function ContactInfo(props) {
 
@@ -84,7 +83,7 @@ const Article = ({ pageContext }) => {
           </MDXProvider>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
-          <Online><Map location={GetLocation(pageContext)} address={GetAddress(pageContext)} persistentDisabled={false} /></Online>
+          <Map location={GetLocation(pageContext)} address={GetAddress(pageContext)} persistentDisabled={false} />
         </div>
       </div>
     </Layout>
