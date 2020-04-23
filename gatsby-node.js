@@ -343,13 +343,28 @@ exports.createPages = async ({ graphql, actions }) => {
         }
 
         // Add google maps location url to be cached
+        var address = node.address.address
+        var location = { lat: Number(node.latLong.latitude), lng: Number(node.latLong.longitude) }
         var baseURL = "https://maps.googleapis.com/maps/api/staticmap?"
+
         if (node.address.address) {
-          location_urls = location_urls + "\n" + baseURL + "&query=" + encodeURI(node.address.address).toString()
+          baseURL = baseURL + "center=" + encodeURI(address);
+        } else {
+          baseURL = baseURL + "center=" + location.lat + "," + location.lng;
         }
-        else if (node.address.lat && node.address.lng) {
-          location_urls = location_urls + "\n" + baseURL + "&query=" + node.address.lat + "," + node.address.lng
+
+        baseURL = baseURL + "&size=600x400&zoom=15&maptype=roadmap&markers=color:red|"
+
+        if (node.address.address) {
+          baseURL = baseURL + encodeURI(address);
+        } else {
+          baseURL = baseURL + location.lat + "," + location.lng;
         }
+        baseURL = baseURL + "&key=" + process.env.GATSBY_GOOGLE_API
+
+        external_resources = external_resources + `\n${baseURL}`
+
+
 
         tags = tags.concat(node.tags)
         createPage({
