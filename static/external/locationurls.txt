@@ -1,9 +1,5 @@
 
-https://www.google.com/maps/search/?api=1&query=Erkebispeg%C3%A5rden,%20Kongsg%C3%A5rdsgata,%20Trondheim,%20Norway
 https://www.google.com/maps/search/?api=1&query=Forsvarsmuseet%20Rustkammeret,%20Kongsg%C3%A5rdsgata,%20Trondheim,%20Norway
 https://www.google.com/maps/search/?api=1&query=Bryggene%20i%20Trondheim,%20Trondheim,%20Norway
-https://www.google.com/maps/search/?api=1&query=Bakklandet,%20Trondheim,%20Norway
-https://www.google.com/maps/search/?api=1&query=Bryggene%20i%20Trondheim,%20Trondheim,%20Norway
-https://www.google.com/maps/search/?api=1&query=Bakklandet,%20Trondheim,%20Norway
-https://www.google.com/maps/search/?api=1&query=Forsvarsmuseet%20Rustkammeret,%20Kongsg%C3%A5rdsgata,%20Trondheim,%20Norway
 https://www.google.com/maps/search/?api=1&query=Erkebispeg%C3%A5rden,%20Kongsg%C3%A5rdsgata,%20Trondheim,%20Norway
+https://www.google.com/maps/search/?api=1&query=Bakklandet,%20Trondheim,%20Norway

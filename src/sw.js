@@ -48,6 +48,9 @@ self.addEventListener('install', function (event) {
                 fetch(urlToPrefetch, {
                   mode: 'no-cors',
                   method: 'GET',
+                  headers: {
+                    Accept: 'text/javascript; charset=UTF-8',
+                  },
                 },
                 ).then(response => {
                   cache.put(request, response)

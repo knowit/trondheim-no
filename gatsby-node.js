@@ -2,6 +2,7 @@
 // You can delete this file if you're not using it
 const path = require(`path`)
 const fs = require('fs')
+const fetch = require('node-fetch')
 const defaultLocale = 'no'
 
 exports.createPages = async ({ graphql, actions }) => {
@@ -398,5 +399,4 @@ exports.createPages = async ({ graphql, actions }) => {
       throw error
     }
   })
-
 }
