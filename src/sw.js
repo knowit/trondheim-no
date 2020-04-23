@@ -1,9 +1,8 @@
+import fetch from "node-fetch";
 
 var cacheNames = ['external-resources'];
 var urlsToPrefetch = [];
 var locationUrlsToPrefetch = []
-
-const query = `query{allFlamelinkArticleContent{edges{node{title}}}}`
 
 
 self.addEventListener('install', function (event) {
@@ -33,6 +32,27 @@ self.addEventListener('install', function (event) {
               cache.put(request, response)
             })
           })
+        }).then(_ => {
+
+          // Fetch static map urls from stored file
+          fetch(`../external/locations.txt`, { mode: 'no-cors' })
+            .then(response => response.text())
+            .then(text => text.split('\n'))
+            .then(mapUrls => {
+
+
+              mapUrls.map(function (mapUrl) {
+
+                var urlObject = new URL(mapUrl)
+                var path = `../static/maps/center=${urlObject.searchParams.get("center")}.png`
+
+                fetch(path, { mode: 'no-cors' })
+                  .then(response => {
+                    console.log(response)
+                  })
+
+              })
+            })
         })
         .catch(error => console.error(error));
     })
