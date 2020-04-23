@@ -343,7 +343,7 @@ exports.createPages = async ({ graphql, actions }) => {
         }
 
         // Add google maps location url to be cached
-        var baseURL = "https://www.google.com/maps/search/?api=1"
+        var baseURL = "https://maps.googleapis.com/maps/api/staticmap?"
         if (node.address.address) {
           location_urls = location_urls + "\n" + baseURL + "&query=" + encodeURI(node.address.address).toString()
         }
