@@ -22,7 +22,7 @@ class Map extends Component {
         var location = this.props.location;
         var baseURL = "https://maps.googleapis.com/maps/api/staticmap?"
 
-        if (node.address.address) {
+        if (this.props.address) {
             baseURL = baseURL + "center=" + encodeURI(address);
         } else {
             baseURL = baseURL + "center=" + location.lat + "," + location.lng;
@@ -30,7 +30,7 @@ class Map extends Component {
 
         baseURL = baseURL + "&size=600x400&zoom=15&maptype=roadmap&markers=color:red|"
 
-        if (node.address.address) {
+        if (this.props.address) {
             baseURL = baseURL + encodeURI(address);
         } else {
             baseURL = baseURL + location.lat + "," + location.lng;
