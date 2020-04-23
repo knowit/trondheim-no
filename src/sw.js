@@ -34,30 +34,6 @@ self.addEventListener('install', function (event) {
             })
           })
         })
-        .then(_ => {
-          // Fetch external google maps location urls from stored file
-          fetch(`../external/locationurls.txt`, { mode: 'no-cors' })
-            .then(response => response.text())
-            .then(text => text.split('\n'))
-            .then(urlsToPrefetch => {
-
-              urlsToPrefetch.map(function (urlToPrefetch) {
-                const request = new Request(urlToPrefetch, { mode: 'no-cors' });
-
-                // Fetch individual google maps locations url and cache it
-                fetch(urlToPrefetch, {
-                  mode: 'no-cors',
-                  method: 'GET',
-                  headers: {
-                    Accept: 'text/javascript; charset=UTF-8',
-                  },
-                },
-                ).then(response => {
-                  cache.put(request, response)
-                })
-              })
-            })
-        })
         .catch(error => console.error(error));
     })
   );

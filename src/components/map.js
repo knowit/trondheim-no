@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import styles from "../style/map.module.css"
 import { Online, Offline } from "react-detect-offline"
-import { Image } from "gatsby-image"
 
 class Map extends Component {
 
@@ -28,7 +27,7 @@ class Map extends Component {
             baseURL = baseURL + "center=" + location.lat + "," + location.lng;
         }
 
-        baseURL = baseURL + "&size=600x400&zoom=15&maptype=roadmap&markers=color:red|"
+        baseURL = baseURL + "&size=600x400&zoom=14&maptype=roadmap&markers=color:red|"
 
         if (this.props.address) {
             baseURL = baseURL + encodeURI(address);
@@ -77,7 +76,7 @@ class Map extends Component {
                     />
                 </Online>
                 <Offline>
-                    <img src={this.getGoogleStaticLink()}></img>
+                    <img src={this.getGoogleStaticLink()} alt="Static map"></img>
                 </Offline>
 
             </div>

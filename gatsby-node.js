@@ -293,7 +293,6 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
   var external_resources = ""
-  var location_urls = ""
 
 
   // Create front page
@@ -353,7 +352,7 @@ exports.createPages = async ({ graphql, actions }) => {
           baseURL = baseURL + "center=" + location.lat + "," + location.lng;
         }
 
-        baseURL = baseURL + "&size=600x400&zoom=15&maptype=roadmap&markers=color:red|"
+        baseURL = baseURL + "&size=600x400&zoom=14&maptype=roadmap&markers=color:red|"
 
         if (node.address.address) {
           baseURL = baseURL + encodeURI(address);
@@ -404,12 +403,6 @@ exports.createPages = async ({ graphql, actions }) => {
   // Save all external resource urls to be precached by service worker
 
   fs.writeFile('./static/external/sources.txt', external_resources, (error) => {
-    if (error) {
-      throw error
-    }
-  })
-
-  fs.writeFile('./static/external/locationurls.txt', location_urls, (error) => {
     if (error) {
       throw error
     }
