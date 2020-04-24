@@ -1,9 +1,6 @@
-
-
 var cacheNames = ['external-resources'];
 var urlsToPrefetch = [];
 var locationUrlsToPrefetch = []
-
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
@@ -61,44 +58,33 @@ self.addEventListener('install', function (event) {
   );
 });
 
+
+function redirect(request) {
+  if (request.url.indexOf(`maps.googleapis.com/maps/api/staticmap`) > -1) {
+    // Redirect to cached static map image
+    var urlObject = new URL(request.url)
+    var path = `../maps/center=${decodeURI(urlObject.searchParams.get("center"))}.png`
+    return new Request(path, { mode: 'no-cors' })
+  }
+  else {
+    return request
+  }
+}
+
 self.addEventListener('fetch', function (event) {
   console.log('Service Worker: Fetching ');
-  var mapFound = false
-  if (event.request.url.indexOf(`maps.googleapis.com/maps/api/staticmap`) > -1) {
 
+  event.respondWith(
+    caches.match(redirect(event.request))
+      .then(function (response) {
+        // Cache hit - return response
+        if (response) {
+          console.log(response)
 
-    var urlObject = new URL(event.request.url)
-    var path = `../maps/center=${decodeURI(urlObject.searchParams.get("center"))}.png`
-
-    var request = new Request(path, { mode: 'no-cors' })
-
-    console.log(`Fetching: ${path}`)
-
-    event.respondWith(
-      caches.match(request)
-        .then(function (response) {
-          // Cache hit - return response
-          if (response) {
-            console.log(response)
-            mapFound = true
-            return response;
-          }
+          return response;
         }
-        )
-    );
-  }
-
-  if (!mapFound) {
-    event.respondWith(
-      caches.match(event.request)
-        .then(function (response) {
-          // Cache hit - return response
-          if (response) {
-            return response;
-          }
-          return fetch(event.request);
-        }
-        )
-    );
-  }
+        return fetch(event.request);
+      }
+      )
+  )
 });
