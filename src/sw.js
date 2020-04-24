@@ -46,7 +46,6 @@ self.addEventListener('install', function (event) {
 
                 fetch(path, { mode: 'no-cors' })
                   .then(response => {
-                    console.log(`Chaching\nRequest: ${path}\nResponse:${JSON.stringify(response.body)}\n\n`)
                     cache.put(request, response)
                   })
 
@@ -79,8 +78,6 @@ self.addEventListener('fetch', function (event) {
       .then(function (response) {
         // Cache hit - return response
         if (response) {
-          console.log(response)
-
           return response;
         }
         return fetch(event.request);
