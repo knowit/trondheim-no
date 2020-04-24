@@ -45,10 +45,11 @@ self.addEventListener('install', function (event) {
 
                 var urlObject = new URL(mapUrl)
                 var path = `../maps/center=${decodeURI(urlObject.searchParams.get("center"))}.png`
+                const request = new Request(mapUrl, { mode: 'no-cors' })
 
                 fetch(path, { mode: 'no-cors' })
                   .then(response => {
-                    console.log(response)
+                    cache.put(request, response)
                   })
 
               })
@@ -61,15 +62,40 @@ self.addEventListener('install', function (event) {
 
 self.addEventListener('fetch', function (event) {
   console.log('Service Worker: Fetching ');
-  event.respondWith(
-    caches.match(event.request)
-      .then(function (response) {
-        // Cache hit - return response
-        if (response) {
-          return response;
+  var mapFound = false
+  if (event.request.url.indexOf(`maps.googleapis.com/maps/api/staticmap`) > -1) {
+
+
+    var url = event.request.url
+    url.searchParams.delete('key')
+    var request = new Request(url, { mode: 'no-cors' })
+
+    console.log(`Fetching: ${url}`)
+
+    event.respondWith(
+      caches.match(request)
+        .then(function (response) {
+          // Cache hit - return response
+          if (response) {
+            mapFound = true
+            return response;
+          }
         }
-        return fetch(event.request);
-      }
-      )
-  );
+        )
+    );
+  }
+
+  if (!mapFound) {
+    event.respondWith(
+      caches.match(event.request)
+        .then(function (response) {
+          // Cache hit - return response
+          if (response) {
+            return response;
+          }
+          return fetch(event.request);
+        }
+        )
+    );
+  }
 });
