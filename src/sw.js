@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+
 
 var cacheNames = ['external-resources'];
 var urlsToPrefetch = [];
