@@ -2,7 +2,6 @@
 // You can delete this file if you're not using it
 const path = require(`path`)
 const fs = require('fs')
-const fse = require('fs-extra')
 const fetch = require('node-fetch')
 const defaultLocale = 'no'
 
@@ -381,7 +380,7 @@ exports.createPages = async ({ graphql, actions }) => {
         })
           .then(res => res.body)
           .then(data => {
-            fs.promisesgit.mkdir(`./static/maps`, { recursive: true }).then(_ => {
+            fs.promises.mkdir(`./static/maps`, { recursive: true }).then(_ => {
               const dest = fs.createWriteStream(`./static/maps/${decodeURI(parameters)}.png`, { flags: 'w', encoding: 'utf-8', mode: 0666 });
               dest.on('error', function (e) { console.error(e); });
               data.pipe(dest);
