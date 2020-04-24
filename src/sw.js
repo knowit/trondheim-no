@@ -1,3 +1,5 @@
+
+
 var cacheNames = ['external-resources'];
 var urlsToPrefetch = [];
 var locationUrlsToPrefetch = []
@@ -5,6 +7,8 @@ var locationUrlsToPrefetch = []
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheNames).then(function (cache) {
+
+      console.log("Service Worker: Installing")
 
       // Fetch external image urls from stored file
       fetch(`../external/sources.txt`, { mode: 'no-cors' })
@@ -37,6 +41,7 @@ self.addEventListener('install', function (event) {
             .then(text => text.split('\n'))
             .then(mapUrls => {
 
+              console.log('Service Worker: Caching Static Google Maps');
 
               mapUrls.filter(mapUrl => mapUrl.length > 3).map(function (mapUrl) {
 
