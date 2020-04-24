@@ -293,6 +293,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
   var external_resources = ""
+  var locations = ""
 
 
   // Create front page
@@ -346,23 +347,45 @@ exports.createPages = async ({ graphql, actions }) => {
         var location = { lat: Number(node.latLong.latitude), lng: Number(node.latLong.longitude) }
         var baseURL = "https://maps.googleapis.com/maps/api/staticmap?"
 
-        if (node.address.address) {
-          baseURL = baseURL + "center=" + encodeURI(address);
-        } else {
-          baseURL = baseURL + "center=" + location.lat + "," + location.lng;
-        }
-
-        baseURL = baseURL + "&size=600x400&zoom=14&maptype=roadmap&markers=color:red|"
+        var parameters = ""
 
         if (node.address.address) {
-          baseURL = baseURL + encodeURI(address);
+          parameters = "center=" + encodeURI(address);
         } else {
-          baseURL = baseURL + location.lat + "," + location.lng;
+          parameters = "center=" + location.lat + "," + location.lng;
         }
-        baseURL = baseURL + "&key=" + process.env.GATSBY_GOOGLE_API
 
-        external_resources = external_resources + `\n${baseURL}`
+        var style = "&size=600x400&zoom=14&maptype=roadmap&markers=color:red|"
 
+        if (node.address.address) {
+          style = style + encodeURI(address);
+        } else {
+          style = style + location.lat + "," + location.lng;
+        }
+
+        var noApiURL = baseURL + parameters + style
+
+        var apiURL = noApiURL + "&key=" + process.env.GATSBY_GOOGLE_API
+
+        locations = locations + `\n${noApiURL}`
+
+
+        // Fetch static Google Maps image
+        fetch(apiURL, {
+          mode: 'no-cors',
+          method: 'GET',
+          headers: {
+            Accept: 'image/png',
+          },
+        })
+          .then(res => res.body)
+          .then(data => {
+            fs.promises.mkdir(`./static/maps`, { recursive: true }).then(_ => {
+              const dest = fs.createWriteStream(`./static/maps/${decodeURI(parameters)}.png`, { flags: 'w', encoding: 'utf-8', mode: 0666 });
+              dest.on('error', function (e) { console.error(e); });
+              data.pipe(dest);
+            })
+          })
 
 
         tags = tags.concat(node.tags)
@@ -403,6 +426,11 @@ exports.createPages = async ({ graphql, actions }) => {
   // Save all external resource urls to be precached by service worker
 
   fs.writeFile('./static/external/sources.txt', external_resources, (error) => {
+    if (error) {
+      throw error
+    }
+  })
+  fs.writeFile('./static/external/locations.txt', locations, (error) => {
     if (error) {
       throw error
     }

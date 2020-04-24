@@ -5,11 +5,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-static/external/*
-
 # Environment
 .env.*
 service-account.json
+
+# Resource
+
+static/maps
 
 # Runtime data
 pids
