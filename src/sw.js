@@ -45,11 +45,11 @@ self.addEventListener('install', function (event) {
 
                 var urlObject = new URL(mapUrl)
                 var path = `../maps/center=${decodeURI(urlObject.searchParams.get("center"))}.png`
-                const request = new Request(mapUrl, { mode: 'no-cors' })
+                const request = new Request(path, { mode: 'no-cors' })
 
                 fetch(path, { mode: 'no-cors' })
                   .then(response => {
-                    console.log(`Chaching\nRequest: ${request.url}\nResponse:${JSON.stringify(response.body)}\n\n`)
+                    console.log(`Chaching\nRequest: ${request.url}\nResponse:${JSON.stringify(response.body.json())}\n\n`)
                     cache.put(request, response)
                   })
 
@@ -67,9 +67,10 @@ self.addEventListener('fetch', function (event) {
   if (event.request.url.indexOf(`maps.googleapis.com/maps/api/staticmap`) > -1) {
 
 
-    var url = event.request.url
-    url.searchParams.delete('key')
-    var request = new Request(url, { mode: 'no-cors' })
+    var urlObject = new URL(event.request.url)
+    var path = `../maps/center=${decodeURI(urlObject.searchParams.get("center"))}.png`
+
+    var request = new Request(path, { mode: 'no-cors' })
 
     console.log(`Fetching: ${url}`)
 
