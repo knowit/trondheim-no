@@ -49,7 +49,7 @@ self.addEventListener('install', function (event) {
 
                 fetch(path, { mode: 'no-cors' })
                   .then(response => {
-                    console.log(`Chaching\nRequest: ${JSON.stringify(request)}\nResponse:${JSON.stringify(response)}\n\n`)
+                    console.log(`Chaching\nRequest: ${request.url}\nResponse:${JSON.stringify(response.body)}\n\n`)
                     cache.put(request, response)
                   })
 
