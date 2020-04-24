@@ -9,6 +9,10 @@ yarn-error.log*
 .env.*
 service-account.json
 
+# Resource
+
+static/maps
+
 # Runtime data
 pids
 *.pid
