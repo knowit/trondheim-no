@@ -44,7 +44,7 @@ self.addEventListener('install', function (event) {
               mapUrls.filter(mapUrl => mapUrl.length > 3).map(function (mapUrl) {
 
                 var urlObject = new URL(mapUrl)
-                var path = `../static/maps/center=${decodeURI(urlObject.searchParams.get("center"))}.png`
+                var path = `../maps/center=${decodeURI(urlObject.searchParams.get("center"))}.png`
 
                 fetch(path, { mode: 'no-cors' })
                   .then(response => {
