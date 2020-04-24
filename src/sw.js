@@ -72,13 +72,14 @@ self.addEventListener('fetch', function (event) {
 
     var request = new Request(path, { mode: 'no-cors' })
 
-    console.log(`Fetching: ${url}`)
+    console.log(`Fetching: ${path}`)
 
     event.respondWith(
       caches.match(request)
         .then(function (response) {
           // Cache hit - return response
           if (response) {
+            console.log(response)
             mapFound = true
             return response;
           }
