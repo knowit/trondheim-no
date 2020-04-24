@@ -380,10 +380,10 @@ exports.createPages = async ({ graphql, actions }) => {
         })
           .then(res => {
             fs.writeFileSync(`./static/maps/${decodeURI(parameters)}.png`, "")
-            /*
+
             const dest = fs.createWriteStream(path.normalize(`./static/maps/${decodeURI(parameters)}.png`), { flags: 'w', encoding: 'utf-8', mode: 0666 });
             dest.on('error', function (e) { console.error(e); });
-            res.body.pipe(dest); */
+            res.body.pipe(dest);
           });
 
 
