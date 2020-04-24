@@ -379,7 +379,8 @@ exports.createPages = async ({ graphql, actions }) => {
           },
         })
           .then(res => {
-            const dest = fs.createWriteStream(`./static/maps/${parameters}.png`);
+            const dest = fs.createWriteStream(`./static/maps/${parameters.split('%').join('')}.png`, { flags: 'w', encoding: 'utf-8', mode: 0666 });
+            dest.on('error', function (e) { console.error(e); });
             res.body.pipe(dest);
           });
 
