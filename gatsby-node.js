@@ -35,6 +35,12 @@ exports.createPages = async ({ graphql, actions }) => {
           navigationTitle
           navigationSubtitle
           textOnPage
+          parentListingPage{
+            slug
+            _fl_meta_ {
+              fl_id
+            }
+          }
         }
       }
     }
@@ -179,6 +185,33 @@ exports.createPages = async ({ graphql, actions }) => {
       this.children = new Map();
       this.slugs = new Map();
     }
+
+    // Depth first search for child with id
+    dfSearchInTree(id) {
+
+      // Check if direct children has id
+      const child = this.children.get(id)
+      if (child != null) {
+
+        return child
+      }
+
+      // Search in children's children.
+      else {
+        var result = null
+        if (this.children != null) {
+
+          for (let child of Array.from(this.children.values())) {
+            result = child.dfSearchInTree(id)
+            if (result != null) {
+              break;
+            }
+          }
+        }
+        return result
+      }
+    }
+
     addChild(treeNode) {
       this.children.set(treeNode.id, treeNode)
     }
@@ -187,6 +220,7 @@ exports.createPages = async ({ graphql, actions }) => {
         this.addChild(new TreeNode(id, this))
       }
       this.children.get(id).setSlug(locale, slug)
+      return this.children.get(id)
     }
     getChild(id) {
       return this.children.get(id)
@@ -216,9 +250,125 @@ exports.createPages = async ({ graphql, actions }) => {
         return obj;
       }, {});
     }
+    getLevel() {
+      var level = 0
+      var parent = this.parent
+      while (parent != null) {
+        level += 1
+        parent = parent.parent
+      }
+      return level
+    }
+    print() {
+      var level = this.getLevel()
+      console.log(`Node level ${level}: id: ${this.id},  path: ${this.getPath('no')}`)
+      this.printChildren()
+    }
+    printChildren() {
+      Array.from(this.children.values()).map(child => child.print())
+    }
   }
 
 
+
+  let root;
+
+  function findListingPage(id, locale) {
+    return result.data.allFlamelinkListingPageContent.edges.find(({ node }) =>
+      node._fl_meta_.fl_id == id && node.flamelink_locale == locale
+    )
+  }
+
+  function getListingPagePath(id, locale) {
+    const match = root.dfSearchInTree(id)
+    if (match != null) {
+      return match.getPath(locale)
+    }
+    else {
+      console.log(`ERROR: Could not find tree node of id: ${id}`)
+      return ""
+    }
+  }
+
+  function insertListingPageToTree(node) {
+    const id = node._fl_meta_.fl_id
+    const locale = node.flamelink_locale
+    const slug = node.slug
+    const parent = node.parentListingPage
+
+    var parentNode = root
+
+    // Add the parent to the tree first.
+    if (parent != null) {
+      if (parent._fl_meta_ != null) {
+        const p = findListingPage(parent._fl_meta_.fl_id, locale)
+
+        if (p != null) {
+          if (p.node._fl_meta_ != null) {
+            parentNode = insertListingPageToTree(p.node)
+          }
+        }
+      }
+    }
+
+    return parentNode.addChildSlug(id, locale, slug)
+  }
+
+  function insertArticleToTree(node) {
+    const id = node._fl_meta_.fl_id
+    const locale = node.flamelink_locale
+    const slug = node.slug
+    const parent = node.parentContent
+
+    var parentNode = root
+
+    // Add the parent to the tree first.
+    if (parent != null) {
+      if (parent._fl_meta_ != null) {
+        const p = findListingPage(parent._fl_meta_.fl_id, locale)
+
+        if (p != null) {
+          if (p.node._fl_meta_ != null) {
+            parentNode = insertListingPageToTree(p.node)
+          }
+        }
+      }
+    }
+
+
+    return parentNode.addChildSlug(id, locale, slug)
+  }
+
+
+
+  // Generate node tree
+  result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
+    const id = node._fl_meta_.fl_id
+    const locale = node.flamelink_locale
+    const slug = (locale === defaultLocale) ? '' : locale.split('-')[0]
+
+    if (root == null) {
+      // Set frontpage as root of tree
+      root = new TreeNode(id)
+    }
+
+    root.setSlug(locale, slug)
+  })
+
+  result.data.allFlamelinkArticleContent.edges.map(({ node }) =>
+    insertArticleToTree(node)
+  )
+
+  result.data.allFlamelinkListingPageContent.edges.map(({ node }) =>
+    insertListingPageToTree(node)
+  )
+
+
+  root.print()
+
+
+
+  // Return a list of image urls from a markdown body
   function extract_image_urls(markdownBody) {
     var result = markdownBody.matchAll(/!\[[^\]]*\]\((?<filename>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g)
 
@@ -231,35 +381,6 @@ exports.createPages = async ({ graphql, actions }) => {
     }
     return array
   }
-
-  let root;
-
-  result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
-    const id = node._fl_meta_.fl_id
-    const locale = node.flamelink_locale
-    const slug = (locale === defaultLocale) ? '' : locale.split('-')[0]
-
-    // Set frontpage as root of tree
-    if (!root) {
-      root = new TreeNode(id)
-    }
-    root.setSlug(locale, slug)
-  })
-
-  result.data.allFlamelinkListingPageContent.edges.map(({ node }) =>
-    root.addChildSlug(node._fl_meta_.fl_id, node.flamelink_locale, node.slug)
-  )
-
-  result.data.allFlamelinkArticleContent.edges.map(({ node }) =>
-    root.getChild(node.parentContent._fl_meta_.fl_id).addChildSlug(node._fl_meta_.fl_id, node.flamelink_locale, node.slug)
-  )
-
-  function getListingPagePath(id, locale) {
-    return root.getChild(id).getPath(locale)
-  }
-
-
-
 
 
 
@@ -329,7 +450,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
     // Create Article Pages
     var articles = result.data.allFlamelinkArticleContent.edges
-      .filter(({ node }) => node.parentContent.slug === slug)
+      .filter(({ node }) => node.parentContent._fl_meta_.fl_id === id && node.flamelink_locale === locale)
       .map(node => node.node)
       .map(node => {
 
@@ -346,7 +467,6 @@ exports.createPages = async ({ graphql, actions }) => {
         var address = node.address.address
         var location = { lat: Number(node.latLong.latitude), lng: Number(node.latLong.longitude) }
         var baseURL = "https://maps.googleapis.com/maps/api/staticmap?"
-
         var parameters = ""
 
         if (node.address.address) {
@@ -364,7 +484,6 @@ exports.createPages = async ({ graphql, actions }) => {
         }
 
         var noApiURL = baseURL + parameters + style
-
         var apiURL = noApiURL + "&key=" + process.env.GATSBY_GOOGLE_API
 
         locations = locations + `\n${noApiURL}`
@@ -381,7 +500,7 @@ exports.createPages = async ({ graphql, actions }) => {
           .then(res => res.body)
           .then(data => {
             fs.promises.mkdir(`./static/maps`, { recursive: true }).then(_ => {
-              const dest = fs.createWriteStream(`./static/maps/${decodeURI(parameters)}.png`, { flags: 'w', encoding: 'utf-8', mode: 0666 });
+              const dest = fs.createWriteStream(`./static/maps/${decodeURI(parameters).trim(' ')}.png`, { flags: 'w', encoding: 'utf-8', mode: 0666 });
               dest.on('error', function (e) { console.error(e); });
               data.pipe(dest);
             })
@@ -389,15 +508,16 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
         tags = tags.concat(node.tags)
+        const treeNode = root.dfSearchInTree(id).getChild(node._fl_meta_.fl_id)
         createPage({
-          path: root.getChild(id).getChild(node._fl_meta_.fl_id).getPath(node.flamelink_locale),
+          path: treeNode.getPath(node.flamelink_locale),
           component: path.resolve('./src/templates/article.js'),
           context: {
             // Pass context data here (Remove queries from article.js)
             defaultCenter: { lat: 63.430529, lng: 10.4005522 },
             localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
             node: node,
-            layoutContext: layoutContext(locale, root.getChild(id).getChild(node._fl_meta_.fl_id).getLocalizedPaths()),
+            layoutContext: layoutContext(locale, treeNode.getLocalizedPaths()),
             locale: locale,
           }
         })
@@ -406,8 +526,10 @@ exports.createPages = async ({ graphql, actions }) => {
 
     // Create Listing Page
     tags = [...new Set(tags)]
+    const treeNode = root.dfSearchInTree(id)
+
     createPage({
-      path: root.getChild(id).getPath(locale),
+      path: treeNode.getPath(locale),
       component: path.resolve(`./src/templates/listing-page.js`),
       context: {
         node: node,
@@ -416,7 +538,7 @@ exports.createPages = async ({ graphql, actions }) => {
         articles: articles,
         localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
         locale: locale,
-        layoutContext: layoutContext(locale, root.getChild(id).getLocalizedPaths()),
+        layoutContext: layoutContext(locale, treeNode.getLocalizedPaths()),
       },
     })
   }
