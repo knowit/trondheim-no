@@ -6,7 +6,8 @@ class TreeNode {
     this.parent = parent;
     this.children = new Map();
     this.slugs = new Map();
-    this.menuListingPages = new Map()
+    this.menuListingPages = new Map();
+    this.node = new Map();
   }
 
   // Depth first search for child with id
@@ -53,6 +54,12 @@ class TreeNode {
   }
   getSlug(locale) {
     return this.slugs.get(locale)
+  }
+  setGraphQLNode(node, locale) {
+    this.node.set(locale, node)
+  }
+  getGraphQLNode(locale) {
+    return this.node.get(locale)
   }
   getPath(locale) {
     let slug = this.getSlug(locale)
@@ -139,7 +146,9 @@ class PathTreeBuilder {
       }
     }
 
-    return parentNode.addChildSlug(id, locale, slug)
+    var result = parentNode.addChildSlug(id, locale, slug)
+    result.setGraphQLNode(node)
+    return result;
   }
 
 
@@ -164,8 +173,9 @@ class PathTreeBuilder {
       }
     }
 
-
-    return parentNode.addChildSlug(id, locale, slug)
+    var result = parentNode.addChildSlug(id, locale, slug)
+    result.setGraphQLNode(node)
+    return result
   }
 
   generateMenuData() {
@@ -179,12 +189,14 @@ class PathTreeBuilder {
         this.menuListingPages.set(locale, new Array())
       }
 
-      this.menuListingPages.get(locale).push({
-        title: node.localTitle,
-        slug: node.slug,
-        locale: locale,
-        path: this.getListingPagePath(node._fl_meta_.fl_id, locale)
-      })
+      if (node.showInDropMenu === true) {
+        this.menuListingPages.get(locale).push({
+          title: node.localTitle,
+          slug: node.slug,
+          locale: locale,
+          path: this.getListingPagePath(node._fl_meta_.fl_id, locale)
+        })
+      }
     })
   }
 
@@ -210,6 +222,7 @@ class PathTreeBuilder {
       }
 
       this.root.setSlug(locale, slug)
+      this.root.setGraphQLNode(node, locale)
     })
 
     this.result.data.allFlamelinkArticleContent.edges.map(({ node }) =>

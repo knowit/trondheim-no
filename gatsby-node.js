@@ -36,6 +36,8 @@ exports.createPages = async ({ graphql, actions }) => {
           navigationTitle
           navigationSubtitle
           textOnPage
+          showOnFrontPage
+          showInDropMenu
           parentListingPage{
             slug
             _fl_meta_ {
@@ -178,11 +180,6 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
 
-  let pathHelper = new PathTreeBuilder(result, defaultLocale)
-  const root = pathHelper.build()
-
-
-
   // Return a list of image urls from a markdown body
   function extract_image_urls(markdownBody) {
     var result = markdownBody.matchAll(/!\[[^\]]*\]\((?<filename>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g)
@@ -198,6 +195,8 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
 
+  let pathHelper = new PathTreeBuilder(result, defaultLocale)
+  const root = pathHelper.build()
 
   var external_resources = ""
   var locations = ""
@@ -207,12 +206,18 @@ exports.createPages = async ({ graphql, actions }) => {
   result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
     const locale = node.flamelink_locale
 
-    const listingPages = result.data.allFlamelinkListingPageContent.edges.filter(({ node }) => {
-      return node.flamelink_locale === locale
-    }).map(node => {
-      createListingPage(node.node)
-      return node.node
-    })
+    var listingPages = []
+
+
+    result.data.allFlamelinkListingPageContent.edges
+      .filter(({ node }) => node.flamelink_locale === locale)
+      .map(node => {
+        createListingPage(node.node)
+
+        if (node.node.showOnFrontPage === true) {
+          listingPages.push(node.node)
+        }
+      })
 
     createPage({
       path: root.getPath(locale),
