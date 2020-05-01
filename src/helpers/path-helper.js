@@ -137,6 +137,7 @@ class TreeNode {
 class BreadthFirstNodeIterator {
 
   constructor(root) {
+    console.log("Started iterator...")
     this.queue = [root]
     this.counter = 0
     this.listingPageCounter = 0
@@ -161,7 +162,7 @@ class BreadthFirstNodeIterator {
     }
     else {
       const node = this.queue[0]
-
+      console.log(`Iterating node ${this.counter}: ${node.getPath('no')}`)
       this.counter += 1
       if (node.isArticle) {
         this.articleCounter += 1
@@ -179,6 +180,7 @@ class BreadthFirstNodeIterator {
   }
 }
 
+// TODO: Fix node iterator
 class ListingPageBuilder {
   constructor(treeNode) {
     this.treeNode = treeNode
@@ -205,7 +207,6 @@ class ListingPageBuilder {
 
   addSubListingPage(treeNode) {
     this.subListingPages.push(treeNode)
-    console.log("Sub listing page added.")
   }
 
   getSubListingPages(locale) {
@@ -214,7 +215,6 @@ class ListingPageBuilder {
 
   addArticle(treeNode) {
     this.articles.push(treeNode)
-    console.log("Article added.")
   }
 
   getArticles(locale) {
@@ -238,7 +238,8 @@ class PathTreeBuilder {
   }
 
   createNodeIterator() {
-    return new BreadthFirstNodeIterator(this.root)
+    const iterator = new BreadthFirstNodeIterator(this.root)
+    return iterator
   }
 
   findListingPage(id, locale) {
@@ -271,7 +272,6 @@ class PathTreeBuilder {
       }
       if (!this.frontPageListingPages.get(locale).has(id)) {
         !this.frontPageListingPages.get(locale).set(id, node)
-        console.log(`Listing page ${slug} was put on the front page`)
       }
     }
 

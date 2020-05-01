@@ -192,7 +192,6 @@ exports.createPages = async ({ graphql, actions }) => {
 
   let pathHelper = new PathTreeBuilder(result, defaultLocale)
   const root = pathHelper.build()
-  let treeNodeIterator = pathHelper.createNodeIterator()
   const listingPages = new Map()
 
   var external_resources = ""
@@ -293,7 +292,6 @@ exports.createPages = async ({ graphql, actions }) => {
           locale: locale,
         }
       })
-      console.log("Article created.")
     })
   }
 
@@ -307,6 +305,7 @@ exports.createPages = async ({ graphql, actions }) => {
       const subListingPages = listingPageBuilder.getSubListingPages(locale)
       const articles = listingPageBuilder.getArticles(locale)
       const tags = listingPageBuilder.getTags(locale)
+      const pagePath = treeNode.getPath(locale)
 
       createPage({
         path: treeNode.getPath(locale),
@@ -321,7 +320,6 @@ exports.createPages = async ({ graphql, actions }) => {
           layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
         },
       })
-      console.log("Listing page created.")
     })
   }
 
@@ -346,38 +344,31 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   }
 
+  const treeNodeIterator = pathHelper.createNodeIterator()
+
   while (treeNodeIterator.hasNext()) {
 
-    let treeNode = treeNodeIterator.next()
-    console.log("\n\nProcessing tree node...")
-    console.log(`TreeNode is ListingPage: ${treeNode.isListingPage}\nTreeNode is Article: ${treeNode.isArticle}\nTreeNode is Front Page: ${treeNode.isFrontPage}`)
+    const treeNode = treeNodeIterator.next()
 
     if (treeNode.isListingPage == true) {
-      console.log("Adding listing page...")
       if (treeNode.parentListingPage != null) {
-        console.log("Listing page has parent. Adding listing page as sub page to parent...")
         listingPages.get(treeNode.parentListingPage._fl_meta_.fl_id).addSubListingPage(treeNode)
       }
 
       listingPages.set(treeNode.id, pathHelper.createListingPageBuilder(treeNode))
-      console.log("Listing page added.")
     }
 
     else if (treeNode.isArticle == true) {
-      console.log("\nCreating article...")
       if (treeNode.parentContent != null) {
-        console.log("Adding article as child of parent listing page...")
         const listingPage = listingPages.get(treeNode.parentContent._fl_meta_.fl_id)
         listingPage.addArticle(treeNode)
         listingPage.addTags(treeNode.tags)
       }
       createArticle(treeNode)
     }
-    console.log("Node processed.")
   }
 
   Array.from(listingPages.values()).map(listingPage => {
-    console.log(listingPage)
     createListingPage(listingPage)
   })
 
