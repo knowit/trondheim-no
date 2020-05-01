@@ -6,12 +6,30 @@ class TreeNode {
     this.parent = parent;
     this.children = new Map();
     this.slugs = new Map();
-    this.menuListingPages = new Map();
     this.node = new Map();
+    this.isListingPage = false;
+    this.isArticle = false;
+    this.isFrontPage = false;
   }
 
-  // Depth first search for child with id
+  bfSearchInTree(id) {
+    let iterator = new BreadthFirstNodeIterator(this)
+    while (iterator.hasNext()) {
+      let node = iterator.next()
+      if (node.id === id) {
+        return node
+      }
+    }
+    return null
+  }
+
+
   dfSearchInTree(id) {
+
+    // Check if id matches
+    if (this.id === id) {
+      return this
+    }
 
     // Check if direct children has id
     const child = this.children.get(id)
@@ -55,9 +73,25 @@ class TreeNode {
   getSlug(locale) {
     return this.slugs.get(locale)
   }
+
   setGraphQLNode(node, locale) {
+    var schemaTitle = ""
+    if (node._fl_meta_ != null) {
+      schemaTitle = node._fl_meta_.schemaRef.title
+    }
+
+    if (schemaTitle == "Article") {
+      this.isArticle = true
+    }
+    else if (schemaTitle == "ListingPage") {
+      this.isListingPage = true
+    }
+    else if (schemaTitle == "Front Page") {
+      this.isFrontPage = true
+    }
     this.node.set(locale, node)
   }
+
   getGraphQLNode(locale) {
     return this.node.get(locale)
   }
@@ -100,12 +134,111 @@ class TreeNode {
 }
 
 
+class BreadthFirstNodeIterator {
+
+  constructor(root) {
+    this.queue = [root]
+    this.counter = 0
+    this.listingPageCounter = 0
+    this.articleCounter = 0
+    this.frontPageCounter = 0
+  }
+
+  hasNext() {
+    if (this.queue.length > 0) {
+      return true
+    }
+    else {
+      console.log(`Iterated through ${this.counter} tree nodes.`)
+      console.log(`Front pages: ${this.frontPageCounter}\nListingPages: ${this.listingPageCounter}\nArticles:${this.articleCounter}`)
+      return false
+    }
+  }
+
+  next() {
+    if (!this.hasNext()) {
+      throw new Error("Iterator is empty, but next was called.")
+    }
+    else {
+      const node = this.queue[0]
+
+      this.counter += 1
+      if (node.isArticle) {
+        this.articleCounter += 1
+      }
+      if (node.isListingPage) {
+        this.listingPageCounter += 1
+      }
+      if (node.isFrontPage) {
+        this.frontPageCounter += 1
+      }
+
+      this.queue = this.queue.slice(1).concat(Array.from(node.children.values()))
+      return node
+    }
+  }
+}
+
+class ListingPageBuilder {
+  constructor(treeNode) {
+    this.treeNode = treeNode
+    this.subListingPages = []
+    this.articles = []
+    this.tags = new Map();
+  }
+
+  getTreeNode() {
+    return this.treeNode
+  }
+
+  addTags(tags, locale) {
+    if (!this.tags.has(locale)) {
+      this.tags.set(locale, new Array())
+    }
+
+    this.tags.set(locale, [...new Set(this.tags.get(locale).concat(tags))])
+  }
+
+  getTags(locale) {
+    return this.tags.get(locale)
+  }
+
+  addSubListingPage(treeNode) {
+    this.subListingPages.push(treeNode)
+    console.log("Sub listing page added.")
+  }
+
+  getSubListingPages(locale) {
+    return this.subListingPages.map(lp => lp.node.get(locale))
+  }
+
+  addArticle(treeNode) {
+    this.articles.push(treeNode)
+    console.log("Article added.")
+  }
+
+  getArticles(locale) {
+    return this.articles.map(a => a.node.get(locale))
+  }
+
+}
+
 class PathTreeBuilder {
 
   constructor(result, defaultLocale) {
     this.result = result
     this.defaultLocale = defaultLocale
     this.root = null
+    this.frontPageListingPages = new Map()
+    this.dropMenuListingPages = new Map()
+  }
+
+  createListingPageBuilder(treeNode) {
+    return new ListingPageBuilder(treeNode)
+  }
+
+  createNodeIterator() {
+    return new BreadthFirstNodeIterator(this.root)
   }
 
   findListingPage(id, locale) {
@@ -115,7 +248,7 @@ class PathTreeBuilder {
   }
 
   getListingPagePath(id, locale) {
-    const match = this.root.dfSearchInTree(id)
+    const match = this.root.bfSearchInTree(id)
     if (match != null) {
       return match.getPath(locale)
     }
@@ -130,6 +263,27 @@ class PathTreeBuilder {
     const locale = node.flamelink_locale
     const slug = node.slug
     const parent = node.parentListingPage
+
+    // Check if listing page belongs on front page
+    if (node.showOnFrontPage === true) {
+      if (!this.frontPageListingPages.has(locale)) {
+        this.frontPageListingPages.set(locale, new Map())
+      }
+      if (!this.frontPageListingPages.get(locale).has(id)) {
+        !this.frontPageListingPages.get(locale).set(id, node)
+        console.log(`Listing page ${slug} was put on the front page`)
+      }
+    }
+
+    // Check if listing page belongs in drop menu
+    if (node.showInDropMenu === true) {
+      if (!this.dropMenuListingPages.has(locale)) {
+        this.dropMenuListingPages.set(locale, new Map())
+      }
+      if (!this.dropMenuListingPages.get(locale).has(id)) {
+        this.dropMenuListingPages.get(locale).set(id, node)
+      }
+    }
 
     var parentNode = this.root
 
@@ -148,6 +302,7 @@ class PathTreeBuilder {
 
     var result = parentNode.addChildSlug(id, locale, slug)
     result.setGraphQLNode(node)
+
     return result;
   }
 
