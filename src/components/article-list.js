@@ -7,6 +7,7 @@ import Img from "gatsby-image"
 
 const selectedStyle = {backgroundColor: 'grey', color: 'white'};
 const unSelectedStyle = {backgroundColor: 'darkgrey', color: 'black'};
+const SORT_TYPES = ["standard", "date", "title", "random"];
 
 export default class SortableArticleView extends React.Component {
 
@@ -16,45 +17,82 @@ export default class SortableArticleView extends React.Component {
             filterTags: [],
             sortBy: "standard"
         };
+
+        this.handleTagToggle = this.handleTagToggle.bind(this);
+        this.handleSortToggle = this.handleSortToggle.bind(this);
     }
 
-  render() {
-    return (
-        <div>
-            <TagFilter 
-                pageContext={this.props.pageContext}
-                filterTags={this.state.filterTags}
-            />
-            <Sorter 
-                pageContext={this.props.pageContext}
-                sortBy={this.state.sortBy}
-            />
-            <ArticleList 
-                articles={this.props.pageContext.articles} 
-                pageContext={this.props.pageContext}
-                filterTags={this.state.filterTags}
-                sortBy={this.state.sortBy}
-            />
-        </div>
-    );
-  }
+    handleTagToggle(tag){
+        let filterTags = this.state.filterTags;
+        if(tag == "all") filterTags = [];
+        else {
+            var indexOf = filterTags.findIndex(tag);
+            if(indexOf == -1) filterTags.push(tag);
+            else filterTags.splice(indexOf,1);
+        }
+        this.setState({filterTags: filterTags});
+    }
+
+    handleSortToggle(sort){
+        this.setState({sortBy:sort});
+    }
+
+    render() {
+        return (
+            <div>
+                <TagFilter 
+                    pageContext={this.props.pageContext}
+                    filterTags={this.state.filterTags}
+                    onTagToggle={this.handleTagToggle}
+                />
+                <Sorter 
+                    pageContext={this.props.pageContext}
+                    sortBy={this.state.sortBy}
+                    onSortToggle={this.handleSortToggle}
+                />
+                <ArticleList 
+                    articles={this.props.pageContext.articles} 
+                    pageContext={this.props.pageContext}
+                    filterTags={this.state.filterTags}
+                    sortBy={this.state.sortBy}
+                />
+            </div>
+        );
+    }
 }
 
 class TagFilter extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleTagToggle = this.handleTagToggle.bind(this);
+    }
+
+    handleTagToggle(tag, e) {
+        e.preventDefault();
+        this.props.onTagToggle(tag)
+    }
+
     render() {
         const pageContext = this.props.pageContext;
         const filterTags = this.props.filterTags;
         const allTags = [];
 
         allTags.push(
-            <div class="distinct-tag" style={filterTags.length == 0 ? selectedStyle : unSelectedStyle}>
-                {LocalizationHelper.getLocalWord(pageContext.localization, "all", pageContext.locale)}
+            <div 
+                class="distinct-tag" 
+                style={filterTags.length == 0 ? selectedStyle : unSelectedStyle}
+                onClick={(e) => this.handleTagToggle("all", e)}>
+                    {LocalizationHelper.getLocalWord(pageContext.localization, "all", pageContext.locale)}
             </div>
         )
 
         pageContext.tags.forEach((tag) => {
             allTags.push(
-            <div class="distinct-tag" style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}>
+            <div 
+                class="distinct-tag" 
+                style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}
+                onClick={(e) => this.handleTagToggle(tag, e)}>
                 {tag}
             </div>)
         })
@@ -68,16 +106,37 @@ class TagFilter extends React.Component {
 }
 
 class Sorter extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleSortToggle = this.handleSortToggle.bind(this);
+    }
+
+    handleSortToggle(tag, e) {
+        e.preventDefault();
+        this.props.onSortToggle(tag)
+    }
+
     render() {
         const pageContext = this.props.pageContext;
         const sortBy = this.props.sortBy;
+        const sortTags = [];
+
+        SORT_TYPES.forEach(s => {
+            sortTags.push(
+                <div 
+                    class="distinct-tag" 
+                    style={sortBy == s ? selectedStyle : unSelectedStyle}
+                    onClick={(e) => this.handleSortToggle(s, e)}
+                    >
+                        {LocalizationHelper.getLocalWord(pageContext.localization, s, pageContext.locale)}
+                </div>
+            );
+        });
 
         return(
             <div>
-                <div class="distinct-tag" style={sortBy == "standard" ? selectedStyle : unSelectedStyle}>{LocalizationHelper.getLocalWord(pageContext.localization, "standard", pageContext.locale)}</div>
-                <div class="distinct-tag" style={sortBy == "date" ? selectedStyle : unSelectedStyle}>{LocalizationHelper.getLocalWord(pageContext.localization, "date", pageContext.locale)}</div>
-                <div class="distinct-tag" style={sortBy == "title" ? selectedStyle : unSelectedStyle}>{LocalizationHelper.getLocalWord(pageContext.localization, "title", pageContext.locale)}</div>
-                <div class="distinct-tag" style={sortBy == "random" ? selectedStyle : unSelectedStyle}>{LocalizationHelper.getLocalWord(pageContext.localization, "random", pageContext.locale)}</div>
+                {sortTags}
             </div>
         )
     }
