@@ -1,4 +1,26 @@
 
+
+function* breadthFirstIterator(root) {
+  var node = null
+  var queue = [root]
+  var done = false
+  var counter = 0
+  console.log(`\nStarted iterator...`)
+
+  while (!done) {
+    node = queue.shift()
+    queue = queue.concat(Array.from(node.children.values()))
+    done = node == null || queue.length === 0
+
+    console.log(`Iterating node ${counter}: ${node.getPath('no')}`)
+
+    counter += 1
+    yield node
+  }
+  console.log(`Iterated through ${counter} nodes.`)
+}
+
+
 // Helper class to map paths in different locales
 class TreeNode {
   constructor(id, parent = null) {
@@ -13,13 +35,14 @@ class TreeNode {
   }
 
   bfSearchInTree(id) {
-    let iterator = new BreadthFirstNodeIterator(this)
-    while (iterator.hasNext()) {
-      let node = iterator.next()
+    console.log(`\nSearching for id ${id}`)
+    for (const node of breadthFirstIterator(this)) {
+      console.log(`Node: ${node.id}, match: ${node.id === id}`)
       if (node.id === id) {
         return node
       }
     }
+
     return null
   }
 
@@ -134,53 +157,8 @@ class TreeNode {
 }
 
 
-class BreadthFirstNodeIterator {
 
-  constructor(root) {
-    console.log("Started iterator...")
-    this.queue = [root]
-    this.counter = 0
-    this.listingPageCounter = 0
-    this.articleCounter = 0
-    this.frontPageCounter = 0
-  }
 
-  hasNext() {
-    if (this.queue.length > 0) {
-      return true
-    }
-    else {
-      console.log(`Iterated through ${this.counter} tree nodes.`)
-      console.log(`Front pages: ${this.frontPageCounter}\nListingPages: ${this.listingPageCounter}\nArticles:${this.articleCounter}`)
-      return false
-    }
-  }
-
-  next() {
-    if (!this.hasNext()) {
-      throw new Error("Iterator is empty, but next was called.")
-    }
-    else {
-      const node = this.queue[0]
-      console.log(`Iterating node ${this.counter}: ${node.getPath('no')}`)
-      this.counter += 1
-      if (node.isArticle) {
-        this.articleCounter += 1
-      }
-      if (node.isListingPage) {
-        this.listingPageCounter += 1
-      }
-      if (node.isFrontPage) {
-        this.frontPageCounter += 1
-      }
-
-      this.queue = this.queue.slice(1).concat(Array.from(node.children.values()))
-      return node
-    }
-  }
-}
-
-// TODO: Fix node iterator
 class ListingPageBuilder {
   constructor(treeNode) {
     this.treeNode = treeNode
@@ -231,6 +209,7 @@ class PathTreeBuilder {
     this.root = null
     this.frontPageListingPages = new Map()
     this.dropMenuListingPages = new Map()
+    this.menuData = new Map()
   }
 
   createListingPageBuilder(treeNode) {
@@ -238,8 +217,7 @@ class PathTreeBuilder {
   }
 
   createNodeIterator() {
-    const iterator = new BreadthFirstNodeIterator(this.root)
-    return iterator
+    return breadthFirstIterator(this.root)
   }
 
   findListingPage(id, locale) {
@@ -248,8 +226,9 @@ class PathTreeBuilder {
     )
   }
 
-  getListingPagePath(id, locale) {
-    const match = this.root.bfSearchInTree(id)
+  findPagePath(id, locale) {
+    var match = this.root.bfSearchInTree(id)
+
     if (match != null) {
       return match.getPath(locale)
     }
@@ -265,24 +244,27 @@ class PathTreeBuilder {
     const slug = node.slug
     const parent = node.parentListingPage
 
+    console.log(`\nAttempting to build node {id: ${id}, slug: ${slug}}`)
+    console.log(`Node is Listing page.`)
+
     // Check if listing page belongs on front page
     if (node.showOnFrontPage === true) {
       if (!this.frontPageListingPages.has(locale)) {
         this.frontPageListingPages.set(locale, new Map())
       }
-      if (!this.frontPageListingPages.get(locale).has(id)) {
-        !this.frontPageListingPages.get(locale).set(id, node)
-      }
+      this.frontPageListingPages.get(locale).set(id, node)
+      console.log(`Listing page was added to front page.`)
     }
 
     // Check if listing page belongs in drop menu
     if (node.showInDropMenu === true) {
       if (!this.dropMenuListingPages.has(locale)) {
-        this.dropMenuListingPages.set(locale, new Map())
+        this.dropMenuListingPages.set(locale, new Array())
       }
-      if (!this.dropMenuListingPages.get(locale).has(id)) {
-        this.dropMenuListingPages.get(locale).set(id, node)
+      if (!this.dropMenuListingPages.get(locale).includes(node)) {
+        this.dropMenuListingPages.get(locale).push(node)
       }
+      console.log(`Listing page was added to drop menu.`)
     }
 
     var parentNode = this.root
@@ -294,6 +276,7 @@ class PathTreeBuilder {
 
         if (p != null) {
           if (p.node._fl_meta_ != null) {
+            console.log(`Listing page has parent. Attempting to add parent to tree...`)
             parentNode = this.insertListingPageToTree(p.node)
           }
         }
@@ -302,6 +285,13 @@ class PathTreeBuilder {
 
     var result = parentNode.addChildSlug(id, locale, slug)
     result.setGraphQLNode(node)
+
+    if (result != null) {
+      console.log(`Added listing page successfully.`)
+    }
+    else {
+      console.log(`Adding listing page failed.`)
+    }
 
     return result;
   }
@@ -313,7 +303,10 @@ class PathTreeBuilder {
     const slug = node.slug
     const parent = node.parentContent
 
-    var parentNode = root
+    console.log(`\nAttempting to build node {id: ${id}, slug: ${slug}}`)
+    console.log(`Node is article`)
+
+    var parentNode = this.root
 
     // Add the parent to the tree first.
     if (parent != null) {
@@ -322,62 +315,79 @@ class PathTreeBuilder {
 
         if (p != null) {
           if (p.node._fl_meta_ != null) {
+            console.log(`Article has parent. Attempting to add parent as listing page...`)
             parentNode = this.insertListingPageToTree(p.node)
           }
         }
       }
     }
 
+    console.log(`Adding article as child to parent tree node.`)
     var result = parentNode.addChildSlug(id, locale, slug)
     result.setGraphQLNode(node)
+    if (result != null) {
+      console.log(`Article added successfully.`)
+    }
+    else {
+      console.log(`Adding article failed.`)
+    }
     return result
   }
 
   generateMenuData() {
     // Generate menu data for every locale
-    this.menuListingPages = new Map()
-    this.result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
+    console.log(`\n\nGenerating menu data...`)
 
-      const locale = node.flamelink_locale
+    this.dropMenuListingPages.forEach((value, key, map) => {
 
-      if (!this.menuListingPages.has(locale)) {
-        this.menuListingPages.set(locale, new Array())
+      const locale = key
+
+      if (!this.menuData.has(locale)) {
+        this.menuData.set(locale, new Array())
       }
 
-      if (node.showInDropMenu === true) {
-        this.menuListingPages.get(locale).push({
+      value.map(node => {
+
+        this.menuData.get(locale).push({
           title: node.localTitle,
           slug: node.slug,
           locale: locale,
-          path: this.getListingPagePath(node._fl_meta_.fl_id, locale)
+          path: this.findPagePath(node._fl_meta_.fl_id, locale)
         })
-      }
+
+      })
     })
   }
 
   layoutContext(locale, localizedPaths) {
     return {
-      menuData: this.menuListingPages.get(locale),
+      menuData: this.menuData.get(locale),
       locale: locale,
       localizedPaths: localizedPaths, // Paths to the same page for different locales
     }
   }
 
   build() {
-
+    console.log(`Building node tree...`)
     // Generate node tree
     this.result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
       const id = node._fl_meta_.fl_id
       const locale = node.flamelink_locale
       const slug = (locale === this.defaultLocale) ? '' : locale.split('-')[0]
+      console.log(`\nAttempting to build node {id: ${id}, slug: ${slug}}`)
 
       if (this.root == null) {
         // Set frontpage as root of tree
         this.root = new TreeNode(id)
+        console.log(`Node is front page. Creating new front page tree node.`)
+      }
+      else {
+        console.log(`Node is front page. Adding node to front page tree node.`)
       }
 
       this.root.setSlug(locale, slug)
       this.root.setGraphQLNode(node, locale)
+      console.log(`Front page node updated.`)
     })
 
     this.result.data.allFlamelinkArticleContent.edges.map(({ node }) =>
@@ -388,11 +398,21 @@ class PathTreeBuilder {
       this.insertListingPageToTree(node)
     )
 
+    console.log(`\n\nRoot has ${this.root.children.size} children.\n`)
+    console.log(`\n\nPath tree complete! Iterating through tree...`)
+
+    for (let node of breadthFirstIterator(this.root)) {
+      console.log(`Node: ${node.getPath('no')}`)
+    }
+
+
     this.generateMenuData()
+
+
 
     return this.root
   }
 
 }
 
-module.exports = PathTreeBuilder 
+module.exports = { PathTreeBuilder } 

@@ -4,7 +4,7 @@ const path = require(`path`)
 const fs = require('fs')
 const fetch = require('node-fetch')
 const defaultLocale = 'no'
-const PathTreeBuilder = require(`./src/helpers/path-helper`)
+const { PathTreeBuilder } = require(`./src/helpers/path-helper`)
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
@@ -189,11 +189,9 @@ exports.createPages = async ({ graphql, actions }) => {
     return
   }
 
-
   let pathHelper = new PathTreeBuilder(result, defaultLocale)
   const root = pathHelper.build()
   const listingPages = new Map()
-
   var external_resources = ""
   var locations = ""
 
@@ -344,11 +342,8 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   }
 
-  const treeNodeIterator = pathHelper.createNodeIterator()
 
-  while (treeNodeIterator.hasNext()) {
-
-    const treeNode = treeNodeIterator.next()
+  for (const treeNode of pathHelper.createNodeIterator(root)) {
 
     if (treeNode.isListingPage == true) {
       if (treeNode.parentListingPage != null) {
