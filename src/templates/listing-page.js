@@ -4,7 +4,7 @@ import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
 import { Link } from "gatsby"
 import Img from "gatsby-image"
-
+import SortableArticleView from "../components/article-list"
 
 const ListingPage = ({ pageContext }) => {
   return (
@@ -22,9 +22,7 @@ const ListingPage = ({ pageContext }) => {
               {LocalizationHelper.getLocalWord(pageContext.localization, "changeLanguage", pageContext.locale)}
             </Link>
           </div>
-
-
-
+          
           <div id="all-tags-container">
             <div class="distinct-tag">
               {LocalizationHelper.getLocalWord(pageContext.localization, "all", pageContext.locale)}
@@ -71,7 +69,7 @@ const ListingPage = ({ pageContext }) => {
             })}
           </div>
         </div>
-      </div>
+      </div>*/}
     </Layout>
   )
 }
