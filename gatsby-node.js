@@ -191,7 +191,6 @@ exports.createPages = async ({ graphql, actions }) => {
 
   let pathHelper = new PathTreeBuilder(result, defaultLocale)
   const root = pathHelper.build()
-  const listingPages = new Map()
   var external_resources = ""
   var locations = ""
 
@@ -262,8 +261,17 @@ exports.createPages = async ({ graphql, actions }) => {
 
   function createArticle(treeNode) {
 
-    Array.from(treeNode.node.keys()).map(locale => {
-      const node = treeNode.node.get(locale)
+    console.log(`\nCreating article from node: ${treeNode.toString()}`)
+    console.log(`Node locales: ${Array.from(treeNode.node.keys())}`)
+
+
+
+    treeNode.node.forEach((value, key, map) => {
+      const node = value
+      const locale = key
+
+      console.log(`{locale: ${locale}, path: ${treeNode.getPath(locale)}}`)
+      console.log(`${treeNode.node.size}`)
 
       // Check for external image urls in markdown body
       var urls = extract_image_urls(node.content.childMarkdownRemark.rawMarkdownBody)
@@ -277,6 +285,7 @@ exports.createPages = async ({ graphql, actions }) => {
       // Add google maps location url to be cached
       var noApiURL = getGoogleStaticMapsUrl(node)
       locations = locations + `\n${noApiURL}`
+
 
       createPage({
         path: treeNode.getPath(locale),
@@ -343,28 +352,34 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
 
-  for (const treeNode of pathHelper.createNodeIterator(root)) {
+
+  const listingPages = new Map()
+  console.log(`\n\nBuilding pages...`)
+
+  for (const treeNode of pathHelper.createNodeIterator()) {
 
     if (treeNode.isListingPage == true) {
-      if (treeNode.parentListingPage != null) {
-        listingPages.get(treeNode.parentListingPage._fl_meta_.fl_id).addSubListingPage(treeNode)
-      }
-
       listingPages.set(treeNode.id, pathHelper.createListingPageBuilder(treeNode))
+
+      if (treeNode.parent.id != root.id) {
+        listingPages.get(treeNode.parent.id).addSubListingPage(treeNode)
+      }
     }
 
     else if (treeNode.isArticle == true) {
-      if (treeNode.parentContent != null) {
-        const listingPage = listingPages.get(treeNode.parentContent._fl_meta_.fl_id)
-        listingPage.addArticle(treeNode)
-        listingPage.addTags(treeNode.tags)
+
+      if (treeNode.parent != null) {
+        const parentListingPage = listingPages.get(treeNode.parent.id)
+        parentListingPage.addArticle(treeNode)
       }
+
       createArticle(treeNode)
     }
   }
 
-  Array.from(listingPages.values()).map(listingPage => {
-    createListingPage(listingPage)
+
+  Array.from(listingPages.values()).map(listingPageBuilder => {
+    createListingPage(listingPageBuilder)
   })
 
   createFrontPage(root, pathHelper.frontPageListingPages)

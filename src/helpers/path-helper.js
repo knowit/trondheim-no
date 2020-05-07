@@ -5,19 +5,14 @@ function* breadthFirstIterator(root) {
   var queue = [root]
   var done = false
   var counter = 0
-  console.log(`\nStarted iterator...`)
 
   while (!done) {
     node = queue.shift()
     queue = queue.concat(Array.from(node.children.values()))
     done = node == null || queue.length === 0
-
-    console.log(`Iterating node ${counter}: ${node.getPath('no')}`)
-
     counter += 1
     yield node
   }
-  console.log(`Iterated through ${counter} nodes.`)
 }
 
 
@@ -34,10 +29,32 @@ class TreeNode {
     this.isFrontPage = false;
   }
 
+  toString() {
+    var parentId = `${(this.parent == null) ? 'null' : this.parent.id}`
+
+    var locales = `[`
+    var slugs = `{`
+
+    this.slugs.forEach((value, key, map) => {
+      locales += `${key}, `
+      slugs += `\n\t\t${key}: ${value},`
+    })
+
+    locales = `${locales.substring(0, locales.length - 2)}]`
+    slugs = `${slugs.substring(0, slugs.length - 1)}\n\t}`
+
+    return `{
+      \tid: ${this.id},
+      \tparentId: ${parentId}
+      \tisListingPage: ${this.isListingPage},
+      \tisArticle: ${this.isArticle},
+      \tisFrontPage: ${this.isFrontPage}
+      \tlocales: ${locales}
+      \tslugs: ${slugs}\n}`
+  }
+
   bfSearchInTree(id) {
-    console.log(`\nSearching for id ${id}`)
     for (const node of breadthFirstIterator(this)) {
-      console.log(`Node: ${node.id}, match: ${node.id === id}`)
       if (node.id === id) {
         return node
       }
@@ -97,7 +114,7 @@ class TreeNode {
     return this.slugs.get(locale)
   }
 
-  setGraphQLNode(node, locale) {
+  setGraphQLNode(node) {
     var schemaTitle = ""
     if (node._fl_meta_ != null) {
       schemaTitle = node._fl_meta_.schemaRef.title
@@ -112,7 +129,7 @@ class TreeNode {
     else if (schemaTitle == "Front Page") {
       this.isFrontPage = true
     }
-    this.node.set(locale, node)
+    this.node.set(node.flamelink_locale, node)
   }
 
   getGraphQLNode(locale) {
@@ -193,6 +210,14 @@ class ListingPageBuilder {
 
   addArticle(treeNode) {
     this.articles.push(treeNode)
+
+    // Add article tags
+    this.treeNode.node.forEach((value, key, map) => {
+      const locale = key
+      const node = value
+
+      this.addTags(node.tags, locale)
+    })
   }
 
   getArticles(locale) {
@@ -244,16 +269,12 @@ class PathTreeBuilder {
     const slug = node.slug
     const parent = node.parentListingPage
 
-    console.log(`\nAttempting to build node {id: ${id}, slug: ${slug}}`)
-    console.log(`Node is Listing page.`)
-
     // Check if listing page belongs on front page
     if (node.showOnFrontPage === true) {
       if (!this.frontPageListingPages.has(locale)) {
         this.frontPageListingPages.set(locale, new Map())
       }
       this.frontPageListingPages.get(locale).set(id, node)
-      console.log(`Listing page was added to front page.`)
     }
 
     // Check if listing page belongs in drop menu
@@ -264,7 +285,6 @@ class PathTreeBuilder {
       if (!this.dropMenuListingPages.get(locale).includes(node)) {
         this.dropMenuListingPages.get(locale).push(node)
       }
-      console.log(`Listing page was added to drop menu.`)
     }
 
     var parentNode = this.root
@@ -276,7 +296,6 @@ class PathTreeBuilder {
 
         if (p != null) {
           if (p.node._fl_meta_ != null) {
-            console.log(`Listing page has parent. Attempting to add parent to tree...`)
             parentNode = this.insertListingPageToTree(p.node)
           }
         }
@@ -285,14 +304,6 @@ class PathTreeBuilder {
 
     var result = parentNode.addChildSlug(id, locale, slug)
     result.setGraphQLNode(node)
-
-    if (result != null) {
-      console.log(`Added listing page successfully.`)
-    }
-    else {
-      console.log(`Adding listing page failed.`)
-    }
-
     return result;
   }
 
@@ -303,9 +314,6 @@ class PathTreeBuilder {
     const slug = node.slug
     const parent = node.parentContent
 
-    console.log(`\nAttempting to build node {id: ${id}, slug: ${slug}}`)
-    console.log(`Node is article`)
-
     var parentNode = this.root
 
     // Add the parent to the tree first.
@@ -315,28 +323,20 @@ class PathTreeBuilder {
 
         if (p != null) {
           if (p.node._fl_meta_ != null) {
-            console.log(`Article has parent. Attempting to add parent as listing page...`)
             parentNode = this.insertListingPageToTree(p.node)
           }
         }
       }
     }
 
-    console.log(`Adding article as child to parent tree node.`)
     var result = parentNode.addChildSlug(id, locale, slug)
     result.setGraphQLNode(node)
-    if (result != null) {
-      console.log(`Article added successfully.`)
-    }
-    else {
-      console.log(`Adding article failed.`)
-    }
     return result
   }
 
   generateMenuData() {
     // Generate menu data for every locale
-    console.log(`\n\nGenerating menu data...`)
+    console.log(`Generating menu data...`)
 
     this.dropMenuListingPages.forEach((value, key, map) => {
 
@@ -374,42 +374,27 @@ class PathTreeBuilder {
       const id = node._fl_meta_.fl_id
       const locale = node.flamelink_locale
       const slug = (locale === this.defaultLocale) ? '' : locale.split('-')[0]
-      console.log(`\nAttempting to build node {id: ${id}, slug: ${slug}}`)
 
       if (this.root == null) {
         // Set frontpage as root of tree
         this.root = new TreeNode(id)
-        console.log(`Node is front page. Creating new front page tree node.`)
-      }
-      else {
-        console.log(`Node is front page. Adding node to front page tree node.`)
       }
 
       this.root.setSlug(locale, slug)
       this.root.setGraphQLNode(node, locale)
-      console.log(`Front page node updated.`)
     })
 
-    this.result.data.allFlamelinkArticleContent.edges.map(({ node }) =>
-      this.insertArticleToTree(node)
-    )
-
-    this.result.data.allFlamelinkListingPageContent.edges.map(({ node }) =>
-      this.insertListingPageToTree(node)
-    )
-
-    console.log(`\n\nRoot has ${this.root.children.size} children.\n`)
-    console.log(`\n\nPath tree complete! Iterating through tree...`)
-
-    for (let node of breadthFirstIterator(this.root)) {
-      console.log(`Node: ${node.getPath('no')}`)
+    this.result.data.allFlamelinkArticleContent.edges.map(({ node }) => {
+      const result = this.insertArticleToTree(node)
     }
+    )
 
+    this.result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
+      const result = this.insertListingPageToTree(node)
+    }
+    )
 
     this.generateMenuData()
-
-
-
     return this.root
   }
 
