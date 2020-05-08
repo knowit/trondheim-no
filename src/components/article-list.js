@@ -26,7 +26,7 @@ export default class SortableArticleView extends React.Component {
         let filterTags = this.state.filterTags;
         if(tag == "all") filterTags = [];
         else {
-            var indexOf = filterTags.findIndex(tag);
+            var indexOf = filterTags.findIndex((e)=>e==tag);
             if(indexOf == -1) filterTags.push(tag);
             else filterTags.splice(indexOf,1);
         }
