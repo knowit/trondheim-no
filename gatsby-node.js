@@ -261,17 +261,9 @@ exports.createPages = async ({ graphql, actions }) => {
 
   function createArticle(treeNode) {
 
-    console.log(`\nCreating article from node: ${treeNode.toString()}`)
-    console.log(`Node locales: ${Array.from(treeNode.node.keys())}`)
-
-
-
     treeNode.node.forEach((value, key, map) => {
       const node = value
       const locale = key
-
-      console.log(`{locale: ${locale}, path: ${treeNode.getPath(locale)}}`)
-      console.log(`${treeNode.node.size}`)
 
       // Check for external image urls in markdown body
       var urls = extract_image_urls(node.content.childMarkdownRemark.rawMarkdownBody)
@@ -312,7 +304,6 @@ exports.createPages = async ({ graphql, actions }) => {
       const subListingPages = listingPageBuilder.getSubListingPages(locale)
       const articles = listingPageBuilder.getArticles(locale)
       const tags = listingPageBuilder.getTags(locale)
-      const pagePath = treeNode.getPath(locale)
 
       createPage({
         path: treeNode.getPath(locale),
@@ -320,6 +311,7 @@ exports.createPages = async ({ graphql, actions }) => {
         context: {
           node: node,
           parentPath: root.getPath(locale),
+          subListingPages: subListingPages,
           tags: tags,
           articles: articles,
           localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,

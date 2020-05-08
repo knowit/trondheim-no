@@ -193,10 +193,13 @@ class ListingPageBuilder {
       this.tags.set(locale, new Array())
     }
 
-    this.tags.set(locale, [...new Set(this.tags.get(locale).concat(tags))])
+    this.tags.set(locale, [...new Set(Array.from(this.tags.get(locale)).concat(tags))])
   }
 
   getTags(locale) {
+    if (!this.tags.has(locale)) {
+      this.tags.set(locale, new Array())
+    }
     return this.tags.get(locale)
   }
 
@@ -212,7 +215,7 @@ class ListingPageBuilder {
     this.articles.push(treeNode)
 
     // Add article tags
-    this.treeNode.node.forEach((value, key, map) => {
+    treeNode.node.forEach((value, key, map) => {
       const locale = key
       const node = value
 
