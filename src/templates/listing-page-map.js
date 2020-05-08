@@ -23,7 +23,8 @@ const ListingPageMap = ({ pageContext }) => {
     <Layout layoutContext={pageContext.layoutContext}>
       <div id="outer-container">
         <div id="inner-container">
-          <Map location={GetLocation(pageContext)} address={GetAddress(pageContext)} markers={pageContext.markers} zoom={13} persistentDisabled={false} />
+          <Map location={GetLocation(pageContext)} address={GetAddress(pageContext)} markers={pageContext.markers} zoom={14} persistentDisabled={false}
+            width="100%" height="500px" />
         </div>
       </div>
     </Layout>

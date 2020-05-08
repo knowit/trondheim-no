@@ -73,10 +73,10 @@ class Map extends Component {
                             center={this.props.location}
                             zoom={this.props.zoom}
                             mapContainerStyle={{
-                                height: "400px",
-                                width: "100%"
+                                height: this.props.height,
+                                width: this.props.width
                             }}>
-                            <MarkerClusterer gridSize={60}>
+                            <MarkerClusterer gridSize={1}>
                                 {clusterer =>
                                     this.props.markers.map(markerData => (
                                         <MapMarker

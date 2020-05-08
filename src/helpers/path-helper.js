@@ -218,7 +218,7 @@ class ListingPageBuilder {
       return `${parentPath}/kart-over-${this.treeNode.slugs.get(locale)}`
     }
     else {
-      return `${parentPath}/maps-of-${this.treeNode.slugs.get(locale)}`
+      return `${parentPath}/map-of-${this.treeNode.slugs.get(locale)}`
     }
   }
 

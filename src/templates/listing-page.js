@@ -15,7 +15,7 @@ const ListingPage = ({ pageContext }) => {
           <div id="articles-header">
             <h2>{pageContext.node.localTitle}</h2>
             <p>{pageContext.node.textOnPage}</p>
-            <div id="map-button">{LocalizationHelper.getLocalWord(pageContext.localization, "showOnMap", pageContext.locale)}</div>
+            <Link id="map-button" to={pageContext.mapPath}>{LocalizationHelper.getLocalWord(pageContext.localization, "showOnMap", pageContext.locale)}</Link>
             <Link
               id="english-button"
               to={((pageContext.layoutContext.locale === 'no') ? pageContext.layoutContext.localizedPaths.en : pageContext.layoutContext.localizedPaths.no)}>

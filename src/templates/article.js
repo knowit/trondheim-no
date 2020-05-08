@@ -85,7 +85,8 @@ const Article = ({ pageContext }) => {
           </MDXProvider>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
-          <Map location={location} address={GetAddress(pageContext)} markers={markers} zoom={16} persistentDisabled={false} />
+          <Map location={location} address={GetAddress(pageContext)} markers={markers} zoom={16} persistentDisabled={false}
+            width="100%" height="400px" />
         </div>
       </div>
     </Layout>

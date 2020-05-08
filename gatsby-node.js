@@ -295,21 +295,22 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   }
 
-  function createListingPageMap(listingPageBuilder) {
-
-    const treeNode = listingPageBuilder.getTreeNode()
-    Array.from(treeNode.node.keys()).map(locale => {
-
-    })
-  }
-
 
   function createListingPage(listingPageBuilder) {
 
     const treeNode = listingPageBuilder.getTreeNode()
+    const localization = result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations
     Array.from(treeNode.node.keys()).map(locale => {
 
-      const mapPath = listingPageBuilder.getMapPath(locale)
+      const mapSlug = `${(locale === 'no') ? 'kart-over-' : 'map-of-'}${treeNode.slugs.get(locale)}`
+      const parentPath = treeNode.parent.getPath(locale)
+
+      if (parentPath.slice(-1) != '/') {
+        parentPath = parentPath + '/'
+      }
+
+      const mapPath = parentPath + mapSlug
+
 
       // Get all markers from child articles and subpage child articles.
       const markers = treeNode.getAllChildArticles()
@@ -333,7 +334,7 @@ exports.createPages = async ({ graphql, actions }) => {
         context: {
           node: treeNode.node.get(locale),
           parentPath: treeNode.parent.getPath(locale),
-          localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
+          localization: localization,
           locale: locale,
           layoutContext: pathHelper.layoutContext(locale, listingPageBuilder.getLocalizedMapPaths()),
           markers: markers,
@@ -405,10 +406,9 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   }
 
-  listingPages.forEach((value, key, map) => {
+  listingPages.forEach((value, key, map) =>
     createListingPage(value)
-    createListingPageMap(value)
-  })
+  )
 
   createFrontPage(root, pathHelper.frontPageListingPages)
 
