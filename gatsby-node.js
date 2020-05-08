@@ -41,6 +41,8 @@ exports.createPages = async ({ graphql, actions }) => {
           textOnPage
           showOnFrontPage
           showInDropMenu
+          mapPageTitle
+          mapPageDescription
           parentListingPage{
             slug
             _fl_meta_ {
@@ -310,6 +312,7 @@ exports.createPages = async ({ graphql, actions }) => {
       }
 
       const mapPath = parentPath + mapSlug
+      const listingPagePath = treeNode.getPath(locale)
 
 
       // Get all markers from child articles and subpage child articles.
@@ -338,12 +341,13 @@ exports.createPages = async ({ graphql, actions }) => {
           locale: locale,
           layoutContext: pathHelper.layoutContext(locale, listingPageBuilder.getLocalizedMapPaths()),
           markers: markers,
+          listingPagePath: listingPagePath,
         },
       })
 
       // Create listing page
       createPage({
-        path: treeNode.getPath(locale),
+        path: listingPagePath,
         component: path.resolve(`./src/templates/listing-page.js`),
         context: {
           node: treeNode.node.get(locale),
