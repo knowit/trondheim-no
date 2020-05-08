@@ -52,6 +52,7 @@ export default class SortableArticleView extends React.Component {
                 />
                 <ArticleList 
                     articles={this.props.pageContext.articles} 
+                    subListingPages={this.props.pageContext.subListingPages}
                     pageContext={this.props.pageContext}
                     filterTags={this.state.filterTags}
                     sortBy={this.state.sortBy}
@@ -149,6 +150,15 @@ class ArticleList extends React.Component {
         const pageContext = this.props.pageContext;
         const articleViews = [];
 
+        this.props.subListingPages.forEach((slp) => {
+            slp.tags = [];
+            if(filterTags.length == 0){
+                articleViews.push(
+                    <ArticleView article={slp} pageContext={pageContext} subList={true}/>
+                )
+            }
+        })
+
         this.props.articles.forEach((article) => {
             //Add article to array only if it contains a tag chosen, or ALL is chosen (empty list).
             if(filterTags.length == 0 || article.tags.some(r => filterTags.includes(r))){
@@ -175,7 +185,7 @@ class ArticleView extends React.Component {
             <div class="article-container">
               <Img className="article-thumbnail" fluid={article.thumbnail[0]?.localFile.childImageSharp.fluid} />
               <div class="article-info-container">
-                <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${article.slug}`}>{article.title}</Link></h2>
+                <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${article.slug}`}>{(this.props.subList) ? article.navigationTitle : article.title}</Link></h2>
                 <div class="tags-container">
                   {article.tags.map(function (tag, key) {
                     return (
