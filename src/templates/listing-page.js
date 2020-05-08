@@ -50,6 +50,18 @@ const ListingPage = ({ pageContext }) => {
 
 
           <div id="articles-container">
+
+            {pageContext.subListingPages.map(function (node, key) {
+              return (
+                <div class="article-container">
+                  <Img className="article-thumbnail" fluid={node.thumbnail[0]?.localFile.childImageSharp.fluid} />
+                  <div class="article-info-container">
+                    <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.navigationTitle}</Link></h2>
+                  </div>
+                </div>
+              )
+            })}
+
             {pageContext.articles.map(function (node, key) {
               return (
                 <div class="article-container">
