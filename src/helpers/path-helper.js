@@ -165,7 +165,7 @@ class TreeNode {
   }
   print() {
     var level = this.getLevel()
-    console.log(`Node level ${level}: id: ${this.id},  path: ${this.getPath('no')}`)
+    console.log(`Node level ${level}: ${this.toString()}}`)
     this.printChildren()
   }
   printChildren() {
@@ -345,7 +345,6 @@ class PathTreeBuilder {
 
   generateMenuData() {
     // Generate menu data for every locale
-    console.log(`Generating menu data...`)
 
     this.dropMenuListingPages.forEach((value, key, map) => {
 
@@ -377,7 +376,6 @@ class PathTreeBuilder {
   }
 
   build() {
-    console.log(`Building node tree...`)
     // Generate node tree
     this.result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
       const id = node._fl_meta_.fl_id

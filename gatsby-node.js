@@ -341,7 +341,6 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
   const listingPages = new Map()
-  console.log(`\n\nBuilding pages...`)
 
   for (const treeNode of pathHelper.createNodeIterator()) {
 
