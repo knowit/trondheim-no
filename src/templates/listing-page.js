@@ -53,10 +53,11 @@ const ListingPage = ({ pageContext }) => {
 
             {pageContext.subListingPages.map(function (node, key) {
               return (
-                <div class="listingpage-container">
-                  <Img className="listingpage-thumbnail" fluid={node.thumbnail[0]?.localFile.childImageSharp.fluid} />
-                  <div class="listingpage-info-container">
-                    <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.title}</Link></h2>
+                <div className="article-container">
+                  <Img className="article-thumbnail" fluid={node.thumbnail[0]?.localFile.childImageSharp.fluid} />
+
+                  <div className="article-info-container">
+                    <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.navigationTitle}</Link></h2>
                   </div>
                 </div>
               )
@@ -64,14 +65,14 @@ const ListingPage = ({ pageContext }) => {
 
             {pageContext.articles.map(function (node, key) {
               return (
-                <div class="article-container">
+                <div className="article-container">
                   <Img className="article-thumbnail" fluid={node.thumbnail[0]?.localFile.childImageSharp.fluid} />
-                  <div class="article-info-container">
+                  <div className="article-info-container">
                     <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.title}</Link></h2>
-                    <div class="tags-container">
+                    <div className="tags-container">
                       {node.tags.map(function (tag, key) {
                         return (
-                          <div class="tag">
+                          <div className="tag">
                             <a href="/">{tag}</a>
                           </div>
                         )

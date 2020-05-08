@@ -208,7 +208,13 @@ class ListingPageBuilder {
   }
 
   getSubListingPages(locale) {
-    return this.subListingPages.map(lp => lp.node.get(locale))
+
+    var result = []
+    this.subListingPages.map(treeNode => {
+      result.push(treeNode.node.get(locale))
+    })
+
+    return result
   }
 
   addArticle(treeNode) {

@@ -300,20 +300,15 @@ exports.createPages = async ({ graphql, actions }) => {
     const treeNode = listingPageBuilder.getTreeNode()
     Array.from(treeNode.node.keys()).map(locale => {
 
-      const node = treeNode.node.get(locale)
-      const subListingPages = listingPageBuilder.getSubListingPages(locale)
-      const articles = listingPageBuilder.getArticles(locale)
-      const tags = listingPageBuilder.getTags(locale)
-
       createPage({
         path: treeNode.getPath(locale),
         component: path.resolve(`./src/templates/listing-page.js`),
         context: {
-          node: node,
-          parentPath: root.getPath(locale),
-          subListingPages: subListingPages,
-          tags: tags,
-          articles: articles,
+          node: treeNode.node.get(locale),
+          parentPath: treeNode.parent.getPath(locale),
+          subListingPages: listingPageBuilder.getSubListingPages(locale),
+          tags: listingPageBuilder.getTags(locale),
+          articles: listingPageBuilder.getArticles(locale),
           localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
           locale: locale,
           layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
