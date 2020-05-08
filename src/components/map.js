@@ -1,9 +1,24 @@
 import React, { Component } from 'react';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { GoogleMap, LoadScript, MarkerClusterer } from '@react-google-maps/api';
 import styles from "../style/map.module.css"
 import { Online, Offline } from "react-detect-offline"
+import MapMarker from "./map-marker.js"
+
 
 class Map extends Component {
+
+    state = {
+        isInfoOpen: false,
+        selectedMarkerId: null,
+        noOfClusters: null
+    };
+
+    onClick = (isInfoOpen, selectedMarkerId) => {
+        this.setState({
+            isInfoOpen,
+            selectedMarkerId
+        });
+    };
 
     getGoogleLink() {
         var address = this.props.address;
@@ -48,32 +63,46 @@ class Map extends Component {
 
         if (!this.props.location) return "";
 
-
-
-        const OnlineMap = withScriptjs(withGoogleMap(props => (
-
-            <div style={{ position: "relative" }}>
-                {this.createPersistentGoogleLink()}
-                <GoogleMap
-                    defaultCenter={this.props.location}
-                    defaultZoom={17}
-                >
-                    <Marker position={this.props.location} />
-                </GoogleMap>
-            </div>
-
-        )))
+        const OnlineMap = ({ props }) => {
+            return (
+                <LoadScript googleMapsApiKey={process.env.GATSBY_GOOGLE_API}>
+                    <div style={{ position: "relative" }}>
+                        {this.createPersistentGoogleLink()}
+                        <GoogleMap
+                            id="article-map"
+                            center={this.props.location}
+                            zoom={16}
+                            mapContainerStyle={{
+                                height: "400px",
+                                width: "100%"
+                            }}>
+                            <MarkerClusterer gridSize={60}>
+                                {clusterer =>
+                                    this.props.markers.map(markerData => (
+                                        <MapMarker
+                                            key={markerData.id}
+                                            clusterer={clusterer}
+                                            markerData={markerData}
+                                            isSelected={markerData.id === this.state.selectedMarkerId}
+                                            isInfoOpen={
+                                                markerData.id === this.state.selectedMarkerId && this.state.isInfoOpen
+                                            }
+                                            onClick={this.onClick}
+                                        />
+                                    ))
+                                }
+                            </MarkerClusterer>
+                        </GoogleMap>
+                    </div>
+                </LoadScript>
+            )
+        }
 
 
         return (
             <div className={styles.mapContainer}>
                 <Online>
-                    <OnlineMap
-                        containerElement={<div style={{ height: `400px`, width: '100%' }} />}
-                        mapElement={<div style={{ height: `100%` }} />}
-                        googleMapURL={"https://maps.googleapis.com/maps/api/js?key=" + process.env.GATSBY_GOOGLE_API + "&v=3.exp&libraries=geometry,drawing,places"}
-                        loadingElement={<div style={{ height: `100%` }} />}
-                    />
+                    <OnlineMap />
                 </Online>
                 <Offline>
                     <img src={this.getGoogleStaticLink()} alt="Static map"></img>

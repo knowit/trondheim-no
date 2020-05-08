@@ -71,7 +71,10 @@ function GetAddress(pageContext) {
 }
 
 const Article = ({ pageContext }) => {
-  console.log(pageContext);
+
+  const location = GetLocation(pageContext)
+  const markers = [location]
+
   return (
 
     <Layout layoutContext={pageContext.layoutContext}>
@@ -83,7 +86,7 @@ const Article = ({ pageContext }) => {
           </MDXProvider>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
-          <Map location={GetLocation(pageContext)} address={GetAddress(pageContext)} persistentDisabled={false} />
+          <Map location={location} address={GetAddress(pageContext)} markers={markers} persistentDisabled={false} />
         </div>
       </div>
     </Layout>
