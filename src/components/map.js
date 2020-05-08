@@ -71,7 +71,7 @@ class Map extends Component {
                         <GoogleMap
                             id="article-map"
                             center={this.props.location}
-                            zoom={16}
+                            zoom={this.props.zoom}
                             mapContainerStyle={{
                                 height: "400px",
                                 width: "100%"

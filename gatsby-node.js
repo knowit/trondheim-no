@@ -193,6 +193,7 @@ exports.createPages = async ({ graphql, actions }) => {
   const root = pathHelper.build()
   var external_resources = ""
   var locations = ""
+  const listingPages = new Map()
 
 
   // Return a list of image urls from a markdown body
@@ -294,18 +295,59 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   }
 
+  function createListingPageMap(listingPageBuilder) {
+
+    const treeNode = listingPageBuilder.getTreeNode()
+    Array.from(treeNode.node.keys()).map(locale => {
+
+    })
+  }
+
 
   function createListingPage(listingPageBuilder) {
 
     const treeNode = listingPageBuilder.getTreeNode()
     Array.from(treeNode.node.keys()).map(locale => {
 
+      const mapPath = listingPageBuilder.getMapPath(locale)
+
+      // Get all markers from child articles and subpage child articles.
+      const markers = treeNode.getAllChildArticles()
+        .map(articleTreeNode => {
+          return articleTreeNode.node.get(locale)
+        })
+        .map(node => {
+          if (node.latLong && node.latLong.latitude && node.latLong.longitude) {
+            return { lat: Number(node.latLong.latitude), lng: Number(node.latLong.longitude) };
+          }
+          if (node.address && node.address.lat && node.address.lng) {
+            return { lat: node.address.lat, lng: node.address.lng };
+          }
+        })
+
+
+      // Create listing page map
+      createPage({
+        path: mapPath,
+        component: path.resolve(`./src/templates/listing-page-map.js`),
+        context: {
+          node: treeNode.node.get(locale),
+          parentPath: treeNode.parent.getPath(locale),
+          localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
+          locale: locale,
+          layoutContext: pathHelper.layoutContext(locale, listingPageBuilder.getLocalizedMapPaths()),
+          markers: markers,
+        },
+      })
+
+      // Create listing page
       createPage({
         path: treeNode.getPath(locale),
         component: path.resolve(`./src/templates/listing-page.js`),
         context: {
           node: treeNode.node.get(locale),
           parentPath: treeNode.parent.getPath(locale),
+          mapPath: mapPath,
           subListingPages: listingPageBuilder.getSubListingPages(locale),
           tags: listingPageBuilder.getTags(locale),
           articles: listingPageBuilder.getArticles(locale),
@@ -340,11 +382,11 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
 
-  const listingPages = new Map()
+
 
   for (const treeNode of pathHelper.createNodeIterator()) {
 
-    if (treeNode.isListingPage == true) {
+    if (treeNode.isListingPage === true && treeNode.isFrontPage === false && treeNode.isArticle === false) {
       listingPages.set(treeNode.id, pathHelper.createListingPageBuilder(treeNode))
 
       if (treeNode.parent.id != root.id) {
@@ -352,7 +394,7 @@ exports.createPages = async ({ graphql, actions }) => {
       }
     }
 
-    else if (treeNode.isArticle == true) {
+    else if (treeNode.isArticle === true) {
 
       if (treeNode.parent != null) {
         const parentListingPage = listingPages.get(treeNode.parent.id)
@@ -363,9 +405,9 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   }
 
-
-  Array.from(listingPages.values()).map(listingPageBuilder => {
-    createListingPage(listingPageBuilder)
+  listingPages.forEach((value, key, map) => {
+    createListingPage(value)
+    createListingPageMap(value)
   })
 
   createFrontPage(root, pathHelper.frontPageListingPages)
