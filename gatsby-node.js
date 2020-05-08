@@ -4,6 +4,7 @@ const path = require(`path`)
 const fs = require('fs')
 const fetch = require('node-fetch')
 const defaultLocale = 'no'
+const { PathTreeBuilder } = require(`./src/helpers/path-helper`)
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
@@ -17,6 +18,9 @@ exports.createPages = async ({ graphql, actions }) => {
           id
           _fl_meta_ {
             fl_id
+            schemaRef {
+              title
+            }
           }
           slug
           thumbnail {
@@ -35,6 +39,14 @@ exports.createPages = async ({ graphql, actions }) => {
           navigationTitle
           navigationSubtitle
           textOnPage
+          showOnFrontPage
+          showInDropMenu
+          parentListingPage{
+            slug
+            _fl_meta_ {
+              fl_id
+            }
+          }
         }
       }
     }
@@ -43,6 +55,9 @@ exports.createPages = async ({ graphql, actions }) => {
         node {
           _fl_meta_ {
             fl_id
+            schemaRef {
+              title
+            }
           }
           flamelink_locale
           flamelink_id
@@ -138,6 +153,9 @@ exports.createPages = async ({ graphql, actions }) => {
         node {
           _fl_meta_ {
             fl_id
+            schemaRef {
+              title
+            }
           }
           flamelink_id
           flamelink_locale
@@ -164,61 +182,20 @@ exports.createPages = async ({ graphql, actions }) => {
   }
   `)
 
+
   // Handle errors
   if (result.errors) {
     reporter.panicOnBuild(`Error while running GraphQL query.`)
     return
   }
 
-
-  // Helper class to map paths in different locales
-  class TreeNode {
-    constructor(id, parent = null) {
-      this.id = id;
-      this.parent = parent;
-      this.children = new Map();
-      this.slugs = new Map();
-    }
-    addChild(treeNode) {
-      this.children.set(treeNode.id, treeNode)
-    }
-    addChildSlug(id, locale, slug) {
-      if (!this.children.has(id)) {
-        this.addChild(new TreeNode(id, this))
-      }
-      this.children.get(id).setSlug(locale, slug)
-    }
-    getChild(id) {
-      return this.children.get(id)
-    }
-    setSlug(locale, slug) {
-      this.slugs.set(locale, slug)
-    }
-    getSlug(locale) {
-      return this.slugs.get(locale)
-    }
-    getPath(locale) {
-      let slug = this.getSlug(locale)
-      if (this.parent == null) {
-        return `/${slug}${(slug === '') ? '' : '/'}`
-      }
-      else {
-        return `${this.parent.getPath(locale)}${slug}/`
-      }
-    }
-    getLocalizedPaths() {
-      let paths = new Map()
-      Array.from(this.slugs.keys()).forEach(key => {
-        paths.set(key.split('-')[0], this.getPath(key))
-      })
-      return Array.from(paths).reduce((obj, [key, value]) => {
-        obj[key] = value;
-        return obj;
-      }, {});
-    }
-  }
+  let pathHelper = new PathTreeBuilder(result, defaultLocale)
+  const root = pathHelper.build()
+  var external_resources = ""
+  var locations = ""
 
 
+  // Return a list of image urls from a markdown body
   function extract_image_urls(markdownBody) {
     var result = markdownBody.matchAll(/!\[[^\]]*\]\((?<filename>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g)
 
@@ -232,195 +209,166 @@ exports.createPages = async ({ graphql, actions }) => {
     return array
   }
 
-  let root;
 
-  result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
-    const id = node._fl_meta_.fl_id
-    const locale = node.flamelink_locale
-    const slug = (locale === defaultLocale) ? '' : locale.split('-')[0]
+  // Return an url to the static google map image without the API key
+  function getGoogleStaticMapsUrl(node) {
+    var address = node.address.address
+    var location = { lat: Number(node.latLong.latitude), lng: Number(node.latLong.longitude) }
+    var baseURL = "https://maps.googleapis.com/maps/api/staticmap?"
+    var parameters = ""
 
-    // Set frontpage as root of tree
-    if (!root) {
-      root = new TreeNode(id)
+    if (node.address.address) {
+      parameters = "center=" + encodeURI(address);
+    } else {
+      parameters = "center=" + location.lat + "," + location.lng;
     }
-    root.setSlug(locale, slug)
-  })
 
-  result.data.allFlamelinkListingPageContent.edges.map(({ node }) =>
-    root.addChildSlug(node._fl_meta_.fl_id, node.flamelink_locale, node.slug)
-  )
+    var style = "&size=600x400&zoom=14&maptype=roadmap&markers=color:red|"
 
-  result.data.allFlamelinkArticleContent.edges.map(({ node }) =>
-    root.getChild(node.parentContent._fl_meta_.fl_id).addChildSlug(node._fl_meta_.fl_id, node.flamelink_locale, node.slug)
-  )
+    if (node.address.address) {
+      style = style + encodeURI(address);
+    } else {
+      style = style + location.lat + "," + location.lng;
+    }
 
-  function getListingPagePath(id, locale) {
-    return root.getChild(id).getPath(locale)
+    var noApiURL = baseURL + parameters + style
+
+    fetchStaticGoogleMapsImage(noApiURL + "&key=" + process.env.GATSBY_GOOGLE_API, parameters)
+
+    return noApiURL
   }
 
 
-
-
-
-
-  // Generate menu data for every locale
-  var menuListingPages = new Map()
-  result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
-
-    const locale = node.flamelink_locale
-
-    if (!menuListingPages.has(locale)) {
-      menuListingPages.set(locale, new Array())
-    }
-
-    menuListingPages.get(locale).push({
-      title: node.localTitle,
-      slug: node.slug,
-      locale: locale,
-      path: getListingPagePath(node._fl_meta_.fl_id, locale)
-    })
-  })
-
-
-  function layoutContext(locale, localizedPaths) {
-    return {
-      menuData: menuListingPages.get(locale),
-      locale: locale,
-      localizedPaths: localizedPaths, // Paths to the same page for different locales
-    }
-  }
-
-
-
-  var external_resources = ""
-  var locations = ""
-
-
-  // Create front page
-  result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
-    const locale = node.flamelink_locale
-
-    const listingPages = result.data.allFlamelinkListingPageContent.edges.filter(({ node }) => {
-      return node.flamelink_locale === locale
-    }).map(node => {
-      createListingPage(node.node)
-      return node.node
-    })
-
-    createPage({
-      path: root.getPath(locale),
-      component: path.resolve(`./src/templates/home.js`),
-      context: {
-        node: node,
-        slug: root.getSlug(locale),
-        listingPages: listingPages,
-        layoutContext: layoutContext(locale, root.getLocalizedPaths())
-      }
-    })
-  })
-
-  function createListingPage(node) {
-
-    const id = node._fl_meta_.fl_id
-    const slug = node.slug;
-    const locale = node.flamelink_locale
-
-    var tags = []
-
-    // Create Article Pages
-    var articles = result.data.allFlamelinkArticleContent.edges
-      .filter(({ node }) => node.parentContent.slug === slug)
-      .map(node => node.node)
-      .map(node => {
-
-        // Check for external image urls in markdown body
-        var urls = extract_image_urls(node.content.childMarkdownRemark.rawMarkdownBody)
-
-        if (urls !== null) {
-          urls.map(url => {
-            external_resources = external_resources + `\n${url}`
-          })
-        }
-
-        // Add google maps location url to be cached
-        var address = node.address.address
-        var location = { lat: Number(node.latLong.latitude), lng: Number(node.latLong.longitude) }
-        var baseURL = "https://maps.googleapis.com/maps/api/staticmap?"
-
-        var parameters = ""
-
-        if (node.address.address) {
-          parameters = "center=" + encodeURI(address);
-        } else {
-          parameters = "center=" + location.lat + "," + location.lng;
-        }
-
-        var style = "&size=600x400&zoom=14&maptype=roadmap&markers=color:red|"
-
-        if (node.address.address) {
-          style = style + encodeURI(address);
-        } else {
-          style = style + location.lat + "," + location.lng;
-        }
-
-        var noApiURL = baseURL + parameters + style
-
-        var apiURL = noApiURL + "&key=" + process.env.GATSBY_GOOGLE_API
-
-        locations = locations + `\n${noApiURL}`
-
-
-        // Fetch static Google Maps image
-        fetch(apiURL, {
-          mode: 'no-cors',
-          method: 'GET',
-          headers: {
-            Accept: 'image/png',
-          },
-        })
-          .then(res => res.body)
-          .then(data => {
-            fs.promises.mkdir(`./static/maps`, { recursive: true }).then(_ => {
-              const dest = fs.createWriteStream(`./static/maps/${decodeURI(parameters)}.png`, { flags: 'w', encoding: 'utf-8', mode: 0666 });
-              dest.on('error', function (e) { console.error(e); });
-              data.pipe(dest);
-            })
-          })
-
-
-        tags = tags.concat(node.tags)
-        createPage({
-          path: root.getChild(id).getChild(node._fl_meta_.fl_id).getPath(node.flamelink_locale),
-          component: path.resolve('./src/templates/article.js'),
-          context: {
-            // Pass context data here (Remove queries from article.js)
-            defaultCenter: { lat: 63.430529, lng: 10.4005522 },
-            localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
-            node: node,
-            layoutContext: layoutContext(locale, root.getChild(id).getChild(node._fl_meta_.fl_id).getLocalizedPaths()),
-            locale: locale,
-          }
-        })
-        return node
-      })
-
-    // Create Listing Page
-    tags = [...new Set(tags)]
-    createPage({
-      path: root.getChild(id).getPath(locale),
-      component: path.resolve(`./src/templates/listing-page.js`),
-      context: {
-        node: node,
-        parentPath: root.getPath(locale),
-        tags: tags,
-        articles: articles,
-        localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
-        locale: locale,
-        layoutContext: layoutContext(locale, root.getChild(id).getLocalizedPaths()),
+  // Fetch a static map image from google and store it to server's image folder
+  function fetchStaticGoogleMapsImage(apiURL, parameters) {
+    fetch(apiURL, {
+      mode: 'no-cors',
+      method: 'GET',
+      headers: {
+        Accept: 'image/png',
       },
     })
+      .then(res => res.body)
+      .then(data => {
+        fs.promises.mkdir(`./static/maps`, { recursive: true }).then(_ => {
+          const dest = fs.createWriteStream(`./static/maps/${decodeURI(parameters).trim(' ')}.png`, { flags: 'w', encoding: 'utf-8', mode: 0666 });
+          dest.on('error', function (e) { console.error(e); });
+          data.pipe(dest);
+        })
+      })
   }
 
+
+  function createArticle(treeNode) {
+
+    treeNode.node.forEach((value, key, map) => {
+      const node = value
+      const locale = key
+
+      // Check for external image urls in markdown body
+      var urls = extract_image_urls(node.content.childMarkdownRemark.rawMarkdownBody)
+
+      if (urls !== null) {
+        urls.map(url => {
+          external_resources = external_resources + `\n${url}`
+        })
+      }
+
+      // Add google maps location url to be cached
+      var noApiURL = getGoogleStaticMapsUrl(node)
+      locations = locations + `\n${noApiURL}`
+
+
+      createPage({
+        path: treeNode.getPath(locale),
+        component: path.resolve('./src/templates/article.js'),
+        context: {
+          // Pass context data here (Remove queries from article.js)
+          defaultCenter: { lat: 63.430529, lng: 10.4005522 },
+          localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
+          node: node,
+          layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
+          locale: locale,
+        }
+      })
+    })
+  }
+
+
+  function createListingPage(listingPageBuilder) {
+
+    const treeNode = listingPageBuilder.getTreeNode()
+    Array.from(treeNode.node.keys()).map(locale => {
+
+      createPage({
+        path: treeNode.getPath(locale),
+        component: path.resolve(`./src/templates/listing-page.js`),
+        context: {
+          node: treeNode.node.get(locale),
+          parentPath: treeNode.parent.getPath(locale),
+          subListingPages: listingPageBuilder.getSubListingPages(locale),
+          tags: listingPageBuilder.getTags(locale),
+          articles: listingPageBuilder.getArticles(locale),
+          localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
+          locale: locale,
+          layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
+        },
+      })
+    })
+  }
+
+
+  function createFrontPage(root, frontPageListingPages) {
+
+    Array.from(root.node.keys()).map(locale => {
+
+      const node = root.node.get(locale)
+      const listingPages = Array.from(frontPageListingPages.get(locale).values())
+
+      createPage({
+        path: root.getPath(locale),
+        component: path.resolve(`./src/templates/home.js`),
+        context: {
+          node: node,
+          slug: root.getSlug(locale),
+          listingPages: listingPages,
+          layoutContext: pathHelper.layoutContext(locale, root.getLocalizedPaths())
+        }
+      })
+    })
+  }
+
+
+
+  const listingPages = new Map()
+
+  for (const treeNode of pathHelper.createNodeIterator()) {
+
+    if (treeNode.isListingPage == true) {
+      listingPages.set(treeNode.id, pathHelper.createListingPageBuilder(treeNode))
+
+      if (treeNode.parent.id != root.id) {
+        listingPages.get(treeNode.parent.id).addSubListingPage(treeNode)
+      }
+    }
+
+    else if (treeNode.isArticle == true) {
+
+      if (treeNode.parent != null) {
+        const parentListingPage = listingPages.get(treeNode.parent.id)
+        parentListingPage.addArticle(treeNode)
+      }
+
+      createArticle(treeNode)
+    }
+  }
+
+
+  Array.from(listingPages.values()).map(listingPageBuilder => {
+    createListingPage(listingPageBuilder)
+  })
+
+  createFrontPage(root, pathHelper.frontPageListingPages)
 
 
   // Save all external resource urls to be precached by service worker
