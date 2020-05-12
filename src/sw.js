@@ -72,7 +72,7 @@ self.addEventListener('install', function (event) {
 function redirect(request) {
   if (request.url.indexOf(`maps.googleapis.com/maps/api/staticmap`) > -1) {
     // Redirect to cached static map image
-    var urlObject = new Url(request.url)
+    var urlObject = new URL(request.url)
     urlObject.delete('key')
     var path = createImageUrl(urlObject)
     console.log(`Redirecting from ${request.url} to ${path}`)
