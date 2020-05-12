@@ -73,6 +73,7 @@ function redirect(request) {
   if (request.url.indexOf(`maps.googleapis.com/maps/api/staticmap`) > -1) {
     // Redirect to cached static map image
     var path = createImageUrl(request.url)
+    console.log(`Redirecting from ${request.url} to ${path}`)
     return new Request(path, { mode: 'no-cors' })
   }
   else {
