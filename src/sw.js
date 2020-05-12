@@ -2,9 +2,9 @@ var cacheNames = ['external-resources'];
 var urlsToPrefetch = [];
 var locationUrlsToPrefetch = []
 
-function createImageUrl(noApiUrl) {
+function createImageUrl(noApiUrl, static = true) {
   var parameters = noApiUrl.substr(noApiUrl.indexOf("?") + 1)
-  var result = `../static/maps/${parameters.trim(' ')}.png`
+  var result = `../maps/${parameters.trim(' ')}.png`
   result = result.split(':').join(']')
   result = result.split('|').join(')')
   return result
@@ -60,7 +60,6 @@ self.addEventListener('install', function (event) {
               mapUrls.filter(mapUrl => mapUrl.length > 3).map(function (mapUrl) {
 
                 var path = createImageUrl(mapUrl)
-                console.log(path)
                 const request = new Request(path, { mode: 'no-cors' })
 
                 fetch(path, { mode: 'no-cors' })
