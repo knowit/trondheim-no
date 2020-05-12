@@ -1,8 +1,14 @@
-
-
 var cacheNames = ['external-resources'];
 var urlsToPrefetch = [];
 var locationUrlsToPrefetch = []
+
+function createImageUrl(noApiUrl) {
+  var parameters = noApiUrl.substr(noApiUrl.indexOf("?") + 1)
+  var result = `../static/maps/${decodeURI(parameters).trim(' ')}.png`
+  result = result.split(':').join('(')
+  result = result.split('|').join(')')
+  return result
+}
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
@@ -45,8 +51,8 @@ self.addEventListener('install', function (event) {
 
               mapUrls.filter(mapUrl => mapUrl.length > 3).map(function (mapUrl) {
 
-                var urlObject = new URL(mapUrl)
-                var path = `../maps/center=${decodeURI(urlObject.searchParams.get("center"))}.png`
+                var path = createImageUrl(mapUrl)
+                console.log(path)
                 const request = new Request(path, { mode: 'no-cors' })
 
                 fetch(path, { mode: 'no-cors' })
@@ -66,8 +72,7 @@ self.addEventListener('install', function (event) {
 function redirect(request) {
   if (request.url.indexOf(`maps.googleapis.com/maps/api/staticmap`) > -1) {
     // Redirect to cached static map image
-    var urlObject = new URL(request.url)
-    var path = `../maps/center=${decodeURI(urlObject.searchParams.get("center"))}.png`
+    var path = createImageUrl(request.url)
     return new Request(path, { mode: 'no-cors' })
   }
   else {
