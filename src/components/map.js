@@ -3,6 +3,7 @@ import { GoogleMap, LoadScript, MarkerClusterer } from '@react-google-maps/api';
 import styles from "../style/map.module.css"
 import { Online, Offline } from "react-detect-offline"
 import MapMarker from "./map-marker.js"
+import { GoogleMapsUrlHelper } from "../helpers/url-helper"
 
 
 class Map extends Component {
@@ -29,27 +30,6 @@ class Map extends Component {
         } else {
             return baseURL + "&query=" + location.lat + "," + location.lng;
         }
-    }
-
-    getGoogleStaticLink() {
-        var address = this.props.address;
-        var location = this.props.location;
-        var baseURL = "https://maps.googleapis.com/maps/api/staticmap?"
-
-        if (this.props.address) {
-            baseURL = baseURL + "center=" + encodeURI(address);
-        } else {
-            baseURL = baseURL + "center=" + location.lat + "," + location.lng;
-        }
-
-        baseURL = baseURL + "&size=600x400&zoom=14&maptype=roadmap&markers=color:red|"
-
-        if (this.props.address) {
-            baseURL = baseURL + encodeURI(address);
-        } else {
-            baseURL = baseURL + location.lat + "," + location.lng;
-        }
-        return baseURL + "&key=" + process.env.GATSBY_GOOGLE_API
     }
 
     createPersistentGoogleLink() {
@@ -102,10 +82,12 @@ class Map extends Component {
         return (
             <div className={styles.mapContainer}>
                 <Online>
+                    <img src={GoogleMapsUrlHelper.createStaticGoogleMapUrl(this.props.location, this.props.markers)} alt="Static map"></img>
+
                     <OnlineMap />
                 </Online>
                 <Offline>
-                    <img src={this.getGoogleStaticLink()} alt="Static map"></img>
+                    <img src={GoogleMapsUrlHelper.createStaticGoogleMapUrl(this.props.location, this.props.markers)} alt="Static map"></img>
                 </Offline>
 
             </div>
