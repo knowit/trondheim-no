@@ -11,7 +11,7 @@ function createImageUrl(noApiUrl) {
 }
 
 function removeApiKey(apiUrl) {
-  var urlObject = new URL(apiUrl)
+  var urlObject = new URL(decodeURI(apiUrl).trim(' '))
   var searchParams = urlObject.searchParams
   searchParams.delete('key')
   urlObject.search = searchParams.toString()
