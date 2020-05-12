@@ -80,9 +80,7 @@ self.addEventListener('install', function (event) {
 function redirect(request) {
   if (request.url.indexOf(`maps.googleapis.com/maps/api/staticmap`) > -1) {
     // Redirect to cached static map image
-    var noApiUrl = removeApiKey(request.url)
     var path = createImageUrl(removeApiKey(request.url))
-    console.log(`Redirecting...\nURL: ${request.url}\nno API URL: ${noApiUrl}\nImageURL: ${path}`)
     return new Request(path, { mode: 'no-cors' })
   }
   else {

@@ -27,7 +27,7 @@ class GoogleMapsUrlHelper {
 
   static createImageUrl(noApiUrl) {
     var parameters = noApiUrl.substr(noApiUrl.indexOf("?") + 1)
-    var result = `./static/maps/${encodeURI(parameters).trim(' ')}.png`
+    var result = `./static/maps/${decodeURIComponent(parameters).trim(' ')}.png`
     result = result.split(':').join(']')
     result = result.split('|').join(')')
     return result
