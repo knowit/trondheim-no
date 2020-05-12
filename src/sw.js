@@ -4,14 +4,14 @@ var locationUrlsToPrefetch = []
 
 function createImageUrl(noApiUrl) {
   var parameters = noApiUrl.substr(noApiUrl.indexOf("?") + 1)
-  var result = `../static/maps/${decodeURI(parameters).trim(' ')}.png`
+  var result = `../static/maps/${parameters.trim(' ')}.png`
   result = result.split(':').join(']')
   result = result.split('|').join(')')
   return result
 }
 
 function removeApiKey(apiUrl) {
-  var urlObject = new URL(decodeURI(apiUrl).trim(' '))
+  var urlObject = new URL(apiUrl)
   var searchParams = urlObject.searchParams
   searchParams.delete('key')
   urlObject.search = searchParams.toString()
