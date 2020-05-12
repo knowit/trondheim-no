@@ -15,7 +15,7 @@ function removeApiKey(apiUrl) {
   var searchParams = urlObject.searchParams
   searchParams.delete('key')
   urlObject.search = searchParams.toString()
-  return encodeURIComponent(urlObject.toString())
+  return decodeURIComponent(urlObject.toString())
 }
 
 self.addEventListener('install', function (event) {
