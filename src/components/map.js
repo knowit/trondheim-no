@@ -82,8 +82,6 @@ class Map extends Component {
         return (
             <div className={styles.mapContainer}>
                 <Online>
-                    <img src={GoogleMapsUrlHelper.createStaticGoogleMapUrl(this.props.location, this.props.markers)} alt="Static map"></img>
-
                     <OnlineMap />
                 </Online>
                 <Offline>
