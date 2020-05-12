@@ -10,6 +10,19 @@ function createImageUrl(noApiUrl) {
   return result
 }
 
+function removeApiKey(apiUrl) {
+  var i = apiUrl.indexOf('&key=')
+  if (i = -1) {
+    i = apiUrl.indexOf('key=')
+  }
+  if (i = -1) {
+    return apiUrl
+  }
+  else {
+    return apiUrl.substr(0, i)
+  }
+}
+
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheNames).then(function (cache) {
@@ -72,7 +85,7 @@ self.addEventListener('install', function (event) {
 function redirect(request) {
   if (request.url.indexOf(`maps.googleapis.com/maps/api/staticmap`) > -1) {
     // Redirect to cached static map image
-    var path = createImageUrl(request.url)
+    var path = createImageUrl(removeApiKey(request.url))
     console.log(`Redirecting from ${request.url} to ${path}`)
     return new Request(path, { mode: 'no-cors' })
   }
