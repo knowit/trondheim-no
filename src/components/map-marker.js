@@ -1,6 +1,7 @@
 import React from "react";
 
 import { InfoWindow, Marker } from "@react-google-maps/api";
+import { Link } from "gatsby"
 
 export default class MapMarker extends React.Component {
   state = {
@@ -31,7 +32,7 @@ export default class MapMarker extends React.Component {
 
     return (
       <InfoWindow anchor={mapMarker}>
-        <div>I am Marker {markerId}</div>
+        <div><Link to={markerData.url}>{markerData.title}</Link> {markerId}</div>
       </InfoWindow>
     );
   };
@@ -48,6 +49,7 @@ export default class MapMarker extends React.Component {
           lat: markerData.location.lat,
           lng: markerData.location.lng
         }}
+
       >
         {this.renderInfoWindow(markerData.id)}
       </Marker>
