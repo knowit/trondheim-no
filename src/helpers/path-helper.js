@@ -63,35 +63,14 @@ class TreeNode {
     return null
   }
 
-
-  dfSearchInTree(id) {
-
-    // Check if id matches
-    if (this.id === id) {
-      return this
-    }
-
-    // Check if direct children has id
-    const child = this.children.get(id)
-    if (child != null) {
-
-      return child
-    }
-
-    // Search in children's children.
-    else {
-      var result = null
-      if (this.children != null) {
-
-        for (let child of Array.from(this.children.values())) {
-          result = child.dfSearchInTree(id)
-          if (result != null) {
-            break;
-          }
-        }
+  getAllChildArticles() {
+    var result = []
+    for (const treeNode of breadthFirstIterator(this)) {
+      if (treeNode.isArticle == true) {
+        result.push(treeNode)
       }
-      return result
     }
+    return result
   }
 
   addChild(treeNode) {
@@ -181,7 +160,7 @@ class ListingPageBuilder {
     this.treeNode = treeNode
     this.subListingPages = []
     this.articles = []
-    this.tags = new Map();
+    this.tags = new Map()
   }
 
   getTreeNode() {
@@ -233,6 +212,26 @@ class ListingPageBuilder {
     return this.articles.map(a => a.node.get(locale))
   }
 
+  getMapPath(locale) {
+    var parentPath = this.treeNode.parent.getPath(locale)
+    if (locale === 'no') {
+      return `${parentPath}/kart-over-${this.treeNode.slugs.get(locale)}`
+    }
+    else {
+      return `${parentPath}/map-of-${this.treeNode.slugs.get(locale)}`
+    }
+  }
+
+  getLocalizedMapPaths() {
+    let paths = new Map()
+    Array.from(this.treeNode.slugs.keys()).forEach(key => {
+      paths.set(key.split('-')[0], this.getMapPath(key))
+    })
+    return Array.from(paths).reduce((obj, [key, value]) => {
+      obj[key] = value;
+      return obj;
+    }, {});
+  }
 }
 
 class PathTreeBuilder {

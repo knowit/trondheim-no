@@ -6,6 +6,7 @@ import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import { MDXRenderer } from "gatsby-mdx-fix"
 import { MDXProvider } from "@mdx-js/react"
+import { GoogleMapsUrlHelper } from "../helpers/url-helper"
 
 function ContactInfo(props) {
 
@@ -54,24 +55,12 @@ function OpeningHours(props) {
   else return "";
 }
 
-function GetLocation(pageContext) {
-  if (pageContext.node.latLong && pageContext.node.latLong.latitude && pageContext.node.latLong.longitude) {
-    console.log({ lat: Number(pageContext.node.latLong.latitude), lng: Number(pageContext.node.latLong.longitude) })
-    return { lat: Number(pageContext.node.latLong.latitude), lng: Number(pageContext.node.latLong.longitude) };
-  }
-  if (pageContext.node.address && pageContext.node.address.lat && pageContext.node.address.lng) {
-    return { lat: pageContext.node.address.lat, lng: pageContext.node.address.lng };
-  }
-  return false;
-}
-
-function GetAddress(pageContext) {
-  if (pageContext.node.address && pageContext.node.address.address) return pageContext.node.address.address;
-  return false;
-}
-
 const Article = ({ pageContext }) => {
-  console.log(pageContext);
+
+  const location = GoogleMapsUrlHelper.getLocation(pageContext.node)
+  const address = GoogleMapsUrlHelper.getAddress(pageContext.node)
+  const markers = [location]
+
   return (
 
     <Layout layoutContext={pageContext.layoutContext}>
@@ -83,7 +72,8 @@ const Article = ({ pageContext }) => {
           </MDXProvider>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
-          <Map location={GetLocation(pageContext)} address={GetAddress(pageContext)} persistentDisabled={false} />
+          <Map location={location} address={address} markers={markers} zoom={15} persistentDisabled={false}
+            width="100%" height="400px" />
         </div>
       </div>
     </Layout>

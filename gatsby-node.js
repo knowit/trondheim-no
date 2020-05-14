@@ -5,6 +5,7 @@ const fs = require('fs')
 const fetch = require('node-fetch')
 const defaultLocale = 'no'
 const { PathTreeBuilder } = require(`./src/helpers/path-helper`)
+const { GoogleMapsUrlHelper } = require(`./src/helpers/url-helper`)
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
@@ -41,6 +42,8 @@ exports.createPages = async ({ graphql, actions }) => {
           textOnPage
           showOnFrontPage
           showInDropMenu
+          mapPageTitle
+          mapPageDescription
           parentListingPage{
             slug
             _fl_meta_ {
@@ -193,6 +196,7 @@ exports.createPages = async ({ graphql, actions }) => {
   const root = pathHelper.build()
   var external_resources = ""
   var locations = ""
+  const listingPages = new Map()
 
 
   // Return a list of image urls from a markdown body
@@ -209,38 +213,12 @@ exports.createPages = async ({ graphql, actions }) => {
     return array
   }
 
-
-  // Return an url to the static google map image without the API key
-  function getGoogleStaticMapsUrl(node) {
-    var address = node.address.address
-    var location = { lat: Number(node.latLong.latitude), lng: Number(node.latLong.longitude) }
-    var baseURL = "https://maps.googleapis.com/maps/api/staticmap?"
-    var parameters = ""
-
-    if (node.address.address) {
-      parameters = "center=" + encodeURI(address);
-    } else {
-      parameters = "center=" + location.lat + "," + location.lng;
-    }
-
-    var style = "&size=600x400&zoom=14&maptype=roadmap&markers=color:red|"
-
-    if (node.address.address) {
-      style = style + encodeURI(address);
-    } else {
-      style = style + location.lat + "," + location.lng;
-    }
-
-    var noApiURL = baseURL + parameters + style
-
-    fetchStaticGoogleMapsImage(noApiURL + "&key=" + process.env.GATSBY_GOOGLE_API, parameters)
-
-    return noApiURL
-  }
-
-
   // Fetch a static map image from google and store it to server's image folder
-  function fetchStaticGoogleMapsImage(apiURL, parameters) {
+  function fetchStaticGoogleMapsImage(apiURL, noApiURL) {
+
+    const imgDir = GoogleMapsUrlHelper.getImageDirectory()
+    const imgUrl = GoogleMapsUrlHelper.createImageUrl(noApiURL)
+
     fetch(apiURL, {
       mode: 'no-cors',
       method: 'GET',
@@ -250,12 +228,20 @@ exports.createPages = async ({ graphql, actions }) => {
     })
       .then(res => res.body)
       .then(data => {
-        fs.promises.mkdir(`./static/maps`, { recursive: true }).then(_ => {
-          const dest = fs.createWriteStream(`./static/maps/${decodeURI(parameters).trim(' ')}.png`, { flags: 'w', encoding: 'utf-8', mode: 0666 });
+        fs.promises.mkdir(imgDir, { recursive: true }).then(_ => {
+          const dest = fs.createWriteStream(imgUrl, { flags: 'w', encoding: 'utf-8', mode: 0666 });
           dest.on('error', function (e) { console.error(e); });
           data.pipe(dest);
         })
       })
+  }
+
+  function addStaticGoogleMapsImageToCache(location, markers) {
+    // Add google maps location url to be cached
+    var apiURL = GoogleMapsUrlHelper.createStaticGoogleMapUrl(location, markers)
+    var noApiURL = GoogleMapsUrlHelper.createStaticGoogleMapUrl(location, markers, false)
+    fetchStaticGoogleMapsImage(apiURL, noApiURL)
+    locations = locations + `\n${noApiURL}`
   }
 
 
@@ -274,9 +260,9 @@ exports.createPages = async ({ graphql, actions }) => {
         })
       }
 
-      // Add google maps location url to be cached
-      var noApiURL = getGoogleStaticMapsUrl(node)
-      locations = locations + `\n${noApiURL}`
+      var location = GoogleMapsUrlHelper.getLocation(node)
+      var markers = [location]
+      addStaticGoogleMapsImageToCache(location, markers)
 
 
       createPage({
@@ -298,14 +284,55 @@ exports.createPages = async ({ graphql, actions }) => {
   function createListingPage(listingPageBuilder) {
 
     const treeNode = listingPageBuilder.getTreeNode()
+    const localization = result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations
     Array.from(treeNode.node.keys()).map(locale => {
 
+      const mapSlug = `${(locale === 'no') ? 'kart-over-' : 'map-of-'}${treeNode.slugs.get(locale)}`
+      const parentPath = treeNode.parent.getPath(locale)
+
+      if (parentPath.slice(-1) != '/') {
+        parentPath = parentPath + '/'
+      }
+
+      const mapPath = parentPath + mapSlug
+      const listingPagePath = treeNode.getPath(locale)
+
+
+      // Get all markers from child articles and subpage child articles.
+      const markers = treeNode.getAllChildArticles()
+        .map(articleTreeNode => {
+          return GoogleMapsUrlHelper.getLocation(articleTreeNode.node.get(locale))
+        })
+
+      if (markers.length > 0) {
+        const location = GoogleMapsUrlHelper.getLocation()
+        addStaticGoogleMapsImageToCache(location, markers)
+      }
+
+
+      // Create listing page map
       createPage({
-        path: treeNode.getPath(locale),
+        path: mapPath,
+        component: path.resolve(`./src/templates/listing-page-map.js`),
+        context: {
+          node: treeNode.node.get(locale),
+          parentPath: treeNode.parent.getPath(locale),
+          localization: localization,
+          locale: locale,
+          layoutContext: pathHelper.layoutContext(locale, listingPageBuilder.getLocalizedMapPaths()),
+          markers: markers,
+          listingPagePath: listingPagePath,
+        },
+      })
+
+      // Create listing page
+      createPage({
+        path: listingPagePath,
         component: path.resolve(`./src/templates/listing-page.js`),
         context: {
           node: treeNode.node.get(locale),
           parentPath: treeNode.parent.getPath(locale),
+          mapPath: mapPath,
           subListingPages: listingPageBuilder.getSubListingPages(locale),
           tags: listingPageBuilder.getTags(locale),
           articles: listingPageBuilder.getArticles(locale),
@@ -340,11 +367,11 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
 
-  const listingPages = new Map()
+
 
   for (const treeNode of pathHelper.createNodeIterator()) {
 
-    if (treeNode.isListingPage == true) {
+    if (treeNode.isListingPage === true && treeNode.isFrontPage === false && treeNode.isArticle === false) {
       listingPages.set(treeNode.id, pathHelper.createListingPageBuilder(treeNode))
 
       if (treeNode.parent.id != root.id) {
@@ -352,7 +379,7 @@ exports.createPages = async ({ graphql, actions }) => {
       }
     }
 
-    else if (treeNode.isArticle == true) {
+    else if (treeNode.isArticle === true) {
 
       if (treeNode.parent != null) {
         const parentListingPage = listingPages.get(treeNode.parent.id)
@@ -363,13 +390,13 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   }
 
-
-  Array.from(listingPages.values()).map(listingPageBuilder => {
-    createListingPage(listingPageBuilder)
-  })
+  listingPages.forEach((value, key, map) =>
+    createListingPage(value)
+  )
 
   createFrontPage(root, pathHelper.frontPageListingPages)
 
+  addStaticGoogleMapsImageToCache(GoogleMapsUrlHelper.getLocation())
 
   // Save all external resource urls to be precached by service worker
 
