@@ -19,9 +19,7 @@ exports.createPages = async ({ graphql, actions }) => {
           id
           _fl_meta_ {
             fl_id
-            schemaRef {
-              title
-            }
+            schema
           }
           slug
           thumbnail {
@@ -58,9 +56,7 @@ exports.createPages = async ({ graphql, actions }) => {
         node {
           _fl_meta_ {
             fl_id
-            schemaRef {
-              title
-            }
+            schema
           }
           flamelink_locale
           flamelink_id
@@ -156,9 +152,7 @@ exports.createPages = async ({ graphql, actions }) => {
         node {
           _fl_meta_ {
             fl_id
-            schemaRef {
-              title
-            }
+            schema
           }
           flamelink_id
           flamelink_locale
@@ -182,6 +176,80 @@ exports.createPages = async ({ graphql, actions }) => {
         }
       }
     }
+
+
+    allFlamelinkArticleNewContent {
+      edges {
+        node {
+          _fl_meta_ {
+            fl_id
+            schema
+          }
+          flamelink_locale
+          flamelink_id
+          id
+          openingHours {
+            content
+          }
+          parentContent {
+            _fl_meta_ {
+              fl_id
+              schema
+            }
+            id
+            slug
+          }
+          slug
+          title
+          tags
+          thumbnail {
+            localFile {
+              childImageSharp {
+                fluid (quality: 90) {
+                  src
+                }
+              }
+            }
+          }
+          content {
+            content
+          }
+          contactInfo {
+            emailAddress
+            textToShow
+            telephoneNumber
+            linkToWebsite
+          }
+          address {
+            address
+            lat
+            lng
+          }
+          latLong {
+            latitude
+            longitude
+          }
+        }
+      }
+    }
+    allFlamelinkDefaultThumbnailsContent {
+      edges {
+        node {
+          imageDeck {
+            title
+            image {
+              localFile {
+                childImageSharp {
+                  fluid (quality: 90) {
+                    src
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
   `)
 
@@ -200,17 +268,8 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
   // Return a list of image urls from a markdown body
-  function extract_image_urls(markdownBody) {
-    var result = markdownBody.matchAll(/!\[[^\]]*\]\((?<filename>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g)
-
-    var array = []
-
-    let r = result.next()
-    while (!r.done) {
-      array.push(r.value.groups.filename)
-      r = result.next()
-    }
-    return array
+  function extract_image_urls(htmlBody) {
+    return Array.from(htmlBody.matchAll(/<img[^>]+src="([^">]+)"/g), m => m[0])
   }
 
   // Fetch a static map image from google and store it to server's image folder
@@ -252,7 +311,7 @@ exports.createPages = async ({ graphql, actions }) => {
       const locale = key
 
       // Check for external image urls in markdown body
-      var urls = extract_image_urls(node.content.childMarkdownRemark.rawMarkdownBody)
+      var urls = extract_image_urls(node.content.content)
 
       if (urls !== null) {
         urls.map(url => {
@@ -301,9 +360,15 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
       // Get all markers from child articles and subpage child articles.
-      const markers = treeNode.getAllChildArticles()
+      const markers = []
+
+      treeNode.getAllChildArticles()
         .map(articleTreeNode => {
-          return GoogleMapsUrlHelper.getMarker(articleTreeNode.node.get(locale), articleTreeNode.getPath(locale))
+          const articleNode = articleTreeNode.node.get(locale)
+          const articlePath = articleTreeNode.getPath(locale)
+          if (articleNode != null && articlePath != null) {
+            markers.push(GoogleMapsUrlHelper.getMarker(articleNode, articlePath))
+          }
         })
 
       if (markers.length > 1) {
@@ -385,7 +450,9 @@ exports.createPages = async ({ graphql, actions }) => {
 
       if (treeNode.parent != null) {
         const parentListingPage = listingPages.get(treeNode.parent.id)
-        parentListingPage.addArticle(treeNode)
+        if (parentListingPage != null) {
+          parentListingPage.addArticle(treeNode)
+        }
       }
 
       createArticle(treeNode)

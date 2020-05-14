@@ -94,18 +94,18 @@ class TreeNode {
   }
 
   setGraphQLNode(node) {
-    var schemaTitle = ""
+    var schema = ""
     if (node._fl_meta_ != null) {
-      schemaTitle = node._fl_meta_.schemaRef.title
+      schema = node._fl_meta_.schema
     }
 
-    if (schemaTitle == "Article") {
+    if (schema == "articleNew") {
       this.isArticle = true
     }
-    else if (schemaTitle == "ListingPage") {
+    else if (schema == "listingPage") {
       this.isListingPage = true
     }
-    else if (schemaTitle == "Front Page") {
+    else if (schema == "frontPage") {
       this.isFrontPage = true
     }
     this.node.set(node.flamelink_locale, node)
@@ -371,6 +371,7 @@ class PathTreeBuilder {
       menuData: this.menuData.get(locale),
       locale: locale,
       localizedPaths: localizedPaths, // Paths to the same page for different locales
+      defaultThumbnails: this.result.data.allFlamelinkDefaultThumbnailsContent.edges[0].node.imageDeck
     }
   }
 
@@ -390,7 +391,7 @@ class PathTreeBuilder {
       this.root.setGraphQLNode(node, locale)
     })
 
-    this.result.data.allFlamelinkArticleContent.edges.map(({ node }) => {
+    this.result.data.allFlamelinkArticleNewContent.edges.map(({ node }) => {
       const result = this.insertArticleToTree(node)
     }
     )

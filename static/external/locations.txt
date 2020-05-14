@@ -1,16 +1,9 @@
 
-https://maps.googleapis.com/maps/api/staticmap?center=63.43052660000001,10.4027409&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.43052660000001,10.4027409
-https://maps.googleapis.com/maps/api/staticmap?center=63.43052660000001,10.4027409&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.43052660000001,10.4027409
-https://maps.googleapis.com/maps/api/staticmap?center=63.4258174,10.3952502&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4258174,10.3952502
-https://maps.googleapis.com/maps/api/staticmap?center=63.4258174,10.3952502&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4258174,10.3952502
-https://maps.googleapis.com/maps/api/staticmap?center=63.4259381,10.3968378&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4259381,10.3968378
-https://maps.googleapis.com/maps/api/staticmap?center=63.4259381,10.3968378&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4259381,10.3968378
-https://maps.googleapis.com/maps/api/staticmap?center=63.4270009,10.4040739&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4270009,10.4040739
-https://maps.googleapis.com/maps/api/staticmap?center=63.4270009,10.4040739&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4270009,10.4040739
-https://maps.googleapis.com/maps/api/staticmap?center=51.5122891,-0.1245884&size=600x400&zoom=14&maptype=roadmap&markers=color:red|51.5122891,-0.1245884
-https://maps.googleapis.com/maps/api/staticmap?center=51.5122891,-0.1245884&size=600x400&zoom=14&maptype=roadmap&markers=color:red|51.5122891,-0.1245884
-https://maps.googleapis.com/maps/api/staticmap?center=63.4305149,10.3950528&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4305149,10.3950528
-https://maps.googleapis.com/maps/api/staticmap?center=63.4305149,10.3950528&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4305149,10.3950528
-https://maps.googleapis.com/maps/api/staticmap?center=63.4305149,10.3950528&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.43052660000001,10.4027409|63.4258174,10.3952502|63.4259381,10.3968378|63.4270009,10.4040739
-https://maps.googleapis.com/maps/api/staticmap?center=63.4305149,10.3950528&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.43052660000001,10.4027409|63.4258174,10.3952502|63.4259381,10.3968378|63.4270009,10.4040739
+https://maps.googleapis.com/maps/api/staticmap?center=undefined,undefined&size=600x400&zoom=14&maptype=roadmap&markers=color:red|undefined,undefined
+https://maps.googleapis.com/maps/api/staticmap?center=63.4299513,10.3933613&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4299513,10.3933613
+https://maps.googleapis.com/maps/api/staticmap?center=63.4299513,10.3933613&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4299513,10.3933613
+https://maps.googleapis.com/maps/api/staticmap?center=63.384602,10.319042&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.384602,10.319042
+https://maps.googleapis.com/maps/api/staticmap?center=63.419428,10.146326&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.419428,10.146326
+https://maps.googleapis.com/maps/api/staticmap?center=63.4305149,10.3950528&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.4299513,10.3933613|63.384602,10.319042|63.419428,10.146326
+https://maps.googleapis.com/maps/api/staticmap?center=63.4305149,10.3950528&size=600x400&zoom=14&maptype=roadmap&markers=color:red|63.384602,10.319042|63.419428,10.146326
 https://maps.googleapis.com/maps/api/staticmap?center=63.4305149,10.3950528&size=600x400&zoom=14&maptype=roadmap
