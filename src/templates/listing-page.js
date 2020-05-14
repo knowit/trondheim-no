@@ -4,7 +4,7 @@ import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
 import { Link } from "gatsby"
 import Img from "gatsby-image"
-
+import SortableArticleView from "../components/article-list"
 
 const ListingPage = ({ pageContext }) => {
   return (
@@ -23,65 +23,8 @@ const ListingPage = ({ pageContext }) => {
             </Link>
           </div>
 
+          <SortableArticleView pageContext={pageContext}/>
 
-
-          <div id="all-tags-container">
-            <div class="distinct-tag">
-              {LocalizationHelper.getLocalWord(pageContext.localization, "all", pageContext.locale)}
-            </div>
-            {pageContext.tags.map(function (tag, key) {
-              return (
-                <div class="distinct-tag">
-                  {tag}
-                </div>
-              )
-            })}
-          </div>
-
-
-
-          <div id="sort-container">
-            <div class="distinct-tag">{LocalizationHelper.getLocalWord(pageContext.localization, "standard", pageContext.locale)}</div>
-            <div class="distinct-tag">{LocalizationHelper.getLocalWord(pageContext.localization, "title", pageContext.locale)}</div>
-            <div class="distinct-tag">{LocalizationHelper.getLocalWord(pageContext.localization, "date", pageContext.locale)}</div>
-            <div class="distinct-tag">{LocalizationHelper.getLocalWord(pageContext.localization, "random", pageContext.locale)}</div>
-          </div>
-
-
-
-          <div id="articles-container">
-
-            {pageContext.subListingPages.map(function (node, key) {
-              return (
-                <div class="article-container">
-                  <Img className="article-thumbnail" fluid={node.thumbnail[0]?.localFile.childImageSharp.fluid} />
-                  <div class="article-info-container">
-                    <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.navigationTitle}</Link></h2>
-                  </div>
-                </div>
-              )
-            })}
-
-            {pageContext.articles.map(function (node, key) {
-              return (
-                <div class="article-container">
-                  <Img className="article-thumbnail" fluid={node.thumbnail[0]?.localFile.childImageSharp.fluid} />
-                  <div class="article-info-container">
-                    <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${node.slug}`}>{node.title}</Link></h2>
-                    <div class="tags-container">
-                      {node.tags.map(function (tag, key) {
-                        return (
-                          <div class="tag">
-                            <a href="/">{tag}</a>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
         </div>
       </div>
     </Layout>
