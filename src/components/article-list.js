@@ -136,7 +136,7 @@ class Sorter extends React.Component {
         });
 
         return(
-            <div>
+            <div id="sort-container">
                 {sortTags}
             </div>
         )
