@@ -45,8 +45,8 @@ export default class MapMarker extends React.Component {
         onLoad={this.onLoad}
         onClick={this.onClick}
         position={{
-          lat: markerData.lat,
-          lng: markerData.lng
+          lat: markerData.location.lat,
+          lng: markerData.location.lng
         }}
       >
         {this.renderInfoWindow(markerData.id)}
