@@ -46,9 +46,7 @@ function OpeningHours(props) {
   if (props.node.openingHours && props.node.openingHours.content) {
     elements.push(<h3 className={styles.subheading}>{LocalizationHelper.getLocalWord(props.localization, "openingHours", locale)}</h3>);
     elements.push(
-      <MDXProvider>
-        <MDXRenderer title="Article">{props.node.openingHours.childMdx.code.body}</MDXRenderer>
-      </MDXProvider>
+      <div dangerouslySetInnerHTML={{ __html: props.node.openingHours.content }}></div>
     )
   }
   if (elements.length > 0) return <div>{elements}</div>
@@ -66,9 +64,7 @@ const Article = ({ pageContext }) => {
       <div id="outer-container">
         <div id="inner-container">
           <h2>{pageContext.node.title}</h2>
-          <MDXProvider>
-            <MDXRenderer title="Article">{pageContext.node.content.childMdx.code.body}</MDXRenderer>
-          </MDXProvider>
+          <div dangerouslySetInnerHTML={{ __html: pageContext.node.content.content }}></div>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <Map location={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
