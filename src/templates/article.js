@@ -59,7 +59,6 @@ const Article = ({ pageContext }) => {
 
   const location = GoogleMapsUrlHelper.getLocation(pageContext.node)
   const address = GoogleMapsUrlHelper.getAddress(pageContext.node)
-  const markers = [location]
 
   return (
 
@@ -72,7 +71,7 @@ const Article = ({ pageContext }) => {
           </MDXProvider>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
-          <Map location={location} address={address} markers={markers} zoom={15} persistentDisabled={false}
+          <Map location={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
             width="100%" height="400px" />
         </div>
       </div>

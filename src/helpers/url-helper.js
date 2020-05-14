@@ -21,6 +21,15 @@ class GoogleMapsUrlHelper {
     return false;
   }
 
+  static getMarker(node, url) {
+    return {
+      id: node._fl_meta_.fl_id,
+      title: node.title,
+      url: url,
+      location: this.getLocation(node)
+    }
+  }
+
   static getImageDirectory() {
     return `./static/maps`
   }
@@ -47,7 +56,7 @@ class GoogleMapsUrlHelper {
     if (markers.length > 0) {
       var markerString = "color:red"
       markers.map(markerData => {
-        markerString = `${markerString}|${markerData.lat},${markerData.lng}`
+        markerString = `${markerString}|${markerData.location.lat},${markerData.location.lng}`
       })
       parameters.set("markers", markerString)
     }

@@ -260,8 +260,9 @@ exports.createPages = async ({ graphql, actions }) => {
         })
       }
 
-      var location = GoogleMapsUrlHelper.getLocation(node)
-      var markers = [location]
+      var marker = GoogleMapsUrlHelper.getMarker(node, treeNode.getPath(locale))
+      var markers = [marker]
+      var location = marker.location
       addStaticGoogleMapsImageToCache(location, markers)
 
 
@@ -275,6 +276,7 @@ exports.createPages = async ({ graphql, actions }) => {
           node: node,
           layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
           locale: locale,
+          markers: markers,
         }
       })
     })
@@ -301,10 +303,10 @@ exports.createPages = async ({ graphql, actions }) => {
       // Get all markers from child articles and subpage child articles.
       const markers = treeNode.getAllChildArticles()
         .map(articleTreeNode => {
-          return GoogleMapsUrlHelper.getLocation(articleTreeNode.node.get(locale))
+          return GoogleMapsUrlHelper.getMarker(articleTreeNode.node.get(locale), articleTreeNode.getPath(locale))
         })
 
-      if (markers.length > 0) {
+      if (markers.length > 1) {
         const location = GoogleMapsUrlHelper.getLocation()
         addStaticGoogleMapsImageToCache(location, markers)
       }
