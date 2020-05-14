@@ -23,6 +23,7 @@ class GoogleMapsUrlHelper {
 
   static getMarker(node, url) {
     return {
+      id: node._fl_meta_.fl_id,
       title: node.title,
       url: url,
       location: this.getLocation(node)

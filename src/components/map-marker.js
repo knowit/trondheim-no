@@ -32,7 +32,7 @@ export default class MapMarker extends React.Component {
 
     return (
       <InfoWindow anchor={mapMarker}>
-        <div><Link to={markerData.url}>{markerData.title}</Link> {markerId}</div>
+        <div><Link to={markerData.url}>{markerData.title}</Link></div>
       </InfoWindow>
     );
   };
