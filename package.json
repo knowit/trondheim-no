@@ -14,7 +14,7 @@
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "dotenv": "^8.2.0",
-    "gatsby": "^2.20.8",
+    "gatsby": "^2.23.1",
     "gatsby-background-image": "^1.0.1",
     "gatsby-image": "^2.3.1",
     "gatsby-mdx-fix": "0.0.3",

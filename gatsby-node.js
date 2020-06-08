@@ -274,6 +274,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Fetch a static map image from google and store it to server's image folder
   function fetchStaticGoogleMapsImage(apiURL, noApiURL) {
+    /*
 
     const imgDir = GoogleMapsUrlHelper.getImageDirectory()
     const imgUrl = GoogleMapsUrlHelper.createImageUrl(noApiURL)
@@ -293,6 +294,7 @@ exports.createPages = async ({ graphql, actions }) => {
           data.pipe(dest);
         })
       })
+      */
   }
 
   function addStaticGoogleMapsImageToCache(location, markers) {
