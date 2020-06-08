@@ -4,8 +4,6 @@ import styles from "../style/article.module.css"
 import Map from "../components/map.js"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
-import { MDXRenderer } from "gatsby-mdx-fix"
-import { MDXProvider } from "@mdx-js/react"
 import { GoogleMapsUrlHelper } from "../helpers/url-helper"
 
 function ContactInfo(props) {
