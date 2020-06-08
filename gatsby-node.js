@@ -6,6 +6,67 @@ const fetch = require('node-fetch')
 const defaultLocale = 'no'
 const { PathTreeBuilder } = require(`./src/helpers/path-helper`)
 const { GoogleMapsUrlHelper } = require(`./src/helpers/url-helper`)
+const { createRemoteFileNode } = require("gatsby-source-filesystem")
+
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions
+  createTypes(`
+    type FlamelinkTextHtmlContentNode implements Node {
+      remoteImages: [File] @link
+    }
+  `)
+}
+
+exports.onCreateNode = async ({
+  node,
+  actions: { createNode },
+  store,
+  cache,
+  createNodeId,
+}) => {
+
+  function extract_image_urls(htmlBody) {
+    var result = []
+
+    var tags = htmlBody.match(/<img [^>]*src="[^"]*"[^>]*>/gm)
+    if (tags == null) {
+      tags = []
+    }
+
+    tags.map(x => x.replace(/.*src="([^"]*)".*/, '$1')).map(url => {
+      result.push(encodeURI(url))
+    })
+
+    return result
+  }
+
+  if (node.internal.type === "FlamelinkTextHtmlContentNode") {
+
+    var fileNodes = []
+    node.remoteImages = fileNodes
+
+    extract_image_urls(node.content).forEach(url => {
+
+      createRemoteFileNode({
+        url: url, // string that points to the URL of the image
+        parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
+        createNode, // helper function in gatsby-node to generate the node
+        createNodeId, // helper function in gatsby-node to generate the node id
+        cache, // Gatsby's cache
+        store, // Gatsby's redux store
+      }).then(fileNode => {
+        // if the file was created, attach the new node to the parent node
+        if (fileNode) {
+          fileNodes.push(fileNode.id)
+          node.remoteImages = fileNodes
+        }
+      })
+    })
+
+
+  }
+}
+
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
@@ -471,6 +532,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Save all external resource urls to be precached by service worker
 
+  /*
   fs.writeFile('./static/external/sources.txt', external_resources, (error) => {
     if (error) {
       throw error
@@ -481,4 +543,5 @@ exports.createPages = async ({ graphql, actions }) => {
       throw error
     }
   })
+  */
 }
