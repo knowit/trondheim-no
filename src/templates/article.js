@@ -61,7 +61,24 @@ const Article = ({ pageContext }) => {
 
 
   const HTMLContent = ({ htmlContent }) => {
-    return ReactDOMHelper.parseToReact(htmlContent)
+
+
+    const element = ReactDOMHelper.parseToReact(htmlContent)
+    const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent,
+      (props, index) => {
+        const imageNode = pageContext.node.content.remoteImages.find(n => { return n.url === props.src })
+        if (imageNode) {
+          return <Img key={index} fixed={imageNode.childImageSharp.fixed} alt={props.alt}></Img>
+        }
+        else {
+          return <div></div>
+        }
+      })
+
+
+    console.log(element)
+
+    return reactComponent
   }
 
 

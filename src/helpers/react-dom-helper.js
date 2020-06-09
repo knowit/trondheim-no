@@ -4,7 +4,151 @@ var HtmlToReact = require('html-to-react');
 var HtmlToReactParser = require('html-to-react').Parser;
 var ReactDOMServer = require('react-dom/server');
 
+class HtmlNode {
+
+  constructor(type, props = {}) {
+    this.children = []
+    this.type = type
+    this.props = props
+    this.level = 0
+  }
+
+  addChild(htmlNode) {
+    this.children.push(htmlNode)
+  }
+
+  getChildCount() {
+    return this.children.length
+  }
+  getChildren() {
+    return this.children
+  }
+
+  setLevel(level) {
+    this.level = level
+  }
+
+  getLevel() {
+    return this.level
+  }
+  isType(type) {
+    return this.type === type
+  }
+
+  toString() {
+    var string = `Level ${this.level}:`
+
+    if (this.props.text) {
+      string = `${string} ${this.props.text}`
+    }
+    else {
+      string = `${string} \ttype: ${this.type}\tprops${JSON.stringify(this.props)}`
+    }
+    return string
+  }
+
+  print() {
+    console.log(this.toString())
+    this.children.map(child => {
+      child.print()
+    })
+  }
+
+}
+
 class ReactDOMHelper {
+
+
+  static printChildren(element) {
+    if (element.props) {
+      if (element.props.children) {
+        React.Children.map(element.props.children, (child) => {
+          this.printChildren(child)
+        })
+      }
+      else {
+
+      }
+    }
+    else if (typeof element === 'string') {
+      console.log(element)
+    }
+  }
+
+  static buildHtmlTree(element, level = 1) {
+    if (element.props) {
+      const childNode = new HtmlNode(element.type, element.props)
+      childNode.setLevel(level)
+
+
+      if (element.props.children) {
+        React.Children.map(element.props.children, (child) => {
+          const grandChild = this.buildHtmlTree(child, level + 1)
+          if (grandChild) {
+            childNode.addChild(grandChild)
+          }
+        })
+      }
+
+      return childNode
+
+    }
+    else if (typeof element === 'string') {
+      const childNode = new HtmlNode('text', { text: element })
+      childNode.setLevel(level)
+      return childNode
+    }
+    else {
+      return null
+    }
+  }
+
+  static createReactComponent(htmlNode, transformImg, index = 0) {
+
+    if (htmlNode.isType('img')) {
+      return transformImg(htmlNode.props, index)
+    }
+
+    else if (htmlNode.isType('text')) {
+      return React.createElement('div', { key: index }, htmlNode.props.text)
+    }
+
+    else {
+      var children = []
+
+      var childIndex = 0
+
+      htmlNode.getChildren().map(child => {
+        children.push(
+          this.createReactComponent(child, transformImg, childIndex)
+        )
+        childIndex += 1
+      })
+
+      return React.createElement(
+        (htmlNode.type === 'p') ? 'div' : htmlNode.type, { key: index, }, children)
+    }
+  }
+
+
+  static buildReactComponent(htmlInput, transformImg) {
+
+    const root = new HtmlNode('div')
+    const element = this.parseToReact(htmlInput)
+
+
+    React.Children.map(element, (child) => {
+      const childNode = this.buildHtmlTree(child)
+      if (childNode) {
+        root.addChild(childNode)
+      }
+    })
+
+    const reactElement = this.createReactComponent(root, transformImg)
+
+    return reactElement
+
+  }
 
   static isType(node, type) {
     if (node.type == 'tag') {
@@ -48,29 +192,6 @@ class ReactDOMHelper {
         return this.hasParentOfType(node.parent, type)
       }
     }
-  }
-
-  static createReactTextElement(text, index) {
-    return React.createElement('div', { key: index, }, text)
-  }
-
-  static createReactElementOfType(node, type, index, processChild) {
-
-    var children = []
-
-    if (node.childNodes) {
-      node.childNodes.map(child => {
-
-        if (child.type === 'tag') {
-          children.push(
-            processChild(child, children.length)
-          )
-        }
-      })
-    }
-
-    return React.createElement(type, { key: index, }, children)
-
   }
 
   static parseToReact(htmlInput) {
