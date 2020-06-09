@@ -31,6 +31,7 @@ module.exports = {
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {
+
       resolve: `gatsby-mdx-fix`,
       options: {
         extensions: ['.mdx', '.md'],
@@ -46,13 +47,7 @@ module.exports = {
         ],
       },
     },
-    {
-      resolve: `gatsby-plugin-remote-images`,
-      options: {
-        nodeType: 'allFile',
-        imagePath: 'edges[].node.url',
-      },
-    },
+
     {
       resolve: 'gatsby-source-flamelink',
       options: {
@@ -70,6 +65,13 @@ module.exports = {
         navigation: true,
         globals: true
       }
+    },
+    {
+      resolve: `gatsby-plugin-remote-images`,
+      options: {
+        nodeType: 'file',
+        imagePath: 'edges[].node.url',
+      },
     },
     {
       resolve: `gatsby-plugin-manifest`,

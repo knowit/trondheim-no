@@ -8,14 +8,17 @@ const { PathTreeBuilder } = require(`./src/helpers/path-helper`)
 const { GoogleMapsUrlHelper } = require(`./src/helpers/url-helper`)
 const { createRemoteFileNode } = require("gatsby-source-filesystem")
 
+
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
-  createTypes(`
+  const typeDefs = `
     type FlamelinkTextHtmlContentNode implements Node {
       remoteImages: [File] @link
     }
-  `)
+  `
+  createTypes(typeDefs)
 }
+
 
 exports.onCreateNode = async ({
   node,
@@ -43,7 +46,6 @@ exports.onCreateNode = async ({
   if (node.internal.type === "FlamelinkTextHtmlContentNode") {
 
     var fileNodes = []
-    node.remoteImages = fileNodes
 
     extract_image_urls(node.content).forEach(url => {
 
@@ -62,9 +64,8 @@ exports.onCreateNode = async ({
         }
       })
     })
-
-
   }
+
 }
 
 
@@ -274,6 +275,19 @@ exports.createPages = async ({ graphql, actions }) => {
           }
           content {
             content
+            remoteImages {
+              url
+              childImageSharp {
+                fixed (quality: 90){
+                  tracedSVG 
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  width
+                  height
+                } 
+              }
+            }
           }
           contactInfo {
             emailAddress

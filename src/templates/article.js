@@ -5,6 +5,8 @@ import Map from "../components/map.js"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import { GoogleMapsUrlHelper } from "../helpers/url-helper"
+import Img from "gatsby-image"
+import ReactDOMHelper from "../helpers/react-dom-helper"
 
 function ContactInfo(props) {
 
@@ -33,7 +35,6 @@ function ContactInfo(props) {
           props.node.contactInfo.linkToWebsite}
       </Link></div>)
   }
-  console.log(elements);
   if (elements.length > 0) return <div><h3 className={styles.subheading}>{LocalizationHelper.getLocalWord(props.localization, "contactInfo", locale)}</h3><div>{elements}</div></div>
   else return "";
 }
@@ -51,10 +52,18 @@ function OpeningHours(props) {
   else return "";
 }
 
+
+
 const Article = ({ pageContext }) => {
 
   const location = GoogleMapsUrlHelper.getLocation(pageContext.node)
   const address = GoogleMapsUrlHelper.getAddress(pageContext.node)
+
+
+  const HTMLContent = ({ htmlContent }) => {
+    return ReactDOMHelper.parseToReact(htmlContent)
+  }
+
 
   return (
 
@@ -62,7 +71,7 @@ const Article = ({ pageContext }) => {
       <div id="outer-container">
         <div id="inner-container">
           <h2>{pageContext.node.title}</h2>
-          <div dangerouslySetInnerHTML={{ __html: pageContext.node.content.content }}></div>
+          <HTMLContent htmlContent={pageContext.node.content.content}></HTMLContent>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <Map location={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
