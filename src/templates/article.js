@@ -7,6 +7,7 @@ import LocalizationHelper from "../helpers/helpers"
 import { GoogleMapsUrlHelper } from "../helpers/url-helper"
 import Img from "gatsby-image"
 import ReactDOMHelper from "../helpers/react-dom-helper"
+import { Online, Offline } from "react-detect-offline"
 
 
 function ContactInfo(props) {
@@ -96,11 +97,10 @@ const Article = ({ pageContext }) => {
         }
       })
 
-
-
     return reactComponent
   }
 
+  console.log(pageContext.markers)
 
   return (
 
@@ -108,11 +108,20 @@ const Article = ({ pageContext }) => {
       <div id="outer-container">
         <div id="inner-container">
           <h2>{pageContext.node.title}</h2>
+          <Img fluid={pageContext.node.googleMapsStaticImage.childImageSharp.fluid} alt={'Map of location'}>
+          </Img>
           <HTMLContent htmlContent={pageContext.node.content.content}></HTMLContent>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
-          <Map location={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
-            width="100%" height="400px" />
+          <Online>
+            <Map location={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
+              width="100%" height="400px" />
+          </Online>
+          <Offline>
+            <Img fluid={pageContext.node.googleMapsStaticImage.childImageSharp.fluid} alt={'Map of location'}>
+            </Img>
+          </Offline>
+
         </div>
       </div>
     </Layout>

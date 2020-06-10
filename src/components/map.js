@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { GoogleMap, LoadScript, MarkerClusterer } from '@react-google-maps/api';
 import styles from "../style/map.module.css"
-import { Online, Offline } from "react-detect-offline"
 import MapMarker from "./map-marker.js"
-import { GoogleMapsUrlHelper } from "../helpers/url-helper"
 
 
 class Map extends Component {
@@ -81,13 +79,7 @@ class Map extends Component {
 
         return (
             <div className={styles.mapContainer}>
-                <Online>
-                    <OnlineMap />
-                </Online>
-                <Offline>
-                    <img src={GoogleMapsUrlHelper.createStaticGoogleMapUrl(this.props.location, this.props.markers)} alt="Static map"></img>
-                </Offline>
-
+                <OnlineMap />
             </div>
         );
     }
