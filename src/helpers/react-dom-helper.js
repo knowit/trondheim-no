@@ -113,6 +113,10 @@ class ReactDOMHelper {
       return React.createElement('p', { key: index }, htmlNode.props.text)
     }
 
+    else if (htmlNode.isType('br')) {
+      return React.createElement('p', { key: index }, '')
+    }
+
     else {
       var children = []
 
