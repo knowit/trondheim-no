@@ -29,7 +29,14 @@ module.exports = {
       }
     },
     `gatsby-transformer-sharp`,
-    `gatsby-plugin-sharp`,
+    {
+      resolve: `gatsby-plugin-sharp`,
+      options: {
+        useMozJpeg: false,
+        stripMetadata: false,
+        defaultQuality: 90,
+      },
+    },
     {
 
       resolve: `gatsby-mdx-fix`,

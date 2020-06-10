@@ -286,6 +286,17 @@ exports.createPages = async ({ graphql, actions }) => {
                   width
                   height
                 } 
+                fluid (quality: 90){
+                  base64
+                  tracedSVG 
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                } 
               }
             }
           }

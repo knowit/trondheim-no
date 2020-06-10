@@ -110,7 +110,7 @@ class ReactDOMHelper {
     }
 
     else if (htmlNode.isType('text')) {
-      return React.createElement('div', { key: index }, htmlNode.props.text)
+      return React.createElement('p', { key: index }, htmlNode.props.text)
     }
 
     else {

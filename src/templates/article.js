@@ -8,6 +8,7 @@ import { GoogleMapsUrlHelper } from "../helpers/url-helper"
 import Img from "gatsby-image"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 
+
 function ContactInfo(props) {
 
   if (!props.node.contactInfo) return "";
@@ -68,7 +69,24 @@ const Article = ({ pageContext }) => {
       (props, index) => {
         const imageNode = pageContext.node.content.remoteImages.find(n => { return n.url === props.src })
         if (imageNode) {
-          return <Img key={index} fixed={imageNode.childImageSharp.fixed} alt={props.alt}></Img>
+
+          const styles = {
+
+            width: imageNode.childImageSharp.fluid.presentationWidth,
+            height: imageNode.childImageSharp.fluid.presentationHeight,
+            margin: '1em 0'
+
+          }
+
+          return <div className="article-content-image-container" style={styles}>
+            <Img
+              className='article-content-image'
+              key={index}
+              fluid={imageNode.childImageSharp.fluid}
+              alt={props.alt}>
+            </Img>
+          </div>
+
         }
         else {
           return <div></div>
