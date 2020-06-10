@@ -63,11 +63,14 @@ const Article = ({ pageContext }) => {
 
   const HTMLContent = ({ htmlContent }) => {
 
-
     const element = ReactDOMHelper.parseToReact(htmlContent)
+
     const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent,
       (props, index) => {
-        const imageNode = pageContext.node.content.remoteImages.find(n => { return n.url === props.src })
+        const imageNode = pageContext.node.content.remoteImages.find(n => {
+          return n.url === encodeURI(props.src)
+        })
+
         if (imageNode) {
 
           const styles = {
@@ -94,7 +97,6 @@ const Article = ({ pageContext }) => {
       })
 
 
-    console.log(element)
 
     return reactComponent
   }

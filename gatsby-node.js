@@ -348,15 +348,8 @@ exports.createPages = async ({ graphql, actions }) => {
 
   let pathHelper = new PathTreeBuilder(result, defaultLocale)
   const root = pathHelper.build()
-  var external_resources = ""
   var locations = ""
   const listingPages = new Map()
-
-
-  // Return a list of image urls from a markdown body
-  function extract_image_urls(htmlBody) {
-    return Array.from(htmlBody.matchAll(/<img[^>]+src="([^">]+)"/g), m => m[0])
-  }
 
   // Fetch a static map image from google and store it to server's image folder
   function fetchStaticGoogleMapsImage(apiURL, noApiURL) {
@@ -397,15 +390,6 @@ exports.createPages = async ({ graphql, actions }) => {
     treeNode.node.forEach((value, key, map) => {
       const node = value
       const locale = key
-
-      // Check for external image urls in markdown body
-      var urls = extract_image_urls(node.content.content)
-
-      if (urls !== null) {
-        urls.map(url => {
-          external_resources = external_resources + `\n${url}`
-        })
-      }
 
       var marker = GoogleMapsUrlHelper.getMarker(node, treeNode.getPath(locale))
       var markers = [marker]
@@ -522,8 +506,6 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
 
-
-
   for (const treeNode of pathHelper.createNodeIterator()) {
 
     if (treeNode.isListingPage === true && treeNode.isFrontPage === false && treeNode.isArticle === false) {
@@ -558,11 +540,6 @@ exports.createPages = async ({ graphql, actions }) => {
   // Save all external resource urls to be precached by service worker
 
   /*
-  fs.writeFile('./static/external/sources.txt', external_resources, (error) => {
-    if (error) {
-      throw error
-    }
-  })
   fs.writeFile('./static/external/locations.txt', locations, (error) => {
     if (error) {
       throw error
