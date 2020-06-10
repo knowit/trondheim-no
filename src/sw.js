@@ -1,5 +1,4 @@
 var cacheNames = ['external-resources'];
-var urlsToPrefetch = [];
 var locationUrlsToPrefetch = []
 
 function createImageUrl(noApiUrl, static = true) {
@@ -24,53 +23,26 @@ self.addEventListener('install', function (event) {
 
       console.log("Service Worker: Installing")
 
-      // Fetch external image urls from stored file
-      fetch(`../external/sources.txt`, { mode: 'no-cors' })
+      // Fetch static map urls from stored file
+      fetch(`../external/locations.txt`, { mode: 'no-cors' })
         .then(response => response.text())
         .then(text => text.split('\n'))
-        .then(urlsToPrefetch => {
+        .then(mapUrls => {
 
-          console.log('Service Worker: Caching external resources');
+          console.log('Service Worker: Caching Static Google Maps');
 
-          urlsToPrefetch.map(function (urlToPrefetch) {
-            const request = new Request(urlToPrefetch, { mode: 'no-cors' });
+          mapUrls.filter(mapUrl => mapUrl.length > 3).map(function (mapUrl) {
 
-            // Fetch individual external image url and cache it
-            fetch(urlToPrefetch, {
-              mode: 'no-cors',
-              method: 'GET',
-              headers: {
-                Accept: 'image/png',
-              },
-            },
-            ).then(response => {
-              cache.put(request, response)
-            })
-          })
-        }).then(_ => {
+            var path = createImageUrl(mapUrl)
+            const request = new Request(path, { mode: 'no-cors' })
 
-          // Fetch static map urls from stored file
-          fetch(`../external/locations.txt`, { mode: 'no-cors' })
-            .then(response => response.text())
-            .then(text => text.split('\n'))
-            .then(mapUrls => {
-
-              console.log('Service Worker: Caching Static Google Maps');
-
-              mapUrls.filter(mapUrl => mapUrl.length > 3).map(function (mapUrl) {
-
-                var path = createImageUrl(mapUrl)
-                const request = new Request(path, { mode: 'no-cors' })
-
-                fetch(path, { mode: 'no-cors' })
-                  .then(response => {
-                    cache.put(request, response)
-                  })
-
+            fetch(path, { mode: 'no-cors' })
+              .then(response => {
+                cache.put(request, response)
               })
-            })
+
+          })
         })
-        .catch(error => console.error(error));
     })
   );
 });
