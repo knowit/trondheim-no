@@ -81,7 +81,7 @@ class TagFilter extends React.Component {
 
         allTags.push(
             <div
-                class="distinct-tag"
+                className="distinct-tag"
                 key="all"
                 style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
                 onClick={(e) => this.handleTagToggle("all", e)}>
@@ -92,7 +92,7 @@ class TagFilter extends React.Component {
         pageContext.tags.forEach((tag) => {
             allTags.push(
                 <div
-                    class="distinct-tag"
+                    className="distinct-tag"
                     key={tag}
                     style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}
                     onClick={(e) => this.handleTagToggle(tag, e)}>
@@ -129,7 +129,7 @@ class Sorter extends React.Component {
             var tagName = LocalizationHelper.getLocalWord(pageContext.localization, s, pageContext.locale);
             sortTags.push(
                 <div
-                    class="distinct-tag"
+                    className="distinct-tag"
                     key={s}
                     style={sortBy === s ? selectedStyle : unSelectedStyle}
                     onClick={(e) => this.handleSortToggle(s, e)}
@@ -235,10 +235,16 @@ class ArticleList extends React.Component {
 }
 
 class ArticleView extends React.Component {
+
+
+    getDefaultThumbnail() {
+        return this.props.pageContext.layoutContext.defaultThumbnails.find(node => node.title === "Article Thumbnail").image[0].localFile.childImageSharp.fluid
+    }
+
     render() {
         const article = this.props.article;
         const pageContext = this.props.pageContext;
-        var thumbnail = pageContext.layoutContext.defaultThumbnails.find(node => node.title === "Article Thumbnail").image[0].localFile.childImageSharp.fluid
+        var thumbnail = null
 
         if (article.thumbnail != null) {
             if (article.thumbnail.length > 0) {
@@ -246,15 +252,19 @@ class ArticleView extends React.Component {
             }
         }
 
+        if (thumbnail == null) {
+            thumbnail = this.getDefaultThumbnail()
+        }
+
         return (
-            <div class="article-container">
+            <div className="article-container">
                 <Img className="article-thumbnail" fluid={thumbnail} />
-                <div class="article-info-container">
+                <div className="article-info-container">
                     <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${article.slug}`}>{(this.props.subList) ? article.navigationTitle : article.title}</Link></h2>
-                    <div class="tags-container">
+                    <div className="tags-container">
                         {article.tags.map(function (tag, key) {
                             return (
-                                <div class="tag" key={tag}>
+                                <div className="tag" key={tag}>
                                     <a href="/">{tag}</a>
                                 </div>
                             )

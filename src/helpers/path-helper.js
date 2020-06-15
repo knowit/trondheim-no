@@ -73,25 +73,6 @@ class TreeNode {
     return result
   }
 
-  getTypedChildArticles() {
-
-    var result = new Map()
-    for (const treeNode of breadthFirstIterator(this)) {
-      if (treeNode.isArticle == true) {
-
-        const listingPageTitle = treeNode.parent.node.localTitle
-        if (!result.has(listingPageTitle)) {
-          result.set(listingPageTitle, [])
-        }
-
-        result.get(listingPageTitle).push(treeNode)
-      }
-    }
-
-    return result
-  }
-
-
   addChild(treeNode) {
     this.children.set(treeNode.id, treeNode)
   }
@@ -234,10 +215,10 @@ class ListingPageBuilder {
   getMapPath(locale) {
     var parentPath = this.treeNode.parent.getPath(locale)
     if (locale === 'no') {
-      return `${parentPath}/kart-over-${this.treeNode.slugs.get(locale)}`
+      return `${parentPath}kart-over-${this.treeNode.slugs.get(locale)}`
     }
     else {
-      return `${parentPath}/map-of-${this.treeNode.slugs.get(locale)}`
+      return `${parentPath}map-of-${this.treeNode.slugs.get(locale)}`
     }
   }
 
