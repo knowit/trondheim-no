@@ -47,33 +47,10 @@ class HtmlNode {
     return string
   }
 
-  print() {
-    console.log(this.toString())
-    this.children.map(child => {
-      child.print()
-    })
-  }
-
 }
 
 class ReactDOMHelper {
 
-
-  static printChildren(element) {
-    if (element.props) {
-      if (element.props.children) {
-        React.Children.map(element.props.children, (child) => {
-          this.printChildren(child)
-        })
-      }
-      else {
-
-      }
-    }
-    else if (typeof element === 'string') {
-      console.log(element)
-    }
-  }
 
   static buildHtmlTree(element, level = 1) {
     if (element.props) {
@@ -127,6 +104,7 @@ class ReactDOMHelper {
           this.createReactComponent(child, transformImg, childIndex)
         )
         childIndex += 1
+        return child
       })
 
       return React.createElement(
@@ -155,8 +133,8 @@ class ReactDOMHelper {
   }
 
   static isType(node, type) {
-    if (node.type == 'tag') {
-      return node.tagName == type
+    if (node.type === 'tag') {
+      return node.tagName === type
     }
     else {
       return false

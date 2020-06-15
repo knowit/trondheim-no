@@ -64,8 +64,6 @@ const Article = ({ pageContext }) => {
 
   const HTMLContent = ({ htmlContent }) => {
 
-    const element = ReactDOMHelper.parseToReact(htmlContent)
-
     const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent,
       (props, index) => {
         const imageNode = pageContext.node.content.remoteImages.find(n => {

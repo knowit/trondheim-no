@@ -22,14 +22,14 @@ export default ({ layoutContext }) => {
   `)
 
 
-  return <div class="navigation-container">
+  return <div className="navigation-container">
 
     <BurgerMenu layoutContext={layoutContext}></BurgerMenu>
 
-    <div class="logo-container">
+    <div className="logo-container">
       <Link id="trondheimno-link" to={(layoutContext.locale === 'no') ? '/' : `/${layoutContext.locale.split('-')[0]}/`}>TRONDHEIM.NO</Link>
 
-      <div class="logo">
+      <div className="logo">
         <Img fluid={data.file.childImageSharp.fluid} alt="Trondheim logo" />
       </div>
     </div>

@@ -70,9 +70,9 @@ class GoogleMapsUrlHelper {
 
     if (markers.length > 0) {
       var markerString = "color:red"
-      markers.map(markerData => {
+      markers.map(markerData =>
         markerString = `${markerString}|${markerData.location.lat},${markerData.location.lng}`
-      })
+      )
       parameters.set("markers", markerString)
     }
 
