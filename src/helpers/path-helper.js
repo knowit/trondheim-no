@@ -73,6 +73,25 @@ class TreeNode {
     return result
   }
 
+  getTypedChildArticles() {
+
+    var result = new Map()
+    for (const treeNode of breadthFirstIterator(this)) {
+      if (treeNode.isArticle == true) {
+
+        const listingPageTitle = treeNode.parent.node.localTitle
+        if (!result.has(listingPageTitle)) {
+          result.set(listingPageTitle, [])
+        }
+
+        result.get(listingPageTitle).push(treeNode)
+      }
+    }
+
+    return result
+  }
+
+
   addChild(treeNode) {
     this.children.set(treeNode.id, treeNode)
   }

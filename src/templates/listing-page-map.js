@@ -1,7 +1,7 @@
 import React from "react"
 import "../style/listing-page.css"
 import Layout from "../layouts/layout"
-import Map from "../components/map.js"
+import GoogleMap from "../components/map.js"
 import LocalizationHelper from "../helpers/helpers"
 import { Link } from "gatsby"
 
@@ -18,23 +18,83 @@ function GetAddress(pageContext) {
   return "Trondheim, Norway"
 }
 
-const ListingPageMap = ({ pageContext }) => {
+class ListingPageMap extends React.Component {
 
-  return (
-    <Layout layoutContext={pageContext.layoutContext}>
-      <div id="outer-container">
-        <div id="inner-container">
-          <Map location={GetLocation(pageContext)} address={GetAddress(pageContext)} markers={pageContext.markers} zoom={14} persistentDisabled={false}
-            width="100%" height="500px" />
-          <div id="content-container">
-            <h2>{pageContext.node.mapPageTitle}</h2>
-            <p>{pageContext.node.mapPageDescription}</p>
-            <Link to={pageContext.listingPagePath}>{LocalizationHelper.getLocalWord(pageContext.localization, "viewListingPageList", pageContext.locale)}</Link>
+  constructor(props) {
+    super(props)
+
+    var subListingPages = new Map();
+
+    props.pageContext.markers.map(marker => {
+      if (marker.parent != null) {
+        subListingPages.set(marker.parent, true)
+      }
+    })
+
+    this.state = {
+      subListingPages: subListingPages
+    }
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    const item = e.target.name;
+    const isChecked = e.target.checked;
+    this.setState(prevState => ({ subListingPages: prevState.subListingPages.set(item, isChecked) }));
+  }
+
+  render() {
+
+    var items = []
+    var markers = []
+
+    this.state.subListingPages.forEach((value, key, map) => {
+      items.push(
+        <label className="map-checkbox-container" key={key}>
+          <input
+            name={key}
+            type="checkbox"
+            checked={value}
+            onChange={this.handleChange} />
+          {key}
+        </label>
+      )
+    })
+
+    this.props.pageContext.markers.map(marker => {
+      if (this.state.subListingPages.get(marker.parent)) {
+        markers.push(marker)
+      }
+    })
+
+    return (
+      <Layout layoutContext={this.props.pageContext.layoutContext}>
+        <div id="outer-container">
+          <div id="inner-container">
+            <GoogleMap location={GetLocation(this.props.pageContext)} address={GetAddress(this.props.pageContext)} markers={markers} zoom={13} persistentDisabled={false}
+              width="100%" height="500px" />
+
+
+            <div>
+              <form className="map-checkbox-form">
+                {items}
+              </form>
+            </div>
+
+
+            <div id="content-container">
+              <h2>{this.props.pageContext.node.mapPageTitle}</h2>
+              <p>{this.props.pageContext.node.mapPageDescription}</p>
+              <Link to={this.props.pageContext.listingPagePath}>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "viewListingPageList", this.props.pageContext.locale)}</Link>
+            </div>
           </div>
         </div>
-      </div>
-    </Layout>
-  )
+      </Layout>
+    )
+  }
+
 }
+
 
 export default ListingPageMap

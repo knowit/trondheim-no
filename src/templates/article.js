@@ -62,7 +62,13 @@ const Article = ({ pageContext }) => {
   const address = GoogleMapsUrlHelper.getAddress(pageContext.node)
 
 
-  const HTMLContent = ({ htmlContent }) => {
+  const HTMLContent = () => {
+
+    if (!pageContext.node.content) {
+      return (<div></div>)
+    }
+
+    const htmlContent = pageContext.node.content.content
 
     const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent,
       (props, index) => {
@@ -123,7 +129,7 @@ const Article = ({ pageContext }) => {
       <div id="outer-container">
         <div id="inner-container">
           <h2>{pageContext.node.title}</h2>
-          <HTMLContent htmlContent={pageContext.node.content.content}></HTMLContent>
+          <HTMLContent />
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <Online>

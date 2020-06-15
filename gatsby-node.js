@@ -128,7 +128,8 @@ exports.createPages = async ({ graphql, actions }) => {
     treeNode.node.forEach((value, key, map) => {
       const node = value
       const locale = key
-      const marker = GoogleMapsUrlHelper.getMarker(node, treeNode.getPath(locale))
+      const parent = treeNode.parent.node.get(locale)
+      const marker = GoogleMapsUrlHelper.getMarker(node, treeNode.getPath(locale), parent)
 
       createPage({
         path: treeNode.getPath(locale),
@@ -167,14 +168,15 @@ exports.createPages = async ({ graphql, actions }) => {
       // Get all markers from child articles and subpage child articles.
       const markers = []
 
-      treeNode.getAllChildArticles()
-        .map(articleTreeNode => {
-          const articleNode = articleTreeNode.node.get(locale)
-          const articlePath = articleTreeNode.getPath(locale)
-          if (articleNode != null && articlePath != null) {
-            markers.push(GoogleMapsUrlHelper.getMarker(articleNode, articlePath))
-          }
-        })
+      treeNode.getAllChildArticles().map(articleTreeNode => {
+
+        const articleNode = articleTreeNode.node.get(locale)
+        const articlePath = articleTreeNode.getPath(locale)
+        const parentNode = articleTreeNode.parent.node.get(locale)
+        const marker = GoogleMapsUrlHelper.getMarker(articleNode, articlePath, parentNode)
+
+        markers.push(marker)
+      })
 
       // Create listing page map
       createPage({

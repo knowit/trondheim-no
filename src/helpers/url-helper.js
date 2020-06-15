@@ -25,12 +25,13 @@ class GoogleMapsUrlHelper {
     return false;
   }
 
-  static getMarker(node, url) {
+  static getMarker(node, url, parent = null) {
     return {
       id: node._fl_meta_.fl_id,
       title: node.title,
       url: url,
-      location: this.getLocation(node)
+      location: this.getLocation(node),
+      parent: parent ? parent.localTitle : null
     }
   }
 
