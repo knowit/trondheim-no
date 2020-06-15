@@ -80,9 +80,8 @@ class TagFilter extends React.Component {
         const allTags = [];
 
         allTags.push(
-            <div
+            <div role="button" tabIndex={20 + allTags.length} onKeyPress={this.handleKeyPress} key={allTags.length}
                 className="distinct-tag"
-                key="all"
                 style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
                 onClick={(e) => this.handleTagToggle("all", e)}>
                 {LocalizationHelper.getLocalWord(pageContext.localization, "all", pageContext.locale)}
@@ -91,9 +90,9 @@ class TagFilter extends React.Component {
 
         pageContext.tags.forEach((tag) => {
             allTags.push(
-                <div
+                <div role="button" tabIndex={20 + allTags.length} onKeyPress={this.handleKeyPress}
+                    key={allTags.length}
                     className="distinct-tag"
-                    key={tag}
                     style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}
                     onClick={(e) => this.handleTagToggle(tag, e)}>
                     {tag}
@@ -128,9 +127,9 @@ class Sorter extends React.Component {
         SORT_TYPES.forEach(s => {
             var tagName = LocalizationHelper.getLocalWord(pageContext.localization, s, pageContext.locale);
             sortTags.push(
-                <div
+                <div role="button" tabIndex={20 + sortTags.length} onKeyPress={this.handleKeyPress}
                     className="distinct-tag"
-                    key={s}
+                    key={sortTags.length}
                     style={sortBy === s ? selectedStyle : unSelectedStyle}
                     onClick={(e) => this.handleSortToggle(s, e)}
                 >

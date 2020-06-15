@@ -33,7 +33,7 @@ class Map extends Component {
     createPersistentGoogleLink() {
         if (this.props.persistentDisabled) return "";
         else {
-            return <a href={this.getGoogleLink()} style={{ width: '68px', height: '26px', cursor: 'pointer', marginLeft: '5px', marginRight: '5px', position: "absolute", left: "0", bottom: "0", zIndex: "1000001" }}></a>
+            return <a href={this.getGoogleLink()} style={{ width: '68px', height: '26px', cursor: 'pointer', marginLeft: '5px', marginRight: '5px', position: "absolute", left: "0", bottom: "0", zIndex: "1000001" }}>{' '}</a>
         }
     }
 

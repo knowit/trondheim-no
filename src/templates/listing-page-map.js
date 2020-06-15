@@ -29,6 +29,7 @@ class ListingPageMap extends React.Component {
       if (marker.parent != null) {
         subListingPages.set(marker.parent, true)
       }
+      return null
     })
 
     this.state = {
@@ -54,10 +55,12 @@ class ListingPageMap extends React.Component {
         <label className="map-checkbox-container" key={key}>
           <input
             name={key}
+            aria-label={key}
             type="checkbox"
             checked={value}
-            onChange={this.handleChange} />
+            onChange={this.handleChange}></input>
           {key}
+
         </label>
       )
     })
@@ -66,6 +69,7 @@ class ListingPageMap extends React.Component {
       if (this.state.subListingPages.get(marker.parent)) {
         markers.push(marker)
       }
+      return null
     })
 
     return (

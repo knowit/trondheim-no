@@ -34,7 +34,7 @@ export class BurgerMenu extends React.Component {
 
   render() {
     return (
-      <div className="menu-container" onClick={this.showMenu}>
+      <div role="menu" tabIndex={0} onKeyPress={this.handleKeyPress} className="menu-container" onClick={this.showMenu}>
         <div className="burger-container">
           <div className="burger-bar"></div>
           <div className="burger-bar"></div>

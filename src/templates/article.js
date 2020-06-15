@@ -86,10 +86,9 @@ const Article = ({ pageContext }) => {
 
           }
 
-          return <div className="article-content-image-container" style={styles}>
+          return <div key={index} className="article-content-image-container" style={styles}>
             <Img
               className='article-content-image'
-              key={index}
               fluid={imageNode.childImageSharp.fluid}
               alt={props.alt}>
             </Img>
