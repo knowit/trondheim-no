@@ -207,22 +207,7 @@ query {
             }
           }
         }
-        googleMapsStaticImage {
-          url
-          childImageSharp {
-            fluid (quality: 90){
-              base64
-              tracedSVG 
-              aspectRatio 
-              src 
-              srcSet 
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
-            } 
-          }
-        }
+        
         content {
           content
           remoteImages {
@@ -256,6 +241,22 @@ query {
         latLong {
           latitude
           longitude
+          googleMapsStaticImage {
+            url
+            childImageSharp {
+              fluid (quality: 90){
+                base64
+                tracedSVG 
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              } 
+            }
+          }
         }
       }
     }

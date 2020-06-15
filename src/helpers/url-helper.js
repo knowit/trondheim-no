@@ -22,7 +22,6 @@ class GoogleMapsUrlHelper {
       return { lat: node.latitude, lng: node.longitude }
     }
 
-    console.log(JSON.stringify(node.latLong))
     return false;
   }
 

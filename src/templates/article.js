@@ -100,7 +100,24 @@ const Article = ({ pageContext }) => {
     return reactComponent
   }
 
-  console.log(pageContext.markers)
+  const OfflineMap = () => {
+    const imageNode = pageContext.node.latLong.googleMapsStaticImage
+
+    if (imageNode != null) {
+      const styles = {
+        width: imageNode.childImageSharp.fluid.presentationWidth,
+        height: imageNode.childImageSharp.fluid.presentationHeight,
+      }
+      return (<div className="offline-map-container" style={styles}>
+        <Img className="offline-map-image" fluid={imageNode.childImageSharp.fluid} alt={'Map of location'}></Img>
+      </div>)
+    }
+
+    else {
+      return (<div></div>)
+    }
+  }
+
 
   return (
 
@@ -108,8 +125,6 @@ const Article = ({ pageContext }) => {
       <div id="outer-container">
         <div id="inner-container">
           <h2>{pageContext.node.title}</h2>
-          <Img fluid={pageContext.node.googleMapsStaticImage.childImageSharp.fluid} alt={'Map of location'}>
-          </Img>
           <HTMLContent htmlContent={pageContext.node.content.content}></HTMLContent>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
@@ -118,8 +133,7 @@ const Article = ({ pageContext }) => {
               width="100%" height="400px" />
           </Online>
           <Offline>
-            <Img fluid={pageContext.node.googleMapsStaticImage.childImageSharp.fluid} alt={'Map of location'}>
-            </Img>
+            <OfflineMap></OfflineMap>
           </Offline>
 
         </div>

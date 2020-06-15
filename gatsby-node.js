@@ -10,6 +10,24 @@ const { createRemoteFileNode } = require("gatsby-source-filesystem")
 const { query } = require('./src/graphql-query')
 
 
+function extract_image_urls(htmlBody) {
+  var result = []
+
+  var tags = htmlBody.match(/<img [^>]*src="[^"]*"[^>]*>/gm)
+  if (tags == null) {
+    tags = []
+  }
+
+  tags.map(x => x.replace(/.*src="([^"]*)".*/, '$1')).map(url => {
+    result.push(encodeURI(url))
+  })
+
+  return result
+}
+
+
+
+
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
@@ -17,7 +35,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       remoteImages: [File] @link
     }
 
-    type FlamelinkArticleNewContent implements Node {
+    type FlamelinkArticleNewContentFieldLatLong implements Node {
       googleMapsStaticImage: File @link
     }
 
@@ -33,21 +51,6 @@ exports.onCreateNode = async ({
   cache,
   createNodeId,
 }) => {
-
-  function extract_image_urls(htmlBody) {
-    var result = []
-
-    var tags = htmlBody.match(/<img [^>]*src="[^"]*"[^>]*>/gm)
-    if (tags == null) {
-      tags = []
-    }
-
-    tags.map(x => x.replace(/.*src="([^"]*)".*/, '$1')).map(url => {
-      result.push(encodeURI(url))
-    })
-
-    return result
-  }
 
   if (node.internal.type === "FlamelinkTextHtmlContentNode") {
 
@@ -75,18 +78,14 @@ exports.onCreateNode = async ({
 
   else if (node.internal.type === 'FlamelinkArticleNewContentFieldLatLong' && node.latitude && node.longitude) {
 
-
     let location = GoogleMapsUrlHelper.getLocation(node)
-
-    console.log(`\nLocation: ${JSON.stringify(location)}`)
 
     const url = GoogleMapsUrlHelper.createStaticGoogleMapUrl(location, [{ location: location }])
 
-    console.log(`URL: ${url}\n`)
 
     createRemoteFileNode({
       url: encodeURI(url), // string that points to the URL of the image
-      parentNodeId: node.parent.id, // id of the parent node of the fileNode you are going to create
+      parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
       createNode, // helper function in gatsby-node to generate the node
       createNodeId, // helper function in gatsby-node to generate the node id
       cache, // Gatsby's cache
@@ -94,16 +93,11 @@ exports.onCreateNode = async ({
     }).then(fileNode => {
       // if the file was created, attach the new node to the parent node
       if (fileNode) {
-        node.parent.googleMapsStaticImage = fileNode.id
+        node.googleMapsStaticImage = fileNode.id
       }
     })
   }
 }
-
-
-
-
-
 
 
 
