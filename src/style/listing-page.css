@@ -174,3 +174,12 @@
   letter-spacing: 0;
 }
 
+.map-checkbox-container {
+  display: inline-block;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.map-checkbox-container input {
+  margin-right: 5px;
+}
