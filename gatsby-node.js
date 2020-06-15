@@ -1,257 +1,114 @@
 
 // You can delete this file if you're not using it
 const path = require(`path`)
-const fs = require('fs')
-const fetch = require('node-fetch')
 const defaultLocale = 'no'
 const { PathTreeBuilder } = require(`./src/helpers/path-helper`)
 const { GoogleMapsUrlHelper } = require(`./src/helpers/url-helper`)
+const { createRemoteFileNode } = require("gatsby-source-filesystem")
+const { query } = require('./src/graphql-query')
+
+
+function extract_image_urls(htmlBody) {
+  var result = []
+
+  var tags = htmlBody.match(/<img [^>]*src="[^"]*"[^>]*>/gm)
+  if (tags == null) {
+    tags = []
+  }
+
+  tags.map(x => x.replace(/.*src="([^"]*)".*/, '$1')).map(url => {
+    result.push(encodeURI(url))
+  })
+
+  return result
+}
+
+
+
+
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions
+  const typeDefs = `
+    type FlamelinkTextHtmlContentNode implements Node {
+      remoteImages: [File] @link
+    }
+
+    type FlamelinkArticleNewContentFieldLatLong implements Node {
+      googleMapsStaticImage: File @link
+    }
+
+  `
+  createTypes(typeDefs)
+}
+
+
+exports.onCreateNode = async ({
+  node,
+  actions: { createNode },
+  store,
+  cache,
+  createNodeId,
+}) => {
+
+  if (node.internal.type === "FlamelinkTextHtmlContentNode") {
+
+    var fileNodes = []
+
+    extract_image_urls(node.content).forEach(url => {
+
+      createRemoteFileNode({
+        url: url, // string that points to the URL of the image
+        parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
+        createNode, // helper function in gatsby-node to generate the node
+        createNodeId, // helper function in gatsby-node to generate the node id
+        cache, // Gatsby's cache
+        store, // Gatsby's redux store
+      }).then(fileNode => {
+        // if the file was created, attach the new node to the parent node
+        if (fileNode) {
+          fileNodes.push(fileNode.id)
+          node.remoteImages = fileNodes
+        }
+      })
+    })
+  }
+
+
+  else if (node.internal.type === 'FlamelinkArticleNewContentFieldLatLong' && node.latitude && node.longitude) {
+
+    let location = GoogleMapsUrlHelper.getLocation(node)
+
+    const url = GoogleMapsUrlHelper.createStaticGoogleMapUrl(location, [{ location: location }])
+
+
+    createRemoteFileNode({
+      url: encodeURI(url), // string that points to the URL of the image
+      parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
+      createNode, // helper function in gatsby-node to generate the node
+      createNodeId, // helper function in gatsby-node to generate the node id
+      cache, // Gatsby's cache
+      store, // Gatsby's redux store
+    }).then(fileNode => {
+      // if the file was created, attach the new node to the parent node
+      if (fileNode) {
+        node.googleMapsStaticImage = fileNode.id
+      }
+    })
+  }
+}
+
+
+
+
+
+
+
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
 
   // Retrieve all data to build sites
-  const result = await graphql(`
-  query {
-    allFlamelinkListingPageContent {
-      edges {
-        node {
-          id
-          _fl_meta_ {
-            fl_id
-            schema
-          }
-          slug
-          thumbnail {
-            localFile {
-              name
-              childImageSharp {
-                fluid(quality: 90) {
-                  src
-                }
-              }
-            }
-          }
-          flamelink_id
-          flamelink_locale
-          localTitle
-          navigationTitle
-          navigationSubtitle
-          textOnPage
-          showOnFrontPage
-          showInDropMenu
-          mapPageTitle
-          mapPageDescription
-          parentListingPage{
-            slug
-            _fl_meta_ {
-              fl_id
-            }
-          }
-        }
-      }
-    }
-    allFlamelinkArticleContent {
-      edges {
-        node {
-          _fl_meta_ {
-            fl_id
-            schema
-          }
-          flamelink_locale
-          flamelink_id
-          id
-          openingHours {
-            content
-            childMdx {
-              code{
-                body
-              }
-            }
-          }
-          parentContent {
-            _fl_meta_ {
-              fl_id
-            }
-            id
-            slug
-          }
-          slug
-          title
-          tags
-          thumbnail {
-            localFile {
-              childImageSharp {
-                fluid (quality: 90) {
-                  src
-                }
-              }
-            }
-          }
-          content {
-            content
-            childMdx {
-              code{
-                body
-              }
-            }
-            childMarkdownRemark{
-              rawMarkdownBody
-            }
-          }
-          contactInfo {
-            emailAddress
-            textToShow
-            telephoneNumber
-            linkToWebsite
-          }
-          address {
-            address
-            lat
-            lng
-          }
-          latLong {
-            latitude
-            longitude
-          }
-        }
-      }
-    }
-    allFlamelinkArticleLocalizationContent(filter: {flamelink_locale: {eq: "no"}}) {
-      edges {
-        node {
-          id
-          translations {
-            translations {
-              uniqueKey
-              language
-              word
-            }
-            key
-          }
-        }
-      }
-    }
-    allFlamelinkListingPageLocalizationContent(filter: {flamelink_locale: {eq: "no"}}) {
-      edges {
-        node {
-          id
-          translations {
-            translations {
-              uniqueKey
-              language
-              word
-            }
-            key
-          }
-        }
-      }
-    }
-    allFlamelinkFrontPageContent {
-      edges {
-        node {
-          _fl_meta_ {
-            fl_id
-            schema
-          }
-          flamelink_id
-          flamelink_locale
-          headerFocusWord
-          headerText
-          id
-          imageDeck {
-            title
-            image {
-              url
-              localFile {
-                childImageSharp {
-                  fluid {
-                    base64
-                  }
-                }
-              }
-            }
-          }
-          navigationText
-        }
-      }
-    }
-
-
-    allFlamelinkArticleNewContent {
-      edges {
-        node {
-          _fl_meta_ {
-            fl_id
-            schema
-          }
-          flamelink_locale
-          flamelink_id
-          id
-          openingHours {
-            content
-          }
-          parentContent {
-            _fl_meta_ {
-              fl_id
-              schema
-            }
-            id
-            slug
-          }
-          slug
-          title
-          tags
-          thumbnail {
-            localFile {
-              childImageSharp {
-                fluid (quality: 90) {
-                  src
-                }
-              }
-            }
-          }
-          content {
-            content
-          }
-          contactInfo {
-            emailAddress
-            textToShow
-            telephoneNumber
-            linkToWebsite
-          }
-          address {
-            address
-            lat
-            lng
-          }
-          latLong {
-            latitude
-            longitude
-          }
-        }
-      }
-    }
-    allFlamelinkDefaultThumbnailsContent {
-      edges {
-        node {
-          imageDeck {
-            title
-            image {
-              localFile {
-                childImageSharp {
-                  fluid (quality: 90) {
-                    src
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  `)
+  const result = await graphql(query)
 
 
   // Handle errors
@@ -262,46 +119,8 @@ exports.createPages = async ({ graphql, actions }) => {
 
   let pathHelper = new PathTreeBuilder(result, defaultLocale)
   const root = pathHelper.build()
-  var external_resources = ""
-  var locations = ""
   const listingPages = new Map()
 
-
-  // Return a list of image urls from a markdown body
-  function extract_image_urls(htmlBody) {
-    return Array.from(htmlBody.matchAll(/<img[^>]+src="([^">]+)"/g), m => m[0])
-  }
-
-  // Fetch a static map image from google and store it to server's image folder
-  function fetchStaticGoogleMapsImage(apiURL, noApiURL) {
-
-    const imgDir = GoogleMapsUrlHelper.getImageDirectory()
-    const imgUrl = GoogleMapsUrlHelper.createImageUrl(noApiURL)
-
-    fetch(apiURL, {
-      mode: 'no-cors',
-      method: 'GET',
-      headers: {
-        Accept: 'image/png',
-      },
-    })
-      .then(res => res.body)
-      .then(data => {
-        fs.promises.mkdir(imgDir, { recursive: true }).then(_ => {
-          const dest = fs.createWriteStream(imgUrl, { flags: 'w', encoding: 'utf-8', mode: 0666 });
-          dest.on('error', function (e) { console.error(e); });
-          data.pipe(dest);
-        })
-      })
-  }
-
-  function addStaticGoogleMapsImageToCache(location, markers) {
-    // Add google maps location url to be cached
-    var apiURL = GoogleMapsUrlHelper.createStaticGoogleMapUrl(location, markers)
-    var noApiURL = GoogleMapsUrlHelper.createStaticGoogleMapUrl(location, markers, false)
-    fetchStaticGoogleMapsImage(apiURL, noApiURL)
-    locations = locations + `\n${noApiURL}`
-  }
 
 
   function createArticle(treeNode) {
@@ -309,21 +128,7 @@ exports.createPages = async ({ graphql, actions }) => {
     treeNode.node.forEach((value, key, map) => {
       const node = value
       const locale = key
-
-      // Check for external image urls in markdown body
-      var urls = extract_image_urls(node.content.content)
-
-      if (urls !== null) {
-        urls.map(url => {
-          external_resources = external_resources + `\n${url}`
-        })
-      }
-
-      var marker = GoogleMapsUrlHelper.getMarker(node, treeNode.getPath(locale))
-      var markers = [marker]
-      var location = marker.location
-      addStaticGoogleMapsImageToCache(location, markers)
-
+      const marker = GoogleMapsUrlHelper.getMarker(node, treeNode.getPath(locale))
 
       createPage({
         path: treeNode.getPath(locale),
@@ -335,7 +140,7 @@ exports.createPages = async ({ graphql, actions }) => {
           node: node,
           layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
           locale: locale,
-          markers: markers,
+          markers: [marker],
         }
       })
     })
@@ -370,12 +175,6 @@ exports.createPages = async ({ graphql, actions }) => {
             markers.push(GoogleMapsUrlHelper.getMarker(articleNode, articlePath))
           }
         })
-
-      if (markers.length > 1) {
-        const location = GoogleMapsUrlHelper.getLocation()
-        addStaticGoogleMapsImageToCache(location, markers)
-      }
-
 
       // Create listing page map
       createPage({
@@ -434,8 +233,6 @@ exports.createPages = async ({ graphql, actions }) => {
 
 
 
-
-
   for (const treeNode of pathHelper.createNodeIterator()) {
 
     if (treeNode.isListingPage === true && treeNode.isFrontPage === false && treeNode.isArticle === false) {
@@ -465,18 +262,4 @@ exports.createPages = async ({ graphql, actions }) => {
 
   createFrontPage(root, pathHelper.frontPageListingPages)
 
-  addStaticGoogleMapsImageToCache(GoogleMapsUrlHelper.getLocation())
-
-  // Save all external resource urls to be precached by service worker
-
-  fs.writeFile('./static/external/sources.txt', external_resources, (error) => {
-    if (error) {
-      throw error
-    }
-  })
-  fs.writeFile('./static/external/locations.txt', locations, (error) => {
-    if (error) {
-      throw error
-    }
-  })
 }

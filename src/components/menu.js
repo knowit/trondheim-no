@@ -34,13 +34,13 @@ export class BurgerMenu extends React.Component {
 
   render() {
     return (
-      <div class="menu-container" onClick={this.showMenu}>
-        <div class="burger-container">
-          <div class="burger-bar"></div>
-          <div class="burger-bar"></div>
-          <div class="burger-bar"></div>
+      <div className="menu-container" onClick={this.showMenu}>
+        <div className="burger-container">
+          <div className="burger-bar"></div>
+          <div className="burger-bar"></div>
+          <div className="burger-bar"></div>
         </div>
-        <div class="menu-text-container">
+        <div className="menu-text-container">
           {(this.props.layoutContext.locale === 'no') ? 'MENY' : 'MENU'}
         </div>
 
@@ -51,7 +51,9 @@ export class BurgerMenu extends React.Component {
               <div className="drop-menu-container">
                 {this.props.layoutContext.menuData.map(function (node, key) {
                   return (
-                    <Link className="drop-menu-item-container"
+                    <Link
+                      key={key}
+                      className="drop-menu-item-container"
                       to={node.path}>
                       {node.title}
                     </Link>

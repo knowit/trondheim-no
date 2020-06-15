@@ -3,7 +3,6 @@ import "../style/listing-page.css"
 import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
 import { Link } from "gatsby"
-import Img from "gatsby-image"
 import SortableArticleView from "../components/article-list"
 
 const ListingPage = ({ pageContext }) => {

@@ -18,6 +18,10 @@ class GoogleMapsUrlHelper {
     if (node.address && node.address.lat && node.address.lng) {
       return { lat: node.address.lat, lng: node.address.lng };
     }
+    if (node.latitude && node.longitude) {
+      return { lat: node.latitude, lng: node.longitude }
+    }
+
     return false;
   }
 
@@ -30,6 +34,16 @@ class GoogleMapsUrlHelper {
     }
   }
 
+  static getStaticMarkerData(node) {
+
+    return {
+      id: node._fl_meta_.fl_id,
+      title: node.title,
+      location: this.getLocation(node)
+    }
+  }
+
+
   static getImageDirectory() {
     return `./static/maps`
   }
@@ -41,6 +55,7 @@ class GoogleMapsUrlHelper {
     result = result.split('|').join(')')
     return result
   }
+
 
   static createStaticGoogleMapUrl(location, markers = [], apiKey = true) {
 
@@ -55,9 +70,9 @@ class GoogleMapsUrlHelper {
 
     if (markers.length > 0) {
       var markerString = "color:red"
-      markers.map(markerData => {
+      markers.map(markerData =>
         markerString = `${markerString}|${markerData.location.lat},${markerData.location.lng}`
-      })
+      )
       parameters.set("markers", markerString)
     }
 
@@ -69,13 +84,8 @@ class GoogleMapsUrlHelper {
     var first = true
 
     parameters.forEach((value, key, map) => {
-      if (first) {
-        url = `${url}?${key}=${value}`
-        first = false
-      }
-      else {
-        url = `${url}&${key}=${value}`
-      }
+      url = `${url}${first ? '?' : '&'}${key}=${value}`
+      first = false
     })
 
     return url

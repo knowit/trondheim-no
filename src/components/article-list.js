@@ -24,10 +24,10 @@ export default class SortableArticleView extends React.Component {
 
     handleTagToggle(tag) {
         let filterTags = this.state.filterTags;
-        if (tag == "all") filterTags = [];
+        if (tag === "all") filterTags = [];
         else {
-            var indexOf = filterTags.findIndex((e) => e == tag);
-            if (indexOf == -1) filterTags.push(tag);
+            var indexOf = filterTags.findIndex((e) => e === tag);
+            if (indexOf === -1) filterTags.push(tag);
             else filterTags.splice(indexOf, 1);
         }
         this.setState({ filterTags: filterTags });
@@ -83,7 +83,7 @@ class TagFilter extends React.Component {
             <div
                 class="distinct-tag"
                 key="all"
-                style={filterTags.length == 0 ? selectedStyle : unSelectedStyle}
+                style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
                 onClick={(e) => this.handleTagToggle("all", e)}>
                 {LocalizationHelper.getLocalWord(pageContext.localization, "all", pageContext.locale)}
             </div>
@@ -131,7 +131,7 @@ class Sorter extends React.Component {
                 <div
                     class="distinct-tag"
                     key={s}
-                    style={sortBy == s ? selectedStyle : unSelectedStyle}
+                    style={sortBy === s ? selectedStyle : unSelectedStyle}
                     onClick={(e) => this.handleSortToggle(s, e)}
                 >
                     {tagName}
@@ -198,7 +198,7 @@ class ArticleList extends React.Component {
 
         this.props.subListingPages.forEach((slp) => {
             slp.tags = [];
-            if (filterTags.length == 0) {
+            if (filterTags.length === 0) {
                 articleViews.push(
                     <ArticleView article={slp} pageContext={pageContext} subList={true} />
                 )
@@ -207,22 +207,22 @@ class ArticleList extends React.Component {
 
         this.props.articles.forEach((article) => {
             //Add article to array only if it contains a tag chosen, or ALL is chosen (empty list).
-            if (filterTags.length == 0 || article.tags.some(r => filterTags.includes(r))) {
+            if (filterTags.length === 0 || article.tags.some(r => filterTags.includes(r))) {
                 articleViews.push(
                     <ArticleView article={article} pageContext={pageContext} key={article.title} />
                 )
             }
         });
 
-        if (sortBy == "date") {
+        if (sortBy === "date") {
             articleViews.sort(compareArticleViewDate);
         }
 
-        if (sortBy == "title") {
+        if (sortBy === "title") {
             articleViews.sort(compareArticleViewTitle);
         }
 
-        if (sortBy == "random") {
+        if (sortBy === "random") {
             shuffleArray(articleViews);
         }
 

@@ -4,9 +4,11 @@ import styles from "../style/article.module.css"
 import Map from "../components/map.js"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
-import { MDXRenderer } from "gatsby-mdx-fix"
-import { MDXProvider } from "@mdx-js/react"
 import { GoogleMapsUrlHelper } from "../helpers/url-helper"
+import Img from "gatsby-image"
+import ReactDOMHelper from "../helpers/react-dom-helper"
+import { Online, Offline } from "react-detect-offline"
+
 
 function ContactInfo(props) {
 
@@ -35,7 +37,6 @@ function ContactInfo(props) {
           props.node.contactInfo.linkToWebsite}
       </Link></div>)
   }
-  console.log(elements);
   if (elements.length > 0) return <div><h3 className={styles.subheading}>{LocalizationHelper.getLocalWord(props.localization, "contactInfo", locale)}</h3><div>{elements}</div></div>
   else return "";
 }
@@ -53,10 +54,68 @@ function OpeningHours(props) {
   else return "";
 }
 
+
+
 const Article = ({ pageContext }) => {
 
   const location = GoogleMapsUrlHelper.getLocation(pageContext.node)
   const address = GoogleMapsUrlHelper.getAddress(pageContext.node)
+
+
+  const HTMLContent = ({ htmlContent }) => {
+
+    const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent,
+      (props, index) => {
+        const imageNode = pageContext.node.content.remoteImages.find(n => {
+          return n.url === encodeURI(props.src)
+        })
+
+        if (imageNode) {
+
+          const styles = {
+
+            width: imageNode.childImageSharp.fluid.presentationWidth,
+            height: imageNode.childImageSharp.fluid.presentationHeight,
+            margin: '1em 0'
+
+          }
+
+          return <div className="article-content-image-container" style={styles}>
+            <Img
+              className='article-content-image'
+              key={index}
+              fluid={imageNode.childImageSharp.fluid}
+              alt={props.alt}>
+            </Img>
+          </div>
+
+        }
+        else {
+          return <div></div>
+        }
+      })
+
+    return reactComponent
+  }
+
+  const OfflineMap = () => {
+    const imageNode = pageContext.node.latLong.googleMapsStaticImage
+
+    if (imageNode != null) {
+      const styles = {
+        width: imageNode.childImageSharp.fluid.presentationWidth,
+        height: imageNode.childImageSharp.fluid.presentationHeight,
+      }
+      return (<div className="offline-map-container" style={styles}>
+        <Img className="offline-map-image" fluid={imageNode.childImageSharp.fluid} alt={'Map of location'}></Img>
+      </div>)
+    }
+
+    else {
+      return (<div></div>)
+    }
+  }
+
 
   return (
 
@@ -64,11 +123,17 @@ const Article = ({ pageContext }) => {
       <div id="outer-container">
         <div id="inner-container">
           <h2>{pageContext.node.title}</h2>
-          <div dangerouslySetInnerHTML={{ __html: pageContext.node.content.content }}></div>
+          <HTMLContent htmlContent={pageContext.node.content.content}></HTMLContent>
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
-          <Map location={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
-            width="100%" height="400px" />
+          <Online>
+            <Map location={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
+              width="100%" height="400px" />
+          </Online>
+          <Offline>
+            <OfflineMap></OfflineMap>
+          </Offline>
+
         </div>
       </div>
     </Layout>
