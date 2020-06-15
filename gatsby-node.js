@@ -1,8 +1,6 @@
 
 // You can delete this file if you're not using it
 const path = require(`path`)
-const fs = require('fs')
-const fetch = require('node-fetch')
 const defaultLocale = 'no'
 const { PathTreeBuilder } = require(`./src/helpers/path-helper`)
 const { GoogleMapsUrlHelper } = require(`./src/helpers/url-helper`)
