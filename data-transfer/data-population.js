@@ -329,21 +329,21 @@ function getContactInfo(content, language) {
 
     var errors = []
 
-    function errorLine(line) {
+    function errorLine(line, label = 'None') {
         error = true
-        errors.push(line)
+        errors.push(`[${label}]: ${line}`)
         return ''
     }
 
     function getPTagContent(line, splitLabel) {
         const tag = /<\s*p[^>]*>(.*?)<\s*\/\s*p>/g.exec(line)
-        return tag ? tag[1].replace(splitLabel, '').trim() : errorLine(line)
+        return tag ? tag[1].replace(splitLabel, '').trim() : errorLine(line, 'P-tag content')
     }
 
     function getPhoneNumber(line) {
         if (line.includes(`<a`)) {
             const phoneTag = /href=\"tel:([^\"]*)\"(.*)/g.exec(line.toLowerCase())
-            return phoneTag ? phoneTag[1] : errorLine(line)
+            return phoneTag ? phoneTag[1] : errorLine(line, 'Phone')
         }
         else {
             const splitLabel = (language === 'no') ? 'Telefon:' : 'Phone:'
@@ -354,7 +354,7 @@ function getContactInfo(content, language) {
     function getEmailAddress(line) {
         const regex = /(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
         const tag = regex.exec(line.toLowerCase())
-        return tag ? tag : errorLine(line)
+        return tag ? tag : errorLine(line, 'E-mail')
     }
 
     function isWebsite(line) {
@@ -371,12 +371,12 @@ function getContactInfo(content, language) {
         if (line.includes(`title=`)) {
             const regex = /<a\s+[^>]*?title="([^"]*)"/
             const tag = regex.exec(line)
-            return tag ? tag[1] : errorLine(line)
+            return tag ? tag[1] : errorLine(line, 'Website title')
         }
         else {
             const regex = /<a [^>]+>(.*?)<\/a>/
             const tag = regex.exec(line)
-            return tag ? tag[1] : errorLine(line)
+            return tag ? tag[1] : errorLine(line, 'Website title')
         }
     }
 
@@ -384,11 +384,15 @@ function getContactInfo(content, language) {
     function getWebsiteUrl(line) {
         const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/
         const tag = regex.exec(line.replace(`/#!/`, '/'))
+        var other = ''
 
-        if (tag) {
-            console.log(`${tag[0]}\n`)
+        if (!tag) {
+            const content = getPTagContent(line.replace(`/#!/`, '/'), '')
+            if (isWebsite(content)) {
+                other = errorLine(line, 'Website URL')
+            }
         }
-        return tag ? tag[0] : errorLine(line)
+        return tag ? tag[0] : other
 
     }
 
@@ -434,11 +438,9 @@ function getContactInfo(content, language) {
     }
 
     if (error) {
-        console.log(`\nError parsing lines: `)
         errors.map(line => {
-            console.log(line)
+            console.log("\x1b[33m%s\x1b[0m", `\nWarning: Failed to parse ${line}`)
         })
-        console.log(`\n`)
     }
 
     return result
