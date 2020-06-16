@@ -315,19 +315,22 @@ function getContactInfo(content, language) {
     var webUrl = ''
     var webTitle = ''
 
-    const htmlArray = content.replace(/<img([\w\W]+?)\/>/g, '').split(/\r?\n/)
+    const htmlArray = content
+        .replace(/<img([\w\W]+?)\/>/g, '')
+        .split(/\r?\n/)
 
-    const startLabel = (language === 'no') ? 'Kontaktinfo' : 'Contact'
-    const phoneLabel = (language === 'no') ? 'Telefon:' : 'Phone:'
+    const startLabel = (language === 'no') ? 'kontaktinfo' : 'contact'
+    const phoneLabel = (language === 'no') ? 'telefon:' : 'phone:'
     const emailLabel1 = 'post:'
     const emailLabel2 = 'mail:'
-    const addressLabel = (language === 'no') ? 'Adresse:' : 'Address:'
+    const addressLabel = (language === 'no') ? 'adresse:' : 'address:'
 
     var start = false
     var error = false
     var i = 0
 
     var errors = []
+    var removedLines = []
 
     function errorLine(line, label = 'None') {
         error = true
@@ -336,6 +339,7 @@ function getContactInfo(content, language) {
     }
 
     function getPTagContent(line, splitLabel) {
+        removedLines.push(line)
         const tag = /<\s*p[^>]*>(.*?)<\s*\/\s*p>/g.exec(line)
         return tag ? tag[1].replace(splitLabel, '').trim() : errorLine(line, 'P-tag content')
     }
@@ -401,26 +405,31 @@ function getContactInfo(content, language) {
 
         const line = htmlArray[i++]
 
-        if (line.includes(startLabel)) {
+        if (line.toLowerCase().includes(startLabel)) {
+            removedLines.push(line)
             start = true
         }
 
         else if (start) {
 
-            if (line.includes(phoneLabel)) {
+            if (line.toLowerCase().includes(phoneLabel)) {
+                removedLines.push(line)
                 phone = getPhoneNumber(line)
             }
 
-            if (line.includes(emailLabel1) || line.includes(emailLabel2)) {
+            if (line.toLowerCase().includes(emailLabel1) || line.toLowerCase().includes(emailLabel2)) {
+                removedLines.push(line)
                 email = getEmailAddress(line)
             }
 
-            if (line.includes(addressLabel)) {
+            if (line.toLowerCase().includes(addressLabel)) {
+                removedLines.push(line)
                 const splitLabel = (language === 'no') ? 'Adresse:' : 'Address:'
                 address = getPTagContent(line, splitLabel)
             }
 
             if (isWebsite(line)) {
+                removedLines.push(line)
                 webTitle = getWebsiteTitle(line)
                 webUrl = getWebsiteUrl(line)
             }
@@ -443,7 +452,10 @@ function getContactInfo(content, language) {
         })
     }
 
-    return result
+    return {
+        result: result,
+        removedLines: removedLines
+    }
 }
 
 function getOpeningHours(content, language) {
@@ -453,6 +465,8 @@ function getOpeningHours(content, language) {
     const stopLabel = (language === 'no') ? 'kontaktinfo' : 'contact'
     var read = false
 
+    var removedLines = []
+
     var result = ""
 
     var i = 0
@@ -460,20 +474,36 @@ function getOpeningHours(content, language) {
         const line = htmlArray[i++]
 
         if (line.toLowerCase().includes(startLabel)) {
+            removedLines.push(line)
             read = true
         }
         else if (line.toLowerCase().includes(stopLabel)) {
             read = false
+            removedLines.push(line)
             break;
         }
 
         else if (read) {
-
             result += line
+            removedLines.push(line)
         }
     }
 
-    return result
+    return {
+        result: result,
+        removedLines: removedLines
+    }
+}
+
+function removeLines(content, linesToRemove) {
+    const htmlArray = content.split(/\r?\n/)
+    var remaining = content
+    var i = 0
+    while (i < linesToRemove.length) {
+        line = linesToRemove[i++]
+        remaining = remaining.replace(line, '')
+    }
+    return (remaining.length > 0) ? remaining : ''
 }
 
 
@@ -497,17 +527,19 @@ async function createArticles() {
             const content = await concatText(element.no.introtext, element.no.fulltext, element.no.images)
             const contact = await getContactInfo(content, 'no')
             const contactInfo = {
-                telephoneNumber: contact.telephoneNumber,
-                emailAddress: contact.emailAddress,
-                linkToWebsite: contact.linkToWebsite,
-                textToShow: contact.textToShow
+                telephoneNumber: contact.result.telephoneNumber,
+                emailAddress: contact.result.emailAddress,
+                linkToWebsite: contact.result.linkToWebsite,
+                textToShow: contact.result.textToShow
             }
             const openingHours = await getOpeningHours(content, 'no')
             const address = {
-                address: contact.address,
+                address: contact.result.address,
                 lat: 0,
                 lng: 0
             }
+
+            const reducedContent = removeLines(content, contact.removedLines.concat(openingHours.removedLines))
 
             const norwegianArticle = await app.content.add(
                 {
@@ -517,8 +549,8 @@ async function createArticles() {
                         slug: slugify(element.no.title).toLowerCase(),
                         thumbnail: noThumbnail,
                         parentContent: getCategoryRef("no", element.no.catid),
-                        content: content,
-                        openingHours: openingHours,
+                        content: reducedContent,
+                        openingHours: openingHours.result,
                         contactInfo: contactInfo,
                         address: address, //{ address: '', lat: 0, lng: 0 },
                         latLong: getLatLong(element.no.metadata.xreference),
@@ -534,13 +566,13 @@ async function createArticles() {
             const contentEn = await concatText(element.en.introtext, element.en.fulltext, element.en.images)
             const contactEn = await getContactInfo(contentEn, 'en')
             const contactInfoEn = {
-                telephoneNumber: contactEn.telephoneNumber,
-                emailAddress: contactEn.emailAddress,
-                linkToWebsite: contactEn.linkToWebsite,
-                textToShow: contactEn.textToShow
+                telephoneNumber: contactEn.result.telephoneNumber,
+                emailAddress: contactEn.result.emailAddress,
+                linkToWebsite: contactEn.result.linkToWebsite,
+                textToShow: contactEn.result.textToShow
             }
             const addressEn = {
-                address: contactEn.address,
+                address: contactEn.result.address,
                 lat: 0,
                 lng: 0
             }
@@ -556,7 +588,7 @@ async function createArticles() {
                         thumbnail: enThumbnail,
                         parentContent: getCategoryRef("en", element.en.catid),
                         content: contentEn,
-                        openingHours: openingHoursEn,
+                        openingHours: openingHoursEn.result,
                         contactInfo: contactInfoEn,
                         address: addressEn,
                         latLong: getLatLong(element.en.metadata.xreference)
