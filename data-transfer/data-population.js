@@ -315,7 +315,7 @@ function getContactInfo(content, language) {
     var webUrl = ''
     var webTitle = ''
 
-    const htmlArray = content.split(/\r?\n/)
+    const htmlArray = content.replace(/<img([\w\W]+?)\/>/g, '').split(/\r?\n/)
 
     const startLabel = (language === 'no') ? 'Kontaktinfo' : 'Contact'
     const phoneLabel = (language === 'no') ? 'Telefon:' : 'Phone:'
@@ -358,20 +358,13 @@ function getContactInfo(content, language) {
     }
 
     function isWebsite(line) {
-        const result = (line.includes(`<a`) &&
-            line.includes(`href`) &&
-            !line.toLowerCase().includes(`mailto:`) &&
-            !line.toLowerCase().includes(`tel:`))
 
-        if (!result && !line.includes(`a`) && !line.includes(`<img`)) {
-            const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/gm
-            const tag = regex.exec(line)
-            if (tag != null) {
-                return true
-            }
+        const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/
+        const tag = regex.exec(line)
+        if (tag != null) {
+            return true
         }
-
-        return result
+        return false
     }
 
     function getWebsiteTitle(line) {
@@ -387,10 +380,16 @@ function getContactInfo(content, language) {
         }
     }
 
+
     function getWebsiteUrl(line) {
-        const regex = /<a\s+[^>]*?href="([^"]*)"/
-        const tag = regex.exec(line)
-        return tag ? tag[1] : errorLine(line)
+        const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/
+        const tag = regex.exec(line.replace(`/#!/`, '/'))
+
+        if (tag) {
+            console.log(`${tag[0]}\n`)
+        }
+        return tag ? tag[0] : errorLine(line)
+
     }
 
 
@@ -449,7 +448,7 @@ function getOpeningHours(content, language) {
 
     const htmlArray = content.split(/\r?\n/)
     const startLabel = (language === 'no') ? 'åpningstider' : 'opening hours'
-    const stopLabel = (language === 'no') ? 'Kontaktinfo' : 'Contact'
+    const stopLabel = (language === 'no') ? 'kontaktinfo' : 'contact'
     var read = false
 
     var result = ""
@@ -484,8 +483,8 @@ async function createArticles() {
 
         let articles = [];
 
-        const startIndex = 500
-        const quantity = 15
+        const startIndex = 495
+        const quantity = 5
 
         //Create all articles with both Norwegian and English translations
         for (let i = startIndex; i < startIndex + quantity/*commonData.length*/; i++) {
