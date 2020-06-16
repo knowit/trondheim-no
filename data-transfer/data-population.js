@@ -317,12 +317,10 @@ function getContactInfo(content, language) {
 
     const htmlArray = content.split(/\r?\n/)
 
-    const startLabel = (language === 'no') ? 'Kontaktinfo' : '>Contact Info:<\/h'
+    const startLabel = (language === 'no') ? 'Kontaktinfo' : 'Contact'
     const phoneLabel = (language === 'no') ? 'Telefon:' : 'Phone:'
-    const emailLabel = (language === 'no') ? 'E-post:' : 'E-mail:'
+    const emailLabel = (language === 'no') ? 'post:' : 'mail:'
     const addressLabel = (language === 'no') ? 'Adresse:' : 'Address:'
-    const webLabel1 = 'href="https://'
-    const webLabel2 = 'href="http://'
 
     var start = false
     var error = false
@@ -353,15 +351,38 @@ function getContactInfo(content, language) {
     }
 
     function getEmailAddress(line) {
-        if (line.includes(`<a`)) {
-            const tag = /href=\"mailto:([^\"]*)\"(.*)/g.exec(line)
+        const regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+        const tag = regex.exec(line)
+        return tag ? tag : errorLine(line)
+    }
+
+    function isWebsite(line) {
+        const result = (line.includes(`<a`) &&
+            line.includes(`href`) &&
+            !line.includes(`mailto:`) &&
+            !line.includes(`tel:`))
+        return result
+    }
+
+    function getWebsiteTitle(line) {
+        if (line.includes(`title=`)) {
+            const regex = /<a\s+[^>]*?title="([^"]*)"/
+            const tag = regex.exec(line)
             return tag ? tag[1] : errorLine(line)
         }
         else {
-            const splitLabel = (language === 'no') ? 'E-post:' : 'E-mail:'
-            return getPTagContent(line, splitLabel)
+            const regex = /<a [^>]+>(.*?)<\/a>/
+            const tag = regex.exec(line)
+            return tag ? tag[1] : errorLine(line)
         }
     }
+
+    function getWebsiteUrl(line) {
+        const regex = /<a\s+[^>]*?href="([^"]*)"/
+        const tag = regex.exec(line)
+        return tag ? tag[1] : errorLine(line)
+    }
+
 
     while (i < htmlArray.length) {
 
@@ -386,12 +407,9 @@ function getContactInfo(content, language) {
                 address = getPTagContent(line, splitLabel)
             }
 
-            if (line.includes(webLabel1) || line.includes(webLabel2)) {
-                const aTag = /<a [^>]+>(.*?)<\/a>/g.exec(line)
-                webTitle = aTag ? aTag[1] : ''
-
-                const tagHref = /href="(.*?)"/g.exec(line)
-                webUrl = tagHref ? tagHref[1] : errorLine(line)
+            if (isWebsite(line)) {
+                webTitle = getWebsiteTitle(line)
+                webUrl = getWebsiteUrl(line)
             }
 
 
@@ -430,8 +448,11 @@ async function createArticles() {
 
         let articles = [];
 
+        const startIndex = 502
+        const quantity = 3
+
         //Create all articles with both Norwegian and English translations
-        for (let i = 200; i < 210/*commonData.length*/; i++) {
+        for (let i = startIndex; i < startIndex + quantity/*commonData.length*/; i++) {
             const element = commonData[i];
 
             await app.settings.setLocale('no');
@@ -472,6 +493,20 @@ async function createArticles() {
             await app.settings.setLocale('en-US');
             let enThumbnail = await getThumbnailReference(element.en);
 
+            const contentEn = await concatText(element.en.introtext, element.en.fulltext, element.en.images)
+            const contactEn = await getContactInfo(contentEn, 'en')
+            const contactInfoEn = {
+                telephoneNumber: contactEn.telephoneNumber,
+                emailAddress: contactEn.emailAddress,
+                linkToWebsite: contactEn.linkToWebsite,
+                textToShow: contactEn.textToShow
+            }
+            const addressEn = {
+                address: contactEn.address,
+                lat: 0,
+                lng: 0
+            }
+
             const englishArticle = await app.content.add(
                 {
                     schemaKey: 'articleNew',
@@ -481,10 +516,10 @@ async function createArticles() {
                         slug: slugify(element.en.title).toLowerCase(),
                         thumbnail: enThumbnail,
                         parentContent: getCategoryRef("en", element.en.catid),
-                        content: concatText(element.en.introtext, element.en.fulltext, element.en.images),
-                        openingHours: '',
-                        contactInfo: null,
-                        address: { address: '', lat: 0, lng: 0 },
+                        content: contentEn,
+                        openingHours: getOpeningHours(contentEn, 'en'),
+                        contactInfo: contactInfoEn,
+                        address: addressEn,
                         latLong: getLatLong(element.en.metadata.xreference)
                     }
                 })
