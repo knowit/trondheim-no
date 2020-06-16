@@ -319,7 +319,8 @@ function getContactInfo(content, language) {
 
     const startLabel = (language === 'no') ? 'Kontaktinfo' : 'Contact'
     const phoneLabel = (language === 'no') ? 'Telefon:' : 'Phone:'
-    const emailLabel = (language === 'no') ? 'post:' : 'mail:'
+    const emailLabel1 = 'post:'
+    const emailLabel2 = 'mail:'
     const addressLabel = (language === 'no') ? 'Adresse:' : 'Address:'
 
     var start = false
@@ -341,7 +342,7 @@ function getContactInfo(content, language) {
 
     function getPhoneNumber(line) {
         if (line.includes(`<a`)) {
-            const phoneTag = /href=\"tel:([^\"]*)\"(.*)/g.exec(line)
+            const phoneTag = /href=\"tel:([^\"]*)\"(.*)/g.exec(line.toLowerCase())
             return phoneTag ? phoneTag[1] : errorLine(line)
         }
         else {
@@ -351,16 +352,25 @@ function getContactInfo(content, language) {
     }
 
     function getEmailAddress(line) {
-        const regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-        const tag = regex.exec(line)
+        const regex = /(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+        const tag = regex.exec(line.toLowerCase())
         return tag ? tag : errorLine(line)
     }
 
     function isWebsite(line) {
         const result = (line.includes(`<a`) &&
             line.includes(`href`) &&
-            !line.includes(`mailto:`) &&
-            !line.includes(`tel:`))
+            !line.toLowerCase().includes(`mailto:`) &&
+            !line.toLowerCase().includes(`tel:`))
+
+        if (!result && !line.includes(`a`) && !line.includes(`<img`)) {
+            const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/gm
+            const tag = regex.exec(line)
+            if (tag != null) {
+                return true
+            }
+        }
+
         return result
     }
 
@@ -398,7 +408,7 @@ function getContactInfo(content, language) {
                 phone = getPhoneNumber(line)
             }
 
-            if (line.includes(emailLabel)) {
+            if (line.includes(emailLabel1) || line.includes(emailLabel2)) {
                 email = getEmailAddress(line)
             }
 
@@ -436,7 +446,33 @@ function getContactInfo(content, language) {
 }
 
 function getOpeningHours(content, language) {
-    return ''
+
+    const htmlArray = content.split(/\r?\n/)
+    const startLabel = (language === 'no') ? 'åpningstider' : 'opening hours'
+    const stopLabel = (language === 'no') ? 'Kontaktinfo' : 'Contact'
+    var read = false
+
+    var result = ""
+
+    var i = 0
+    while (i < htmlArray.length) {
+        const line = htmlArray[i++]
+
+        if (line.toLowerCase().includes(startLabel)) {
+            read = true
+        }
+        else if (line.toLowerCase().includes(stopLabel)) {
+            read = false
+            break;
+        }
+
+        else if (read) {
+
+            result += line
+        }
+    }
+
+    return result
 }
 
 
@@ -448,8 +484,8 @@ async function createArticles() {
 
         let articles = [];
 
-        const startIndex = 502
-        const quantity = 3
+        const startIndex = 500
+        const quantity = 15
 
         //Create all articles with both Norwegian and English translations
         for (let i = startIndex; i < startIndex + quantity/*commonData.length*/; i++) {
@@ -465,6 +501,7 @@ async function createArticles() {
                 linkToWebsite: contact.linkToWebsite,
                 textToShow: contact.textToShow
             }
+            const openingHours = await getOpeningHours(content, 'no')
             const address = {
                 address: contact.address,
                 lat: 0,
@@ -480,7 +517,7 @@ async function createArticles() {
                         thumbnail: noThumbnail,
                         parentContent: getCategoryRef("no", element.no.catid),
                         content: content,
-                        openingHours: getOpeningHours(content, 'no'),
+                        openingHours: openingHours,
                         contactInfo: contactInfo,
                         address: address, //{ address: '', lat: 0, lng: 0 },
                         latLong: getLatLong(element.no.metadata.xreference),
@@ -506,6 +543,7 @@ async function createArticles() {
                 lat: 0,
                 lng: 0
             }
+            const openingHoursEn = await getOpeningHours(contentEn, 'en')
 
             const englishArticle = await app.content.add(
                 {
@@ -517,7 +555,7 @@ async function createArticles() {
                         thumbnail: enThumbnail,
                         parentContent: getCategoryRef("en", element.en.catid),
                         content: contentEn,
-                        openingHours: getOpeningHours(contentEn, 'en'),
+                        openingHours: openingHoursEn,
                         contactInfo: contactInfoEn,
                         address: addressEn,
                         latLong: getLatLong(element.en.metadata.xreference)
