@@ -12,24 +12,31 @@ import { Online, Offline } from "react-detect-offline"
 
 function ContactInfo(props) {
 
-  if (!props.node.contactInfo) return "";
+  if (!props.node.contactInfo && !props.node.address.address) return "";
 
   const elements = [];
   var locale = props.locale;
+  var index = 0
+  if (props.node.address.address) {
+    elements.push(
+      <div key={index++} className={styles.contactInfo}>
+        <span className={styles.contactInfoHeader}>{`${LocalizationHelper.getLocalWord(props.localization, "address", locale)}:\t`}</span><span>{props.node.address.address}</span>
+      </div>)
+  }
   if (props.node.contactInfo.emailAddress) {
     elements.push(
-      <div className={styles.contactInfo}>
+      <div key={index++} className={styles.contactInfo}>
         <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "email", locale) + ": "}</span>
         <a href={"mailto: " + props.node.contactInfo.emailAddress}>{props.node.contactInfo.emailAddress}</a>
       </div>)
   } if (props.node.contactInfo.telephoneNumber) {
     elements.push(
-      <div className={styles.contactInfo}>
+      <div key={index++} className={styles.contactInfo}>
         <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "telephone", locale) + ": "}</span>
         <a href={"tel: " + props.node.contactInfo.telephoneNumber}>{props.node.contactInfo.telephoneNumber}</a>
       </div>)
   } if (props.node.contactInfo.linkToWebsite) {
-    elements.push(<div className={styles.contactInfo}>
+    elements.push(<div key={index++} className={styles.contactInfo}>
       <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "website", locale) + ": "}</span>
       <Link to={props.node.contactInfo.linkToWebsite}>
         {(props.node.contactInfo.textToShow) ?
@@ -43,14 +50,15 @@ function ContactInfo(props) {
 
 function OpeningHours(props) {
   const elements = [];
+  var index = 0
   var locale = props.locale;
   if (props.node.openingHours && props.node.openingHours.content) {
-    elements.push(<h3 className={styles.subheading}>{LocalizationHelper.getLocalWord(props.localization, "openingHours", locale)}</h3>);
+    elements.push(<h3 key={index++} className={styles.subheading}>{LocalizationHelper.getLocalWord(props.localization, "openingHours", locale)}</h3>);
     elements.push(
-      <div dangerouslySetInnerHTML={{ __html: props.node.openingHours.content }}></div>
+      <div key={index++} dangerouslySetInnerHTML={{ __html: props.node.openingHours.content }}></div>
     )
   }
-  if (elements.length > 0) return <div>{elements}</div>
+  if (elements.length > 0) return <div key={index++}>{elements}</div>
   else return "";
 }
 
