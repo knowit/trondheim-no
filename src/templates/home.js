@@ -27,15 +27,21 @@ export default ({ pageContext }) => {
 
         <div id="navigation-menu-container">
           {pageContext.listingPages.map(function (node, key) {
-            return (
-              <div key={key} className="navigation-box-container">
-                <Img className="navigation-box-thumbnail"
-                  fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
-                  alt="thumbnail" />
-                <h2><Link className="navigation-box-title" to={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>{node.navigationTitle}</Link></h2>
-                <h4>{node.navigationSubtitle}</h4>
-              </div>
-            )
+            if (node.thumbnail[0].localFile) {
+              return (
+                <div key={key} className="navigation-box-container">
+                  <Img className="navigation-box-thumbnail"
+                    fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
+                    alt="thumbnail" />
+                  <h2><Link className="navigation-box-title" to={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>{node.navigationTitle}</Link></h2>
+                  <h4>{node.navigationSubtitle}</h4>
+                </div>)
+            }
+            else {
+              return (<div></div>)
+            }
+
+
           })}
         </div>
 

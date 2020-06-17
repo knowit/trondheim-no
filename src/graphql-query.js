@@ -15,7 +15,14 @@ query {
             name
             childImageSharp {
               fluid(quality: 90) {
-                src
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
               }
             }
           }
@@ -86,7 +93,6 @@ query {
             childImageSharp {
               fluid (quality: 90) {
                 base64
-                tracedSVG 
                 aspectRatio 
                 src 
                 srcSet 
@@ -104,7 +110,6 @@ query {
             childImageSharp {
               fluid (maxWidth: 9999, quality: 100) {
                 base64
-                tracedSVG 
                 aspectRatio 
                 src 
                 srcSet 
@@ -112,19 +117,6 @@ query {
                 presentationWidth
                 presentationHeight
                 originalImg
-              }
-            }
-          }
-        }
-        imageDeck {
-          title
-          image {
-            url
-            localFile {
-              childImageSharp {
-                fluid {
-                  base64
-                }
               }
             }
           }
@@ -174,7 +166,6 @@ query {
             childImageSharp {
               fluid (quality: 90) {
                 base64
-                tracedSVG 
                 aspectRatio 
                 src 
                 srcSet 
@@ -194,7 +185,6 @@ query {
             childImageSharp {
               fluid (quality: 90){
                 base64
-                tracedSVG 
                 aspectRatio 
                 src 
                 srcSet 
@@ -225,7 +215,6 @@ query {
             childImageSharp {
               fluid (quality: 90){
                 base64
-                tracedSVG 
                 aspectRatio 
                 src 
                 srcSet 
@@ -248,8 +237,15 @@ query {
           image {
             localFile {
               childImageSharp {
-                fluid (quality: 90) {
-                  src
+                fluid(quality: 90) {
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
                 }
               }
             }
