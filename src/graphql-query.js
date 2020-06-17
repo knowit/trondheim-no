@@ -116,19 +116,6 @@ query {
             }
           }
         }
-        imageDeck {
-          title
-          image {
-            url
-            localFile {
-              childImageSharp {
-                fluid {
-                  base64
-                }
-              }
-            }
-          }
-        }
         navigationText
       }
     }
