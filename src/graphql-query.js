@@ -99,6 +99,16 @@ query {
     }
   }
 
+  allFlamelinkArticleNewContentFieldContactInfo {
+    edges {
+      node {
+        textToShow
+        telephoneNumber
+        linkToWebsite
+        emailAddress
+      }
+    }
+  }
 
   allFlamelinkArticleNewContent {
     edges {
@@ -162,10 +172,10 @@ query {
           }
         }
         contactInfo {
-          emailAddress
           textToShow
           telephoneNumber
           linkToWebsite
+          emailAddress
         }
         address {
           address
