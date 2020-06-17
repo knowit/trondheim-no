@@ -39,72 +39,6 @@ query {
       }
     }
   }
-  allFlamelinkArticleContent {
-    edges {
-      node {
-        _fl_meta_ {
-          fl_id
-          schema
-        }
-        flamelink_locale
-        flamelink_id
-        id
-        openingHours {
-          content
-          childMdx {
-            code{
-              body
-            }
-          }
-        }
-        parentContent {
-          _fl_meta_ {
-            fl_id
-          }
-          id
-          slug
-        }
-        slug
-        title
-        tags
-        thumbnail {
-          localFile {
-            childImageSharp {
-              fluid (quality: 90) {
-                src
-              }
-            }
-          }
-        }
-        content {
-          content
-          childMdx {
-            code{
-              body
-            }
-          }
-          childMarkdownRemark{
-            rawMarkdownBody
-          }
-        }
-        contactInfo {
-          emailAddress
-          textToShow
-          telephoneNumber
-          linkToWebsite
-        }
-        address {
-          address
-          lat
-          lng
-        }
-        latLong {
-          latitude
-          longitude
-        }
-      }
-    }
-  }
   allFlamelinkArticleLocalizationContent(filter: {flamelink_locale: {eq: "no"}}) {
     edges {
       node {
@@ -165,6 +99,16 @@ query {
     }
   }
 
+  allFlamelinkArticleNewContentFieldContactInfo {
+    edges {
+      node {
+        textToShow
+        telephoneNumber
+        linkToWebsite
+        emailAddress
+      }
+    }
+  }
 
   allFlamelinkArticleNewContent {
     edges {
@@ -228,10 +172,10 @@ query {
           }
         }
         contactInfo {
-          emailAddress
           textToShow
           telephoneNumber
           linkToWebsite
+          emailAddress
         }
         address {
           address

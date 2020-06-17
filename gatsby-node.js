@@ -25,7 +25,6 @@ function extract_image_urls(htmlBody) {
 
 
 
-
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
@@ -35,6 +34,10 @@ exports.createSchemaCustomization = ({ actions }) => {
 
     type FlamelinkArticleNewContentFieldLatLong implements Node {
       googleMapsStaticImage: File @link
+    }
+
+    type FlamelinkArticleNewContentFieldContactInfo implements Node {
+      emailAddress: String
     }
 
   `
