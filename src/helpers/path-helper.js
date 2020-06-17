@@ -371,7 +371,8 @@ class PathTreeBuilder {
       menuData: this.menuData.get(locale),
       locale: locale,
       localizedPaths: localizedPaths, // Paths to the same page for different locales
-      defaultThumbnails: this.result.data.allFlamelinkDefaultThumbnailsContent.edges[0].node.imageDeck
+      defaultThumbnails: this.result.data.allFlamelinkDefaultThumbnailsContent.edges[0].node.imageDeck,
+      logoImage: this.result.data.allFlamelinkFrontPageContent.edges[0].node.logoImage[0]
     }
   }
 

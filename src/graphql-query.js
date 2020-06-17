@@ -81,6 +81,41 @@ query {
         headerFocusWord
         headerText
         id
+        logoImage{
+          localFile {
+            childImageSharp {
+              fluid (quality: 90) {
+                base64
+                tracedSVG 
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+        frontImageAlt
+        frontImage{
+          localFile {
+            childImageSharp {
+              fluid (maxWidth: 9999, quality: 100) {
+                base64
+                tracedSVG 
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
         imageDeck {
           title
           image {
