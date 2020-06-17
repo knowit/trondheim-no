@@ -237,8 +237,15 @@ query {
           image {
             localFile {
               childImageSharp {
-                fluid (quality: 90) {
-                  src
+                fluid(quality: 90) {
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
                 }
               }
             }
