@@ -4,7 +4,7 @@ import LocalizationHelper from "../helpers/helpers"
 import { Link } from 'gatsby';
 import Img from "gatsby-image"
 import "../style/listing-page.css"
-import TextEllipsis from 'react-text-ellipsis';
+import EllipsisText from "react-ellipsis-text";
 
 
 const selectedStyle = { backgroundColor: 'grey', color: 'white' };
@@ -41,7 +41,7 @@ export default class SortableArticleView extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="article-list-container">
                 <TagFilter
                     pageContext={this.props.pageContext}
                     filterTags={this.state.filterTags}
@@ -248,6 +248,18 @@ class ArticleView extends React.Component {
         return el.textContent
     }
 
+    tags(count, tag) {
+        var i = 0
+        var items = []
+        while (i < count) {
+            i++
+            items.push(<div className="tag" key={tag}>
+                {tag}
+            </div>)
+        }
+        return items
+    }
+
     render() {
         const article = this.props.article;
         const pageContext = this.props.pageContext;
@@ -270,17 +282,8 @@ class ArticleView extends React.Component {
 
                     <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${article.slug}`}>{(this.props.subList) ? article.navigationTitle : article.title}</Link></h2>
 
-                    <div>
-                        <TextEllipsis
-                            lines={2}
-                            tag={'p'}
-                            ellipsisChars={'...'}
-                            tagClass={'article-info-text'}
-                            debounceTimeoutOnResize={200}
-                            useJsOnly={true} >
-                            {this.getArticleInfo(article)}
-                        </TextEllipsis>
-                    </div>
+                    <EllipsisText className="article-info-text" text={this.getArticleInfo(article)} length={"100"} />
+
 
                     <div className="tags-container">
                         {article.tags.map(function (tag, key) {
