@@ -3,6 +3,8 @@ import React from 'react';
 import LocalizationHelper from "../helpers/helpers"
 import { Link } from 'gatsby';
 import Img from "gatsby-image"
+import "../style/listing-page.css"
+import TextEllipsis from 'react-text-ellipsis';
 
 
 const selectedStyle = { backgroundColor: 'grey', color: 'white' };
@@ -240,6 +242,12 @@ class ArticleView extends React.Component {
         return this.props.pageContext.layoutContext.defaultThumbnails.find(node => node.title === "Article Thumbnail").image[0].localFile.childImageSharp.fluid
     }
 
+    getArticleInfo(article) {
+        var el = document.createElement('html');
+        el.innerHTML = article.content.content
+        return el.textContent
+    }
+
     render() {
         const article = this.props.article;
         const pageContext = this.props.pageContext;
@@ -259,7 +267,21 @@ class ArticleView extends React.Component {
             <div className="article-container">
                 <Img className="article-thumbnail" fluid={thumbnail} />
                 <div className="article-info-container">
+
                     <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${article.slug}`}>{(this.props.subList) ? article.navigationTitle : article.title}</Link></h2>
+
+                    <div>
+                        <TextEllipsis
+                            lines={2}
+                            tag={'p'}
+                            ellipsisChars={'...'}
+                            tagClass={'article-info-text'}
+                            debounceTimeoutOnResize={200}
+                            useJsOnly={true} >
+                            {this.getArticleInfo(article)}
+                        </TextEllipsis>
+                    </div>
+
                     <div className="tags-container">
                         {article.tags.map(function (tag, key) {
                             return (
