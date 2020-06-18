@@ -31,10 +31,22 @@ export class BurgerMenu extends React.Component {
     });
   }
 
+  toggleMenu(e) {
+    if (this.state.showMenu) {
+      this.closeMenu()
+    }
+    else {
+      this.showMenu(e)
+    }
+  }
+
+
+
 
   render() {
+
     return (
-      <div role="menu" tabIndex={0} onKeyPress={this.handleKeyPress} className="menu-container" onClick={this.showMenu}>
+      <div role="menu" tabIndex={0} onKeyPress={this.toggleMenu.bind(this)} className="menu-container" onClick={this.showMenu}>
         <div className="burger-container">
           <div className="burger-bar"></div>
           <div className="burger-bar"></div>

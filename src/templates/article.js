@@ -1,5 +1,4 @@
 import React from "react"
-import { Link } from "gatsby"
 import styles from "../style/article.module.css"
 import Map from "../components/map.js"
 import Layout from "../layouts/layout"
@@ -38,11 +37,11 @@ function ContactInfo(props) {
   } if (props.node.contactInfo.linkToWebsite) {
     elements.push(<div key={index++} className={styles.contactInfo}>
       <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "website", locale) + ": "}</span>
-      <Link to={props.node.contactInfo.linkToWebsite}>
+      <a href={props.node.contactInfo.linkToWebsite}>
         {(props.node.contactInfo.textToShow) ?
           props.node.contactInfo.textToShow :
           props.node.contactInfo.linkToWebsite}
-      </Link></div>)
+      </a></div>)
   }
   if (elements.length > 0) return <div><h3 className={styles.subheading}>{LocalizationHelper.getLocalWord(props.localization, "contactInfo", locale)}</h3><div>{elements}</div></div>
   else return "";

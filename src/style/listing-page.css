@@ -165,14 +165,13 @@
   min-width: 50px;
   margin: 4px;
   padding: 2px 6px;
-}
-
-.tag a{
   font-style: italic;
   color: rgb(61, 61, 61);
   font-size: 11pt;
   letter-spacing: 0;
+  text-decoration: underline;
 }
+
 
 .map-checkbox-container {
   display: inline-block;
