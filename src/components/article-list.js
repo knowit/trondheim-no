@@ -80,7 +80,7 @@ class TagFilter extends React.Component {
         const allTags = [];
 
         allTags.push(
-            <div role="button" tabIndex={20 + allTags.length} onKeyPress={this.handleKeyPress} key={allTags.length}
+            <div role="button" tabIndex={0} onKeyPress={(e) => this.handleTagToggle("all", e)} key={allTags.length}
                 className="distinct-tag"
                 style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
                 onClick={(e) => this.handleTagToggle("all", e)}>
@@ -90,7 +90,7 @@ class TagFilter extends React.Component {
 
         pageContext.tags.forEach((tag) => {
             allTags.push(
-                <div role="button" tabIndex={20 + allTags.length} onKeyPress={this.handleKeyPress}
+                <div role="button" tabIndex={0} onKeyPress={(e) => this.handleTagToggle(tag, e)}
                     key={allTags.length}
                     className="distinct-tag"
                     style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}
@@ -127,7 +127,7 @@ class Sorter extends React.Component {
         SORT_TYPES.forEach(s => {
             var tagName = LocalizationHelper.getLocalWord(pageContext.localization, s, pageContext.locale);
             sortTags.push(
-                <div role="button" tabIndex={20 + sortTags.length} onKeyPress={this.handleKeyPress}
+                <div role="button" tabIndex={0} onKeyPress={(e) => { this.handleSortToggle(s, e) }}
                     className="distinct-tag"
                     key={sortTags.length}
                     style={sortBy === s ? selectedStyle : unSelectedStyle}
@@ -199,7 +199,7 @@ class ArticleList extends React.Component {
             slp.tags = [];
             if (filterTags.length === 0) {
                 articleViews.push(
-                    <ArticleView article={slp} pageContext={pageContext} subList={true} />
+                    <ArticleView key={articleViews.length} article={slp} pageContext={pageContext} subList={true} />
                 )
             }
         })
@@ -264,7 +264,7 @@ class ArticleView extends React.Component {
                         {article.tags.map(function (tag, key) {
                             return (
                                 <div className="tag" key={tag}>
-                                    <a href="/">{tag}</a>
+                                    {tag}
                                 </div>
                             )
                         })}

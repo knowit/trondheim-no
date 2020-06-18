@@ -32,7 +32,6 @@ export class BurgerMenu extends React.Component {
   }
 
   toggleMenu(e) {
-    console.log(this.showMenu)
     if (this.state.showMenu) {
       this.closeMenu()
     }

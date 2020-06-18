@@ -39,10 +39,11 @@ class ListingPageMap extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(e) {
+  handleChange(e, toggle = false) {
     const item = e.target.name;
-    const isChecked = e.target.checked;
+    const isChecked = (toggle) ? !e.target.checked : e.target.checked
     this.setState(prevState => ({ subListingPages: prevState.subListingPages.set(item, isChecked) }));
+
   }
 
   render() {
@@ -58,7 +59,8 @@ class ListingPageMap extends React.Component {
             aria-label={key}
             type="checkbox"
             checked={value}
-            onChange={this.handleChange}></input>
+            onChange={this.handleChange}
+            onKeyPress={(e) => { this.handleChange(e, true) }}></input>
           {key}
 
         </label>
