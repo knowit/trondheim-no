@@ -22,7 +22,7 @@ const ListingPage = ({ pageContext }) => {
             </Link>
           </div>
 
-          <SortableArticleView pageContext={pageContext}/>
+          <SortableArticleView pageContext={pageContext} />
 
         </div>
       </div>

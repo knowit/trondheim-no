@@ -110,3 +110,6 @@ h4{
   letter-spacing: 1px;
   overflow: hidden;
 }
+* {
+  font-family: 'PT Sans',Arial,'Arial Unicode MS',Helvetica,sans-serif;
+}

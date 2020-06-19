@@ -3,6 +3,8 @@ import React from 'react';
 import LocalizationHelper from "../helpers/helpers"
 import { Link } from 'gatsby';
 import Img from "gatsby-image"
+import "../style/listing-page.css"
+import EllipsisText from "react-ellipsis-text";
 
 
 const selectedStyle = { backgroundColor: 'grey', color: 'white' };
@@ -39,7 +41,7 @@ export default class SortableArticleView extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="article-list-container">
                 <TagFilter
                     pageContext={this.props.pageContext}
                     filterTags={this.state.filterTags}
@@ -240,6 +242,29 @@ class ArticleView extends React.Component {
         return this.props.pageContext.layoutContext.defaultThumbnails.find(node => node.title === "Article Thumbnail").image[0].localFile.childImageSharp.fluid
     }
 
+    getArticleInfo(article) {
+        if (article.content == null) {
+            return ""
+        }
+        else {
+            var el = document.createElement('html');
+            el.innerHTML = article.content.content
+            return el.textContent
+        }
+    }
+
+    tags(count, tag) {
+        var i = 0
+        var items = []
+        while (i < count) {
+            i++
+            items.push(<div className="tag" key={tag}>
+                {tag}
+            </div>)
+        }
+        return items
+    }
+
     render() {
         const article = this.props.article;
         const pageContext = this.props.pageContext;
@@ -259,7 +284,12 @@ class ArticleView extends React.Component {
             <div className="article-container">
                 <Img className="article-thumbnail" fluid={thumbnail} />
                 <div className="article-info-container">
+
                     <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${article.slug}`}>{(this.props.subList) ? article.navigationTitle : article.title}</Link></h2>
+
+                    <EllipsisText className="article-info-text" text={this.getArticleInfo(article)} length={100} />
+
+
                     <div className="tags-container">
                         {article.tags.map(function (tag, key) {
                             return (

@@ -44,6 +44,7 @@
     "react-country-flag": "^2.0.1",
     "react-detect-offline": "^2.4.0",
     "react-dom": "^16.8.1",
+    "react-ellipsis-text": "^1.2.1",
     "react-google-maps": "^9.4.5",
     "react-helmet": "^5.2.1",
     "react-refresh": "^0.8.3",
