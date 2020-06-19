@@ -12,6 +12,8 @@ const firebaseApp = admin.initializeApp({
     storageBucket: 'trondheimno-demo.appspot.com'
 })
 
+
+
 var firestore = firebaseApp.firestore();
 
 const app = flamelink({
@@ -203,24 +205,8 @@ var fs = require('fs');
 // })
 
 
-function fixImages(inputString) {
-    return inputString.replace(/src=\"/g, "src=\"https://www.trondheim.no/")
-}
 
-function concatText(introtext, fulltext, images) {
-    var val = "";
-    if (images.image_intro) {
-        val += "<p><img src=\"https://www.trondheim.no/" + images.image_intro + "\""
-            + " alt=\"" + images.image_intro_alt + "\" /></p>"
-    }
-    val += fixImages(introtext);
-    if (images.image_fulltext) {
-        val += "<p><img src=\"https://www.trondheim.no/" + images.image_fulltext + "\""
-            + " alt=\"" + images.image_fulltext_alt + "\" /></p>"
-    }
-    val += fixImages(fulltext);
-    return val;
-}
+
 
 function getLatLong(xreference) {
     if (xreference && xreference != "") {
@@ -307,7 +293,6 @@ async function getThumbnailReference(article) {
     }
 }
 
-
 async function createArticles() {
 
     try {
@@ -325,7 +310,7 @@ async function createArticles() {
 
             await app.settings.setLocale('no');
             let noThumbnail = await getThumbnailReference(element.no);
-            const content = await concatText(element.no.introtext, element.no.fulltext, element.no.images)
+            const content = await HtmlParser.concatText(element.no.introtext, element.no.fulltext, element.no.images)
             const contact = await HtmlParser.getContactInfo(content, 'no')
             const openingHours = await HtmlParser.getOpeningHours(content, 'no')
             const address = {
@@ -358,7 +343,7 @@ async function createArticles() {
             await app.settings.setLocale('en-US');
             let enThumbnail = await getThumbnailReference(element.en);
 
-            const contentEn = await concatText(element.en.introtext, element.en.fulltext, element.en.images)
+            const contentEn = await HtmlParser.concatText(element.en.introtext, element.en.fulltext, element.en.images)
             const contactEn = await HtmlParser.getContactInfo(contentEn, 'en')
             const addressEn = {
                 address: contactEn.address,
