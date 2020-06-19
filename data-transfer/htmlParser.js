@@ -1,4 +1,77 @@
+const mediaUrl = "https://firebasestorage.googleapis.com/v0/b/trondheimno-demo.appspot.com/o/flamelink%2Fmedia%2F"
+
+
+function getImgTag(filename, alt) {
+    return `<img src=\"${mediaUrl}${filename}?alt=media\" alt=\"${alt}\" />`
+}
+
+
 class HtmlParser {
+
+    static concatText(introtext, fulltext, images) {
+
+
+        var val = "";
+
+        var frontImage = null
+        var alt = ""
+
+        if (images.image_fulltext) {
+            var array = images.image_fulltext.split(`/`)
+            frontImage = array[array.length - 1]
+            alt = images.image_fulltext_alt
+        }
+
+        if (!frontImage) {
+            var array = images.image_introtext.split(`/`)
+            frontImage = array[array.length - 1]
+            alt = images.image_introtext_alt
+        }
+
+
+        if (frontImage) {
+            val += `<p><img src=\"${mediaUrl}${frontImage}?alt=media\" alt=\"${alt}\"></img></p>`
+        }
+
+        val += this.fixImages(introtext);
+        val += this.fixImages(fulltext);
+        return val;
+    }
+
+    static fixImages(inputString) {
+
+        const regexp = /<img([\w\W]+?)\/>/g
+        var imgTags = regexp.exec(inputString)
+
+        var result = inputString
+
+        while (imgTags) {
+
+            const line = imgTags[0]
+
+            const srcRegexp = /src\s*=\s*"(.+?)"/
+            const altRegexp = /alt\s*=\s*"(.+?)"/
+
+            var path = ""
+            var alt = ""
+
+            const src = srcRegexp.exec(line)
+
+            if (src) {
+                var array = src[1].split(`/`)
+                path = array[array.length - 1]
+            }
+
+            const a = altRegexp.exec(line)
+
+            if (a) {
+                alt = a[1]
+            }
+            result = result.replace(line, getImgTag(path, alt))
+            imgTags = regexp.exec(inputString)
+        }
+        return result
+    }
 
     static getContactInfo(content, language) {
 
