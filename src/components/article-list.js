@@ -243,9 +243,14 @@ class ArticleView extends React.Component {
     }
 
     getArticleInfo(article) {
-        var el = document.createElement('html');
-        el.innerHTML = article.content.content
-        return el.textContent
+        if (article.content == null) {
+            return ""
+        }
+        else {
+            var el = document.createElement('html');
+            el.innerHTML = article.content.content
+            return el.textContent
+        }
     }
 
     tags(count, tag) {
@@ -282,7 +287,7 @@ class ArticleView extends React.Component {
 
                     <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${article.slug}`}>{(this.props.subList) ? article.navigationTitle : article.title}</Link></h2>
 
-                    <EllipsisText className="article-info-text" text={this.getArticleInfo(article)} length={"100"} />
+                    <EllipsisText className="article-info-text" text={this.getArticleInfo(article)} length={100} />
 
 
                     <div className="tags-container">
