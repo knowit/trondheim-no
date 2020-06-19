@@ -17,7 +17,7 @@ function extract_image_urls(htmlBody) {
   }
 
   tags.map(x => x.replace(/.*src="([^"]*)".*/, '$1')).map(url => {
-    result.push(encodeURI(url))
+    result.push(url)
   })
 
   return result

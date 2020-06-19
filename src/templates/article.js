@@ -80,7 +80,7 @@ const Article = ({ pageContext }) => {
     const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent,
       (props, index) => {
         const imageNode = pageContext.node.content.remoteImages.find(n => {
-          return n.url === encodeURI(props.src)
+          return n.url === props.src
         })
 
         if (imageNode) {

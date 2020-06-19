@@ -12,6 +12,8 @@ const firebaseApp = admin.initializeApp({
     storageBucket: 'trondheimno-demo.appspot.com'
 })
 
+const storage = admin.storage().bucket()
+
 
 
 var firestore = firebaseApp.firestore();
@@ -265,6 +267,7 @@ async function getImageReference(imageString) {
     }
     return reference;
 }
+
 
 function stripPath(string) {
     var splitString = String(string).split("/");
