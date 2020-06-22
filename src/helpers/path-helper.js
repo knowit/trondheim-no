@@ -278,7 +278,7 @@ class PathTreeBuilder {
     const parent = node.parentListingPage
 
     // Check if listing page belongs on front page
-    if (node.showOnFrontPage === true) {
+    if (node.showOnFrontPage === true || node.showOnFrontpageColumns) {
       if (!this.frontPageListingPages.has(locale)) {
         this.frontPageListingPages.set(locale, new Map())
       }

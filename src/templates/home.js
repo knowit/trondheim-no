@@ -4,6 +4,7 @@ import Layout from "../layouts/layout"
 import { Link } from "gatsby"
 import BackgroundImage from 'gatsby-background-image'
 import Img from 'gatsby-image'
+import FrontpageColumns from "../components/frontpage-columns"
 
 export default ({ pageContext }) => {
 
@@ -11,7 +12,7 @@ export default ({ pageContext }) => {
     <div id="outer-container">
       <div id="header-container">
 
-        <BackgroundImage id="header-image" fluid={pageContext.node.frontImage[0].localFile.childImageSharp.fluid} alt="Bybro">
+        <BackgroundImage id="header-image" Tag="section" fluid={pageContext.node.frontImage[0].localFile.childImageSharp.fluid} alt={pageContext.node.frontImageAlt}>
 
           <h3>{pageContext.node.headerText}</h3>
           <h1>{pageContext.node.headerFocusWord}</h1>
@@ -27,7 +28,7 @@ export default ({ pageContext }) => {
 
         <div id="navigation-menu-container">
           {pageContext.listingPages.map(function (node, key) {
-            if (node.thumbnail[0].localFile) {
+            if (node.thumbnail[0].localFile && node.showOnFrontPage) {
               return (
                 <div key={key} className="navigation-box-container">
                   <Img className="navigation-box-thumbnail"
@@ -38,12 +39,18 @@ export default ({ pageContext }) => {
                 </div>)
             }
             else {
-              return (<div></div>)
+              return (<div key={key}></div>)
             }
 
 
           })}
         </div>
+
+        <div>
+          <FrontpageColumns pageContext={pageContext} />
+        </div>
+
+
 
       </div>
     </div>

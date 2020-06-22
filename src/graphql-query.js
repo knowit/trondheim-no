@@ -34,6 +34,7 @@ query {
         navigationSubtitle
         textOnPage
         showOnFrontPage
+        showOnFrontpageColumns
         showInDropMenu
         mapPageTitle
         mapPageDescription
@@ -121,6 +122,22 @@ query {
         }
         frontImageAlt
         frontImage{
+          localFile {
+            childImageSharp {
+              fluid (maxWidth: 9999, quality: 100) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+        backdropImage{
           localFile {
             childImageSharp {
               fluid (maxWidth: 9999, quality: 100) {
