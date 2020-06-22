@@ -372,7 +372,9 @@ class PathTreeBuilder {
       locale: locale,
       localizedPaths: localizedPaths, // Paths to the same page for different locales
       defaultThumbnails: this.result.data.allFlamelinkDefaultThumbnailsContent.edges[0].node.imageDeck,
-      logoImage: this.result.data.allFlamelinkFrontPageContent.edges[0].node.logoImage[0]
+      logoImage: this.result.data.allFlamelinkFrontPageContent.edges[0].node.logoImage[0],
+      localization: this.result.data.allFlamelinkLayoutLocalizationContent.edges[0].node.translations,
+      homePath: (locale === 'no') ? '/' : '/en/'
     }
   }
 

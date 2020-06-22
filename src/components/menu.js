@@ -3,6 +3,7 @@ import React from 'react';
 import "../style/navigation.css"
 import { Link } from 'gatsby';
 import ReactCountryFlag from "react-country-flag"
+import LocalizationHelper from "../helpers/helpers"
 
 export class BurgerMenu extends React.Component {
 
@@ -53,7 +54,7 @@ export class BurgerMenu extends React.Component {
           <div className="burger-bar"></div>
         </div>
         <div className="menu-text-container">
-          {(this.props.layoutContext.locale === 'no') ? 'MENY' : 'MENU'}
+          {LocalizationHelper.getLocalWord(this.props.layoutContext.localization, 'menu', this.props.layoutContext.locale)}
         </div>
 
 
@@ -61,7 +62,12 @@ export class BurgerMenu extends React.Component {
           this.state.showMenu
             ? (
               <div className="drop-menu-container">
-
+                <Link
+                  key={0}
+                  className="drop-menu-item-container"
+                  to={this.props.layoutContext.homePath}>
+                  {LocalizationHelper.getLocalWord(this.props.layoutContext.localization, 'home', this.props.layoutContext.locale)}
+                </Link>
                 {this.props.layoutContext.menuData.map(function (node, key) {
                   return (
                     <Link

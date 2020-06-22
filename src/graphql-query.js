@@ -76,6 +76,21 @@ query {
       }
     }
   }
+  allFlamelinkLayoutLocalizationContent(filter: {flamelink_locale: {eq: "no"}}) {
+    edges {
+      node {
+        id
+        translations {
+          translations {
+            uniqueKey
+            language
+            word
+          }
+          key
+        }
+      }
+    }
+  }
   allFlamelinkFrontPageContent {
     edges {
       node {
