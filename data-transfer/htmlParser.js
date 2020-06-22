@@ -75,15 +75,23 @@ class HtmlParser {
 
     static getContactInfo(content, language) {
 
+        const imgRegExp = /<img\s*(?:class\s*\=\s*[\'\"](.*?)[\'\"].*?\s*|src\s*\=\s*[\'\"](.*?)[\'\"].*?\s*|alt\s*\=\s*[\'\"](.*?)[\'\"].*?\s*|width\s*\=\s*[\'\"](.*?)[\'\"].*?\s*|height\s*\=\s*[\'\"](.*?)[\'\"].*?\s*)+.*?>/g
+        const newlineRegExp = /\r?\n/
+
+        const emailRegex = (/(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g).source
+        const phoneRegex = (/href=\"tel:([^\"]*)\"(.*)/g).source
+        const pTagRegex = (/<\s*p[^>]*>(.*?)<\s*\/\s*p>/g).source
+        const urlRegex = (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/g).source
+        const titleRegex = (/<a\s+[^>]*?title="([^"]*)"/g).source
+        const aTagRegex = (/<a [^>]+>(.*?)<\/a>/g).source
+
         var phone = ''
         var email = ''
         var address = ''
         var webUrl = ''
         var webTitle = ''
 
-        const htmlArray = content
-            .replace(/<img([\w\W]+?)\/>/g, '')
-            .split(/\r?\n/)
+        const htmlArray = content.replace(imgRegExp, '').split(newlineRegExp)
 
         const startLabel = (language === 'no') ? 'kontaktinfo' : 'contact'
         const phoneLabel = (language === 'no') ? 'telefon:' : 'phone:'
@@ -98,6 +106,10 @@ class HtmlParser {
         var errors = []
         var removedLines = []
 
+        function regex(regex, line) {
+            return (new RegExp(regex)).exec(line)
+        }
+
         function errorLine(line, label = 'None') {
             error = true
             errors.push(`[${label}]: ${line}`)
@@ -106,13 +118,13 @@ class HtmlParser {
 
         function getPTagContent(line, splitLabel) {
             removedLines.push(line)
-            const tag = /<\s*p[^>]*>(.*?)<\s*\/\s*p>/g.exec(line)
+            const tag = regex(pTagRegex, line)
             return tag ? tag[1].replace(splitLabel, '').trim() : errorLine(line, 'P-tag content')
         }
 
         function getPhoneNumber(line) {
             if (line.includes(`<a`)) {
-                const phoneTag = /href=\"tel:([^\"]*)\"(.*)/g.exec(line.toLowerCase())
+                const phoneTag = regex(phoneRegex, line.toLowerCase())
                 return phoneTag ? phoneTag[1] : errorLine(line, 'Phone')
             }
             else {
@@ -122,15 +134,12 @@ class HtmlParser {
         }
 
         function getEmailAddress(line) {
-            const regex = /(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-            const tag = regex.exec(line.toLowerCase())
+            const tag = regex(emailRegex, line.toLowerCase())
             return tag ? tag[0] : errorLine(line, 'E-mail')
         }
 
         function isWebsite(line) {
-
-            const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/
-            const tag = regex.exec(line)
+            const tag = regex(urlRegex, line)
             if (tag != null) {
                 return true
             }
@@ -139,21 +148,18 @@ class HtmlParser {
 
         function getWebsiteTitle(line) {
             if (line.includes(`title=`)) {
-                const regex = /<a\s+[^>]*?title="([^"]*)"/
-                const tag = regex.exec(line)
+                const tag = regex(titleRegex, line)
                 return tag ? tag[1] : errorLine(line, 'Website title')
             }
             else {
-                const regex = /<a [^>]+>(.*?)<\/a>/
-                const tag = regex.exec(line)
+                const tag = regex(aTagRegex, line)
                 return tag ? tag[1] : errorLine(line, 'Website title')
             }
         }
 
 
         function getWebsiteUrl(line) {
-            const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/
-            const tag = regex.exec(line.replace(`/#!/`, '/'))
+            const tag = regex(urlRegex, line.replace(`/#!/`, '/'))
             var other = ''
 
             if (!tag) {
@@ -167,10 +173,10 @@ class HtmlParser {
         }
 
 
+
         while (i < htmlArray.length) {
 
             const line = htmlArray[i++]
-
             if (line.toLowerCase().includes(startLabel)) {
                 removedLines.push(line)
                 start = true
