@@ -1,6 +1,33 @@
 
 const query = `
 query {
+  allFlamelinkFrontPageColumnContent{
+    edges{
+      node{
+        flamelink_id
+        flamelink_locale
+        title
+        subTitle
+        redirectUrl
+        icon {
+          localFile {
+            childImageSharp {
+              fluid (maxWidth: 9999, quality: 100) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   allFlamelinkListingPageContent {
     edges {
       node {

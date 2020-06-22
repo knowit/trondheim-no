@@ -222,6 +222,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
       const node = root.node.get(locale)
       const listingPages = Array.from(frontPageListingPages.get(locale).values())
+      const columnContent = result.data.allFlamelinkFrontPageColumnContent.edges.map(node => node.node).filter(node => node.flamelink_locale === locale)
 
       createPage({
         path: root.getPath(locale),
@@ -230,7 +231,8 @@ exports.createPages = async ({ graphql, actions }) => {
           node: node,
           slug: root.getSlug(locale),
           listingPages: listingPages,
-          layoutContext: pathHelper.layoutContext(locale, root.getLocalizedPaths())
+          layoutContext: pathHelper.layoutContext(locale, root.getLocalizedPaths()),
+          columnContent: columnContent
         }
       })
     })

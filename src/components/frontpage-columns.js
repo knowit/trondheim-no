@@ -9,7 +9,6 @@ const FrontpageColumns = ({ pageContext }) => {
 
   }
 
-
   return (
     <div id="frontpage-columns-container" style={backgroundStyle}>
       <div id="frontpage-columns-overlay">
@@ -29,6 +28,24 @@ const FrontpageColumns = ({ pageContext }) => {
           }
           else return null
         })}
+
+        {pageContext.columnContent.map(node => {
+          if (node.icon) {
+            return (
+              <div key={node.flamelink_id} className="frontpage-column-item-container">
+                <div className="frontpage-column-image-container"><Img className="frontpage-column-image"
+                  fluid={node.icon[0].localFile.childImageSharp.fluid}
+                  alt="thumbnail" /></div>
+                <div className="frontpage-column-info-container">
+                  <h2><Link className="frontpage-column-title" to={node.redirectUrl}>{node.title.toUpperCase()}</Link></h2>
+                  <h4>{node.subTitle}</h4>
+                </div>
+              </div>
+            )
+          }
+
+        })}
+
       </div>
     </div>
   )
