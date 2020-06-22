@@ -80,31 +80,60 @@
   position: absolute;
   top: 100%;
   width: 250px;
-  height: 500px;
+  height: auto;
   background-color: white;
   z-index: 999999999;
   justify-content: center;
   align-items: center;
-  padding: 15px 0 0 0;
+  padding: 15px 0 15px 0;
+}
+.drop-menu-container {
+  animation-duration: 0.5s;
+  animation-name: slidein;
+  overflow: hidden;
+}
+@keyframes slidein {
+  from {
+    max-height: 0px;
+  }
+
+  to {
+    max-height: 1000px;
+  }
 }
 .drop-menu-item-container{
   display: flex;
   border-bottom: 1px solid rgb(0, 183, 255);
   width: 80%;
   height: 30px;
-  margin: 8px auto auto auto;
-  padding: 0;
+  margin: auto;
+  padding: 8px 0 0 0;
   text-align: left;
-  font-size: 14pt;
+  font-size: 20px;
   color: rgb(41, 41, 41);
   z-index: 99999999999;
+  text-decoration: none;
+  display: block;
+  overflow: hidden;
 }
 .drop-menu-item-container:hover{
   background-color: black;
   color: white;
+  animation-duration: 0.5s;
+  animation-name: hoverfade
+}
+@keyframes hoverfade {
+  from{
+    background-color: white;
+    color: black;
+  }
+  to{
+    background-color: black;
+    color: white;
+  }
 }
 
-.drop-menu-item-container a{
+.drop-menu-item-container{
   color: inherit;
   text-decoration: none;
   display: block;
