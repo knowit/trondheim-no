@@ -29,7 +29,7 @@
   color: white;
   text-decoration: underline;
   line-height: 28.57px;
-  font-size: 14pt;
+  font-size: 20px;
   height: 100%;
   padding-top: 15px;
 }
@@ -43,7 +43,7 @@
   width: 50px;
   top: 50%;
   transform: translate(0, -50%);
-  padding-top: 2px;
+  padding-top: 6px;
 }
 .menu-container:hover{
   cursor: pointer;
@@ -66,8 +66,9 @@
 }
 .menu-text-container{
   color: white;
-  font-size: 9pt;
+  font-size: 13px;
   text-align: center;
+  letter-spacing: 1px;
   position: absolute;
   bottom: 0;
   left: 50%;                        

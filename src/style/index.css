@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans:regular,bold,italic&subset=latin,latin-ext');
+
 *{
   font-family: 'PT Sans',Arial,'Arial Unicode MS',Helvetica,sans-serif;
 }
@@ -51,10 +53,14 @@ h1{
 h2 {
     margin-top: 10px;
     font-size: 28pt;
-    text-align: center;
+  
     letter-spacing: 2px;
     font-weight: 100;
     padding-top: 20px;
+}
+
+#content-container h2{
+  text-align: center;
 }
 
 #content-container{

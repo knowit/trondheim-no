@@ -134,7 +134,7 @@ const Article = ({ pageContext }) => {
     <Layout layoutContext={pageContext.layoutContext}>
       <div id="outer-container">
         <div id="inner-container">
-          <h2>{pageContext.node.title}</h2>
+          <h2 id="article-title">{pageContext.node.title}</h2>
           <HTMLContent />
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
