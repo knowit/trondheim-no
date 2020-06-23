@@ -4,6 +4,21 @@ import { Helmet } from 'react-helmet'
 import { Link } from "gatsby"
 import { BurgerMenu } from "../components/menu.js"
 import Img from "gatsby-image"
+import LocalizationHelper from "../helpers/helpers"
+
+const Footer = ({ layoutContext }) => {
+  const search = LocalizationHelper.getLocalWord(layoutContext.localization, 'search', layoutContext.locale)
+  return (
+    <footer id="footer-container">
+
+      <form id="search-container">
+        <input type="text" id="search-input" name="search-input" placeholder={`${search}...`}></input>
+        <input id="search-button" type="submit" value={search} />
+      </form>
+
+    </footer>
+  )
+}
 
 const Navigation = ({ layoutContext }) => {
 
@@ -36,5 +51,6 @@ export default ({ children, layoutContext }) => (
     <div id="children-container">
       {children}
     </div>
+    <Footer id="footer" layoutContext={layoutContext} />
   </div>
 )
