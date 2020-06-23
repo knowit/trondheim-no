@@ -2,8 +2,11 @@
 import React from "react"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 import Img from "gatsby-image"
+import Loadable from "@loadable/component"
 
 const HTMLContent = ({ htmlContent }) => {
+
+  return null;
 
   const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent.content,
     (props, index) => {
