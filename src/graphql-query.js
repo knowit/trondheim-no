@@ -1,51 +1,6 @@
 
 const query = `
 query {
-  allFlamelinkFrontPageCardContent{
-    edges{
-      node{
-        flamelink_id
-        flamelink_locale
-        index
-        title
-        textColor
-        backgroundColor
-        links{
-          text
-          url
-        }
-        iconName
-        iconColor
-      }
-    }
-  }
-  allFlamelinkFrontPageColumnContent{
-    edges{
-      node{
-        flamelink_id
-        flamelink_locale
-        title
-        subTitle
-        redirectUrl
-        icon {
-          localFile {
-            childImageSharp {
-              fluid (maxWidth: 9999, quality: 100) {
-                base64
-                aspectRatio 
-                src 
-                srcSet 
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
-              }
-            }
-          }
-        }
-      }
-    }
-  }
   allFlamelinkListingPageContent {
     edges {
       node {
@@ -149,6 +104,9 @@ query {
         headerFocusWord
         headerText
         id
+        customContent{
+          content
+        }
         logoImage{
           localFile {
             childImageSharp {
@@ -199,6 +157,51 @@ query {
           }
         }
         navigationText
+      }
+    }
+  }
+  allFlamelinkFrontPageCardContent{
+    edges{
+      node{
+        flamelink_id
+        flamelink_locale
+        index
+        title
+        textColor
+        backgroundColor
+        links{
+          text
+          url
+        }
+        iconName
+        iconColor
+      }
+    }
+  }
+  allFlamelinkFrontPageColumnContent{
+    edges{
+      node{
+        flamelink_id
+        flamelink_locale
+        title
+        subTitle
+        redirectUrl
+        icon {
+          localFile {
+            childImageSharp {
+              fluid (maxWidth: 9999, quality: 100) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -7,6 +7,7 @@ import { GoogleMapsUrlHelper } from "../helpers/url-helper"
 import Img from "gatsby-image"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 import { Online, Offline } from "react-detect-offline"
+import HTMLContent from "../components/html-content"
 
 
 function ContactInfo(props) {
@@ -68,46 +69,15 @@ const Article = ({ pageContext }) => {
   const location = GoogleMapsUrlHelper.getLocation(pageContext.node)
   const address = GoogleMapsUrlHelper.getAddress(pageContext.node)
 
-
-  const HTMLContent = () => {
-
+  const ParsedHTML = () => {
     if (!pageContext.node.content) {
       return (<div></div>)
     }
-
-    const htmlContent = pageContext.node.content.content
-
-    const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent,
-      (props, index) => {
-        const imageNode = pageContext.node.content.remoteImages.find(n => {
-          return n.url === props.src
-        })
-
-        if (imageNode) {
-
-          const styles = {
-
-            width: imageNode.childImageSharp.fluid.presentationWidth,
-            height: imageNode.childImageSharp.fluid.presentationHeight,
-            margin: '1em 0'
-
-          }
-
-          return <div key={index} className="article-content-image-container" style={styles}>
-            <Img
-              className='article-content-image'
-              fluid={imageNode.childImageSharp.fluid}
-              alt={props.alt}>
-            </Img>
-          </div>
-
-        }
-        else {
-          return <div></div>
-        }
-      })
-
-    return reactComponent
+    else {
+      return (
+        <HTMLContent htmlContent={pageContext.node.content.content} />
+      )
+    }
   }
 
   const OfflineMap = () => {
@@ -135,7 +105,7 @@ const Article = ({ pageContext }) => {
       <div id="outer-container">
         <div id="inner-container">
           <h2 id="article-title">{pageContext.node.title}</h2>
-          <HTMLContent />
+          <ParsedHTML />
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <Online>
