@@ -1,6 +1,24 @@
 
 const query = `
 query {
+  allFlamelinkFrontPageCardContent{
+    edges{
+      node{
+        flamelink_id
+        flamelink_locale
+        index
+        title
+        textColor
+        backgroundColor
+        links{
+          text
+          url
+        }
+        iconName
+        iconColor
+      }
+    }
+  }
   allFlamelinkFrontPageColumnContent{
     edges{
       node{

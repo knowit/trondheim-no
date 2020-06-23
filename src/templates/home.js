@@ -4,6 +4,12 @@ import Layout from "../layouts/layout"
 import { Link } from "gatsby"
 import BackgroundImage from 'gatsby-background-image'
 import Img from 'gatsby-image'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { fas } from "@fortawesome/free-solid-svg-icons"
+
+
+library.add(fas);
 
 const FrontpageColumns = ({ pageContext }) => {
 
@@ -54,6 +60,46 @@ const FrontpageColumns = ({ pageContext }) => {
   )
 }
 
+const FrontpageCards = ({ pageContext }) => {
+
+  const Card = (props) => {
+    console.log(JSON.stringify(props))
+
+    return (
+      <div className="frontpage-card" style={{ backgroundColor: props.backgroundColor, color: props.color }}>
+        <div className="frontpage-card-icon">
+          <FontAwesomeIcon icon={props.icon.name} color={props.icon.color} size={'2x'} />
+        </div>
+        <div className="frontpage-card-content">
+          <h2 className="frontpage-card-title" style={{ color: props.textColor }}>{props.title}</h2>
+          <div className="frontpage-card-links-container">
+            {props.links.map((link, key) => {
+              return (
+                <a className="frontpage-card-link" key={key} href={link.url} style={{ color: props.textColor }}>{link.text}</a>
+              )
+            })
+            }
+          </div>
+        </div>
+      </div >
+    )
+  }
+
+  return (
+    <div id="frontpage-cards-container">
+      {pageContext.cardContent.sort((a, b) => a.index - b.index).map((item, key) => {
+        const icon = {
+          name: item.iconName,
+          color: item.iconColor
+        }
+        return (
+          <Card key={key} title={item.title} icon={icon} links={item.links} backgroundColor={item.backgroundColor} textColor={item.textColor} />
+        )
+      })}
+    </div>
+  )
+}
+
 export default ({ pageContext }) => {
 
   return <Layout layoutContext={pageContext.layoutContext}>
@@ -91,10 +137,8 @@ export default ({ pageContext }) => {
             }
           })}
         </div>
-
-        <div>
-          <FrontpageColumns pageContext={pageContext} />
-        </div>
+        <FrontpageColumns pageContext={pageContext} />
+        <FrontpageCards pageContext={pageContext} />
 
       </div>
     </div>
