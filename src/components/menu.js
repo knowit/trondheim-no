@@ -1,6 +1,6 @@
 
 import React from 'react';
-import "../style/navigation.css"
+import "../style/layout.css"
 import { Link } from 'gatsby';
 import ReactCountryFlag from "react-country-flag"
 import LocalizationHelper from "../helpers/helpers"

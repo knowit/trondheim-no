@@ -38,3 +38,155 @@
   margin: 0;
   padding: 0;
 }
+
+.navigation-container{
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 55px;
+  background-color: black;
+  z-index: 99999;
+}
+
+.logo-container{
+  position: relative;
+  margin-right: 15%;
+  float: right;
+  height: 100%;
+  padding: 0;
+  width: auto;
+}
+.logo-text {
+  display: inline-block;
+  margin: 0;
+  padding: 15px;
+}
+.logo{
+  display: inline-block;
+  background-color: white;
+  width: 55px;
+  margin: 0;
+}
+.logo img {
+  height: 100%;
+  margin: 0;
+}
+#trondheimno-link{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  color: white;
+  text-decoration: underline;
+  line-height: 28.57px;
+  font-size: 20px;
+  height: 100%;
+}
+
+.menu-container{
+  margin-left: 14%;
+  position: relative;
+  display: block;
+  float: left;
+  height: 50px;
+  width: 50px;
+  top: 50%;
+  transform: translate(0, -50%);
+  padding-top: 6px;
+}
+.menu-container:hover{
+  cursor: pointer;
+}
+.burger-container{
+  position: absolute;
+  display: block;
+  margin: 0;
+  left: 50%;                        
+  transform: translate(-50%, 0);
+  width: 34px;
+  height: 32px;
+  margin-bottom: -10px;
+}
+.burger-bar {
+  width: 100%;
+  height: 6px;
+  background-color: white;
+  margin: 3px 0;
+}
+.menu-text-container{
+  color: white;
+  font-size: 13px;
+  text-align: center;
+  letter-spacing: 1px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;                        
+  transform: translate(-50%, -2px);
+  height: 20px;
+}
+.drop-menu-container{
+  display: block;
+  position: absolute;
+  top: 100%;
+  width: 250px;
+  height: auto;
+  background-color: white;
+  z-index: 999999999;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0 15px 0;
+  animation-duration: 0.5s;
+  animation-name: slidein;
+  overflow: hidden;
+}
+
+@keyframes slidein {
+  from {
+    max-height: 0px;
+  }
+
+  to {
+    max-height: 1000px;
+  }
+}
+.drop-menu-item-container{
+  display: flex;
+  border-bottom: 1px solid rgb(0, 183, 255);
+  width: 80%;
+  height: 30px;
+  margin: auto;
+  padding: 8px 0 0 0;
+  text-align: left;
+  font-size: 20px;
+  color: rgb(41, 41, 41);
+  z-index: 99999999999;
+  text-decoration: none;
+  display: block;
+  overflow: hidden;
+}
+.drop-menu-item-container:hover{
+  background-color: black;
+  color: white;
+  animation-duration: 0.5s;
+  animation-name: hoverfade
+}
+@keyframes hoverfade {
+  from{
+    background-color: white;
+    color: black;
+  }
+  to{
+    background-color: black;
+    color: white;
+  }
+}
+
+.drop-menu-item-container{
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.drop-menu-item-flag{
+  margin-right: 3px;
+  padding-top: 2px;
+}
