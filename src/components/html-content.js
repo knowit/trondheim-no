@@ -6,8 +6,6 @@ import Loadable from "@loadable/component"
 
 const HTMLContent = ({ htmlContent }) => {
 
-  return null;
-
   const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent.content,
     (props, index) => {
       const imageNode = htmlContent.remoteImages.find(n => {
