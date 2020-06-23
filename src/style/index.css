@@ -252,3 +252,8 @@ h4{
 .frontpage-card-links-container a{
   margin-top: 2px;
 }
+#custom-content-container{
+  margin-top: 2em;
+  display: flex;
+  justify-content: center;
+}

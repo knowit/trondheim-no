@@ -7,6 +7,7 @@ import Img from 'gatsby-image'
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fas } from "@fortawesome/free-solid-svg-icons"
+import HTMLContent from "../components/html-content"
 
 
 library.add(fas);
@@ -138,6 +139,9 @@ export default ({ pageContext }) => {
           })}
         </div>
         <FrontpageColumns pageContext={pageContext} />
+        <div id="custom-content-container">
+          <HTMLContent htmlContent={pageContext.node.customContent} />
+        </div>
         <FrontpageCards pageContext={pageContext} />
 
       </div>

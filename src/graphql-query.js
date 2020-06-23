@@ -106,6 +106,21 @@ query {
         id
         customContent{
           content
+          remoteImages {
+            url
+            childImageSharp {
+              fluid (quality: 90){
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              } 
+            }
+          }
         }
         logoImage{
           localFile {
