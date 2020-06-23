@@ -45,6 +45,7 @@ export class BurgerMenu extends React.Component {
 
 
   render() {
+    console.log("Menu")
 
     return (
       <div role="menu" tabIndex={0} onKeyPress={this.toggleMenu.bind(this)} className="menu-container" onClick={this.showMenu}>

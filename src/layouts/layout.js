@@ -2,11 +2,12 @@ import React from "react"
 import "../style/layout.css"
 import { Helmet } from 'react-helmet'
 import { Link } from "gatsby"
-import { BurgerMenu } from "../components/menu.js"
 import Img from "gatsby-image"
 import LocalizationHelper from "../helpers/helpers"
+import { BurgerMenu } from "../components/menu.js"
 
 const Footer = ({ layoutContext }) => {
+  console.log("Footer")
   const search = LocalizationHelper.getLocalWord(layoutContext.localization, 'search', layoutContext.locale)
   return (
     <footer id="footer-container">
@@ -21,6 +22,8 @@ const Footer = ({ layoutContext }) => {
 }
 
 const Navigation = ({ layoutContext }) => {
+  console.log("Navigation")
+
 
   return <div className="navigation-container">
 
@@ -40,17 +43,20 @@ const Navigation = ({ layoutContext }) => {
   </div>
 }
 
-export default ({ children, layoutContext }) => (
-  <div id="layout-container">
-    <Helmet
-      title="Trondheim.no">
-      <html lang={layoutContext.locale} />
-      <meta name="description" content="The official website for Trondheim." />
-    </Helmet>
-    <Navigation id="navbar" layoutContext={layoutContext}></Navigation>
-    <div id="children-container">
-      {children}
+export default ({ children, layoutContext }) => {
+  console.log("Layout")
+  return (
+    <div id="layout-container">
+      <Helmet
+        title="Trondheim.no">
+        <html lang={layoutContext.locale} />
+        <meta name="description" content="The official website for Trondheim." />
+      </Helmet>
+      <Navigation id="navbar" layoutContext={layoutContext}></Navigation>
+      <div id="children-container">
+        {children}
+      </div>
+      <Footer id="footer" layoutContext={layoutContext} />
     </div>
-    <Footer id="footer" layoutContext={layoutContext} />
-  </div>
-)
+  )
+}

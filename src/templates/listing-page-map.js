@@ -1,9 +1,9 @@
 import React from "react"
 import "../style/listing-page.css"
 import Layout from "../layouts/layout"
-import GoogleMap from "../components/map.js"
 import LocalizationHelper from "../helpers/helpers"
 import { Link } from "gatsby"
+import loadable from '@loadable/component'
 
 // Default location
 function GetLocation(pageContext) {
@@ -47,6 +47,9 @@ class ListingPageMap extends React.Component {
   }
 
   render() {
+    console.log("Listing page map")
+
+    const GoogleMap = loadable(() => import("../components/map.js"))
 
     var items = []
     var markers = []

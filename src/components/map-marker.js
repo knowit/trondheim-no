@@ -29,7 +29,7 @@ export default class MapMarker extends React.Component {
     if (!isInfoOpen || !isSelected || !mapMarker) {
       return null;
     }
-
+    console.log("Map marker info window")
     return (
       <InfoWindow anchor={mapMarker}>
         <div><Link to={markerData.url}>{markerData.title}</Link></div>
@@ -39,6 +39,7 @@ export default class MapMarker extends React.Component {
 
   render() {
     const { clusterer, markerData } = this.props;
+    console.log("Map marker")
 
     return (
       <Marker

@@ -1,8 +1,8 @@
 
 var React = require('react');
-var HtmlToReact = require('html-to-react');
+var HtmlToReact = require('html-to-react')
 var HtmlToReactParser = require('html-to-react').Parser;
-var ReactDOMServer = require('react-dom/server');
+var ReactDOMServer = require('react-dom/server')
 
 class HtmlNode {
 

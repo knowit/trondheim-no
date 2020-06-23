@@ -1,16 +1,16 @@
 import React from "react"
 import styles from "../style/article.module.css"
-import Map from "../components/map.js"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import { GoogleMapsUrlHelper } from "../helpers/url-helper"
 import Img from "gatsby-image"
-import ReactDOMHelper from "../helpers/react-dom-helper"
 import { Online, Offline } from "react-detect-offline"
-import HTMLContent from "../components/html-content"
+import HTMLContent from '../components/html-content'
+import Map from "../components/map.js"
 
 
 function ContactInfo(props) {
+  console.log("Contact info")
 
   if (!props.node.contactInfo && !props.node.address.address) return "";
 
@@ -49,6 +49,7 @@ function ContactInfo(props) {
 }
 
 function OpeningHours(props) {
+  console.log("Opening hours")
   const elements = [];
   var index = 0
   var locale = props.locale;
@@ -65,9 +66,11 @@ function OpeningHours(props) {
 
 
 const Article = ({ pageContext }) => {
+  console.log("Article")
 
   const location = GoogleMapsUrlHelper.getLocation(pageContext.node)
   const address = GoogleMapsUrlHelper.getAddress(pageContext.node)
+
 
   const ParsedHTML = () => {
     if (!pageContext.node.content) {
@@ -81,6 +84,7 @@ const Article = ({ pageContext }) => {
   }
 
   const OfflineMap = () => {
+    console.log("Offline map")
     const imageNode = pageContext.node.latLong.googleMapsStaticImage
 
     if (imageNode != null) {

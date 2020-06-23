@@ -4,7 +4,7 @@ import LocalizationHelper from "../helpers/helpers"
 import { Link } from 'gatsby';
 import Img from "gatsby-image"
 import "../style/listing-page.css"
-import EllipsisText from "react-ellipsis-text";
+import loadable from '@loadable/component'
 
 
 const selectedStyle = { backgroundColor: 'grey', color: 'white' };
@@ -40,6 +40,7 @@ export default class SortableArticleView extends React.Component {
     }
 
     render() {
+        console.log("Article list")
         return (
             <div className="article-list-container">
                 <TagFilter
@@ -279,6 +280,8 @@ class ArticleView extends React.Component {
         if (thumbnail == null) {
             thumbnail = this.getDefaultThumbnail()
         }
+
+        const EllipsisText = loadable(() => import("react-ellipsis-text"))
 
         return (
             <div className="article-container">

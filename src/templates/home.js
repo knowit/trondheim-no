@@ -4,15 +4,16 @@ import Layout from "../layouts/layout"
 import { Link } from "gatsby"
 import BackgroundImage from 'gatsby-background-image'
 import Img from 'gatsby-image'
-import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons"
-import HTMLContent from "../components/html-content"
+import HTMLContent from '../components/html-content'
 
 
-library.add(fas);
+library.add(fas)
 
 const FrontpageColumns = ({ pageContext }) => {
+  console.log("Front page columns")
 
   const backgroundStyle = {
     backgroundImage: `url(${pageContext.node.backdropImage[0].localFile.childImageSharp.fluid.src})`
@@ -62,10 +63,9 @@ const FrontpageColumns = ({ pageContext }) => {
 }
 
 const FrontpageCards = ({ pageContext }) => {
+  console.log("Front page cards")
 
   const Card = (props) => {
-    console.log(JSON.stringify(props))
-
     return (
       <div className="frontpage-card" style={{ backgroundColor: props.backgroundColor, color: props.color }}>
         <div className="frontpage-card-icon">
@@ -102,6 +102,8 @@ const FrontpageCards = ({ pageContext }) => {
 }
 
 export default ({ pageContext }) => {
+
+  console.log("Home")
 
   return <Layout layoutContext={pageContext.layoutContext}>
     <div id="outer-container">
