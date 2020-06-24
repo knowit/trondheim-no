@@ -4,7 +4,7 @@ import LocalizationHelper from "../helpers/helpers"
 import { Link } from 'gatsby';
 import Img from "gatsby-image"
 import "../style/listing-page.css"
-import loadable from '@loadable/component'
+import EllipsisText from "react-ellipsis-text"
 
 
 const selectedStyle = { backgroundColor: 'grey', color: 'white' };
@@ -280,8 +280,6 @@ class ArticleView extends React.Component {
         if (thumbnail == null) {
             thumbnail = this.getDefaultThumbnail()
         }
-
-        const EllipsisText = loadable(() => import("react-ellipsis-text"))
 
         return (
             <div className="article-container">
