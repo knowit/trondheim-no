@@ -238,6 +238,7 @@ class ListingPageBuilder {
   }
 }
 
+
 class PathTreeBuilder {
 
   constructor(result, defaultLocale) {
@@ -355,28 +356,51 @@ class PathTreeBuilder {
     return result
   }
 
+
   generateMenuData() {
     // Generate menu data for every locale
+    var menuData = new Map();
 
-    this.dropMenuListingPages.forEach((value, key, map) => {
+    function createMenuData(title, slug, locale, path) {
 
-      const locale = key
-
-      if (!this.menuData.has(locale)) {
-        this.menuData.set(locale, new Array())
+      if (!menuData.has(locale)) {
+        menuData.set(locale, new Array())
       }
 
-      value.map(node => {
-
-        this.menuData.get(locale).push({
-          title: node.localTitle,
-          slug: node.slug,
-          locale: locale,
-          path: this.findPagePath(node._fl_meta_.fl_id, locale)
-        })
-
+      menuData.get(locale).push({
+        title: title,
+        slug: slug,
+        locale: locale,
+        path: path
       })
-    })
+
+    }
+
+    for (const treeNode of this.createNodeIterator()) {
+      treeNode.node.forEach((node, locale, map) => {
+        if (node.showInDropMenu || node.showOnDropMenu) {
+
+          if (treeNode.isListingPage) {
+            createMenuData(
+              node.localTitle,
+              node.slug,
+              locale,
+              this.findPagePath(node._fl_meta_.fl_id, locale)
+            )
+          }
+
+          else if (treeNode.isPage) {
+            createMenuData(
+              node.title,
+              node.slug,
+              locale,
+              this.findPagePath(node._fl_meta_.fl_id, locale)
+            )
+          }
+        }
+      })
+    }
+    return menuData
   }
 
   layoutContext(locale, localizedPaths) {
@@ -419,7 +443,7 @@ class PathTreeBuilder {
       const result = this.insertPageToTree(node)
     })
 
-    this.generateMenuData()
+    this.menuData = this.generateMenuData()
     return this.root
   }
 

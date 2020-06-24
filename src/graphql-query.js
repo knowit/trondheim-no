@@ -13,7 +13,7 @@ query {
     flamelink_locale
     title
     slug
-    showOnDropMenu
+    showInDropMenu
     content{
       content
       remoteImages {
