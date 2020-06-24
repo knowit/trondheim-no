@@ -432,15 +432,15 @@ class PathTreeBuilder {
     })
 
     this.result.data.allFlamelinkArticleNewContent.edges.map(({ node }) => {
-      const result = this.insertArticleToTree(node)
+      this.insertArticleToTree(node)
     })
 
     this.result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
-      const result = this.insertListingPageToTree(node)
+      this.insertListingPageToTree(node)
     })
 
     this.result.data.allFlamelinkPageContent.edges.map(({ node }) => {
-      const result = this.insertPageToTree(node)
+      this.insertPageToTree(node)
     })
 
     this.menuData = this.generateMenuData()
