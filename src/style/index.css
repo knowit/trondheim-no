@@ -18,6 +18,26 @@
   padding-bottom: 28%;
 }
 
+#header-image h3{
+  font-size: 18pt;
+  text-align: center;
+  letter-spacing: 4px;
+  font-weight: 100;
+  padding-top: 10px;
+  font-weight: 100;
+  color: white;
+  justify-content: center;
+}
+
+#header-image h1{
+font-size: 78pt;
+text-align: center;
+font-weight: 600;
+padding-top: 0px;
+color: white;
+  justify-content: center;
+}
+
 #header-subtext{
   display: flex;
   color: white;
@@ -30,45 +50,20 @@
   font-weight: 100;
 }
 
-h1, h3{
-  justify-content: center;
-  text-align: center;
-  color: white;
-}
-
-h3{
-    font-size: 18pt;
-    text-align: center;
-    letter-spacing: 4px;
-    font-weight: 100;
-    padding-top: 10px;
-    font-weight: 100;
-}
-
-h1{
-  font-size: 78pt;
-  text-align: center;
-  font-weight: 600;
-  padding-top: 0px;
-}
-
-h2 {
-    margin-top: 10px;
-    font-size: 28pt;
-  
-    letter-spacing: 2px;
-    font-weight: 100;
-    padding-top: 20px;
-}
-
-#content-container h2{
-  text-align: center;
-}
-
 #content-container{
   display: block;
   justify-content: center;
   align-items: center;
+}
+
+#content-container h2 {
+  margin-top: 10px;
+  font-size: 28pt;
+
+  letter-spacing: 2px;
+  font-weight: 100;
+  padding-top: 20px;
+  text-align: center;
 }
 
 #navigation-menu-container{
@@ -110,7 +105,7 @@ h2 {
   text-decoration: none;
 }
 
-h4{
+.navigation-box-container h4{
   text-align: center;
   font-weight: 500;
   font-size: 13pt;
@@ -256,4 +251,9 @@ h4{
   margin-top: 2em;
   display: flex;
   justify-content: center;
+}
+
+.pdiv{
+  margin-top: 8pt;
+  margin-bottom: 18pt;
 }

@@ -75,7 +75,7 @@ const Article = ({ pageContext }) => {
     }
     else {
       return (
-        <HTMLContent htmlContent={pageContext.node.content} />
+        <HTMLContent htmlContent={pageContext.node.content} resizeImg={false} />
       )
     }
   }

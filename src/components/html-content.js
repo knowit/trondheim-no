@@ -3,7 +3,7 @@ import React from "react"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 import Img from "gatsby-image"
 
-const HTMLContent = ({ htmlContent }) => {
+const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
 
   const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent.content,
     (props, index) => {
@@ -13,12 +13,19 @@ const HTMLContent = ({ htmlContent }) => {
 
       if (imageNode) {
 
-        const styles = {
-
+        var styles = {
           width: imageNode.childImageSharp.fluid.presentationWidth,
           height: imageNode.childImageSharp.fluid.presentationHeight,
-          margin: '1em 0'
+          margin: '1em 0',
+        }
 
+        if (resizeImg) {
+          styles.width = `${props.width}px`
+          styles.height = `${props.height}px`
+        }
+
+        if (dropShadow) {
+          styles.boxShadow = '0px 3px 5px lightgrey'
         }
 
         return <div key={index} className="article-content-image-container" style={styles}>
@@ -28,7 +35,6 @@ const HTMLContent = ({ htmlContent }) => {
             alt={props.alt}>
           </Img>
         </div>
-
       }
       else {
         return <div></div>

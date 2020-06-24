@@ -150,6 +150,25 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   }
 
+  function createGenericPage(treeNode) {
+    treeNode.node.forEach((value, key, map) => {
+      const node = value
+      const locale = key
+      const parent = treeNode.parent.node.get(locale)
+
+      createPage({
+        path: treeNode.getPath(locale),
+        component: path.resolve('./src/templates/page.js'),
+        context: {
+          localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
+          node: node,
+          layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
+          locale: locale,
+        }
+      })
+    })
+  }
+
 
   function createListingPage(listingPageBuilder) {
 
@@ -241,7 +260,6 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
 
-
   for (const treeNode of pathHelper.createNodeIterator()) {
 
     if (treeNode.isListingPage === true && treeNode.isFrontPage === false && treeNode.isArticle === false) {
@@ -262,6 +280,10 @@ exports.createPages = async ({ graphql, actions }) => {
       }
 
       createArticle(treeNode)
+    }
+
+    else if (treeNode.isPage === true) {
+      createGenericPage(treeNode)
     }
   }
 

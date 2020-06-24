@@ -109,6 +109,10 @@ class ReactDOMHelper {
     }
   }
 
+  static renderComplexHtml() {
+
+  }
+
   static createReactComponent(htmlNode, transformImg, index = 0) {
 
     if (htmlNode.isType('img')) {
@@ -116,11 +120,11 @@ class ReactDOMHelper {
     }
 
     else if (htmlNode.isType('text')) {
-      return React.createElement('p', { key: index }, htmlNode.props.text)
+      return htmlNode.props.text
     }
 
     else if (htmlNode.isType('br')) {
-      return React.createElement('p', { key: index }, '')
+      return React.createElement('br', { key: index }, null)
     }
 
     else {
@@ -136,8 +140,24 @@ class ReactDOMHelper {
         return child
       })
 
+      var attribs = { key: index }
+      if (htmlNode.props.href) {
+        attribs.href = htmlNode.props.href
+      }
+      if (htmlNode.type === 'p') {
+        attribs.className = 'pdiv'
+      }
+      if (htmlNode.props.width) {
+        attribs.width = htmlNode.props.width
+      }
+      if (htmlNode.props.height) {
+        attribs.width = htmlNode.props.height
+      }
+
       return React.createElement(
-        (htmlNode.type === 'p') ? 'div' : htmlNode.type, { key: index, }, children)
+        (htmlNode.type === 'p') ? 'div' : htmlNode.type,
+        attribs,
+        children)
     }
   }
 

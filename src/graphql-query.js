@@ -1,6 +1,40 @@
 
 const query = `
 query {
+  allFlamelinkPageContent{
+    edges{
+      node{
+        id
+    _fl_meta_ {
+      fl_id
+      schema
+    }
+    flamelink_id
+    flamelink_locale
+    title
+    slug
+    showOnDropMenu
+    content{
+      content
+      remoteImages {
+        url
+        childImageSharp {
+        fluid (quality: 90){
+            base64
+            aspectRatio 
+            src 
+            srcSet 
+            sizes
+            presentationWidth
+            presentationHeight
+            originalImg
+          } 
+        }
+      }
+    }
+      }
+    }
+  }
   allFlamelinkListingPageContent {
     edges {
       node {

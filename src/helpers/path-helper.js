@@ -27,6 +27,7 @@ class TreeNode {
     this.isListingPage = false;
     this.isArticle = false;
     this.isFrontPage = false;
+    this.isPage = false;
   }
 
   toString() {
@@ -107,6 +108,9 @@ class TreeNode {
     }
     else if (schema == "frontPage") {
       this.isFrontPage = true
+    }
+    else if (schema == "page") {
+      this.isPage = true
     }
     this.node.set(node.flamelink_locale, node)
   }
@@ -342,6 +346,15 @@ class PathTreeBuilder {
     return result
   }
 
+  insertPageToTree(node) {
+    const id = node._fl_meta_.fl_id
+    const locale = node.flamelink_locale
+    const slug = node.slug
+    var result = this.root.addChildSlug(id, locale, slug)
+    result.setGraphQLNode(node)
+    return result
+  }
+
   generateMenuData() {
     // Generate menu data for every locale
 
@@ -396,13 +409,15 @@ class PathTreeBuilder {
 
     this.result.data.allFlamelinkArticleNewContent.edges.map(({ node }) => {
       const result = this.insertArticleToTree(node)
-    }
-    )
+    })
 
     this.result.data.allFlamelinkListingPageContent.edges.map(({ node }) => {
       const result = this.insertListingPageToTree(node)
-    }
-    )
+    })
+
+    this.result.data.allFlamelinkPageContent.edges.map(({ node }) => {
+      const result = this.insertPageToTree(node)
+    })
 
     this.generateMenuData()
     return this.root
