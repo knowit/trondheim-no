@@ -248,7 +248,18 @@ class PathTreeBuilder {
     this.frontPageListingPages = new Map()
     this.dropMenuListingPages = new Map()
     this.menuData = new Map()
+    this.navbarData = this.generateNavbarData()
   }
+
+  generateNavbarData() {
+    var nData = new Map()
+    this.result.data.allFlamelinkNavbarContent.edges.map(node => node.node).map(node => {
+      const locale = node.flamelink_locale
+      nData.set(locale, node)
+    })
+    return nData
+  }
+
 
   createListingPageBuilder(treeNode) {
     return new ListingPageBuilder(treeNode)
@@ -404,6 +415,7 @@ class PathTreeBuilder {
   }
 
   layoutContext(locale, localizedPaths) {
+    console.log(this.navbarData)
     return {
       menuData: this.menuData.get(locale),
       locale: locale,
@@ -411,12 +423,16 @@ class PathTreeBuilder {
       defaultThumbnails: this.result.data.allFlamelinkDefaultThumbnailsContent.edges[0].node.imageDeck,
       logoImage: this.result.data.allFlamelinkFrontPageContent.edges[0].node.logoImage[0],
       localization: this.result.data.allFlamelinkLayoutLocalizationContent.edges[0].node.translations,
-      homePath: (locale === 'no') ? '/' : '/en/'
+      homePath: (locale === 'no') ? '/' : '/en/',
+      navbar: this.navbarData.get(locale)
     }
   }
 
   build() {
     // Generate node tree
+
+    this.generateNavbarData();
+
     this.result.data.allFlamelinkFrontPageContent.edges.map(({ node }) => {
       const id = node._fl_meta_.fl_id
       const locale = node.flamelink_locale

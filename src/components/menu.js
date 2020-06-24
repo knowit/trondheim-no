@@ -19,7 +19,7 @@ export class BurgerMenu extends React.Component {
   }
 
   showMenu(event) {
-    event.preventDefault();
+    //event.preventDefault();
 
     this.setState({ showMenu: true }, () => {
       document.addEventListener('click', this.closeMenu);
@@ -76,6 +76,17 @@ export class BurgerMenu extends React.Component {
                       to={node.path}>
                       {node.title}
                     </Link>
+                  )
+                })}
+
+                {this.props.layoutContext.navbar.extraMenuOptions.map(function (node, key) {
+                  return (
+                    <a
+                      key={key}
+                      className="drop-menu-item-container"
+                      href={node.redirectUrl} target="_blank">
+                      {node.title}
+                    </a>
                   )
                 })}
 

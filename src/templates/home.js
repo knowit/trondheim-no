@@ -1,5 +1,5 @@
 import React from "react"
-import "../style/index.css"
+import "../style/home.css"
 import Layout from "../layouts/layout"
 import { Link } from "gatsby"
 import BackgroundImage from 'gatsby-background-image'

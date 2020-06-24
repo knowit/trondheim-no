@@ -1,6 +1,36 @@
 
 const query = `
 query {
+  allFlamelinkNavbarContent{
+    edges{
+      node{
+        id
+        flamelink_locale
+        navbarText
+        extraMenuOptions{
+          title
+          redirectUrl
+        }
+        logo {
+          localFile {
+            name
+            childImageSharp {
+              fluid(quality: 90) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   allFlamelinkPageContent{
     edges{
       node{
