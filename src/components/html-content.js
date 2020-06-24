@@ -7,9 +7,9 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
 
   const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent.content,
     (props, index) => {
-      const imageNode = htmlContent.remoteImages.find(n => {
+      const imageNode = htmlContent.remoteImages ? htmlContent.remoteImages.find(n => {
         return n.url === props.src
-      })
+      }) : null
 
       if (imageNode) {
 
