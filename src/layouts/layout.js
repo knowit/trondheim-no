@@ -7,7 +7,6 @@ import LocalizationHelper from "../helpers/helpers"
 import { BurgerMenu } from "../components/menu.js"
 
 const Footer = ({ layoutContext }) => {
-  console.log("Footer")
   const search = LocalizationHelper.getLocalWord(layoutContext.localization, 'search', layoutContext.locale)
   return (
     <footer id="footer-container">
@@ -22,8 +21,6 @@ const Footer = ({ layoutContext }) => {
 }
 
 const Navigation = ({ layoutContext }) => {
-  console.log("Navigation")
-
 
   return <div className="navigation-container">
 
@@ -44,7 +41,6 @@ const Navigation = ({ layoutContext }) => {
 }
 
 export default ({ children, layoutContext }) => {
-  console.log("Layout")
   return (
     <div id="layout-container">
       <Helmet

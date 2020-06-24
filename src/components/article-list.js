@@ -5,6 +5,7 @@ import { Link } from 'gatsby';
 import Img from "gatsby-image"
 import "../style/listing-page.css"
 import EllipsisText from "react-ellipsis-text"
+import ReactDOMHelper from '../helpers/react-dom-helper';
 
 
 const selectedStyle = { backgroundColor: 'grey', color: 'white' };
@@ -40,7 +41,6 @@ export default class SortableArticleView extends React.Component {
     }
 
     render() {
-        console.log("Article list")
         return (
             <div className="article-list-container">
                 <TagFilter
@@ -248,9 +248,7 @@ class ArticleView extends React.Component {
             return ""
         }
         else {
-            var el = document.createElement('html');
-            el.innerHTML = article.content.content
-            return el.textContent
+            return ReactDOMHelper.getTextContentFromHtml(article.content.content)
         }
     }
 

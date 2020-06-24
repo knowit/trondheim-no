@@ -51,6 +51,35 @@ class HtmlNode {
 
 class ReactDOMHelper {
 
+  static getTextContentFromHtml(htmlInput) {
+
+    function getText(htmlNode) {
+      var text = ""
+      if (htmlNode.isType("text")) {
+        text += htmlNode.props.text ? htmlNode.props.text : ''
+      }
+
+      htmlNode.getChildren().map(childNode => {
+        text += getText(childNode)
+      })
+
+      return text
+    }
+
+    const root = new HtmlNode('div')
+    const element = this.parseToReact(htmlInput)
+
+
+    React.Children.map(element, (child) => {
+      const childNode = this.buildHtmlTree(child)
+      if (childNode) {
+        root.addChild(childNode)
+      }
+    })
+
+    return getText(root)
+  }
+
 
   static buildHtmlTree(element, level = 1) {
     if (element.props) {

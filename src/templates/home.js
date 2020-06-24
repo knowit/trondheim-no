@@ -13,7 +13,6 @@ import HTMLContent from '../components/html-content'
 library.add(fas)
 
 const FrontpageColumns = ({ pageContext }) => {
-  console.log("Front page columns")
 
   const backgroundStyle = {
     backgroundImage: `url(${pageContext.node.backdropImage[0].localFile.childImageSharp.fluid.src})`
@@ -63,7 +62,6 @@ const FrontpageColumns = ({ pageContext }) => {
 }
 
 const FrontpageCards = ({ pageContext }) => {
-  console.log("Front page cards")
 
   const Card = (props) => {
     return (
@@ -102,8 +100,6 @@ const FrontpageCards = ({ pageContext }) => {
 }
 
 export default ({ pageContext }) => {
-
-  console.log("Home")
 
   return <Layout layoutContext={pageContext.layoutContext}>
     <div id="outer-container">

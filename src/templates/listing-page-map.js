@@ -47,7 +47,6 @@ class ListingPageMap extends React.Component {
   }
 
   render() {
-    console.log("Listing page map")
 
     var items = []
     var markers = []

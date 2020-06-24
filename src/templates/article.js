@@ -10,7 +10,6 @@ import Map from "../components/map.js"
 
 
 function ContactInfo(props) {
-  console.log("Contact info")
 
   if (!props.node.contactInfo && !props.node.address.address) return "";
 
@@ -49,7 +48,6 @@ function ContactInfo(props) {
 }
 
 function OpeningHours(props) {
-  console.log("Opening hours")
   const elements = [];
   var index = 0
   var locale = props.locale;
@@ -66,7 +64,6 @@ function OpeningHours(props) {
 
 
 const Article = ({ pageContext }) => {
-  console.log("Article")
 
   const location = GoogleMapsUrlHelper.getLocation(pageContext.node)
   const address = GoogleMapsUrlHelper.getAddress(pageContext.node)
@@ -84,7 +81,6 @@ const Article = ({ pageContext }) => {
   }
 
   const OfflineMap = () => {
-    console.log("Offline map")
     const imageNode = pageContext.node.latLong.googleMapsStaticImage
 
     if (imageNode != null) {

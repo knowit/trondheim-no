@@ -6,7 +6,6 @@ import { Link } from "gatsby"
 import SortableArticleView from "../components/article-list"
 
 const ListingPage = ({ pageContext }) => {
-  console.log("Listing page")
   return (
     <Layout layoutContext={pageContext.layoutContext}>
       <div id="outer-container">
