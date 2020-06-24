@@ -5,6 +5,8 @@ import Img from "gatsby-image"
 
 const HTMLContent = ({ htmlContent }) => {
 
+  console.log("HTML Content")
+
   const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent.content,
     (props, index) => {
       const imageNode = htmlContent.remoteImages.find(n => {
