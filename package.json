@@ -14,6 +14,7 @@
     "@react-google-maps/api": "^1.9.0",
     "@types/googlemaps": "^3.39.6",
     "@types/markerclustererplus": "^2.1.33",
+    "acorn": "^6.4.1",
     "core-js": "^3.6.5",
     "dotenv": "^8.2.0",
     "gatsby": "^2.23.3",
@@ -54,7 +55,8 @@
     "workbox-cacheable-response": "^5.1.2",
     "workbox-precaching": "^5.1.2",
     "workbox-routing": "^5.1.2",
-    "workbox-strategies": "^5.1.2"
+    "workbox-strategies": "^5.1.2",
+    "yup": "^0.29.1"
   },
   "devDependencies": {},
   "keywords": [
