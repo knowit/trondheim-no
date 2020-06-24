@@ -23,8 +23,6 @@ function extract_image_urls(htmlBody) {
   return result
 }
 
-
-
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
@@ -38,6 +36,19 @@ exports.createSchemaCustomization = ({ actions }) => {
 
     type FlamelinkArticleNewContentFieldContactInfo implements Node {
       emailAddress: String
+    }
+
+    type FlamelinkNavbarContent implements Node {
+      extraMenuOptions: FlamelinkNavbarContentFieldExtraMenuOptions @menuOptions
+    }
+
+    type FlamelinkNavbarContentFieldExtraMenuOptions implements Node{
+      childFlamelinkContentFieldExtraMenuOptions: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
+    }
+
+    type FlamelinkNavbarContentFieldExtraMenuOptionsItem implements Node {
+      title: String!
+      redirectUrl: String!
     }
 
   `

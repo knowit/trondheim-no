@@ -27,11 +27,19 @@ const FrontpageColumns = ({ pageContext }) => {
             return (
               <div key={key} className="frontpage-column-item-container">
                 <div className="frontpage-column-image-container"><Img className="frontpage-column-image"
-                  fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
+                  fluid={node.icon[0].localFile.childImageSharp.fluid}
                   alt="thumbnail" /></div>
                 <div className="frontpage-column-info-container">
-                  <h2><Link className="frontpage-column-title" to={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>{node.navigationTitle.toUpperCase()}</Link></h2>
-                  <h4>{node.navigationSubtitle}</h4>
+                  <h2>
+                    <Link className="frontpage-column-title" to={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>
+                      {node.navigationTitle.toUpperCase()}
+                    </Link>
+                  </h2>
+                  <h4>
+                    <Link className="frontpage-column-title" to={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>
+                      {node.navigationSubtitle}
+                    </Link>
+                  </h4>
                 </div>
               </div>
             )

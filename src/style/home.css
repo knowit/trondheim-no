@@ -188,7 +188,7 @@ color: white;
   letter-spacing: 0;
 }
 
-.frontpage-column-info-container h4{
+.frontpage-column-info-container h4 a{
   margin: auto;
   padding: 0 2em;
   text-decoration: underline;
