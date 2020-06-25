@@ -109,10 +109,6 @@ class ReactDOMHelper {
     }
   }
 
-  static renderComplexHtml() {
-
-  }
-
   static createReactComponent(htmlNode, transformImg, index = 0) {
 
     if (htmlNode.isType('img')) {
@@ -153,6 +149,9 @@ class ReactDOMHelper {
       if (htmlNode.props.height) {
         attribs.width = htmlNode.props.height
       }
+      if (htmlNode.props.id) {
+        attribs.id = htmlNode.props.id
+      }
 
       return React.createElement(
         (htmlNode.type === 'p') ? 'div' : htmlNode.type,
@@ -165,6 +164,7 @@ class ReactDOMHelper {
   static buildReactComponent(htmlInput, transformImg) {
 
     const root = new HtmlNode('div')
+    root.props = { id: 'html-content-container' }
     const element = this.parseToReact(htmlInput)
 
 

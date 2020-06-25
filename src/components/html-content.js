@@ -13,20 +13,22 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
 
       if (imageNode) {
 
-        var styles = {
-          width: imageNode.childImageSharp.fluid.presentationWidth,
-          height: imageNode.childImageSharp.fluid.presentationHeight,
-          margin: '1em 0',
+        var styles = {}
+
+        if (props.style) {
+          styles = props.style
         }
 
-        if (resizeImg) {
-          styles.width = `${props.width}px`
-          styles.height = `${props.height}px`
+        if (!resizeImg) {
+          styles.width = imageNode.childImageSharp.fluid.presentationWidth
+          styles.height = imageNode.childImageSharp.fluid.presentationHeight
         }
+
 
         if (dropShadow) {
           styles.boxShadow = '0px 3px 5px lightgrey'
         }
+        styles.margin = '1em 0'
 
         return <div key={index} className="article-content-image-container" style={styles}>
           <Img
