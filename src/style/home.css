@@ -138,9 +138,9 @@ color: white;
   display: block;
   color: white;
   height: auto;
-  min-width: 300px;
-  width: 20%;
-  padding: 3em 0;
+  min-width: 200px;
+  width: 250px;
+  padding: 3em 2em;
   border-left: 1px solid white;
 }
 .frontpage-column-item-container:first-child{
@@ -190,11 +190,16 @@ color: white;
 
 .frontpage-column-info-container h4 a{
   margin: auto;
-  padding: 0 2em;
   text-decoration: underline;
   font-weight: 600;
   letter-spacing: 0;
+  color: white;
 }
+
+.frontpage-column-link:hover{
+  text-decoration: none;
+}
+
 
 #frontpage-cards-container{
   display: flex;

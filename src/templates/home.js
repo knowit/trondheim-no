@@ -14,35 +14,47 @@ library.add(fas)
 
 const FrontpageColumns = ({ pageContext }) => {
 
+  const Column = (props) => {
+    return (<div className="frontpage-column-item-container">
+      <div className="frontpage-column-image-container">
+        <Link className="frontpage-column-link" to={props.path}>
+          <Img className="frontpage-column-image"
+            fluid={props.icon}
+            alt="thumbnail" />
+        </Link>
+      </div>
+      <div className="frontpage-column-info-container">
+        <h2>
+          <Link className="frontpage-column-link" to={props.path}>
+            {props.title}
+          </Link>
+        </h2>
+        <h4>
+          <Link className="frontpage-column-link" to={props.path}>
+            {props.subTitle}
+          </Link>
+        </h4>
+      </div>
+    </div>)
+  }
+
   const backgroundStyle = {
     backgroundImage: `url(${pageContext.node.backdropImage[0].localFile.childImageSharp.fluid.src})`
 
   }
 
   return (
+
     <div id="frontpage-columns-container" style={backgroundStyle}>
       <div id="frontpage-columns-overlay">
         {pageContext.listingPages.map((node, key) => {
           if (node.showOnFrontpageColumns) {
-            return (
-              <div key={key} className="frontpage-column-item-container">
-                <div className="frontpage-column-image-container"><Img className="frontpage-column-image"
-                  fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
-                  alt="thumbnail" /></div>
-                <div className="frontpage-column-info-container">
-                  <h2>
-                    <Link className="frontpage-column-title" to={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>
-                      {node.navigationTitle.toUpperCase()}
-                    </Link>
-                  </h2>
-                  <h4>
-                    <Link className="frontpage-column-title" to={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>
-                      {node.navigationSubtitle}
-                    </Link>
-                  </h4>
-                </div>
-              </div>
-            )
+            return (<Column
+              key={key}
+              path={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}
+              icon={node.thumbnail[0].localFile.childImageSharp.fluid}
+              title={node.navigationTitle.toUpperCase()}
+              subTitle={node.navigationSubtitle} />)
           }
           else return null
         })}
@@ -50,20 +62,15 @@ const FrontpageColumns = ({ pageContext }) => {
         {pageContext.columnContent.map(node => {
           if (node.icon) {
             return (
-              <div key={node.flamelink_id} className="frontpage-column-item-container">
-                <div className="frontpage-column-image-container"><Img className="frontpage-column-image"
-                  fluid={node.icon[0].localFile.childImageSharp.fluid}
-                  alt="thumbnail" /></div>
-                <div className="frontpage-column-info-container">
-                  <h2><Link className="frontpage-column-title" to={node.redirectUrl}>{node.title.toUpperCase()}</Link></h2>
-                  <h4>{node.subTitle}</h4>
-                </div>
-              </div>
-            )
+              <Column
+                key={node.flamelink_id}
+                path={node.redirectUrl}
+                icon={node.icon[0].localFile.childImageSharp.fluid}
+                title={node.title.toUpperCase()}
+                subTitle={node.subTitle} />)
           }
           else return null
         })}
-
       </div>
     </div>
   )
