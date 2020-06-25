@@ -146,7 +146,7 @@ color: white;
 .frontpage-column-item-container:first-child{
   border-left: 0;
 }
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 800px) {
   .frontpage-column-item-container {
     border-left: 0;
     border-bottom: 1px solid #007de8;
