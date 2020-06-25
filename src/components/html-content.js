@@ -13,6 +13,8 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
 
       if (imageNode) {
 
+        console.log(JSON.stringify(imageNode))
+
         var styles = {}
 
         if (props.style) {
