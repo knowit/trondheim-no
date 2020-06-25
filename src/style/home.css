@@ -216,24 +216,24 @@ color: white;
   height: auto;
   min-height: 100px;
   margin: 10px 10px;
-  padding: 1em 2em;
+  padding: 2em 1.5em;
   overflow: hidden;
 }
 .frontpage-card-content{
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 1em 0.5em;
+  padding: 0 0.5em;
 }
 .frontpage-card-icon{
   display: block;
   margin: 0;
-  padding: 1.25em 0;
+  padding: 0;
 }
-.frontpage-card-title{
+#content-container h2.frontpage-card-title{
   display: flex;
-  font-size: 33px;
   font-weight: 600;
+  font-size: 32px;
   padding: 0;
   margin: 0;
   letter-spacing: 0;
