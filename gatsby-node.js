@@ -7,6 +7,8 @@ const { GoogleMapsUrlHelper } = require(`./src/helpers/url-helper`)
 const { createRemoteFileNode } = require("gatsby-source-filesystem")
 const { query } = require('./src/graphql-query')
 
+let layoutContexts = new Map()
+
 
 function extract_image_urls(htmlBody) {
   var result = []
@@ -110,16 +112,51 @@ exports.onCreateNode = async ({
 
 
 
+exports.onCreatePage = async ({ page, actions }) => {
+  const { createPage, deletePage } = actions
+  // Check if the page is a localized 404
+  if (page.path.match(/^\/404\/$/)) {
+    const oldPage = { ...page }
+    const locale = 'no'
+    // Recreate the modified page
+    deletePage(oldPage)
+    console.log(`\nCreated 404 ${locale}\n`)
+    var context = page.context
+    context.layoutContext = layoutContexts.get(locale)
+    context.locale = locale
+    createPage({
+      ...page,
+      context: context,
+      location: page.location,
+    })
+  }
+  else if (page.path.match(/^\/[a-z]{2}\/404\/$/)) {
+    const oldPage = { ...page }
+    const langCode = page.path.split(`/`)[1]
+    const locale = (langCode == 'en') ? 'en-US' : langCode
+    page.matchPath = `/${langCode}/*`
+    // Recreate the modified page
+    deletePage(oldPage)
+    console.log(`\nCreated 404 ${locale}\n`)
+    var context = page.context
+    context.layoutContext = layoutContexts.get(locale)
+    context.locale = locale
+    createPage({
+      ...page,
+      context: context,
+    })
+  }
+
+}
 
 
 
 
-exports.createPages = async ({ graphql, actions }) => {
+exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
   // Retrieve all data to build sites
   const result = await graphql(query)
-
 
   // Handle errors
   if (result.errors) {
@@ -127,11 +164,13 @@ exports.createPages = async ({ graphql, actions }) => {
     return
   }
 
+
   let pathHelper = new PathTreeBuilder(result, defaultLocale)
   const root = pathHelper.build()
   const listingPages = new Map()
-
-
+  console.log(`Created layoutContexts`)
+  layoutContexts.set('no', pathHelper.layoutContext('no', root.getLocalizedPaths()))
+  layoutContexts.set('en-US', pathHelper.layoutContext('en-US', root.getLocalizedPaths()))
 
   function createArticle(treeNode) {
 
@@ -299,5 +338,4 @@ exports.createPages = async ({ graphql, actions }) => {
   )
 
   createFrontPage(root, pathHelper.frontPageListingPages)
-
 }
