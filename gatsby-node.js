@@ -39,11 +39,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     }
 
     type FlamelinkNavbarContent implements Node {
-      extraMenuOptions: FlamelinkNavbarContentFieldExtraMenuOptions @menuOptions
-    }
-
-    type FlamelinkNavbarContentFieldExtraMenuOptions implements Node{
-      childFlamelinkContentFieldExtraMenuOptions: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
+      childrenFlamelinkNavbarContentFieldExtraMenuOptionsItem: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
     }
 
     type FlamelinkNavbarContentFieldExtraMenuOptionsItem implements Node {

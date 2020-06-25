@@ -415,7 +415,6 @@ class PathTreeBuilder {
   }
 
   layoutContext(locale, localizedPaths) {
-    console.log(this.navbarData)
     return {
       menuData: this.menuData.get(locale),
       locale: locale,

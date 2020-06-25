@@ -42,9 +42,25 @@ export class BurgerMenu extends React.Component {
   }
 
 
-
-
   render() {
+
+    const ExtraMenuOptions = () => {
+      if (this.props.layoutContext.navbar.childrenFlamelinkNavbarContentFieldExtraMenuOptionsItem) {
+        return (<span>
+          {this.props.layoutContext.navbar.childrenFlamelinkNavbarContentFieldExtraMenuOptionsItem.map(function (node, key) {
+            return (
+              <a
+                key={key}
+                className="drop-menu-item-container"
+                href={node.redirectUrl} target="_blank" rel="noreferrer">
+                {node.title}
+              </a>
+            )
+          })}
+        </span>)
+      }
+      else return null
+    }
 
     return (
       <div role="menu" tabIndex={0} onKeyPress={this.toggleMenu.bind(this)} className="menu-container" onClick={this.showMenu}>
@@ -79,16 +95,7 @@ export class BurgerMenu extends React.Component {
                   )
                 })}
 
-                {this.props.layoutContext.navbar.extraMenuOptions.map(function (node, key) {
-                  return (
-                    <a
-                      key={key}
-                      className="drop-menu-item-container"
-                      href={node.redirectUrl} target="_blank">
-                      {node.title}
-                    </a>
-                  )
-                })}
+                <ExtraMenuOptions />
 
                 <Link
                   className="drop-menu-item-container"

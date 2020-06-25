@@ -27,7 +27,7 @@ const FrontpageColumns = ({ pageContext }) => {
             return (
               <div key={key} className="frontpage-column-item-container">
                 <div className="frontpage-column-image-container"><Img className="frontpage-column-image"
-                  fluid={node.icon[0].localFile.childImageSharp.fluid}
+                  fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
                   alt="thumbnail" /></div>
                 <div className="frontpage-column-info-container">
                   <h2>

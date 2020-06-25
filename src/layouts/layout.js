@@ -21,7 +21,6 @@ const Footer = ({ layoutContext }) => {
 }
 
 const Navigation = ({ layoutContext }) => {
-
   return <div className="navigation-container">
 
     <BurgerMenu layoutContext={layoutContext}></BurgerMenu>
