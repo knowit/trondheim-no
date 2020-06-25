@@ -14,10 +14,9 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
       if (imageNode) {
         var styles = {}
 
-        /*
         if (props.style) {
           styles = props.style
-        }*/
+        }
 
         if (!resizeImg) {
           styles.width = imageNode.childImageSharp.fluid.presentationWidth

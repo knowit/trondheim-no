@@ -11,7 +11,7 @@ const Page = ({ pageContext }) => {
     }
     else {
       return (
-        <HTMLContent htmlContent={pageContext.node.content} resizeImg={false} />
+        <HTMLContent htmlContent={pageContext.node.content} resizeImg={true} dropShadow={true} />
       )
     }
   }
