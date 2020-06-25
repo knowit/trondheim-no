@@ -4,11 +4,25 @@ import Layout from "../layouts/layout"
 import "../style/page.css"
 
 const Page = ({ pageContext }) => {
+
+  const ParsedHTML = () => {
+    if (!pageContext.node.content) {
+      return null
+    }
+    else {
+      return (
+        <HTMLContent htmlContent={pageContext.node.content} resizeImg={false} />
+      )
+    }
+  }
+
   return (<Layout layoutContext={pageContext.layoutContext}>
     <div id="outer-container">
       <div id="inner-container">
         <h1 id="page-title">{pageContext.node.title}</h1>
-        <div id="page-content-container"><HTMLContent htmlContent={pageContext.node.content} resizeImg={true} dropShadow={true} /></div>
+        <div id="page-content-container">
+          <ParsedHTML />
+        </div>
       </div>
     </div>
   </Layout>)

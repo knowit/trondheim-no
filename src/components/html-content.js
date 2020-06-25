@@ -12,20 +12,17 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
       }) : null
 
       if (imageNode) {
-
-        console.log(JSON.stringify(imageNode))
-
         var styles = {}
 
+        /*
         if (props.style) {
           styles = props.style
-        }
+        }*/
 
         if (!resizeImg) {
           styles.width = imageNode.childImageSharp.fluid.presentationWidth
           styles.height = imageNode.childImageSharp.fluid.presentationHeight
         }
-
 
         if (dropShadow) {
           styles.boxShadow = '0px 3px 5px lightgrey'
@@ -41,7 +38,7 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
         </div>
       }
       else {
-        return <div></div>
+        return null
       }
     })
 

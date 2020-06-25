@@ -71,7 +71,7 @@ const Article = ({ pageContext }) => {
 
   const ParsedHTML = () => {
     if (!pageContext.node.content) {
-      return (<div></div>)
+      return null
     }
     else {
       return (
