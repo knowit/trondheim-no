@@ -19,8 +19,14 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
         }
 
         if (!resizeImg) {
-          styles.width = imageNode.childImageSharp.fluid.presentationWidth
-          styles.height = imageNode.childImageSharp.fluid.presentationHeight
+          styles.maxWidth = imageNode.childImageSharp.fluid.presentationWidth
+          styles.maxHeight = imageNode.childImageSharp.fluid.presentationHeight
+        }
+        else {
+          styles.maxWidth = styles.width
+          styles.maxHeight = styles.height
+          styles.width = 'auto'
+          styles.height = 'auto'
         }
 
         if (dropShadow) {
