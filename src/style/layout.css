@@ -41,8 +41,10 @@
 @media only screen and (max-width: 600px) {
   #inner-container{
     margin: 0;
+    padding: 20px 10px;
   }
 }
+
 
 #footer-container{
   position: relative;
