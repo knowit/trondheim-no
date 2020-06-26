@@ -17,7 +17,7 @@
   text-align: center;
   letter-spacing: 4px;
   font-weight: 100;
-  padding-top: 10px;
+  padding-top: 1.5em;
   font-weight: 100;
   color: white;
   justify-content: center;
@@ -30,6 +30,38 @@ font-weight: 600;
 padding-top: 0px;
 color: white;
   justify-content: center;
+}
+
+@media only screen and (max-width: 600px) {
+  #header-image h3{
+    font-size: 16pt;
+  }
+  #header-image h1{
+    font-size: 60pt;
+  }
+}
+@media only screen and (max-width: 500px) {
+  #header-image h3{
+    font-size: 14pt;
+  }
+  #header-image h1{
+    font-size: 50pt;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  #header-image h1{
+    font-size: 42pt;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  #header-image h3{
+    font-size: 12pt;
+  }
+  #header-image h1{
+    font-size: 36pt;
+  }
 }
 
 #header-subtext{

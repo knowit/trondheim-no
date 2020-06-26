@@ -159,6 +159,12 @@
   height: 100%;
 }
 
+@media only screen and (max-width: 400px) {
+  .logo-text{
+    display: none;
+  }
+}
+
 .menu-container{
   position: relative;
   display: block;
