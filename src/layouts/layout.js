@@ -23,19 +23,23 @@ const Footer = ({ layoutContext }) => {
 const Navigation = ({ layoutContext }) => {
   return <div className="navigation-container">
 
-    <BurgerMenu layoutContext={layoutContext}></BurgerMenu>
+    <div className="navigation-content-container">
+      <BurgerMenu layoutContext={layoutContext}></BurgerMenu>
 
-    <div className="logo-container">
-      <Link id="trondheimno-link" to={(layoutContext.locale === 'no') ? '/' : `/${layoutContext.locale.split('-')[0]}/`}>
+      <div className="logo-container">
+        <Link id="trondheimno-link" to={(layoutContext.locale === 'no') ? '/' : `/${layoutContext.locale.split('-')[0]}/`}>
 
-        <div className="logo-text">{layoutContext.navbar.navbarText}</div>
+          <div className="logo-text">{layoutContext.navbar.navbarText}</div>
 
-        <div className="logo">
-          <Img fluid={layoutContext.navbar.logo[0].localFile.childImageSharp.fluid} alt="Trondheim logo" />
-        </div>
+          <div className="logo">
+            <Img fluid={layoutContext.navbar.logo[0].localFile.childImageSharp.fluid} alt="Trondheim logo" />
+          </div>
 
-      </Link>
+        </Link>
+      </div>
     </div>
+
+
   </div>
 }
 
