@@ -1,0 +1,18 @@
+#not-found-content-container{
+  width: 100%;
+  padding: 2em;
+}
+.not-found-container{
+  margin-bottom: 50px;
+}
+
+.not-found-container h1{
+  margin-bottom: 20px;
+}
+.not-found-container p{
+  margin-bottom: 30px;
+}
+
+.looking-for-container h2{
+  margin-bottom: 16px;
+}

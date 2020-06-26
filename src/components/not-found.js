@@ -2,7 +2,8 @@ import React from "react"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import { Link } from 'gatsby';
-import { locale } from "core-js";
+import "../style/404.css"
+import ReactCountryFlag from "react-country-flag"
 
 const NotFound = ({ pageContext, location }) => {
 
@@ -33,15 +34,25 @@ const NotFound = ({ pageContext, location }) => {
     return (<Link to={url}>{text}</Link>)
   }
 
+  const flag = (<ReactCountryFlag
+    className="looking-for-lang-flag"
+    countryCode={(pageContext.layoutContext.locale !== 'no') ? 'NO' : 'GB'}
+    svg
+    style={{
+      width: '2em',
+      height: '1em',
+    }}
+    title="flag" />)
+
   const LookingFor = () => {
     const headerText = LocalizationHelper.getLocalWord(pageContext.layoutContext.localization, 'lookingForLang', pageContext.locale)
     const subText = LocalizationHelper.getLocalWord(pageContext.layoutContext.localization, 'navigateLang', pageContext.locale)
     const url = (pageContext.locale === 'no') ? '/en' : '/'
     return (
-      <span>
+      <div className="looking-for-container">
         <h2>{headerText}</h2>
-        <Link to={url}>{subText} {(pageContext.locale === 'no') ? 'www.trondheim.no/en' : 'www.trondheim.no'}</Link>
-      </span>
+        <Link to={url}>{flag}{subText} {(pageContext.locale === 'no') ? 'www.trondheim.no/en' : 'www.trondheim.no'}</Link>
+      </div>
     )
   }
 
@@ -50,10 +61,17 @@ const NotFound = ({ pageContext, location }) => {
     <Layout layoutContext={pageContext.layoutContext}>
       <div id="outer-container">
         <div id="inner-container">
-          <h1>{LocalizationHelper.getLocalWord(pageContext.layoutContext.localization, 'notFoundHeader', pageContext.locale)}</h1>
-          <NotFoundText />
-          <GoHome />
-          <LookingFor />
+
+          <div id="not-found-content-container">
+            <div className="not-found-container">
+              <h1>{LocalizationHelper.getLocalWord(pageContext.layoutContext.localization, 'notFoundHeader', pageContext.locale)}</h1>
+              <NotFoundText />
+              <GoHome />
+            </div>
+
+            <LookingFor />
+          </div>
+
         </div>
       </div>
     </Layout>
