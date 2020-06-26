@@ -34,15 +34,16 @@ const NotFound = ({ pageContext, location }) => {
     return (<Link to={url}>{text}</Link>)
   }
 
-  const flag = (<ReactCountryFlag
-    className="looking-for-lang-flag"
-    countryCode={(pageContext.layoutContext.locale !== 'no') ? 'NO' : 'GB'}
-    svg
-    style={{
-      width: '2em',
-      height: '1em',
-    }}
-    title="flag" />)
+  const flag = () => (
+    <ReactCountryFlag className="looking-for-lang-flag"
+      countryCode={(pageContext.layoutContext.locale !== 'no') ? 'NO' : 'GB'}
+      svg
+      style={{
+        width: '2em',
+        height: '1em',
+      }}
+      title="flag" />
+  )
 
   const LookingFor = () => {
     const headerText = LocalizationHelper.getLocalWord(pageContext.layoutContext.localization, 'lookingForLang', pageContext.locale)
@@ -51,7 +52,7 @@ const NotFound = ({ pageContext, location }) => {
     return (
       <div className="looking-for-container">
         <h2>{headerText}</h2>
-        <Link to={url}>{flag}{subText} {(pageContext.locale === 'no') ? 'www.trondheim.no/en' : 'www.trondheim.no'}</Link>
+        <Link to={url}>{flag()}{subText} {(pageContext.locale === 'no') ? 'www.trondheim.no/en' : 'www.trondheim.no'}</Link>
       </div>
     )
   }
