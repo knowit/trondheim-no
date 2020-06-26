@@ -112,13 +112,34 @@ color: white;
   box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
 }
 
+@media only screen and (max-width: 1200px) {
+  #navigation-menu-container{
+    padding: 0 1em;
+  }
+}
+@media only screen and (max-width: 850px) {
+  #navigation-menu-container{
+    padding: 0;
+  }
+}
+@media only screen and (max-width: 800px) {
+  #navigation-menu-container{
+    padding: 0 1em;
+  }
+}
+@media only screen and (max-width: 600px) {
+  #navigation-menu-container{
+    padding: 0;
+  }
+}
+
 
 .navigation-box-thumbnail{
   width: 100%;
   height: 70%;
   display: block;
   background-repeat: no-repeat;
-  background-size: 130%;
+  background-size: cover;
   background-position: center;
 }
 
@@ -140,6 +161,14 @@ color: white;
   margin-top: 14px;
   letter-spacing: 1px;
   overflow: hidden;
+}
+
+@media only screen and (max-width: 800px) {
+  .navigation-box-container{
+    width: 100%;
+    max-width: 100%;
+    margin: 20px;
+  }
 }
 
 #frontpage-columns-container{
