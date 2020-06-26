@@ -36,7 +36,7 @@ const NotFound = ({ pageContext, location }) => {
 
   const flag = () => (
     <ReactCountryFlag className="looking-for-lang-flag"
-      countryCode={(pageContext.layoutContext.locale !== 'no') ? 'NO' : 'GB'}
+      countryCode={(pageContext.locale === 'no') ? 'GB' : 'NO'}
       svg
       style={{
         width: '2em',
