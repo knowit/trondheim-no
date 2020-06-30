@@ -23,9 +23,9 @@ class HtmlParser {
         }
 
         if (!frontImage) {
-            var array = images.image_introtext.split(`/`)
-            frontImage = array[array.length - 1]
-            alt = images.image_introtext_alt
+            var array = images.image_introtext ? images.image_introtext.split(`/`) : null
+            frontImage = array ? array[array.length - 1] : null
+            alt = images.image_introtext_alt ? images.image_introtext_alt : alt
         }
 
 

@@ -39,9 +39,11 @@ const FrontpageColumns = ({ pageContext }) => {
   }
 
   const backgroundStyle = {
-    backgroundImage: `url(${pageContext.node.backdropImage[0].localFile.childImageSharp.fluid.src})`
+    backgroundImage: `url(${pageContext.node.columnsBackgroundImage[0].localFile.childImageSharp.fluid.src})`
 
   }
+
+  var index = 0;
 
   return (
 
@@ -50,7 +52,7 @@ const FrontpageColumns = ({ pageContext }) => {
         {pageContext.listingPages.map((node, key) => {
           if (node.showOnFrontpageColumns) {
             return (<Column
-              key={key}
+              key={index++}
               path={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}
               icon={node.thumbnail[0].localFile.childImageSharp.fluid}
               title={node.navigationTitle.toUpperCase()}
@@ -63,7 +65,7 @@ const FrontpageColumns = ({ pageContext }) => {
           if (node.icon) {
             return (
               <Column
-                key={node.flamelink_id}
+                key={index++}
                 path={node.redirectUrl}
                 icon={node.icon[0].localFile.childImageSharp.fluid}
                 title={node.title.toUpperCase()}

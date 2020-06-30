@@ -288,6 +288,7 @@ query {
         }
         slug
         title
+        tags
         thumbnail {
           localFile {
             childImageSharp {

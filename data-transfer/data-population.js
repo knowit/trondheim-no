@@ -304,7 +304,7 @@ async function createArticles() {
 
         let articles = [];
 
-        const startIndex = 503
+        const startIndex = 382
         const quantity = 3
 
         //Create all articles with both Norwegian and English translations
@@ -331,7 +331,7 @@ async function createArticles() {
                         title: element.no.title,
                         slug: slugify(element.no.title).toLowerCase(),
                         thumbnail: noThumbnail,
-                        parent: getCategoryRef("no", element.no.catid),
+                        parentListingPage: getCategoryRef("no", element.no.catid),
                         content: reducedContent,
                         openingHours: openingHours.result,
                         contactInfo: contact.result,
@@ -365,7 +365,7 @@ async function createArticles() {
                         title: element.en.title,
                         slug: slugify(element.en.title).toLowerCase(),
                         thumbnail: enThumbnail,
-                        parent: getCategoryRef("en", element.en.catid),
+                        parentListingPage: getCategoryRef("en", element.en.catid),
                         content: reducedContentEn,
                         openingHours: openingHoursEn.result,
                         contactInfo: contactEn.result,
@@ -391,7 +391,7 @@ async function createArticles() {
                         title: element.title,
                         slug: slugify(element.title).toLowerCase(),
                         thumbnail: thumbnail,
-                        parentContent: getCategoryRef("no", element.catid),
+                        parentListingPage: getCategoryRef("no", element.catid),
                         content: concatText(element.introtext, element.fulltext, element.images),
                         openingHours: '',
                         contactInfo: null,

@@ -336,7 +336,7 @@ class PathTreeBuilder {
     const id = node._fl_meta_.fl_id
     const locale = node.flamelink_locale
     const slug = node.slug
-    const parent = node.parentContent
+    const parent = node.parentListingPage
 
     var parentNode = this.root
 
