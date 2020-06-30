@@ -5,10 +5,11 @@
 }
 
 #articles-header{
-  display:block;
+  display:flex;
+  flex-direction: column;
   width: 100%;
   height: auto;
-  margin: 0 10px;
+  margin: 0;
   overflow: hidden;
 }
 

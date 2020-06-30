@@ -1,4 +1,4 @@
-const mediaUrl = "https://firebasestorage.googleapis.com/v0/b/trondheimno-demo.appspot.com/o/flamelink%2Fmedia%2F"
+const mediaUrl = "https://firebasestorage.googleapis.com/v0/b/byportal-218506.appspot.com/o/flamelink%2Fmedia%2F"
 
 
 function getImgTag(filename, alt) {

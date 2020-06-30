@@ -7,9 +7,9 @@ require('flamelink/storage');
 require('flamelink/settings');
 
 const firebaseApp = admin.initializeApp({
-    credential: admin.credential.cert("C:/Users/levis/OneDrive/Skrivebord/trondheimno-demo-firebase-adminsdk-ew8t0-6e0ef688fb.json"),
-    databaseURL: 'https://trondheimno-demo.firebaseio.com',
-    storageBucket: 'trondheimno-demo.appspot.com'
+    credential: admin.credential.cert("C:/Users/levis/OneDrive/Skrivebord/byportal-218506-firebase-adminsdk-milcl-2de53579c7.json"),
+    databaseURL: 'https://byportal-218506.firebaseio.com',
+    storageBucket: 'byportal-218506.appspot.com'
 })
 
 const storage = admin.storage().bucket()
@@ -304,7 +304,7 @@ async function createArticles() {
 
         let articles = [];
 
-        const startIndex = 500
+        const startIndex = 503
         const quantity = 3
 
         //Create all articles with both Norwegian and English translations
@@ -326,18 +326,18 @@ async function createArticles() {
 
             const norwegianArticle = await app.content.add(
                 {
-                    schemaKey: 'articleNew',
+                    schemaKey: 'article',
                     data: {
                         title: element.no.title,
                         slug: slugify(element.no.title).toLowerCase(),
                         thumbnail: noThumbnail,
-                        parentContent: getCategoryRef("no", element.no.catid),
+                        parent: getCategoryRef("no", element.no.catid),
                         content: reducedContent,
                         openingHours: openingHours.result,
                         contactInfo: contact.result,
                         address: address, //{ address: '', lat: 0, lng: 0 },
                         latLong: getLatLong(element.no.metadata.xreference),
-                        tags: ['test-tag']
+                        tags: []
                     }
                 })
 
@@ -359,13 +359,13 @@ async function createArticles() {
 
             const englishArticle = await app.content.add(
                 {
-                    schemaKey: 'articleNew',
+                    schemaKey: 'article',
                     entryId: norwegianArticle.id,
                     data: {
                         title: element.en.title,
                         slug: slugify(element.en.title).toLowerCase(),
                         thumbnail: enThumbnail,
-                        parentContent: getCategoryRef("en", element.en.catid),
+                        parent: getCategoryRef("en", element.en.catid),
                         content: reducedContentEn,
                         openingHours: openingHoursEn.result,
                         contactInfo: contactEn.result,
