@@ -1,42 +1,282 @@
 [
-    {"no": 11, "en": 25, "noSlug": "severdig", "enSlug":"attractions", "_comment": "Severdig"},
-    {"no": 12, "en": -1, "noSlug": "", "enSlug": "", "_comment": "Kunst overkategori"},
-    {"no": 13, "en": 14, "noSlug": "kunst-i-uterom", "enSlug":"art-in-public-spaces", "_comment": "Kunst Ute"},
-    {"no": 14, "en": 14, "noSlug": "kunst-i-uterom", "enSlug":"art-in-public-spaces", "_comment": "Kunst Ute"},
-    {"no": 20, "en": 19, "noSlug": "kunst-i-barnehager", "enSlug":"art-in-kindergartens", "_comment": "Kunst Barnehage"},
-    {"no": 21, "en": 18, "noSlug": "kunst-pa-skoler", "enSlug":"art-at-schools", "_comment": "Kunst Skole"},
-    {"no": 22, "en": 17, "noSlug": "kunst-pa-helse-og-velferdssentre", "enSlug":"art-in-health-care-centres", "_comment": "Kunst Helsesenter"},
-    {"no": 23, "en": 16, "noSlug": "kunst-pa-kirkegarder", "enSlug":"art-in-churchyards", "_comment": "Kunst Kirkegård"},
-    {"no": 24, "en": 71, "noSlug": "", "enSlug": "", "_comment": "Kart"},
-    {"no": 27, "en": -1, "noSlug": "ut-pa-tur", "enSlug": "hiking-and-walks", "_comment": "Tur - disabled"},
-    {"no": 28, "en": 28, "noSlug": "", "enSlug": "", "_comment": "'Oversikt' - primært hovedkategorier"},
-    {"no": 37, "en": -1, "noSlug": "", "enSlug": "", "_comment": "Parker"},
-    {"no": 38, "en": 61, "noSlug": "ut-pa-tur", "enSlug":"hiking-and-walks", "_comment": "Turer"},
-    {"no": 39, "en": 63, "noSlug": "spisesteder", "enSlug":"restaurants", "_comment": "Spisesteder"},
-    {"no": 48, "en": 70, "noSlug": "fritid", "enSlug":"leisure", "_comment": "Sport og Fritidsaktiviteter"},
-    {"no": 52, "en": 52, "noSlug": "shopping", "enSlug": "shopping-areas", "_comment": "Shopping"},
-    {"no": 55, "en": 62, "noSlug": "utesteder", "enSlug":"bar-cafe", "_comment": "Utesteder"},
-    {"no": 64, "en": 65, "noSlug": "hoteller", "enSlug":"hotels", "_comment": "Hotel"},
-    {"no": 71, "en": 73, "noSlug": "", "enSlug": "", "_comment": "Om oss"},
-    {"no": 73, "en": -1, "noSlug": "", "enSlug": "", "_comment": "Parkering i sentrum - English does not exist"},
-    {"no": 74, "en": -1, "noSlug": "", "enSlug": "", "_comment": "Parkering i marka - English does not exist"},
-    {"no": 76, "en": -1, "noSlug": "", "enSlug": "", "_comment": "Pilegrim - English does not exist"},
-    {"no": 77, "en": -1, "noSlug": "ut-pa-tur", "enSlug": "hiking-and-walks", "_comment": "Nærtur"},
-    {"no": 78, "en": -1, "noSlug": "", "enSlug": "", "_comment": "Bruer - English does not exist"},
-    {"no": 79, "en": -1, "noSlug": "", "enSlug": "", "_comment": "Trondheimshistorie"},
-    {"no": 80, "en": 59, "noSlug": "historie", "enSlug":"history", "_comment": "Historiske personer"},
-    {"no": 82, "en": 72, "noSlug": "kjopesentre-i-trondheim", "enSlug":"shopping-centres-in-trondheim", "_comment": "Kjøpesenter"},
-    {"no": 83, "en": 70, "noSlug": "fritid", "enSlug":"leisure", "_comment": "Sport og Fritidsaktiviteter (?)"},
-    {"no": 84, "en": 74, "noSlug": "treningssenter", "enSlug":"fitness-centers", "_comment": "Treningssenter"},
-    {"no": 85, "en": 75, "noSlug": "", "enSlug": "", "_comment": "Student"},
-    {"no": 86, "en": 77, "noSlug": "", "enSlug": "", "_comment": "Student => Bolig "},
-    {"no": 87, "en": 76, "noSlug": "", "enSlug": "", "_comment": "Student => Utdanningstilbud"},
-    {"no": 88, "en": 78, "noSlug": "", "enSlug": "", "_comment": "Student => Studentlivet"},
-    {"no": 89, "en": 79, "noSlug": "", "enSlug": "", "_comment": "Student => Komme seg rundt"},
-    {"no": 91, "en": 80, "noSlug": "", "enSlug": "", "_comment": "Student => Jobb i Trondheim"},
-    {"no": 2, "en": 2, "noSlug": "", "enSlug": "", "_comment": "Ukategorisert"},
-    {"no": 81, "en": 10, "noSlug": "", "enSlug": "", "_comment": "Testing"},
-    {"no": 90, "en": -1, "noSlug": "", "enSlug": "", "_comment": "Page..."},
-    {"no": -1, "en": 33, "noSlug": "", "enSlug": "", "_comment": " Historiske personer - på norsk (?!)"},
-    {"no": -1, "en": -1, "noSlug": "hva-skjer", "enSlug": "whats-on", "_comment": "Hva skjer - kjører separat API"}
+    {
+        "no": 11,
+        "en": 25,
+        "noSlug": "severdig",
+        "enSlug": "attractions",
+        "_comment": "Severdig"
+    },
+    {
+        "no": 12,
+        "en": -1,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Kunst overkategori"
+    },
+    {
+        "no": 13,
+        "en": 14,
+        "noSlug": "kunst-i-uterom",
+        "enSlug": "art-in-public-spaces",
+        "_comment": "Kunst Ute"
+    },
+    {
+        "no": 14,
+        "en": 14,
+        "noSlug": "kunst-i-uterom",
+        "enSlug": "art-in-public-spaces",
+        "_comment": "Kunst Ute"
+    },
+    {
+        "no": 20,
+        "en": 19,
+        "noSlug": "kunst-i-barnehager",
+        "enSlug": "art-in-kindergartens",
+        "_comment": "Kunst Barnehage"
+    },
+    {
+        "no": 21,
+        "en": 18,
+        "noSlug": "kunst-pa-skoler",
+        "enSlug": "art-at-schools",
+        "_comment": "Kunst Skole"
+    },
+    {
+        "no": 22,
+        "en": 17,
+        "noSlug": "kunst-pa-helse-og-velferdssentre",
+        "enSlug": "art-in-health-care-centres",
+        "_comment": "Kunst Helsesenter"
+    },
+    {
+        "no": 23,
+        "en": 16,
+        "noSlug": "kunst-pa-kirkegarder",
+        "enSlug": "art-in-churchyards",
+        "_comment": "Kunst Kirkegård"
+    },
+    {
+        "no": 24,
+        "en": 71,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Kart"
+    },
+    {
+        "no": 27,
+        "en": -1,
+        "noSlug": "ut-pa-tur",
+        "enSlug": "hiking-and-walks",
+        "_comment": "Tur - disabled"
+    },
+    {
+        "no": 28,
+        "en": 28,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "'Oversikt' - primært hovedkategorier"
+    },
+    {
+        "no": 37,
+        "en": -1,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Parker"
+    },
+    {
+        "no": 38,
+        "en": 61,
+        "noSlug": "ut-pa-tur",
+        "enSlug": "hiking-and-walks",
+        "_comment": "Turer"
+    },
+    {
+        "no": 39,
+        "en": 63,
+        "noSlug": "spisesteder",
+        "enSlug": "restaurants",
+        "_comment": "Spisesteder"
+    },
+    {
+        "no": 48,
+        "en": 70,
+        "noSlug": "fritid",
+        "enSlug": "leisure",
+        "_comment": "Sport og Fritidsaktiviteter"
+    },
+    {
+        "no": 52,
+        "en": 52,
+        "noSlug": "shopping",
+        "enSlug": "shopping-areas",
+        "_comment": "Shopping"
+    },
+    {
+        "no": 55,
+        "en": 62,
+        "noSlug": "utesteder",
+        "enSlug": "bar-cafe",
+        "_comment": "Utesteder"
+    },
+    {
+        "no": 64,
+        "en": 65,
+        "noSlug": "hoteller",
+        "enSlug": "hotels",
+        "_comment": "Hotel"
+    },
+    {
+        "no": 71,
+        "en": 73,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Om oss"
+    },
+    {
+        "no": 73,
+        "en": -1,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Parkering i sentrum - English does not exist"
+    },
+    {
+        "no": 74,
+        "en": -1,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Parkering i marka - English does not exist"
+    },
+    {
+        "no": 76,
+        "en": -1,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Pilegrim - English does not exist"
+    },
+    {
+        "no": 77,
+        "en": -1,
+        "noSlug": "ut-pa-tur",
+        "enSlug": "hiking-and-walks",
+        "_comment": "Nærtur"
+    },
+    {
+        "no": 78,
+        "en": -1,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Bruer - English does not exist"
+    },
+    {
+        "no": 79,
+        "en": -1,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Trondheimshistorie"
+    },
+    {
+        "no": 80,
+        "en": 59,
+        "noSlug": "historie",
+        "enSlug": "history",
+        "_comment": "Historiske personer"
+    },
+    {
+        "no": 82,
+        "en": 72,
+        "noSlug": "kjopesentre-i-trondheim",
+        "enSlug": "shopping-centres-in-trondheim",
+        "_comment": "Kjøpesenter"
+    },
+    {
+        "no": 83,
+        "en": 70,
+        "noSlug": "fritid",
+        "enSlug": "leisure",
+        "_comment": "Sport og Fritidsaktiviteter (?)"
+    },
+    {
+        "no": 84,
+        "en": 74,
+        "noSlug": "treningssenter",
+        "enSlug": "fitness-centers",
+        "_comment": "Treningssenter"
+    },
+    {
+        "no": 85,
+        "en": 75,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Student"
+    },
+    {
+        "no": 86,
+        "en": 77,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Student => Bolig "
+    },
+    {
+        "no": 87,
+        "en": 76,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Student => Utdanningstilbud"
+    },
+    {
+        "no": 88,
+        "en": 78,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Student => Studentlivet"
+    },
+    {
+        "no": 89,
+        "en": 79,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Student => Komme seg rundt"
+    },
+    {
+        "no": 91,
+        "en": 80,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Student => Jobb i Trondheim"
+    },
+    {
+        "no": 2,
+        "en": 2,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Ukategorisert"
+    },
+    {
+        "no": 81,
+        "en": 10,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Testing"
+    },
+    {
+        "no": 90,
+        "en": -1,
+        "noSlug": "",
+        "enSlug": "",
+        "_comment": "Page..."
+    },
+    {
+        "no": -1,
+        "en": 33,
+        "noSlug": "historie",
+        "enSlug": "history",
+        "_comment": "Historiske personer"
+    },
+    {
+        "no": -1,
+        "en": -1,
+        "noSlug": "hva-skjer",
+        "enSlug": "whats-on",
+        "_comment": "Hva skjer - kjører separat API"
+    }
 ]

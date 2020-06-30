@@ -51,12 +51,12 @@ const FrontpageColumns = ({ pageContext }) => {
       <div id="frontpage-columns-overlay">
         {pageContext.listingPages.map((node, key) => {
           if (node.showOnFrontpageColumns) {
-            return (<Column
+            return (node.icon ? <Column
               key={index++}
               path={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}
-              icon={node.thumbnail[0].localFile.childImageSharp.fluid}
+              icon={node.icon[0].localFile.childImageSharp.fluid}
               title={node.navigationTitle.toUpperCase()}
-              subTitle={node.navigationSubtitle} />)
+              subTitle={node.navigationSubtitle} /> : null)
           }
           else return null
         })}
@@ -138,7 +138,7 @@ export default ({ pageContext }) => {
 
         <div id="navigation-menu-container">
           {pageContext.listingPages.map(function (node, key) {
-            if (node.thumbnail[0].localFile && node.showOnFrontPage) {
+            if (node.thumbnail && node.showOnFrontPage) {
               return (
                 <div key={key} className="navigation-box-container">
                   <Img className="navigation-box-thumbnail"

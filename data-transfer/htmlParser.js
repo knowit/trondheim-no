@@ -2,7 +2,7 @@ const mediaUrl = "https://firebasestorage.googleapis.com/v0/b/byportal-218506.ap
 
 
 function getImgTag(filename, alt) {
-    return `<img src=\"${mediaUrl}${filename}?alt=media\" alt=\"${alt}\" />`
+    return `<img src=\"${mediaUrl}${encodeURI(filename)}?alt=media\" alt=\"${alt}\" />`
 }
 
 

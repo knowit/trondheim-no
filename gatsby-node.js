@@ -19,6 +19,7 @@ function extract_image_urls(htmlBody) {
   }
 
   tags.map(x => x.replace(/.*src="([^"]*)".*/, '$1')).map(url => {
+    const encodedUrl = encodeURI(url)
     result.push(url)
   })
 

@@ -185,26 +185,28 @@ console.log("Total Norwegian Data: " + norData.length);
 console.log("Total English Data: " + engData.length);
 
 var fs = require('fs');
-// fs.writeFile("./outputs/commonData.json",JSON.stringify(commonData),function(err){
-//     if(err) {
-//         console.log(err);
-//     }
-// });
-// fs.writeFile("./outputs/errorData.json",JSON.stringify(errorData),function(err){
-//     if(err) {
-//         console.log(err);
-//     }
-// })
-// fs.writeFile("./outputs/noMatchData.json",JSON.stringify(noMatchData),function(err){
-//     if(err) {
-//         console.log(err);
-//     }
-// })
-// fs.writeFile("./outputs/discardedData.json",JSON.stringify(discardedData),function(err){
-//     if(err) {
-//         console.log(err);
-//     }
-// })
+/*
+fs.writeFile("./outputs/commonData.json", JSON.stringify(commonData), function (err) {
+    if (err) {
+        console.log(err);
+    }
+});
+fs.writeFile("./outputs/errorData.json", JSON.stringify(errorData), function (err) {
+    if (err) {
+        console.log(err);
+    }
+})
+fs.writeFile("./outputs/noMatchData.json", JSON.stringify(noMatchData), function (err) {
+    if (err) {
+        console.log(err);
+    }
+})
+fs.writeFile("./outputs/discardedData.json", JSON.stringify(discardedData), function (err) {
+    if (err) {
+        console.log(err);
+    }
+})
+*/
 
 
 
