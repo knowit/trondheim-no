@@ -186,27 +186,11 @@ query {
             }
           }
         }
-        logoImage{
-          localFile {
-            childImageSharp {
-              fluid (quality: 90) {
-                base64
-                aspectRatio 
-                src 
-                srcSet 
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
-              }
-            }
-          }
-        }
         frontImageAlt
         frontImage{
           localFile {
             childImageSharp {
-              fluid (maxWidth: 9999, quality: 100) {
+              fluid (maxWidth: 9999, quality: 99) {
                 base64
                 aspectRatio 
                 src 
@@ -219,10 +203,10 @@ query {
             }
           }
         }
-        backdropImage{
+        columnsBackgroundImage{
           localFile {
             childImageSharp {
-              fluid (maxWidth: 9999, quality: 100) {
+              fluid (maxWidth: 9999, quality: 99) {
                 base64
                 aspectRatio 
                 src 
@@ -239,53 +223,7 @@ query {
       }
     }
   }
-  allFlamelinkFrontPageCardContent{
-    edges{
-      node{
-        flamelink_id
-        flamelink_locale
-        index
-        title
-        textColor
-        backgroundColor
-        links{
-          text
-          url
-        }
-        iconName
-        iconColor
-      }
-    }
-  }
-  allFlamelinkFrontPageColumnContent{
-    edges{
-      node{
-        flamelink_id
-        flamelink_locale
-        title
-        subTitle
-        redirectUrl
-        icon {
-          localFile {
-            childImageSharp {
-              fluid (maxWidth: 9999, quality: 100) {
-                base64
-                aspectRatio 
-                src 
-                srcSet 
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  allFlamelinkArticleNewContentFieldContactInfo {
+  allFlamelinkArticleContentFieldContactInfo {
     edges {
       node {
         textToShow
@@ -295,8 +233,7 @@ query {
       }
     }
   }
-
-  allFlamelinkArticleNewContent {
+  allFlamelinkArticleContent {
     edges {
       node {
         _fl_meta_ {
@@ -309,7 +246,7 @@ query {
         openingHours {
           content
         }
-        parentContent {
+        parentListingPage {
           _fl_meta_ {
             fl_id
             schema
@@ -319,7 +256,6 @@ query {
         }
         slug
         title
-        tags
         thumbnail {
           localFile {
             childImageSharp {

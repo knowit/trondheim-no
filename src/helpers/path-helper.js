@@ -100,7 +100,7 @@ class TreeNode {
       schema = node._fl_meta_.schema
     }
 
-    if (schema == "articleNew") {
+    if (schema == "article") {
       this.isArticle = true
     }
     else if (schema == "listingPage") {
@@ -420,7 +420,6 @@ class PathTreeBuilder {
       locale: locale,
       localizedPaths: localizedPaths, // Paths to the same page for different locales
       defaultThumbnails: this.result.data.allFlamelinkDefaultThumbnailsContent.edges[0].node.imageDeck,
-      logoImage: this.result.data.allFlamelinkFrontPageContent.edges[0].node.logoImage[0],
       localization: this.result.data.allFlamelinkLayoutLocalizationContent.edges[0].node.translations,
       homePath: (locale === 'no') ? '/' : '/en/',
       navbar: this.navbarData.get(locale)
@@ -446,7 +445,7 @@ class PathTreeBuilder {
       this.root.setGraphQLNode(node, locale)
     })
 
-    this.result.data.allFlamelinkArticleNewContent.edges.map(({ node }) => {
+    this.result.data.allFlamelinkArticleContent.edges.map(({ node }) => {
       this.insertArticleToTree(node)
     })
 

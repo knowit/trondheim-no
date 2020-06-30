@@ -28,27 +28,25 @@ function extract_image_urls(htmlBody) {
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
-    type FlamelinkTextHtmlContentNode implements Node {
-      remoteImages: [File] @link
-    }
-
-    type FlamelinkArticleNewContentFieldLatLong implements Node {
-      googleMapsStaticImage: File @link
-    }
-
-    type FlamelinkArticleNewContentFieldContactInfo implements Node {
-      emailAddress: String
-    }
-
-    type FlamelinkNavbarContent implements Node {
-      childrenFlamelinkNavbarContentFieldExtraMenuOptionsItem: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
-    }
-
-    type FlamelinkNavbarContentFieldExtraMenuOptionsItem implements Node {
-      title: String!
-      redirectUrl: String!
-    }
-
+  type FlamelinkTextHtmlContentNode implements Node {
+    remoteImages: [File] @link
+  }
+  type FlamelinkArticleContentFieldLatLong implements Node {
+    googleMapsStaticImage: File @link
+  }
+  type FlamelinkArticleContentFieldContactInfo implements Node {
+    emailAddress: String
+  }
+  type FlamelinkNavbarContent implements Node {
+    childrenFlamelinkNavbarContentFieldExtraMenuOptionsItem: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
+  }
+  type FlamelinkNavbarContentFieldExtraMenuOptionsItem implements Node {
+    title: String!
+    redirectUrl: String!
+  }
+  type FlamelinkListingPageContent implements Node {
+    parentListingPage: FlamelinkListingPageContent
+  }
   `
   createTypes(typeDefs)
 }
@@ -86,7 +84,7 @@ exports.onCreateNode = async ({
   }
 
 
-  else if (node.internal.type === 'FlamelinkArticleNewContentFieldLatLong' && node.latitude && node.longitude) {
+  else if (node.internal.type === 'FlamelinkArticleContentFieldLatLong' && node.latitude && node.longitude) {
 
     let location = GoogleMapsUrlHelper.getLocation(node)
 
