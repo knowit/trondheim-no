@@ -285,8 +285,8 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
       const node = root.node.get(locale)
       const listingPages = Array.from(frontPageListingPages.get(locale).values())
-      const columnContent = result.data.allFlamelinkFrontPageColumnContent.edges.map(node => node.node).filter(node => node.flamelink_locale === locale)
-      const cardContent = result.data.allFlamelinkFrontPageCardContent.edges.map(node => node.node).filter(node => node.flamelink_locale === locale)
+      const columnContent = node.columns
+      const cardContent = node.bottomCards
 
       createPage({
         path: root.getPath(locale),

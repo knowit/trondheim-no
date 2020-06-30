@@ -186,6 +186,38 @@ query {
             }
           }
         }
+        bottomCards {
+          title
+          textColor
+          backgroundColor
+          iconName
+          iconColor
+          links {
+            text
+            url
+          }
+        }
+        columns {
+          title
+          subTitle
+          redirectUrl
+          icon {
+            localFile {
+              childImageSharp {
+                fluid (maxWidth: 9999, quality: 99) {
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                }
+              }
+            }
+          }
+        }
         frontImageAlt
         frontImage{
           localFile {
