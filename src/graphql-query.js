@@ -39,6 +39,9 @@ query {
       fl_id
       schema
     }
+    internal{
+      type
+    }
     flamelink_id
     flamelink_locale
     title
@@ -72,6 +75,9 @@ query {
         _fl_meta_ {
           fl_id
           schema
+        }
+        internal{
+          type
         }
         slug
         flamelink_id
@@ -179,6 +185,9 @@ query {
         _fl_meta_ {
           fl_id
           schema
+        }
+        internal{
+          type
         }
         flamelink_id
         flamelink_locale
@@ -288,6 +297,9 @@ query {
         _fl_meta_ {
           fl_id
           schema
+        }
+        internal{
+          type
         }
         flamelink_locale
         flamelink_id

@@ -25,14 +25,135 @@ function extract_image_urls(htmlBody) {
   return result
 }
 
+
+exports.createResolvers = ({ createResolvers }) => {
+
+  const resolvePath = (source) => {
+    if (source._fl_meta_.schema === 'listingPage' || source._fl_meta_.schema === 'article') {
+
+      const locale = source.flamelink_locale
+      var path = source.slug
+      var parent = source.parentListingPage
+
+      while (parent != null) {
+        if (parent.slug != null) {
+          path = `${parent.slug}/${path}`
+        }
+        parent = parent.parentListingPage
+      }
+
+      path = `${locale === 'no' ? '' : '/en'}/${path}`
+
+      return path
+    }
+
+    else if (source._fl_meta_.schema === 'page') {
+      return `${source.flamelink_locale === 'no' ? '/' : '/en'}/${source.slug}`
+    }
+
+    else if (source._fl_meta_.schema === 'frontPage') {
+      return source.flamelink_locale === 'no' ? '/' : '/en'
+    }
+
+    else return ""
+  }
+
+  const resolveLocalizedPaths = (source, context) => {
+    const nodeType = source.internal.type
+    const nodeId = source._fl_meta_.fl_id
+    const query = {
+      query: {
+        filter: {
+          _fl_meta_: {
+            fl_id: {
+              eq: nodeId
+            }
+          }
+        },
+      },
+      type: nodeType,
+      firstOnly: false
+    }
+    const result = context.nodeModel.runQuery(query).then(result => {
+      var paths = []
+
+      result.map(node => {
+        paths.push({
+          locale: node.flamelink_locale,
+          path: resolvePath(node)
+        })
+      })
+
+      return paths
+    })
+    return result
+  }
+
+  const resolvers = {
+    FlamelinkListingPageContent: {
+      path: {
+        resolve(source, args, context, info) {
+          return (resolvePath(source))
+        },
+      },
+      localizedPaths: {
+        resolve(source, args, context, info) {
+          return resolveLocalizedPaths(source, context)
+        },
+      },
+    },
+    FlamelinkArticleContent: {
+      path: {
+        resolve(source, args, context, info) {
+          return (resolvePath(source))
+        },
+      },
+      localizedPaths: {
+        resolve(source, args, context, info) {
+          return resolveLocalizedPaths(source, context)
+        },
+      },
+    },
+    FlamelinkFrontPageContent: {
+      path: {
+        resolve(source, args, context, info) {
+          return (resolvePath(source))
+        },
+      },
+      localizedPaths: {
+        resolve(source, args, context, info) {
+          return resolveLocalizedPaths(source, context)
+        },
+      },
+    },
+    FlamelinkPageContent: {
+      path: {
+        resolve(source, args, context, info) {
+          return (resolvePath(source))
+        },
+      },
+      localizedPaths: {
+        resolve(source, args, context, info) {
+          return resolveLocalizedPaths(source, context)
+        },
+      },
+    },
+  }
+  createResolvers(resolvers)
+}
+
+
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
+
   const typeDefs = `
   type FlamelinkTextHtmlContentNode implements Node {
     remoteImages: [File] @link
   }
   type FlamelinkArticleContent implements Node {
     tags: [String]
+    path: String
+    localizedPaths : [LocalizedPath]
   }
   type FlamelinkArticleContentFieldLatLong implements Node {
     googleMapsStaticImage: File @link
@@ -49,6 +170,20 @@ exports.createSchemaCustomization = ({ actions }) => {
   }
   type FlamelinkListingPageContent implements Node {
     parentListingPage: FlamelinkListingPageContent
+    path: String
+    localizedPaths : [LocalizedPath]
+  }
+  type FlamelinkFrontPageContent implements Node {
+    path: String
+    localizedPaths : [LocalizedPath]
+  }
+  type FlamelinkPageContent implements Node {
+    path: String
+    localizedPaths : [LocalizedPath]
+  }
+  type LocalizedPath {
+    locale: String,
+    path: String
   }
   `
   createTypes(typeDefs)
