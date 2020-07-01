@@ -14,25 +14,32 @@ library.add(fas)
 
 const FrontpageColumns = ({ pageContext }) => {
 
-  const Column = (props) => {
+  const Column = ({ node }) => {
+
+    const Ref = ({ children }) =>
+      (node.link)
+        ? <Link className="frontpage-column-link" to={node.redirectUrl}>{children}</Link>
+        : <a className="frontpage-column-link" href={node.redirectUrl}>{children}</a>
+
+
     return (<div className="frontpage-column-item-container">
       <div className="frontpage-column-image-container">
-        <Link className="frontpage-column-link" to={props.path}>
-          <Img className="frontpage-column-image"
-            fluid={props.icon}
-            alt="thumbnail" />
-        </Link>
+        <Ref>
+          {node.icon ? <Img className="frontpage-column-image"
+            fluid={node.icon[0].localFile.childImageSharp.fluid}
+            alt="thumbnail" /> : null}
+        </Ref>
       </div>
       <div className="frontpage-column-info-container">
         <h2>
-          <Link className="frontpage-column-link" to={props.path}>
-            {props.title}
-          </Link>
+          <Ref>
+            {node.title}
+          </Ref>
         </h2>
         <h4>
-          <Link className="frontpage-column-link" to={props.path}>
-            {props.subTitle}
-          </Link>
+          <Ref>
+            {node.subTitle}
+          </Ref>
         </h4>
       </div>
     </div>)
@@ -49,29 +56,11 @@ const FrontpageColumns = ({ pageContext }) => {
 
     <div id="frontpage-columns-container" style={backgroundStyle}>
       <div id="frontpage-columns-overlay">
-        {pageContext.listingPages.map((node, key) => {
-          if (node.showOnFrontpageColumns) {
-            return (node.icon ? <Column
-              key={index++}
-              path={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}
-              icon={node.icon[0].localFile.childImageSharp.fluid}
-              title={node.navigationTitle.toUpperCase()}
-              subTitle={node.navigationSubtitle} /> : null)
-          }
-          else return null
-        })}
-
         {pageContext.columnContent.map(node => {
-          if (node.icon) {
-            return (
-              <Column
-                key={index++}
-                path={node.redirectUrl}
-                icon={node.icon[0].localFile.childImageSharp.fluid}
-                title={node.title.toUpperCase()}
-                subTitle={node.subTitle} />)
-          }
-          else return null
+          return (
+            <Column
+              key={index++}
+              node={node} />)
         })}
       </div>
     </div>

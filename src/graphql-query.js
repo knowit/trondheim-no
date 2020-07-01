@@ -74,6 +74,23 @@ query {
           schema
         }
         slug
+        flamelink_id
+        flamelink_locale
+        localTitle
+        navigationTitle
+        navigationSubtitle
+        textOnPage
+        showOnFrontPage
+        showOnFrontpageColumns
+        showInDropMenu
+        mapPageTitle
+        mapPageDescription
+        parentListingPage{
+          slug
+          _fl_meta_ {
+            fl_id
+          }
+        }
         thumbnail {
           localFile {
             name
@@ -91,21 +108,21 @@ query {
             }
           }
         }
-        flamelink_id
-        flamelink_locale
-        localTitle
-        navigationTitle
-        navigationSubtitle
-        textOnPage
-        showOnFrontPage
-        showOnFrontpageColumns
-        showInDropMenu
-        mapPageTitle
-        mapPageDescription
-        parentListingPage{
-          slug
-          _fl_meta_ {
-            fl_id
+        icon {
+          localFile {
+            name
+            childImageSharp {
+              fluid(quality: 90) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
           }
         }
       }

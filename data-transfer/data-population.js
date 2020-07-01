@@ -306,8 +306,8 @@ async function createArticles() {
 
         let articles = [];
 
-        const startIndex = 382
-        const quantity = 3
+        const startIndex = 500
+        const quantity = 5
 
         //Create all articles with both Norwegian and English translations
         for (let i = startIndex; i < startIndex + quantity/*commonData.length*/; i++) {

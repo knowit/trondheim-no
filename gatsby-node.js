@@ -19,7 +19,6 @@ function extract_image_urls(htmlBody) {
   }
 
   tags.map(x => x.replace(/.*src="([^"]*)".*/, '$1')).map(url => {
-    const encodedUrl = encodeURI(url)
     result.push(url)
   })
 
@@ -122,7 +121,6 @@ exports.onCreatePage = async ({ page, actions }) => {
     const locale = 'no'
     // Recreate the modified page
     deletePage(oldPage)
-    console.log(`\nCreated 404 ${locale}\n`)
     var context = page.context
     context.layoutContext = layoutContexts.get(locale)
     context.locale = locale
@@ -139,7 +137,6 @@ exports.onCreatePage = async ({ page, actions }) => {
     page.matchPath = `/${langCode}/*`
     // Recreate the modified page
     deletePage(oldPage)
-    console.log(`\nCreated 404 ${locale}\n`)
     var context = page.context
     context.layoutContext = layoutContexts.get(locale)
     context.locale = locale
@@ -170,7 +167,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   let pathHelper = new PathTreeBuilder(result, defaultLocale)
   const root = pathHelper.build()
   const listingPages = new Map()
-  console.log(`Created layoutContexts`)
   layoutContexts.set('no', pathHelper.layoutContext('no', root.getLocalizedPaths()))
   layoutContexts.set('en-US', pathHelper.layoutContext('en-US', root.getLocalizedPaths()))
 
@@ -288,8 +284,34 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     Array.from(root.node.keys()).map(locale => {
 
       const node = root.node.get(locale)
-      const listingPages = Array.from(frontPageListingPages.get(locale).values())
-      const columnContent = node.columns
+      const frontListingPages = [] //Array.from(frontPageListingPages.get(locale).values())
+      const columnContent = []
+
+      listingPages.forEach((lsBuilder, id, map) => {
+        const treeNode = lsBuilder.treeNode
+        const node = treeNode.node.get(locale)
+        if (node.showOnFrontPage) {
+          frontListingPages.push(node)
+        }
+        if (node.showOnFrontpageColumns) {
+          columnContent.push({
+            redirectUrl: treeNode.getPath(locale),
+            icon: node.icon,
+            title: node.navigationTitle,
+            subTitle: node.navigationSubtitle,
+            link: true
+          })
+        }
+      })
+
+
+
+      node.columns.map(column => {
+        columnContent.push({
+          ...column,
+          link: false
+        })
+      })
       const cardContent = node.bottomCards
 
       createPage({
@@ -298,7 +320,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         context: {
           node: node,
           slug: root.getSlug(locale),
-          listingPages: listingPages,
+          listingPages: frontListingPages,
           layoutContext: pathHelper.layoutContext(locale, root.getLocalizedPaths()),
           columnContent: columnContent,
           cardContent: cardContent
@@ -310,7 +332,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
   for (const treeNode of pathHelper.createNodeIterator()) {
 
-    if (treeNode.isListingPage === true && treeNode.isFrontPage === false && treeNode.isArticle === false) {
+    if (treeNode.isListingPage === true) {
       listingPages.set(treeNode.id, pathHelper.createListingPageBuilder(treeNode))
 
       if (treeNode.parent.id != root.id) {
