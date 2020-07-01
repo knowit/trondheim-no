@@ -157,6 +157,11 @@ class TreeNode {
 }
 
 
+class LinkItem{
+  constructor (treeNode){
+
+  }
+}
 
 
 class ListingPageBuilder {

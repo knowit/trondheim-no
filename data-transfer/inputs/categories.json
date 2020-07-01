@@ -163,15 +163,15 @@
     {
         "no": 78,
         "en": -1,
-        "noSlug": "",
-        "enSlug": "",
+        "noSlug": "bruer",
+        "enSlug": "bridges",
         "_comment": "Bruer - English does not exist"
     },
     {
         "no": 79,
         "en": -1,
-        "noSlug": "",
-        "enSlug": "",
+        "noSlug": "historie",
+        "enSlug": "history",
         "_comment": "Trondheimshistorie"
     },
     {
@@ -205,50 +205,50 @@
     {
         "no": 85,
         "en": 75,
-        "noSlug": "",
-        "enSlug": "",
+        "noSlug": "student",
+        "enSlug": "student",
         "_comment": "Student"
     },
     {
         "no": 86,
         "en": 77,
-        "noSlug": "",
-        "enSlug": "",
+        "noSlug": "tips-til-studenter",
+        "enSlug": "tips-for-students",
         "_comment": "Student => Bolig "
     },
     {
         "no": 87,
         "en": 76,
-        "noSlug": "",
-        "enSlug": "",
+        "noSlug": "utdanningstilbud",
+        "enSlug": "education",
         "_comment": "Student => Utdanningstilbud"
     },
     {
         "no": 88,
         "en": 78,
-        "noSlug": "",
-        "enSlug": "",
+        "noSlug": "studentlivet",
+        "enSlug": "student-life",
         "_comment": "Student => Studentlivet"
     },
     {
         "no": 89,
         "en": 79,
-        "noSlug": "",
-        "enSlug": "",
+        "noSlug": "komme-seg-rundt",
+        "enSlug": "getting-around",
         "_comment": "Student => Komme seg rundt"
     },
     {
         "no": 91,
         "en": 80,
-        "noSlug": "",
-        "enSlug": "",
+        "noSlug": "jobb-i-trondheim",
+        "enSlug": "working-in-trondheim",
         "_comment": "Student => Jobb i Trondheim"
     },
     {
         "no": 2,
         "en": 2,
-        "noSlug": "",
-        "enSlug": "",
+        "noSlug": "annet",
+        "enSlug": "other",
         "_comment": "Ukategorisert"
     },
     {
@@ -261,8 +261,8 @@
     {
         "no": 90,
         "en": -1,
-        "noSlug": "",
-        "enSlug": "",
+        "noSlug": "annet",
+        "enSlug": "other",
         "_comment": "Page..."
     },
     {
