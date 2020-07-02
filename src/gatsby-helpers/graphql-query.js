@@ -80,6 +80,7 @@ query {
           type
         }
         slug
+        path
         flamelink_id
         flamelink_locale
         localTitle
@@ -353,6 +354,139 @@ query {
                 presentationWidth
                 presentationHeight
                 originalImg
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  allFlamelinkStudentPageContent {
+    edges {
+      node {
+            id
+        _fl_meta_{
+          fl_id
+          schema
+        }
+        flamelink_locale
+        flamelink_id
+        headerText
+        headerFocusWord
+        frontImageAlt
+        logoImage {
+          localFile {
+            childImageSharp {
+              fluid (maxWidth: 9999, quality: 99) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+        frontImage {
+          localFile {
+            childImageSharp {
+              fluid (maxWidth: 9999, quality: 99) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+        columnsBackgroundImage {
+          localFile {
+            childImageSharp {
+              fluid (maxWidth: 9999, quality: 99) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+        customContent{
+          content
+          remoteImages {
+            url
+            childImageSharp {
+              fluid (quality: 90){
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              } 
+            }
+          }
+        }
+        linkColumns {
+          title
+          subTitle
+          linkType
+          url
+          listingPage{
+            navigationTitle
+            navigationSubtitle
+            path
+          }
+          page{
+            title
+            subTitle
+            path
+          }
+          content{
+            content
+            remoteImages {
+              url
+              childImageSharp {
+                fluid (quality: 90){
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                } 
+              }
+            }
+          }
+          icon {
+            localFile {
+              name
+              childImageSharp {
+                fluid(quality: 90) {
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                }
               }
             }
           }

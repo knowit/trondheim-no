@@ -112,63 +112,22 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     })
   }
 
-  function createListingPage(listingPageBuilder) {
-
+  function createStudentPage(listingPageBuilder) {
     const treeNode = listingPageBuilder.getTreeNode()
-    const localization = result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations
     Array.from(treeNode.node.keys()).map(locale => {
 
-      const mapSlug = `${(locale === 'no') ? 'kart-over-' : 'map-of-'}${treeNode.slugs.get(locale)}`
-      const parentPath = treeNode.parent.getPath(locale)
-
-      if (parentPath.slice(-1) != '/') {
-        parentPath = parentPath + '/'
-      }
-
-      const mapPath = parentPath + mapSlug
-      const listingPagePath = treeNode.getPath(locale)
-
-
-      // Get all markers from child articles and subpage child articles.
-      const markers = []
-
-      treeNode.getAllChildArticles().map(articleTreeNode => {
-
-        const articleNode = articleTreeNode.node.get(locale)
-        const articlePath = articleTreeNode.getPath(locale)
-        const parentNode = articleTreeNode.parent.node.get(locale)
-        const marker = GoogleMapsUrlHelper.getMarker(articleNode, articlePath, parentNode)
-
-        markers.push(marker)
-      })
-
-      if (treeNode.node.get(locale).hasMapPage) {
-        // Create listing page map
-        createPage({
-          path: mapPath,
-          component: path.resolve(`./src/templates/listing-page-map.js`),
-          context: {
-            node: treeNode.node.get(locale),
-            parentPath: treeNode.parent.getPath(locale),
-            localization: localization,
-            locale: locale,
-            layoutContext: pathHelper.layoutContext(locale, listingPageBuilder.getLocalizedMapPaths()),
-            markers: markers,
-            listingPagePath: listingPagePath,
-          },
-        })
-      }
+      const studentPageNode = result.data.allFlamelinkStudentPageContent.edges.find(node => node.flamelink_locale == locale)
+      const node = treeNode.node.get(locale)
 
       // Create listing page
       createPage({
-        path: listingPagePath,
-        component: path.resolve(`./src/templates/listing-page.js`),
+        path: node.path,
+        component: path.resolve(`./src/templates/student.js`),
         context: {
-          node: treeNode.node.get(locale),
+          node: node,
+          studentPageNode: studentPageNode,
           parentPath: treeNode.parent.getPath(locale),
-          mapPath: mapPath,
           subListingPages: listingPageBuilder.getSubListingPages(locale),
-          tags: listingPageBuilder.getTags(locale),
           articles: listingPageBuilder.getArticles(locale),
           localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
           locale: locale,
@@ -176,6 +135,81 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         },
       })
     })
+  }
+
+  function createListingPage(listingPageBuilder) {
+
+    const treeNode = listingPageBuilder.getTreeNode()
+
+    if (treeNode.isStudentPage) {
+      createStudentPage(listingPageBuilder)
+    }
+
+    else {
+
+      const localization = result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations
+      Array.from(treeNode.node.keys()).map(locale => {
+
+        const mapSlug = `${(locale === 'no') ? 'kart-over-' : 'map-of-'}${treeNode.slugs.get(locale)}`
+        const parentPath = treeNode.parent.getPath(locale)
+
+        if (parentPath.slice(-1) != '/') {
+          parentPath = parentPath + '/'
+        }
+
+        const mapPath = parentPath + mapSlug
+        const listingPagePath = treeNode.getPath(locale)
+
+
+        // Get all markers from child articles and subpage child articles.
+        const markers = []
+
+        treeNode.getAllChildArticles().map(articleTreeNode => {
+
+          const articleNode = articleTreeNode.node.get(locale)
+          const articlePath = articleTreeNode.getPath(locale)
+          const parentNode = articleTreeNode.parent.node.get(locale)
+          const marker = GoogleMapsUrlHelper.getMarker(articleNode, articlePath, parentNode)
+
+          markers.push(marker)
+        })
+
+        if (treeNode.node.get(locale).hasMapPage) {
+          // Create listing page map
+          createPage({
+            path: mapPath,
+            component: path.resolve(`./src/templates/listing-page-map.js`),
+            context: {
+              node: treeNode.node.get(locale),
+              parentPath: treeNode.parent.getPath(locale),
+              localization: localization,
+              locale: locale,
+              layoutContext: pathHelper.layoutContext(locale, listingPageBuilder.getLocalizedMapPaths()),
+              markers: markers,
+              listingPagePath: listingPagePath,
+            },
+          })
+        }
+
+        // Create listing page
+        createPage({
+          path: listingPagePath,
+          component: path.resolve(`./src/templates/listing-page.js`),
+          context: {
+            node: treeNode.node.get(locale),
+            parentPath: treeNode.parent.getPath(locale),
+            mapPath: mapPath,
+            subListingPages: listingPageBuilder.getSubListingPages(locale),
+            tags: listingPageBuilder.getTags(locale),
+            articles: listingPageBuilder.getArticles(locale),
+            localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
+            locale: locale,
+            layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
+          },
+        })
+      })
+
+    }
   }
 
   function createFrontPage(root, frontPageListingPages) {

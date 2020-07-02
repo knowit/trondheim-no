@@ -28,6 +28,7 @@ class TreeNode {
     this.isArticle = false;
     this.isFrontPage = false;
     this.isPage = false;
+    this.isStudentPage = false;
   }
 
   toString() {
@@ -105,6 +106,9 @@ class TreeNode {
     }
     else if (schema == "listingPage") {
       this.isListingPage = true
+      if (node.slug == 'student') {
+        this.isStudentPage = true;
+      }
     }
     else if (schema == "frontPage") {
       this.isFrontPage = true
@@ -157,8 +161,8 @@ class TreeNode {
 }
 
 
-class LinkItem{
-  constructor (treeNode){
+class LinkItem {
+  constructor(treeNode) {
 
   }
 }

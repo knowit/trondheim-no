@@ -123,6 +123,40 @@ exports.createResolvers = ({ createResolvers }) => {
         },
       },
     },
+    FlamelinkStudentPageContent: {
+      path: {
+        resolve(source, args, context, info) {
+          return (resolvePath(source))
+        },
+      },
+      localizedPaths: {
+        resolve(source, args, context, info) {
+          return resolveLocalizedPaths(source, context)
+        },
+      },
+      linkColumns: {
+        resolve(source, args, context, info) {
+          return source.linkColumns.map(column => context.nodeModel.runQuery({
+            query: {
+              filter: {
+                _fl_meta_: {
+                  fl_id: {
+                    eq: column._fl_meta_.fl_id
+                  }
+                },
+                flamelink_locale: {
+                  eq: source.flamelink_locale
+                }
+              },
+            },
+            type: 'FlamelinkLinkItemContent',
+            firstOnly: true
+          }).then(node => ({
+            ...node
+          })))
+        },
+      },
+    },
     FlamelinkPageContent: {
       path: {
         resolve(source, args, context, info) {
