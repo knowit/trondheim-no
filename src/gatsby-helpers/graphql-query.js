@@ -180,7 +180,7 @@ query {
         url
         listingPage {
           navigationTitle
-          navigationSubTitle
+          navigationSubtitle
           path
         }
         page {
@@ -273,7 +273,55 @@ query {
           }
         }
         linkColumns {
-          id
+          title
+          subTitle
+          linkType
+          url
+          listingPage{
+            navigationTitle
+            navigationSubtitle
+            path
+          }
+          page{
+            title
+            subTitle
+            path
+          }
+          content{
+            content
+            remoteImages {
+              url
+              childImageSharp {
+                fluid (quality: 90){
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                } 
+              }
+            }
+          }
+          icon {
+            localFile {
+              name
+              childImageSharp {
+                fluid(quality: 90) {
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                }
+              }
+            }
+          }
         }
         frontImageAlt
         frontImage{

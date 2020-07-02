@@ -3,6 +3,7 @@ exports.createSchemaCustomization = ({ actions }) => {
 
   const typeDefs = `
   type FlamelinkTextHtmlContentNode implements Node {
+    content: String
     remoteImages: [File] @link
   }
   type FlamelinkArticleContent implements Node {
@@ -36,6 +37,7 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkPageContent implements Node {
     path: String
     localizedPaths : [LocalizedPath]
+    content: FlamelinkTextHtmlContentNode
   }
   type LocalizedPath {
     locale: String,
@@ -44,6 +46,7 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkLinkItemContent implements Node {
     listingPage: FlamelinkListingPageContent
     page: FlamelinkPageContent
+    content: FlamelinkTextHtmlContentNode
   }
   `
   createTypes(typeDefs)

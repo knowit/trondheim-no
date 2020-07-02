@@ -17,7 +17,7 @@ const FrontpageColumns = ({ pageContext }) => {
 
   const Column = ({ node }) => {
 
-    const content = ReactDOMHelper.buildReactComponent(node.content)
+    const Content = () => ReactDOMHelper.parseToReact(node.content.content)
 
     const Ref = ({ children }) => {
       if (node.linkType === 'listingPage' || node.linkType === 'page') {
@@ -45,9 +45,9 @@ const FrontpageColumns = ({ pageContext }) => {
             {node.title}
           </Ref>
         </h2>
-        <h4>
+        <h4 >
           <Ref>
-            {content}
+            <Content />
           </Ref>
         </h4>
       </div>
