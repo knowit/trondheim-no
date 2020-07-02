@@ -178,6 +178,16 @@ query {
         flamelink_locale
         linkType
         url
+        listingPage {
+          navigationTitle
+          navigationSubTitle
+          path
+        }
+        page {
+          title
+          subTitle
+          path
+        }
         content{
           content
           remoteImages {
