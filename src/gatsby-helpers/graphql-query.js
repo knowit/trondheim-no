@@ -114,23 +114,6 @@ query {
             }
           }
         }
-        icon {
-          localFile {
-            name
-            childImageSharp {
-              fluid(quality: 90) {
-                base64
-                aspectRatio 
-                src 
-                srcSet 
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
-              }
-            }
-          }
-        }
       }
     }
   }
@@ -179,6 +162,61 @@ query {
       }
     }
   }
+
+  allFlamelinkLinkItemContent {
+    edges {
+      node {
+        _fl_meta_ {
+          fl_id
+          schema
+        }
+        internal{
+          type
+        }
+        id
+        flamelink_id
+        flamelink_locale
+        linkType
+        url
+        content{
+          content
+          remoteImages {
+            url
+            childImageSharp {
+              fluid (quality: 90){
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              } 
+            }
+          }
+        }
+        icon {
+          localFile {
+            name
+            childImageSharp {
+              fluid(quality: 90) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   allFlamelinkFrontPageContent {
     edges {
       node {
@@ -193,6 +231,7 @@ query {
         flamelink_locale
         headerFocusWord
         headerText
+        navigationText
         id
         customContent{
           content
@@ -223,26 +262,8 @@ query {
             url
           }
         }
-        columns {
-          title
-          subTitle
-          redirectUrl
-          icon {
-            localFile {
-              childImageSharp {
-                fluid (maxWidth: 9999, quality: 99) {
-                  base64
-                  aspectRatio 
-                  src 
-                  srcSet 
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
-                }
-              }
-            }
-          }
+        linkColumns {
+          id
         }
         frontImageAlt
         frontImage{
@@ -277,7 +298,6 @@ query {
             }
           }
         }
-        navigationText
       }
     }
   }

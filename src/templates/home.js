@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons"
 import HTMLContent from '../components/html-content'
+import ReactDOMHelper from '../helpers/react-dom-helper'
 
 
 library.add(fas)
@@ -16,10 +17,18 @@ const FrontpageColumns = ({ pageContext }) => {
 
   const Column = ({ node }) => {
 
-    const Ref = ({ children }) =>
-      (node.link)
-        ? <Link className="frontpage-column-link" to={node.redirectUrl}>{children}</Link>
-        : <a className="frontpage-column-link" href={node.redirectUrl}>{children}</a>
+    const content = ReactDOMHelper.buildReactComponent(node.content)
+
+    const Ref = ({ children }) => {
+      if (node.linkType === 'listingPage' || node.linkType === 'page') {
+        const path = node.linkType === 'listingPage' ? node.listingPage.path : node.page.path
+        return (<Link className="frontpage-column-link" to={path}>{children}</Link>)
+      }
+      else if (node.linkType === 'url') {
+        return (<a className="frontpage-column-link" href={node.url}>{children}</a>)
+      }
+      else return children
+    }
 
 
     return (<div className="frontpage-column-item-container">
@@ -38,7 +47,7 @@ const FrontpageColumns = ({ pageContext }) => {
         </h2>
         <h4>
           <Ref>
-            {node.subTitle}
+            {content}
           </Ref>
         </h4>
       </div>
@@ -56,7 +65,7 @@ const FrontpageColumns = ({ pageContext }) => {
 
     <div id="frontpage-columns-container" style={backgroundStyle}>
       <div id="frontpage-columns-overlay">
-        {pageContext.columnContent.map(node => {
+        {pageContext.node.linkColumns.map(node => {
           return (
             <Column
               key={index++}
@@ -92,7 +101,7 @@ const FrontpageCards = ({ pageContext }) => {
 
   return (
     <div id="frontpage-cards-container">
-      {pageContext.cardContent.sort((a, b) => a.index - b.index).map((item, key) => {
+      {pageContext.node.bottomCards.map((item, key) => {
         const icon = {
           name: item.iconName,
           color: item.iconColor

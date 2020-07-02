@@ -61,6 +61,7 @@ class ReactDOMHelper {
 
       htmlNode.getChildren().map(childNode => {
         text += getText(childNode)
+        return childNode
       })
 
       return text
@@ -161,7 +162,7 @@ class ReactDOMHelper {
   }
 
 
-  static buildReactComponent(htmlInput, transformImg) {
+  static buildReactComponent(htmlInput, transformImg = () => { }) {
 
     const root = new HtmlNode('div')
     root.props = { id: 'html-content-container' }

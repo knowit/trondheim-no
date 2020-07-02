@@ -4,248 +4,19 @@ const path = require(`path`)
 const defaultLocale = 'no'
 const { PathTreeBuilder } = require(`./src/helpers/path-helper`)
 const { GoogleMapsUrlHelper } = require(`./src/helpers/url-helper`)
-const { createRemoteFileNode } = require("gatsby-source-filesystem")
-const { query } = require('./src/graphql-query')
+const { query } = require('./src/gatsby-helpers/graphql-query')
 
 let layoutContexts = new Map()
 
 
-function extract_image_urls(htmlBody) {
-  var result = []
+const { createResolvers } = require('./src/gatsby-helpers/create-resolvers')
+exports.createResolvers = createResolvers
 
-  var tags = htmlBody.match(/<img [^>]*src="[^"]*"[^>]*>/gm)
-  if (tags == null) {
-    tags = []
-  }
+const { createSchemaCustomization } = require('./src/gatsby-helpers/create-schema-customization')
+exports.createSchemaCustomization = createSchemaCustomization
 
-  tags.map(x => x.replace(/.*src="([^"]*)".*/, '$1')).map(url => {
-    result.push(url)
-  })
-
-  return result
-}
-
-
-exports.createResolvers = ({ createResolvers }) => {
-
-  const resolvePath = (source) => {
-    if (source._fl_meta_.schema === 'listingPage' || source._fl_meta_.schema === 'article') {
-
-      const locale = source.flamelink_locale
-      var path = source.slug
-      var parent = source.parentListingPage
-
-      while (parent != null) {
-        if (parent.slug != null) {
-          path = `${parent.slug}/${path}`
-        }
-        parent = parent.parentListingPage
-      }
-
-      path = `${locale === 'no' ? '' : '/en'}/${path}`
-
-      return path
-    }
-
-    else if (source._fl_meta_.schema === 'page') {
-      return `${source.flamelink_locale === 'no' ? '/' : '/en'}/${source.slug}`
-    }
-
-    else if (source._fl_meta_.schema === 'frontPage') {
-      return source.flamelink_locale === 'no' ? '/' : '/en'
-    }
-
-    else return ""
-  }
-
-  const resolveLocalizedPaths = (source, context) => {
-    const nodeType = source.internal.type
-    const nodeId = source._fl_meta_.fl_id
-    const query = {
-      query: {
-        filter: {
-          _fl_meta_: {
-            fl_id: {
-              eq: nodeId
-            }
-          }
-        },
-      },
-      type: nodeType,
-      firstOnly: false
-    }
-    const result = context.nodeModel.runQuery(query).then(result => {
-      var paths = []
-
-      result.map(node => {
-        paths.push({
-          locale: node.flamelink_locale,
-          path: resolvePath(node)
-        })
-      })
-
-      return paths
-    })
-    return result
-  }
-
-  const resolvers = {
-    FlamelinkListingPageContent: {
-      path: {
-        resolve(source, args, context, info) {
-          return (resolvePath(source))
-        },
-      },
-      localizedPaths: {
-        resolve(source, args, context, info) {
-          return resolveLocalizedPaths(source, context)
-        },
-      },
-    },
-    FlamelinkArticleContent: {
-      path: {
-        resolve(source, args, context, info) {
-          return (resolvePath(source))
-        },
-      },
-      localizedPaths: {
-        resolve(source, args, context, info) {
-          return resolveLocalizedPaths(source, context)
-        },
-      },
-    },
-    FlamelinkFrontPageContent: {
-      path: {
-        resolve(source, args, context, info) {
-          return (resolvePath(source))
-        },
-      },
-      localizedPaths: {
-        resolve(source, args, context, info) {
-          return resolveLocalizedPaths(source, context)
-        },
-      },
-    },
-    FlamelinkPageContent: {
-      path: {
-        resolve(source, args, context, info) {
-          return (resolvePath(source))
-        },
-      },
-      localizedPaths: {
-        resolve(source, args, context, info) {
-          return resolveLocalizedPaths(source, context)
-        },
-      },
-    },
-  }
-  createResolvers(resolvers)
-}
-
-
-exports.createSchemaCustomization = ({ actions }) => {
-  const { createTypes } = actions
-
-  const typeDefs = `
-  type FlamelinkTextHtmlContentNode implements Node {
-    remoteImages: [File] @link
-  }
-  type FlamelinkArticleContent implements Node {
-    tags: [String]
-    path: String
-    localizedPaths : [LocalizedPath]
-  }
-  type FlamelinkArticleContentFieldLatLong implements Node {
-    googleMapsStaticImage: File @link
-  }
-  type FlamelinkArticleContentFieldContactInfo implements Node {
-    emailAddress: String
-  }
-  type FlamelinkNavbarContent implements Node {
-    childrenFlamelinkNavbarContentFieldExtraMenuOptionsItem: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
-  }
-  type FlamelinkNavbarContentFieldExtraMenuOptionsItem implements Node {
-    title: String!
-    redirectUrl: String!
-  }
-  type FlamelinkListingPageContent implements Node {
-    parentListingPage: FlamelinkListingPageContent
-    path: String
-    localizedPaths : [LocalizedPath]
-  }
-  type FlamelinkFrontPageContent implements Node {
-    path: String
-    localizedPaths : [LocalizedPath]
-  }
-  type FlamelinkPageContent implements Node {
-    path: String
-    localizedPaths : [LocalizedPath]
-  }
-  type LocalizedPath {
-    locale: String,
-    path: String
-  }
-  `
-  createTypes(typeDefs)
-}
-
-
-exports.onCreateNode = async ({
-  node,
-  actions: { createNode },
-  store,
-  cache,
-  createNodeId,
-}) => {
-
-  if (node.internal.type === "FlamelinkTextHtmlContentNode") {
-
-    var fileNodes = []
-
-    extract_image_urls(node.content).forEach(url => {
-
-      createRemoteFileNode({
-        url: url, // string that points to the URL of the image
-        parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
-        createNode, // helper function in gatsby-node to generate the node
-        createNodeId, // helper function in gatsby-node to generate the node id
-        cache, // Gatsby's cache
-        store, // Gatsby's redux store
-      }).then(fileNode => {
-        // if the file was created, attach the new node to the parent node
-        if (fileNode) {
-          fileNodes.push(fileNode.id)
-          node.remoteImages = fileNodes
-        }
-      })
-    })
-  }
-
-
-  else if (node.internal.type === 'FlamelinkArticleContentFieldLatLong' && node.latitude && node.longitude) {
-
-    let location = GoogleMapsUrlHelper.getLocation(node)
-
-    const url = GoogleMapsUrlHelper.createStaticGoogleMapUrl(location, [{ location: location }])
-
-
-    createRemoteFileNode({
-      url: encodeURI(url), // string that points to the URL of the image
-      parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
-      createNode, // helper function in gatsby-node to generate the node
-      createNodeId, // helper function in gatsby-node to generate the node id
-      cache, // Gatsby's cache
-      store, // Gatsby's redux store
-    }).then(fileNode => {
-      // if the file was created, attach the new node to the parent node
-      if (fileNode) {
-        node.googleMapsStaticImage = fileNode.id
-      }
-    })
-  }
-}
-
-
+const { onCreateNode } = require('./src/gatsby-helpers/on-create-node')
+exports.onCreateNode = onCreateNode
 
 
 exports.onCreatePage = async ({ page, actions }) => {
@@ -280,10 +51,7 @@ exports.onCreatePage = async ({ page, actions }) => {
       context: context,
     })
   }
-
 }
-
-
 
 
 exports.createPages = async ({ graphql, actions, reporter }) => {
@@ -439,16 +207,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         }
       })
 
-
-
-      node.columns.map(column => {
-        columnContent.push({
-          ...column,
-          link: false
-        })
-      })
-      const cardContent = node.bottomCards
-
       createPage({
         path: root.getPath(locale),
         component: path.resolve(`./src/templates/home.js`),
@@ -457,8 +215,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           slug: root.getSlug(locale),
           listingPages: frontListingPages,
           layoutContext: pathHelper.layoutContext(locale, root.getLocalizedPaths()),
-          columnContent: columnContent,
-          cardContent: cardContent
         }
       })
     })
