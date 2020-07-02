@@ -81,6 +81,10 @@ query {
         }
         slug
         path
+        localizedPaths {
+          locale
+          path
+        }
         flamelink_id
         flamelink_locale
         localTitle

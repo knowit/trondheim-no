@@ -116,7 +116,11 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     const treeNode = listingPageBuilder.getTreeNode()
     Array.from(treeNode.node.keys()).map(locale => {
 
-      const studentPageNode = result.data.allFlamelinkStudentPageContent.edges.find(node => node.flamelink_locale == locale)
+      const studentPageNode = result.data.allFlamelinkStudentPageContent.edges
+        .map(node => node.node)
+        .find(node => node.flamelink_locale === locale)
+
+
       const node = treeNode.node.get(locale)
 
       // Create listing page
