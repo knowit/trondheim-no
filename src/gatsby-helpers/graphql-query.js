@@ -89,6 +89,7 @@ query {
         showOnFrontPage
         showOnFrontpageColumns
         showInDropMenu
+        hasMapPage
         mapPageTitle
         mapPageDescription
         parentListingPage{

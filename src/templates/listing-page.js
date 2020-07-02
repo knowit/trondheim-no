@@ -6,6 +6,12 @@ import { Link } from "gatsby"
 import SortableArticleView from "../components/article-list"
 
 const ListingPage = ({ pageContext }) => {
+  const MapButton = () => {
+    if (pageContext.node.hasMapPage) {
+      return (<Link id="map-button" to={pageContext.mapPath}>{LocalizationHelper.getLocalWord(pageContext.localization, "showOnMap", pageContext.locale)}</Link>)
+    }
+    else return null
+  }
   return (
     <Layout layoutContext={pageContext.layoutContext}>
       <div id="outer-container">
@@ -14,7 +20,7 @@ const ListingPage = ({ pageContext }) => {
           <div id="articles-header">
             <h2>{pageContext.node.localTitle}</h2>
             <p>{pageContext.node.textOnPage}</p>
-            <Link id="map-button" to={pageContext.mapPath}>{LocalizationHelper.getLocalWord(pageContext.localization, "showOnMap", pageContext.locale)}</Link>
+            <MapButton />
             <Link
               id="english-button"
               to={((pageContext.layoutContext.locale === 'no') ? pageContext.layoutContext.localizedPaths.en : pageContext.layoutContext.localizedPaths.no)}>

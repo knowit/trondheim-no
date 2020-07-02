@@ -8,7 +8,6 @@ const { query } = require('./src/gatsby-helpers/graphql-query')
 
 let layoutContexts = new Map()
 
-
 const { createResolvers } = require('./src/gatsby-helpers/create-resolvers')
 exports.createResolvers = createResolvers
 
@@ -17,7 +16,6 @@ exports.createSchemaCustomization = createSchemaCustomization
 
 const { onCreateNode } = require('./src/gatsby-helpers/on-create-node')
 exports.onCreateNode = onCreateNode
-
 
 exports.onCreatePage = async ({ page, actions }) => {
   const { createPage, deletePage } = actions
@@ -53,7 +51,6 @@ exports.onCreatePage = async ({ page, actions }) => {
   }
 }
 
-
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
@@ -65,7 +62,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     reporter.panicOnBuild(`Error while running GraphQL query.`)
     return
   }
-
 
   let pathHelper = new PathTreeBuilder(result, defaultLocale)
   const root = pathHelper.build()
@@ -116,7 +112,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     })
   }
 
-
   function createListingPage(listingPageBuilder) {
 
     const treeNode = listingPageBuilder.getTreeNode()
@@ -147,20 +142,22 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         markers.push(marker)
       })
 
-      // Create listing page map
-      createPage({
-        path: mapPath,
-        component: path.resolve(`./src/templates/listing-page-map.js`),
-        context: {
-          node: treeNode.node.get(locale),
-          parentPath: treeNode.parent.getPath(locale),
-          localization: localization,
-          locale: locale,
-          layoutContext: pathHelper.layoutContext(locale, listingPageBuilder.getLocalizedMapPaths()),
-          markers: markers,
-          listingPagePath: listingPagePath,
-        },
-      })
+      if (treeNode.node.get(locale).hasMapPage) {
+        // Create listing page map
+        createPage({
+          path: mapPath,
+          component: path.resolve(`./src/templates/listing-page-map.js`),
+          context: {
+            node: treeNode.node.get(locale),
+            parentPath: treeNode.parent.getPath(locale),
+            localization: localization,
+            locale: locale,
+            layoutContext: pathHelper.layoutContext(locale, listingPageBuilder.getLocalizedMapPaths()),
+            markers: markers,
+            listingPagePath: listingPagePath,
+          },
+        })
+      }
 
       // Create listing page
       createPage({
@@ -180,7 +177,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
   }
-
 
   function createFrontPage(root, frontPageListingPages) {
 
@@ -220,7 +216,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     })
   }
 
-
   for (const treeNode of pathHelper.createNodeIterator()) {
 
     if (treeNode.isListingPage === true) {
@@ -239,7 +234,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           parentListingPage.addArticle(treeNode)
         }
       }
-
       createArticle(treeNode)
     }
 
