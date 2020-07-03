@@ -48,6 +48,8 @@ export class BurgerMenu extends React.Component {
       return this.state.showMenu ? (<div id="menu-background-overlay" />) : null
     }
 
+    console.log(this.props.layoutContext.localizedPaths)
+
     const Menu = () => {
       return this.state.showMenu
         ? (
@@ -73,7 +75,7 @@ export class BurgerMenu extends React.Component {
 
             <Link
               className="drop-menu-item-container"
-              to={(this.props.layoutContext.locale === 'no') ? this.props.layoutContext.localizedPaths.en : this.props.layoutContext.localizedPaths.no}>
+              to={this.props.layoutContext.localizedPaths.find(item => item.locale !== this.props.layoutContext.locale).path}>
 
               <ReactCountryFlag
                 className="drop-menu-item-flag"

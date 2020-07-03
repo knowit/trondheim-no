@@ -27,7 +27,7 @@ const Navigation = ({ layoutContext }) => {
       <BurgerMenu layoutContext={layoutContext}></BurgerMenu>
 
       <div className="logo-container">
-        <Link id="trondheimno-link" to={(layoutContext.locale === 'no') ? '/' : `/${layoutContext.locale.split('-')[0]}/`}>
+        <Link id="trondheimno-link" to={layoutContext.homePath}>
 
           <div className="logo-text">{layoutContext.navbar.navbarText}</div>
 

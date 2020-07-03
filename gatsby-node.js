@@ -89,7 +89,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           defaultCenter: { lat: 63.430529, lng: 10.4005522 },
           localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
           node: node,
-          layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
+          layoutContext: pathHelper.layoutContext(node),
           locale: locale,
           markers: [marker],
         }
@@ -109,7 +109,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         context: {
           localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
           node: node,
-          layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
+          layoutContext: pathHelper.layoutContext(node),
           locale: locale,
         }
       })
@@ -139,7 +139,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           articles: listingPageBuilder.getArticles(locale),
           localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
           locale: locale,
-          layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
+          layoutContext: pathHelper.layoutContext(node),
         },
       })
     })
@@ -182,17 +182,19 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           markers.push(marker)
         })
 
-        if (treeNode.node.get(locale).hasMapPage) {
+        const node = treeNode.node.get(locale)
+
+        if (node.hasMapPage) {
           // Create listing page map
           createPage({
             path: mapPath,
             component: path.resolve(`./src/templates/listing-page-map.js`),
             context: {
-              node: treeNode.node.get(locale),
+              node: node,
               parentPath: treeNode.parent.getPath(locale),
               localization: localization,
               locale: locale,
-              layoutContext: pathHelper.layoutContext(locale, listingPageBuilder.getLocalizedMapPaths()),
+              layoutContext: pathHelper.layoutContext(node),
               markers: markers,
               listingPagePath: listingPagePath,
             },
@@ -212,7 +214,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             articles: listingPageBuilder.getArticles(locale),
             localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
             locale: locale,
-            layoutContext: pathHelper.layoutContext(locale, treeNode.getLocalizedPaths()),
+            layoutContext: pathHelper.layoutContext(node),
           },
         })
       })
@@ -225,7 +227,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     Array.from(root.node.keys()).map(locale => {
 
       const node = root.node.get(locale)
-      const frontListingPages = [] //Array.from(frontPageListingPages.get(locale).values())
+      const frontListingPages = []
       const columnContent = []
 
       listingPages.forEach((lsBuilder, id, map) => {
@@ -252,7 +254,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           node: node,
           slug: root.getSlug(locale),
           listingPages: frontListingPages,
-          layoutContext: pathHelper.layoutContext(locale, root.getLocalizedPaths()),
+          layoutContext: pathHelper.layoutContext(node),
         }
       })
     })

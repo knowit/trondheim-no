@@ -47,6 +47,11 @@ query {
     title
     slug
     showInDropMenu
+    path
+    localizedPaths {
+      locale
+      path
+    }
     content{
       content
       remoteImages {
@@ -249,6 +254,11 @@ query {
         headerText
         navigationText
         id
+        path
+        localizedPaths{
+          locale
+          path
+        }
         customContent{
           content
           remoteImages {
@@ -377,6 +387,11 @@ query {
         headerText
         headerFocusWord
         frontImageAlt
+        path
+        localizedPaths {
+          locale
+          path
+        }
         additionalListingPages {
           id
           _fl_meta_{

@@ -55,14 +55,23 @@ exports.createResolvers = ({ createResolvers }) => {
   const resolveLocalizedPaths = (source, context) => {
     const nodeType = source.internal.type
     const nodeId = source._fl_meta_.fl_id
+    const nodeSchemaType = source._fl_meta_.schemaType
+    const nodeSchema = source._fl_meta_.schema
     const query = {
       query: {
         filter: {
-          _fl_meta_: {
-            fl_id: {
-              eq: nodeId
+          _fl_meta_: (nodeSchemaType === 'single')
+            ? {
+              schema: {
+                eq: nodeSchema
+              }
             }
-          }
+
+            : {
+              fl_id: {
+                eq: nodeId
+              }
+            }
         },
       },
       type: nodeType,
@@ -70,7 +79,6 @@ exports.createResolvers = ({ createResolvers }) => {
     }
     const result = context.nodeModel.runQuery(query).then(result => {
       var paths = []
-
       result.map(node => {
         paths.push({
           locale: node.flamelink_locale,

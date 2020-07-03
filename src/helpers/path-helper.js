@@ -396,42 +396,39 @@ class PathTreeBuilder {
 
     }
 
-    for (const treeNode of this.createNodeIterator()) {
-      treeNode.node.forEach((node, locale, map) => {
-        if (node.showInDropMenu || node.showOnDropMenu) {
+    this.result.data.allFlamelinkListingPageContent.edges.map(node => node.node).map(node => {
+      if (node.showInDropMenu) {
+        createMenuData(
+          node.navigationTitle,
+          node.slug,
+          node.flamelink_locale,
+          node.path
+        )
+      }
+    })
+    this.result.data.allFlamelinkPageContent.edges.map(node => node.node).map(node => {
+      if (node.showInDropMenu) {
+        createMenuData(
+          node.title,
+          node.slug,
+          node.flamelink_locale,
+          node.path
+        )
+      }
+    })
 
-          if (treeNode.isListingPage) {
-            createMenuData(
-              node.localTitle,
-              node.slug,
-              locale,
-              this.findPagePath(node._fl_meta_.fl_id, locale)
-            )
-          }
-
-          else if (treeNode.isPage) {
-            createMenuData(
-              node.title,
-              node.slug,
-              locale,
-              this.findPagePath(node._fl_meta_.fl_id, locale)
-            )
-          }
-        }
-      })
-    }
     return menuData
   }
 
-  layoutContext(locale, localizedPaths) {
+  layoutContext(node) {
     return {
-      menuData: this.menuData.get(locale),
-      locale: locale,
-      localizedPaths: localizedPaths, // Paths to the same page for different locales
+      menuData: this.menuData.get(node.flamelink_locale),
+      locale: node.flamelink_locale,
+      localizedPaths: node.localizedPaths, // Paths to the same page for different locales
       defaultThumbnails: this.result.data.allFlamelinkDefaultThumbnailsContent.edges[0].node.imageDeck,
       localization: this.result.data.allFlamelinkLayoutLocalizationContent.edges[0].node.translations,
-      homePath: (locale === 'no') ? '/' : '/en/',
-      navbar: this.navbarData.get(locale)
+      homePath: (node.flamelink_locale === 'no') ? '/' : '/en/',
+      navbar: this.navbarData.get(node.flamelink_locale)
     }
   }
 
