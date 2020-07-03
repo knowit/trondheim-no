@@ -1,9 +1,10 @@
 import React from "react"
 import { Link } from "gatsby"
 import BackgroundImage from 'gatsby-background-image'
-import Img from 'gatsby-image'
+import Img from "gatsby-image/withIEPolyfill"
 import "../style/student.css"
 import HTMLContent from "../components/html-content"
+import ReactDOMHelper from "../helpers/react-dom-helper"
 
 
 export default ({ pageContext }) => {
@@ -70,8 +71,75 @@ export default ({ pageContext }) => {
     </div>)
   }
 
-  const Links = () => {
-    return (<div></div>)
+  const LinkColumns = () => {
+
+    const Column = ({ node }) => {
+
+      const Content = () => ReactDOMHelper.parseToReact(node.content.content)
+
+      const Ref = ({ children }) => {
+        if (node.linkType === 'listingPage' || node.linkType === 'page') {
+          const path = node.linkType === 'listingPage' ? node.listingPage.path : node.page.path
+          return (<Link className="student-column-link" to={path}>{children}</Link>)
+        }
+        else if (node.linkType === 'url') {
+          return (<a className="student-column-link" href={node.url}>{children}</a>)
+        }
+        else return children
+      }
+
+      const size = 56
+
+      const imgSize = {
+        width: size * node.icon[0].localFile.childImageSharp.fluid.presentationWidth / node.icon[0].localFile.childImageSharp.fluid.presentationHeight,
+        height: `${size}px`
+      }
+
+      return (<div className="student-column-item-container">
+        <div className="student-column-image-container">
+          <Ref >
+            {node.icon ? <Img className="student-column-image"
+              fluid={node.icon[0].localFile.childImageSharp.fluid}
+              alt="thumbnail"
+              style={imgSize}
+            /> : null}
+          </Ref>
+        </div>
+        <div className="student-column-info-container">
+          <h3>
+            <Ref>
+              {node.title}
+            </Ref>
+          </h3>
+          <h4 >
+            <Ref>
+              <Content />
+            </Ref>
+          </h4>
+        </div>
+      </div>)
+    }
+
+
+    const backgroundStyle = {
+      backgroundImage: `url(${pageContext.studentPageNode.columnsBackgroundImage[0].localFile.childImageSharp.fluid.src})`
+    }
+
+    var index = 0;
+
+    return (
+
+      <div id="student-columns-container" style={backgroundStyle}>
+        <div id="student-columns-overlay">
+          {pageContext.studentPageNode.linkColumns.map(node => {
+            return (
+              <Column
+                key={index++}
+                node={node} />)
+          })}
+        </div>
+      </div>
+    )
   }
 
   return (<div>
@@ -79,8 +147,7 @@ export default ({ pageContext }) => {
     <HeaderImage />
     <SubListingPages />
     <CustomContent />
-    <Links />
-    Student page
+    <LinkColumns />
   </div>)
 
 }

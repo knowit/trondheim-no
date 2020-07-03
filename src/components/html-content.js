@@ -51,7 +51,6 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
     },
     (htmlNode) => {
       const props = htmlNode.props
-      console.log(htmlNode)
 
       return <div style={{
         width: props.width ? props.width : '100%',
