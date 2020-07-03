@@ -15,12 +15,11 @@ export default ({ pageContext }) => {
           {pageContext.node.localizedPaths
             .sort((a, b) => b.locale.split('-')[0].toUpperCase() > a.locale.split('-')[0].toUpperCase() ? 1 : -1)
             .map(item => (item.locale === pageContext.node.flamelink_locale)
-              ? <div className="language-item">
+              ? <div key={item.locale} className="language-item">
                 {item.locale.split('-')[0].toUpperCase()}
               </div>
-              : <div className="language-item">
+              : <div key={item.locale} className="language-item">
                 <Link
-                  key={item.locale}
                   className="language-item-link"
                   to={item.path}>
                   {item.locale.split('-')[0].toUpperCase()}

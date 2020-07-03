@@ -3,7 +3,7 @@ import React from "react"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 import Img from "gatsby-image"
 import Iframe from 'react-iframe'
-import { Online, Offline } from "react-detect-offline"
+import { Online } from "react-detect-offline"
 
 const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
 
@@ -49,10 +49,10 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
         return null
       }
     },
-    (htmlNode) => {
+    (htmlNode, index) => {
       const props = htmlNode.props
 
-      return <div style={{
+      return <div key={index} style={{
         width: props.width ? props.width : '100%',
         height: props.height ? props.height : '100%'
       }}>
