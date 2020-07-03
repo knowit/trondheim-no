@@ -14,12 +14,18 @@ export default ({ pageContext }) => {
         <div id="languages-container">
           {pageContext.node.localizedPaths
             .sort((a, b) => b.locale.split('-')[0].toUpperCase() > a.locale.split('-')[0].toUpperCase() ? 1 : -1)
-            .map(item => <Link
-              key={item.locale}
-              className="language-item"
-              to={item.path}>
-              {item.locale.split('-')[0].toUpperCase()}
-            </Link>)}
+            .map(item => (item.locale === pageContext.node.flamelink_locale)
+              ? <div className="language-item">
+                {item.locale.split('-')[0].toUpperCase()}
+              </div>
+              : <div className="language-item">
+                <Link
+                  key={item.locale}
+                  className="language-item-link"
+                  to={item.path}>
+                  {item.locale.split('-')[0].toUpperCase()}
+                </Link>
+              </div>)}
         </div>
 
         <div id="student-logo-container">

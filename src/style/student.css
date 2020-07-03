@@ -26,9 +26,16 @@
   margin-right: 5px;
   padding-right: 5px;
   border-right: 1px solid black;
+  font-size: 17px;
+  font-weight: 600;
 }
 .language-item:last-child {
   border-right: 0;
+}
+
+.language-item-link  {
+  color: #005aa7;
+  font-weight: 400;
 }
 
 #student-logo-container {
