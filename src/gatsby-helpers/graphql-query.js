@@ -378,6 +378,34 @@ query {
         headerText
         headerFocusWord
         frontImageAlt
+        additionalListingPages {
+          _fl_meta_{
+            fl_id
+            schema
+          }
+          flamelink_id
+          flamelink_locale
+          navigationTitle
+          navigationSubtitle
+          path
+          thumbnail {
+            localFile {
+              name
+              childImageSharp {
+                fluid(quality: 90) {
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                }
+              }
+            }
+          }
+        }
         logoImage {
           localFile {
             childImageSharp {

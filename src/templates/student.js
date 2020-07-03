@@ -42,7 +42,11 @@ export default ({ pageContext }) => {
   const ListingPage = ({ node }) => {
     return (<div className="student-listing-page-card">
       <Img className="student-listing-page-card-thumbnail" fluid={node.thumbnail[0].localFile.childImageSharp.fluid}></Img>
-      {node.navigationTitle}
+      <div className="student-listing-page-info-container">
+        <h3><Link to={node.path}>{node.navigationTitle}</Link></h3>
+        <p>{node.navigationSubtitle}</p>
+      </div>
+
     </div>)
   }
 

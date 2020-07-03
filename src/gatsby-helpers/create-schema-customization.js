@@ -37,6 +37,7 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkStudentPageContent implements Node {
     path: String
     localizedPaths : [LocalizedPath]
+    additionalListingPages: [FlamelinkListingPageContent]
     linkColumns: [FlamelinkLinkItemContent]
   }
   type FlamelinkPageContent implements Node {
