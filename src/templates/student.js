@@ -5,6 +5,7 @@ import Img from 'gatsby-image'
 import "../style/student.css"
 import HTMLContent from "../components/html-content"
 
+
 export default ({ pageContext }) => {
   const Navigation = () => {
     return (<div id="student-header-container">
@@ -64,7 +65,9 @@ export default ({ pageContext }) => {
   }
 
   const CustomContent = () => {
-    return (<HTMLContent htmlContent={pageContext.studentPageNode.customContent}/>)
+    return (<div id="student-custom-content-container">
+      <HTMLContent htmlContent={pageContext.studentPageNode.customContent} />
+    </div>)
   }
 
   const Links = () => {

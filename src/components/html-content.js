@@ -2,10 +2,13 @@
 import React from "react"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 import Img from "gatsby-image"
+import Iframe from 'react-iframe'
+import { Online, Offline } from "react-detect-offline"
 
 const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
 
-  const reactComponent = ReactDOMHelper.buildReactComponent(htmlContent.content,
+  const reactComponent = ReactDOMHelper.buildReactComponent(
+    htmlContent.content,
     (props, index) => {
       const imageNode = htmlContent.remoteImages ? htmlContent.remoteImages.find(n => {
         return n.url === props.src
@@ -45,7 +48,29 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
       else {
         return null
       }
-    })
+    },
+    (htmlNode) => {
+      const props = htmlNode.props
+      console.log(htmlNode)
+
+      return <div style={{
+        width: props.width ? props.width : '100%',
+        height: props.height ? props.height : '100%'
+      }}>
+        <Online>
+          <Iframe
+            url={props.src}
+            height='100%'
+            width='100%'
+            className="react-iframe"
+            display={props.display ? props.display : 'initial'}
+            position={props.position ? props.position : 'relative'}
+            frameBorder={props.frameBorder ? props.frameBorder : '0'}
+          />
+        </Online>
+      </div>
+    }
+  )
 
   return reactComponent
 }

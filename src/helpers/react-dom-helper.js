@@ -110,7 +110,7 @@ class ReactDOMHelper {
     }
   }
 
-  static createReactComponent(htmlNode, transformImg, index = 0) {
+  static createReactComponent(htmlNode, transformImg, index = 0, transformIframe) {
 
     if (htmlNode.isType('img')) {
       return transformImg(htmlNode.props, index)
@@ -124,6 +124,10 @@ class ReactDOMHelper {
       return React.createElement('br', { key: index }, null)
     }
 
+    else if (htmlNode.isType('iframe')) {
+      return transformIframe(htmlNode, index)
+    }
+
     else {
       var children = []
 
@@ -131,7 +135,7 @@ class ReactDOMHelper {
 
       htmlNode.getChildren().map(child => {
         children.push(
-          this.createReactComponent(child, transformImg, childIndex)
+          this.createReactComponent(child, transformImg, childIndex, transformIframe)
         )
         childIndex += 1
         return child
@@ -162,7 +166,7 @@ class ReactDOMHelper {
   }
 
 
-  static buildReactComponent(htmlInput, transformImg = () => { }) {
+  static buildReactComponent(htmlInput, transformImg, transformIframe) {
 
     const root = new HtmlNode('div')
     root.props = { id: 'html-content-container' }
@@ -176,7 +180,7 @@ class ReactDOMHelper {
       }
     })
 
-    const reactElement = this.createReactComponent(root, transformImg)
+    const reactElement = this.createReactComponent(root, transformImg, 0, transformIframe)
 
     return reactElement
 

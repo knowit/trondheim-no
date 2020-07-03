@@ -125,3 +125,15 @@
   text-align: center;
   font-size: 14px;
 }
+
+#student-custom-content-container{
+  width: 50%;
+  margin: auto;
+  text-align: center;
+}
+
+#student-custom-content-container #html-content-container {
+  min-height: 300px;
+  height: 500px;
+
+}
