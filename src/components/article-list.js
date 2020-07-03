@@ -284,7 +284,7 @@ class ArticleView extends React.Component {
                 <Img className="article-thumbnail" fluid={thumbnail} />
                 <div className="article-info-container">
 
-                    <h2><Link to={`${pageContext.parentPath}${pageContext.node.slug}/${article.slug}`}>{(this.props.subList) ? article.navigationTitle : article.title}</Link></h2>
+                    <h2><Link to={article.path}>{(this.props.subList) ? article.navigationTitle : article.title}</Link></h2>
 
                     <EllipsisText className="article-info-text" text={this.getArticleInfo(article)} length={100} />
 

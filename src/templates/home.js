@@ -56,7 +56,6 @@ const FrontpageColumns = ({ pageContext }) => {
 
   const backgroundStyle = {
     backgroundImage: `url(${pageContext.node.columnsBackgroundImage[0].localFile.childImageSharp.fluid.src})`
-
   }
 
   var index = 0;
@@ -142,7 +141,7 @@ export default ({ pageContext }) => {
                   <Img className="navigation-box-thumbnail"
                     fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
                     alt="thumbnail" />
-                  <h2><Link className="navigation-box-title" to={`/${pageContext.slug}${(pageContext.slug.length > 0) ? '/' : ''}${node.slug}`}>{node.navigationTitle}</Link></h2>
+                  <h2><Link className="navigation-box-title" to={node.path}>{node.navigationTitle}</Link></h2>
                   <h4>{node.navigationSubtitle}</h4>
                 </div>)
             }

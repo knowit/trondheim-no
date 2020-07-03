@@ -23,7 +23,7 @@ const ListingPage = ({ pageContext }) => {
             <MapButton />
             <Link
               id="english-button"
-              to={((pageContext.layoutContext.locale === 'no') ? pageContext.layoutContext.localizedPaths.en : pageContext.layoutContext.localizedPaths.no)}>
+              to={pageContext.node.localizedPaths.find(item => item.locale !== pageContext.locale).path}>
               {LocalizationHelper.getLocalWord(pageContext.localization, "changeLanguage", pageContext.locale)}
             </Link>
           </div>

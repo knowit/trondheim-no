@@ -578,6 +578,11 @@ query {
         slug
         title
         tags
+        path
+        localizedPaths {
+          locale
+          path
+        }
         thumbnail {
           localFile {
             childImageSharp {

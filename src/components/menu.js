@@ -48,8 +48,6 @@ export class BurgerMenu extends React.Component {
       return this.state.showMenu ? (<div id="menu-background-overlay" />) : null
     }
 
-    console.log(this.props.layoutContext.localizedPaths)
-
     const Menu = () => {
       return this.state.showMenu
         ? (
