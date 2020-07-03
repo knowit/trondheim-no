@@ -141,12 +141,13 @@ exports.createResolvers = ({ createResolvers }) => {
       },
       additionalListingPages: {
         resolve(source, args, context, info) {
-          return source.additionalListingPages.map(listingPage =>
+          const result = source.additionalListingPages.map(listingPage =>
             findSource(context, listingPage, 'FlamelinkListingPageContent', source.flamelink_locale)
               .then(node => ({
                 ...node,
                 path: resolvePath(node)
               })))
+          return result ? result : []
         },
       },
       linkColumns: {

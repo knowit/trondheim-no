@@ -368,7 +368,6 @@ query {
   allFlamelinkStudentPageContent {
     edges {
       node {
-            id
         _fl_meta_{
           fl_id
           schema
@@ -379,6 +378,7 @@ query {
         headerFocusWord
         frontImageAlt
         additionalListingPages {
+          id
           _fl_meta_{
             fl_id
             schema

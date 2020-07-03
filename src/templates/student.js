@@ -3,6 +3,7 @@ import { Link } from "gatsby"
 import BackgroundImage from 'gatsby-background-image'
 import Img from 'gatsby-image'
 import "../style/student.css"
+import HTMLContent from "../components/html-content"
 
 export default ({ pageContext }) => {
   const Navigation = () => {
@@ -56,13 +57,14 @@ export default ({ pageContext }) => {
         <h1>{pageContext.node.localTitle}</h1>
         <div id="student-listing-pages-grid-container">
           {pageContext.subListingPages.map(n => <ListingPage key={n.id} node={n} />)}
+          {pageContext.studentPageNode.additionalListingPages.map(n => <ListingPage key={n.id} node={n} />)}
         </div>
       </div>
     </div>)
   }
 
   const CustomContent = () => {
-    return (<div></div>)
+    return (<HTMLContent htmlContent={pageContext.studentPageNode.customContent}/>)
   }
 
   const Links = () => {
