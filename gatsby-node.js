@@ -70,8 +70,10 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   let pathHelper = new PathTreeBuilder(result, defaultLocale)
   const root = pathHelper.build()
   const listingPages = new Map()
-  layoutContexts.set('no', pathHelper.layoutContext('no', root.getLocalizedPaths()))
-  layoutContexts.set('en-US', pathHelper.layoutContext('en-US', root.getLocalizedPaths()))
+
+  result.data.allFlamelinkFrontPageContent.edges.map(node => node.node).map(node => {
+    layoutContexts.set(node.flamelink_locale, pathHelper.layoutContext(node))
+  })
 
   function createArticle(treeNode) {
 

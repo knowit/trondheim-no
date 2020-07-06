@@ -30,7 +30,7 @@ const NotFound = ({ pageContext, location }) => {
 
   const GoHome = () => {
     const text = LocalizationHelper.getLocalWord(pageContext.layoutContext.localization, 'navigateHome', pageContext.locale)
-    const url = pageContext.layoutContext.localizedPaths[pageContext.locale.split('-')[0]]
+    const url = pageContext.layoutContext.localizedPaths.find(item => item.locale === pageContext.locale).path
     return (<Link to={url}>{text}</Link>)
   }
 
