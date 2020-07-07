@@ -1,50 +1,125 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import "../style/listing-page.css"
 import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
 import { Link } from "gatsby"
 import Loader from "react-spinners/ClipLoader";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons"
 
-class EventsView extends React.Component {
+library.add(fas)
 
-  constructor(props) {
-    super(props)
-    this.state = { loading: true }
-    this.loadingComplete = this.loadingComplete.bind(this)
+const EventsView = ({ pageContext }) => {
+
+  const [state, setState] = useState({ loading: true })
+  useEffect(() => {
+    fetch(`https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`)
+      .then(response => {
+        if (response.body != null) {
+          return response.json()
+        }
+        return (response.body != null) ? response.json() : response
+      })
+      .then(data => {
+        setState({ loading: false, events: data })
+      })
+  })
+
+
+  const categoriesString = (event) => event.categories
+    .map(category =>
+      singleCategoryString(category)
+    )
+    .join(',\t')
+
+  const singleCategoryString = (fullText) => fullText
+    .split('_')
+    .map(word =>
+      `${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`
+    )
+    .join(' ')
+
+  const monthName = (month) => {
+    const monthArray = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Des']
+    return monthArray[month]
   }
 
-  loadingComplete() {
-    this.setState({ loading: false })
+  const timeString = (event) => {
+    const date = new Date(event.startDate)
+    const dateString = `${date.getDate()}. ${monthName(date.getMonth())}`
+
+    const ticketString = `CC: ${event.regularPrice},- ${(event.reducedPrice && event.reducedPrice.length != 0) ? `/ ${event.reducedPrice},-` : ''}`
+    const freeString = LocalizationHelper.getLocalWord(pageContext.localization, "free", pageContext.locale)
+
+    const priceString = `${event.priceOption === 'non-gratis' ? ticketString : freeString}`
+
+    return `${dateString} @ ${event.startTime} | ${priceString}`
   }
 
-  render() {
-
-    const Content = () => {
-      return (
-        this.state.loading
-
-          ? (<div id="events-loading-container">
-            <div id="events-loading-spinner">
-              <Loader loading={this.state.loading} />
-            </div>
-
-            <p>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "loading", this.props.pageContext.locale)}</p>
-          </div>)
-
-          : (<div id="events-data-container">
-
-          </div>)
-      )
-    }
-
-    return (
-      <div id="events-content-container">
-        <Content />
+  const EventInfoRow = (props) => (
+    <div className="event-info-row">
+      <div className="event-icon">
+        <FontAwesomeIcon icon={props.icon} size="xs" />
       </div>
+      <span className="event-info-text">{props.text}</span>
+    </div>
+  )
+
+
+  const Location = ({ event }) => (
+    <EventInfoRow icon="location-arrow" text={event.venueObj ? event.venueObj.name : ''} />
+  )
+
+  const Categories = ({ event }) => (
+    <EventInfoRow icon="tags" text={categoriesString(event)} />
+  )
+
+  const Time = ({ event }) => (
+    <EventInfoRow icon="clock" text={timeString(event)} />
+  )
+
+  const Content = () => {
+    return (
+      state.loading
+
+        ? (<div id="events-loading-container">
+          <div id="events-loading-spinner">
+            <Loader loading={state.loading} />
+          </div>
+
+          <p>{LocalizationHelper.getLocalWord(pageContext.localization, "loading", pageContext.locale)}</p>
+        </div>)
+
+        : (<div id="articles-container">
+          {state.events.map(event => {
+            return (
+              <div key={event.id} className="article-container">
+                <a href={event.eventLink}>
+                  <img className="article-thumbnail" src={event.imageURL} />
+                </a>
+                <div className="article-info-container">
+                  <h2><a href={event.eventLink}>{event.title_nb}</a></h2>
+                  <div className="event-info-container">
+                    <Location event={event} />
+                    <Categories event={event} />
+                    <Time event={event} />
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>)
     )
   }
 
+  return (
+    <div id="events-content-container">
+      <Content />
+    </div>
+  )
 }
+
 
 
 const EventsPage = ({ pageContext }) => {

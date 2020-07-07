@@ -126,6 +126,7 @@
   display: block;
   margin: 0;
   padding: 0;
+  flex-grow: 1;
 }
 
 .article-container h2:hover{
@@ -136,9 +137,11 @@
 .article-container h2 a{
   color: inherit;
   text-decoration: inherit;
+  flex-grow: 1;
 }
 
 .article-info-container{
+  position: relative;
   display: flex;
   flex-direction: row;
   flex-flow: wrap;
@@ -207,4 +210,27 @@
 #events-loading-container p {
   margin-top: 15px;
   text-align: center;
+}
+
+.event-info-container {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  align-self: flex-end;
+}
+
+.event-info-row{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-top: 2px;;
+}
+
+.event-icon {
+  margin-right: 8px;
+}
+
+.event-info-text {
+  display: flex;
+  flex-direction: row;
 }

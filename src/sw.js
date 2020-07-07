@@ -1,7 +1,6 @@
 // --------------------------------------------------------------------------
 
 var cacheNames = ['trd-events'];
-const trdEventsFetchUrl = `/trdEvents`
 const trdEventsUrl = `https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents`
 const trdEventsUrlParameters = `?numEvents=20`
 const timeIntervalInMinutes = 60
@@ -119,7 +118,7 @@ self.addEventListener('fetch', function (event) {
 
   console.log('Service Worker: Fetching ');
 
-  event.request.url.includes(trdEventsFetchUrl) ? event.respondWith(getTrdEvents())
+  event.request.url.includes(trdEventsUrl) ? event.respondWith(getTrdEvents())
 
     : event.respondWith(
       caches.match(event.request)
