@@ -17,48 +17,6 @@ async function setTrdEventsTimestamp() {
   await idbKeyval.set('trd-events-timestamp', Date.now())
 }
 
-async function initDatabase(data) {
-  console.log("Initializing IndexedDB...")
-
-  var request = await self.indexedDB.open('TRD_EVENTS', 1)
-
-  request.onsuccess = function (event) {
-    console.log('[onsuccess]', request.result);
-
-    var db = event.target.result; // === request.result
-    var transaction = db.transaction('event', 'readwrite');
-
-    transaction.onsuccess = function (event) {
-      console.log('[Transaction] Transaction complete');
-    };
-
-    var objectStore = transaction.objectStore('event');
-
-    data
-      .map(item => {
-        delete item['repetitions']
-        return item
-      })
-      .map(item => {
-        var db_op_req = objectStore.add(item); // IDBRequest
-        db_op_req.onsuccess = function (event) {
-          console.log(event.target.result == item.event_slug); // true
-        };
-      })
-  };
-
-  request.onerror = function (event) {
-    console.log('[onerror]', request.error);
-  };
-
-  request.onupgradeneeded = function (event) {
-    // create object store from db or event.target.result
-    var db = event.target.result;
-    var store = db.createObjectStore('event', { keyPath: 'event_slug' });
-    store.createIndex('event_slug_unqiue', 'event_slug', { unique: true })
-  };
-}
-
 
 async function cacheEventImages(data, cache) {
   data.map(async function (item) {
@@ -69,7 +27,7 @@ async function cacheEventImages(data, cache) {
 }
 
 
-async function fetchTrdEventsJson(cache, forceUpdate = false) {
+async function fetchTrdEvents(cache, forceUpdate = false) {
 
   console.log("Fetching trd-events...")
   const request = new Request(trdEventsUrl)
@@ -78,7 +36,7 @@ async function fetchTrdEventsJson(cache, forceUpdate = false) {
 
   if (response && timestamp && !forceUpdate) {
     console.log("Retrieved cached trd-events.")
-    return await response.json()
+    return response
   }
 
   else {
@@ -89,18 +47,14 @@ async function fetchTrdEventsJson(cache, forceUpdate = false) {
     const result = await res.clone().json()
     setTrdEventsTimestamp()
     cacheEventImages(result, cache)
-    return result
+    return res
   }
 }
 
 
 async function getTrdEvents() {
   const cache = await caches.open(cacheNames)
-  const data = await fetchTrdEventsJson(cache)
-  return data.map(item => {
-    delete item['repetitions']
-    return item
-  })
+  return await fetchTrdEvents(cache)
 }
 
 
@@ -108,7 +62,7 @@ self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheNames).then(function (cache) {
       console.log("Service Worker: Installing")
-      fetchTrdEventsJson(cache)
+      fetchTrdEvents(cache)
     })
   );
 });

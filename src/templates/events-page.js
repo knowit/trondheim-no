@@ -16,10 +16,7 @@ const EventsView = ({ pageContext }) => {
   useEffect(() => {
     fetch(`https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`)
       .then(response => {
-        if (response.body != null) {
-          return response.json()
-        }
-        return (response.body != null) ? response.json() : response
+        return response.json()
       })
       .then(data => {
         setState({ loading: false, events: data })
