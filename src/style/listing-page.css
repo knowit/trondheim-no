@@ -187,4 +187,24 @@
   margin-right: 5px;
 }
 
+#events-content-container {
+  display: block;
+  width: 100%;
+}
 
+#events-loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+#events-loading-spinner {
+  display: flex;
+  justify-content: center;
+}
+
+#events-loading-container p {
+  margin-top: 15px;
+  text-align: center;
+}

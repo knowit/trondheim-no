@@ -160,14 +160,6 @@ class TreeNode {
   }
 }
 
-
-class LinkItem {
-  constructor(treeNode) {
-
-  }
-}
-
-
 class ListingPageBuilder {
   constructor(treeNode) {
     this.treeNode = treeNode

@@ -1,12 +1,11 @@
 // --------------------------------------------------------------------------
 
-
 var cacheNames = ['trd-events'];
+const trdEventsFetchUrl = `/trdEvents`
 const trdEventsUrl = `https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents`
 const trdEventsUrlParameters = `?numEvents=20`
 const timeIntervalInMinutes = 60
 const timeoutInMillis = 1000 * 60 * timeIntervalInMinutes
-
 
 
 async function checkTrdEventsTimestamp() {
@@ -61,6 +60,7 @@ async function initDatabase(data) {
   };
 }
 
+
 async function cacheEventImages(data, cache) {
   data.map(async function (item) {
     const request = new Request(item.imageURL)
@@ -68,6 +68,7 @@ async function cacheEventImages(data, cache) {
     cache.put(request, response)
   })
 }
+
 
 async function fetchTrdEventsJson(cache, forceUpdate = false) {
 
@@ -93,14 +94,22 @@ async function fetchTrdEventsJson(cache, forceUpdate = false) {
   }
 }
 
+
+async function getTrdEvents() {
+  const cache = await caches.open(cacheNames)
+  const data = await fetchTrdEventsJson(cache)
+  return data.map(item => {
+    delete item['repetitions']
+    return item
+  })
+}
+
+
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheNames).then(function (cache) {
       console.log("Service Worker: Installing")
       fetchTrdEventsJson(cache)
-        .then(data =>
-          initDatabase(data)
-        )
     })
   );
 });
@@ -109,15 +118,16 @@ self.addEventListener('install', function (event) {
 self.addEventListener('fetch', function (event) {
 
   console.log('Service Worker: Fetching ');
-  event.respondWith(
-    caches.match(event.request)
-      .then(function (response) {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      }
-      )
-  )
+
+  event.request.url.includes(trdEventsFetchUrl) ? event.respondWith(getTrdEvents())
+
+    : event.respondWith(
+      caches.match(event.request)
+        .then(function (response) {
+          // Cache hit - return response
+          if (response) {
+            return response;
+          }
+          return fetch(event.request);
+        }))
 });

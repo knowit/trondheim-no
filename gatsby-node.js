@@ -147,11 +147,45 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     })
   }
 
+  function createEventsPage(listingPageBuilder) {
+    // TODO: Events page
+
+    const treeNode = listingPageBuilder.getTreeNode()
+    Array.from(treeNode.node.keys()).map(locale => {
+      const node = treeNode.node.get(locale)
+
+      createPage({
+        path: node.path,
+        component: path.resolve(`./src/templates/events-page.js`),
+        context: {
+          node: node,
+          parentPath: treeNode.parent.getPath(locale),
+          localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
+          locale: locale,
+          layoutContext: pathHelper.layoutContext(node),
+        },
+      })
+
+    })
+
+  }
+
   function createListingPage(listingPageBuilder) {
 
     const treeNode = listingPageBuilder.getTreeNode()
 
-    if (treeNode.isStudentPage) {
+    var isEventsPage = false
+    treeNode.node.forEach((node, index, map) => {
+      if (node.slug === 'hva-skjer' || node.slug === 'whats-on') {
+        isEventsPage = true
+      }
+    })
+
+    if (isEventsPage) {
+      createEventsPage(listingPageBuilder)
+    }
+
+    else if (treeNode.isStudentPage) {
       createStudentPage(listingPageBuilder)
     }
 
