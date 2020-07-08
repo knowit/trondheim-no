@@ -14,8 +14,10 @@ const EventsView = ({ pageContext }) => {
 
   const [state, setState] = useState({ loading: true, init: false })
 
-  if (!state.init) {
-    useEffect(() => {
+
+
+  useEffect(() => {
+    if (!state.init) {
       console.log("Fetch event")
       setState({ loading: true, init: true })
       fetch(`https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`)
@@ -25,8 +27,8 @@ const EventsView = ({ pageContext }) => {
         .then(data => {
           setState({ loading: false, events: data })
         })
-    })
-  }
+    }
+  })
 
 
 
