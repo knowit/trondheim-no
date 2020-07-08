@@ -12,16 +12,23 @@ library.add(fas)
 
 const EventsView = ({ pageContext }) => {
 
-  const [state, setState] = useState({ loading: true })
-  useEffect(() => {
-    fetch(`https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`)
-      .then(response => {
-        return response.json()
-      })
-      .then(data => {
-        setState({ loading: false, events: data })
-      })
-  })
+  const [state, setState] = useState({ loading: true, init: false })
+
+  if (!state.init) {
+    useEffect(() => {
+      console.log("Fetch event")
+      setState({ loading: true, init: true })
+      fetch(`https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`)
+        .then(response => {
+          return response.json()
+        })
+        .then(data => {
+          setState({ loading: false, events: data })
+        })
+    })
+  }
+
+
 
 
   const categoriesString = (event) => event.categories
