@@ -17,17 +17,14 @@ const EventsView = ({ pageContext }) => {
 
 
   useEffect(() => {
-    if (!state.init) {
-      console.log("Fetch event")
-      setState({ loading: true, init: true })
-      fetch(`https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`)
-        .then(response => {
-          return response.json()
-        })
-        .then(data => {
-          setState({ loading: false, events: data })
-        })
-    }
+    setState({ loading: true, init: true })
+    fetch(`https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`)
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        setState({ loading: false, events: data })
+      })
   })
 
 
