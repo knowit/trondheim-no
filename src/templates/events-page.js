@@ -122,6 +122,14 @@ class EventsView extends React.Component {
     return (
       <div id="events-content-container">
         <Content />
+        {this.state.loading ? null
+          : (
+            <div id="events-more-container">
+              <a id="events-more-button" href="https://trdevents.no" target="_blank">
+                {LocalizationHelper.getLocalWord(pageContext.localization, "more-events", pageContext.locale)}
+              </a>
+            </div>
+          )}
       </div>
     )
   }
@@ -153,13 +161,6 @@ const EventsPage = ({ pageContext }) => {
             <EventsView path='/' pageContext={pageContext} />
           </Router>
 
-          <div id="events-more-container">
-
-            <a id="events-more-button" href="https://trdevents.no" target="_blank">
-              {LocalizationHelper.getLocalWord(pageContext.localization, "more-events", pageContext.locale)}
-            </a>
-
-          </div>
         </div>
       </div>
     </Layout>
