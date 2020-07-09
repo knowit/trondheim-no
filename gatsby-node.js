@@ -49,6 +49,37 @@ exports.onCreatePage = async ({ page, actions }) => {
       context: context,
     })
   }
+
+  else if (page.path.match(/^\/search\/$/)) {
+    const oldPage = { ...page }
+    const locale = 'no'
+    // Recreate the modified page
+    deletePage(oldPage)
+    var context = page.context
+    context.layoutContext = layoutContexts.get(locale)
+    context.locale = locale
+    createPage({
+      ...page,
+      context: context,
+      location: page.location,
+    })
+  }
+
+  else if (page.path.match(/^\/[a-z]{2}\/search\/$/)) {
+    const oldPage = { ...page }
+    const langCode = page.path.split(`/`)[1]
+    const locale = (langCode == 'en') ? 'en-US' : langCode
+    page.matchPath = `/${langCode}/*`
+    // Recreate the modified page
+    deletePage(oldPage)
+    var context = page.context
+    context.layoutContext = layoutContexts.get(locale)
+    context.locale = locale
+    createPage({
+      ...page,
+      context: context,
+    })
+  }
 }
 
 exports.createPages = async ({ graphql, actions, reporter }) => {
