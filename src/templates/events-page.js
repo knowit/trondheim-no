@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
+import { Router } from "@reach/router"
 import "../style/listing-page.css"
 import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
@@ -10,120 +11,125 @@ import { fas } from "@fortawesome/free-solid-svg-icons"
 
 library.add(fas)
 
-const EventsView = ({ pageContext }) => {
+const trdEventsUrl = `https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`
 
-  const [state, setState] = useState({ loading: true, init: false })
+// Rendered at client
 
+class EventsView extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.state = { loading: true, events: [] }
+  }
 
-  useEffect(() => {
-    setState({ loading: true, init: true })
-    fetch(`https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`)
-      .then(response => {
-        return response.json()
-      })
+  componentDidMount() {
+    console.log("Fetching events from trdevents.no...")
+    fetch(trdEventsUrl)
+      .then(response => response.json())
       .then(data => {
-        setState({ loading: false, events: data })
+        console.log("Fetch complete!")
+        this.setState({ loading: false, events: data })
       })
-  })
-
-
-
-
-  const categoriesString = (event) => event.categories
-    .map(category =>
-      singleCategoryString(category)
-    )
-    .join(',\t')
-
-  const singleCategoryString = (fullText) => fullText
-    .split('_')
-    .map(word =>
-      `${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`
-    )
-    .join(' ')
-
-  const monthName = (month) => {
-    const monthArray = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Des']
-    return monthArray[month]
   }
 
-  const timeString = (event) => {
-    const date = new Date(event.startDate)
-    const dateString = `${date.getDate()}. ${monthName(date.getMonth())}`
+  render() {
+    const categoriesString = (event) => event.categories
+      .map(category =>
+        singleCategoryString(category)
+      )
+      .join(',\t')
 
-    const ticketString = `CC: ${event.regularPrice},- ${(event.reducedPrice && event.reducedPrice.length != 0) ? `/ ${event.reducedPrice},-` : ''}`
-    const freeString = LocalizationHelper.getLocalWord(pageContext.localization, "free", pageContext.locale)
+    const singleCategoryString = (fullText) => fullText
+      .split('_')
+      .map(word =>
+        `${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`
+      )
+      .join(' ')
 
-    const priceString = `${event.priceOption === 'non-gratis' ? ticketString : freeString}`
+    const monthName = (month) => {
+      const monthArray = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Des']
+      return monthArray[month]
+    }
 
-    return `${dateString} @ ${event.startTime} | ${priceString}`
-  }
+    const timeString = (event) => {
+      const date = new Date(event.startDate)
+      const dateString = `${date.getDate()}. ${monthName(date.getMonth())}`
 
-  const EventInfoRow = (props) => (
-    <div className="event-info-row">
-      <div className="event-icon">
-        <FontAwesomeIcon icon={props.icon} size="xs" />
+      const ticketString = `CC: ${event.regularPrice},- ${(event.reducedPrice && event.reducedPrice.length != 0) ? `/ ${event.reducedPrice},-` : ''}`
+      const freeString = LocalizationHelper.getLocalWord(this.props.pageContext.localization, "free", this.props.pageContext.locale)
+
+      const priceString = `${event.priceOption === 'non-gratis' ? ticketString : freeString}`
+
+      return `${dateString} @ ${event.startTime} | ${priceString}`
+    }
+
+    const EventInfoRow = (props) => (
+      <div className="event-info-row">
+        <div className="event-icon">
+          <FontAwesomeIcon icon={props.icon} size="xs" />
+        </div>
+        <span className="event-info-text">{props.text}</span>
       </div>
-      <span className="event-info-text">{props.text}</span>
-    </div>
-  )
+    )
 
 
-  const Location = ({ event }) => (
-    <EventInfoRow icon="location-arrow" text={event.venueObj ? event.venueObj.name : ''} />
-  )
+    const Location = ({ event }) => (
+      <EventInfoRow icon="location-arrow" text={event.venueObj ? event.venueObj.name : ''} />
+    )
 
-  const Categories = ({ event }) => (
-    <EventInfoRow icon="tags" text={categoriesString(event)} />
-  )
+    const Categories = ({ event }) => (
+      <EventInfoRow icon="tags" text={categoriesString(event)} />
+    )
 
-  const Time = ({ event }) => (
-    <EventInfoRow icon="clock" text={timeString(event)} />
-  )
+    const Time = ({ event }) => (
+      <EventInfoRow icon="clock" text={timeString(event)} />
+    )
 
-  const Content = () => {
-    return (
-      state.loading
+    const Content = () => {
+      return (
+        this.state.loading
 
-        ? (<div id="events-loading-container">
-          <div id="events-loading-spinner">
-            <Loader loading={state.loading} />
-          </div>
+          ? (<div id="events-loading-container">
+            <div id="events-loading-spinner">
+              <Loader loading={this.state.loading} />
+            </div>
 
-          <p>{LocalizationHelper.getLocalWord(pageContext.localization, "loading", pageContext.locale)}</p>
-        </div>)
+            <p>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "loading", this.props.pageContext.locale)}</p>
+          </div>)
 
-        : (<div id="articles-container">
-          {state.events.map(event => {
-            return (
-              <div key={event.id} className="article-container">
-                <a href={event.eventLink}>
-                  <img className="article-thumbnail" src={event.imageURL} />
-                </a>
-                <div className="article-info-container">
-                  <h2><a href={event.eventLink}>{event.title_nb}</a></h2>
-                  <div className="event-info-container">
-                    <Location event={event} />
-                    <Categories event={event} />
-                    <Time event={event} />
+          : (<div id="articles-container">
+            {this.state.events.map(event => {
+              return (
+                <div key={event.id} className="article-container">
+                  <a href={event.eventLink}>
+                    <img className="article-thumbnail" src={event.imageURL} />
+                  </a>
+                  <div className="article-info-container">
+                    <h2><a href={event.eventLink}>{event.title_nb}</a></h2>
+                    <div className="event-info-container">
+                      <Location event={event} />
+                      <Categories event={event} />
+                      <Time event={event} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          })}
-        </div>)
+              )
+            })}
+          </div>)
+      )
+    }
+
+    return (
+      <div id="events-content-container">
+        <Content />
+      </div>
     )
   }
-
-  return (
-    <div id="events-content-container">
-      <Content />
-    </div>
-  )
 }
 
 
+
+// Rendered server side
 
 const EventsPage = ({ pageContext }) => {
 
@@ -142,7 +148,10 @@ const EventsPage = ({ pageContext }) => {
             </Link>
           </div>
 
-          <EventsView pageContext={pageContext} />
+
+          <Router basepath={pageContext.node.path}>
+            <EventsView path='/' pageContext={pageContext} />
+          </Router>
 
         </div>
       </div>
