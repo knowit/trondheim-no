@@ -49,11 +49,14 @@ async function getCachedTrdEvents() {
 async function cacheEventImages(response, cache) {
   console.log("Caching all trd-events images for offline use...")
   const data = await response.json()
-  data.map(async function (item) {
+  await Promise.all(data.map(async function (item) {
     const req = new Request(item.imageURL)
+    console.log(`Fetching image resource at ${item.imageURL}...`)
     const res = await fetch(item.imageURL, { mode: 'no-cors' })
     cache.put(req, res)
-  })
+    console.log("Cached image resource.")
+    return
+  }))
   console.log("trd-events is now available offline!")
   return
 }
