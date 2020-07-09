@@ -10,10 +10,10 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function checkTrdEventsTimestamp() {
+async function checkTrdEventsTimestamp(timeout) {
   console.log("Checking trd-events timestamp...")
   const timestamp = await idbKeyval.get('trd-events-timestamp')
-  return timestamp ? (new Date(Date.now())).getTime() - (new Date(timestamp)).getTime() < timeoutInMillis : false
+  return timestamp ? (new Date(Date.now())).getTime() - (new Date(timestamp)).getTime() < timeout : false
 }
 
 async function setTrdEventsTimestamp() {
@@ -23,12 +23,16 @@ async function setTrdEventsTimestamp() {
   return
 }
 
-async function trdEventsIsCached() {
+async function trdEventsIsCached(timeout = null) {
   console.log("Checking cache for trdevents...")
   const response = await caches.match(trdEventsUrl, { ignoreSearch: true })
   console.log(response ? "trd-events found in cache." : "trd-events not in cache.")
-  const timestampOk = response ? await checkTrdEventsTimestamp() : false
-  if (response) {
+
+  const timestampOk = (response && timeout != null)
+    ? await checkTrdEventsTimestamp(timeout)
+    : (response != null)
+
+  if (response && timeout != null) {
     console.log(timestampOk ? "Cached trd-events are up to date." : "Cached trd-events are outdated.")
   }
   return response && timestampOk
@@ -87,23 +91,23 @@ async function fetchTrdEvents() {
 
 // Aner ikke om dette funker
 async function waitForCachedTrdEvents() {
-  console.log("Waiting for trd-events to appear in cache...")
+
+  console.log("Checking cache for trd-events...")
   var isCached = await trdEventsIsCached()
 
   while (!isCached) {
-    console.log("trd-events not in cache. Reattempting in 500ms...")
+    console.log("Waiting for trd-events to appear in cache...")
     await sleep(500)
-    isCached = await trdEventsIsCached()
+    isCached = await trdEventsIsCached(timeoutInMillis)
   }
 
-  console.log("trd-events were retrieved from cache.")
   return getCachedTrdEvents()
 }
 
 
 async function getTrdEvents() {
   console.log("Retrieving trd-events...")
-  const isCached = await trdEventsIsCached()
+  const isCached = await trdEventsIsCached(timeoutInMillis)
   return isCached ? getCachedTrdEvents() : Promise.race([waitForCachedTrdEvents(), fetchTrdEvents()])
 }
 
@@ -137,15 +141,8 @@ self.addEventListener('fetch', function (event) {
         }))
 });
 
-self.addEventListener('message', ({ data, source: { id } }) => {
 
-  self.clients.matchAll().then(clients => {
-
-    clients.forEach(client => {
-      if (client.id !== id) client.postMessage(data)
-    })
-
-
-  })
-
+self.addEventListener('sync', function (event) {
+  console.log('Sync event fired!')
 })
+
