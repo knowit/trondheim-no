@@ -8,6 +8,7 @@ import Loader from "react-spinners/ClipLoader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons"
+import { Online, Offline } from "react-detect-offline"
 
 library.add(fas)
 
@@ -19,7 +20,7 @@ class EventsView extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = { loading: true, events: [] }
+    this.state = { loading: true, loadError: false, events: [] }
   }
 
   componentDidMount() {
@@ -29,6 +30,9 @@ class EventsView extends React.Component {
       .then(data => {
         console.log("Fetch complete!")
         this.setState({ loading: false, events: data })
+      }).catch(error => {
+        console.log(error)
+        this.setState({ loadError: true })
       })
   }
 
@@ -85,17 +89,47 @@ class EventsView extends React.Component {
       <EventInfoRow icon="clock" text={timeString(event)} />
     )
 
+    const ErrorMessage = () => (
+      <p>
+        <Online>
+          {this.props.pageContext.locale === 'no'
+            ? 'Noe gikk galt! Prøv igjen senere.'
+            : 'Something went wrong! Try again later.'}
+        </Online>
+        <Offline>
+          {this.props.pageContext.locale === 'no'
+            ? 'Noe gikk galt! Sørg for at du er koblet til internett og prøv igjen.'
+            : 'Something went wrong! Make sure you are connected to the internet and try again.'}
+        </Offline>
+      </p>
+    )
+
+    const Loading = () => (
+      <div id="events-loading-container">
+        {this.state.loadError ? (null) : (
+          <div id="events-loading-spinner">
+            <Loader loading={this.state.loading} />
+          </div>
+        )}
+
+        {this.state.loadError
+          ? (<ErrorMessage />)
+          : (<p>
+            {LocalizationHelper
+              .getLocalWord(this.props.pageContext.localization, "loading", this.props.pageContext.locale)}
+          </p>
+          )}
+
+      </div>
+    )
+
+
+
     const Content = () => {
       return (
         this.state.loading
 
-          ? (<div id="events-loading-container">
-            <div id="events-loading-spinner">
-              <Loader loading={this.state.loading} />
-            </div>
-
-            <p>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "loading", this.props.pageContext.locale)}</p>
-          </div>)
+          ? (<Loading />)
 
           : (<div id="articles-container">
             {this.state.events.map(event => {
@@ -126,7 +160,7 @@ class EventsView extends React.Component {
           : (
             <div id="events-more-container">
               <a id="events-more-button" href="https://trdevents.no" target="_blank">
-                {LocalizationHelper.getLocalWord(pageContext.localization, "more-events", pageContext.locale)}
+                {LocalizationHelper.getLocalWord(this.props.pageContext.localization, "more-events", this.props.pageContext.locale)}
               </a>
             </div>
           )}
