@@ -3,6 +3,23 @@ require("dotenv").config({
   path: `.env.production`,
 })
 
+const resolvePath = (node) => {
+  console.log(node)
+  var parentPath = `/${node.flamelink_locale.split('-')[0]}/`
+  if (node.slug) {
+
+    if (node.parentListingPage) {
+      return `${resolvePath(node.parentListingPage)}/${node.slug}`
+    }
+
+    else {
+      return `${parentPath}/${node.slug}`
+    }
+
+  }
+  return parentPath
+}
+
 module.exports = {
   siteMetadata: {
     title: `Trondheim.no`,
@@ -158,19 +175,39 @@ module.exports = {
           FlamelinkPageContent: {
             title: node => node.title,
             content: node => node.content ? node.content.content : node.content,
-            url: node => node.path,
+            url: node => (
+              `${node.flamelink_locale === 'no' ? '/' : '/en/'}${node.slug}`
+            ),
           },
 
           FlamelinkListingPageContent: {
             title: node => node.localTitle,
             content: node => node.textOnPage,
-            url: node => node.path,
+            url: node => {
+              const home = node.flamelink_locale === 'no' ? '/' : '/en/'
+              var path = node.slug
+              var parent = node.parentListingPage
+              while (parent) {
+                path = `${parent.slug}/${path}`
+                parent = parent.parentListingPage
+              }
+              return `${home}${path}`
+            },
           },
 
           FlamelinkArticleContent: {
             title: node => node.title,
             content: node => node.content ? node.content.content : node.content,
-            url: node => node.path,
+            url: node => {
+              const home = node.flamelink_locale === 'no' ? '/' : '/en/'
+              var path = node.slug
+              var parent = node.parentListingPage
+              while (parent) {
+                path = `${parent.slug}/${path}`
+                parent = parent.parentListingPage
+              }
+              return `${home}${path}`
+            },
           },
         },
         //custom index file name, default is search_index.json

@@ -1,5 +1,5 @@
 import React from 'react'
-import Search from "../templates/search-template"
+import Search from "../../templates/search-template"
 
 const SearchPage = ({ pageContext }) => {
 
