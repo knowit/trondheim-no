@@ -184,15 +184,19 @@ class SearchComponent extends React.Component {
           <SearchResultQuantity />
         </SearchResultQuantityText>
 
-        <div>
-          Vis antall:
-              <select
+        <div id="search-quantity-select">
+          <span>
+            {this.props.pageContext.locale === 'no' ? 'Vis antall:' : 'Display quantity:'}
+          </span>
+          <select
             value={this.state.quantity}
             onChange={e => this.setQuantity(e.target.value)}>
             {this.state.antall.map(n => (
               <option key={n} value={n}>{n}</option>
             ))}
-            <option key={'all'} value={'all'}>Alle</option>
+            <option key={'all'} value={'all'}>
+              {this.props.pageContext.locale === 'no' ? 'Alle' : 'All'}
+            </option>
           </select>
         </div>
 

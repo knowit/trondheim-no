@@ -1,6 +1,7 @@
 
 #search-input-container{
   width: 200px;
+  margin: 10px 0;
 }
 
 #search-input-container input {
@@ -47,10 +48,14 @@
   font-weight: 600;
 }
 
-#search-results-container {
-
+#search-quantity-select {
+  display: flex;
+  margin: 10px 0;
+  flex-direction: column;
 }
 
-#search-results-container ul {
-  list-style-type: decimal;
+#search-quantity-select select {
+  padding: 5px;
 }
+
+
