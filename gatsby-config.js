@@ -5,7 +5,6 @@ require("dotenv").config({
 
 const resolvePath = (node) => {
   if (node.path) {
-    console.log(node.path)
     return node.path
   }
   else {
@@ -26,11 +25,19 @@ const resolvePath = (node) => {
   }
 }
 
+const striptags = require("striptags")
 const resolveContent = (node) => {
   if (node.content) {
-    return node.content.textContent ? node.content.textContent : node.content
+    if (node.content.textContent) {
+      return node.content.textContent
+    }
+    else {
+      return striptags(node.content.content ? node.content.content : node.content)
+    }
   }
-  else return ''
+  else {
+    return ''
+  }
 }
 
 module.exports = {
@@ -179,12 +186,12 @@ module.exports = {
         // Attributes for custom indexing logic. See https://lunrjs.com/docs/lunr.Builder.html for details
         fields: [
           { name: 'title', store: true, attributes: { boost: 20 } },
-          { name: 'content' },
+          { name: 'content', store: true },
           { name: 'url', store: true },
         ],
         // How to resolve each field's value for a supported node type
         resolvers: {
-          // For any node of type MarkdownRemark, list how to resolve the fields' values
+
           FlamelinkPageContent: {
             title: node => node.title,
             content: node => resolveContent(node),

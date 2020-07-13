@@ -68,13 +68,14 @@ const Search = ({ pageContext }) => {
 
           </div>
 
-          <div>
+          <div id="search-results-container">
             <ul>
-              {results.map(({ url, title }) => {
+              {results.map(({ url, title, content }) => {
                 console.log(results)
                 return (
                   <li key={url}>
                     <Link to={url}>{title}</Link>
+                    <p>{content}</p>
                   </li>
                 )
               })}

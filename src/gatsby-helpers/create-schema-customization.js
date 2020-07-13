@@ -11,6 +11,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     tags: [String]
     path: String
     localizedPaths : [LocalizedPath]
+    textContent: String
   }
   type FlamelinkArticleContentFieldLatLong implements Node {
     googleMapsStaticImage: File @link

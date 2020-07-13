@@ -1,5 +1,7 @@
 exports.createResolvers = ({ createResolvers }) => {
 
+  const striptags = require("striptags")
+
   const resolvePath = (source) => {
     if (!source._fl_meta_) {
       return ""
@@ -51,6 +53,36 @@ exports.createResolvers = ({ createResolvers }) => {
       firstOnly: true
     }))
 
+
+  const resolveArticleTextContent = (source, context) => {
+    const nodeType = 'FlamelinkTextHtmlContentNode'
+    const query = {
+      query: {
+        filter: {
+          parent: {
+            id: {
+              eq: source.id
+            }
+          }
+        },
+      },
+      type: nodeType,
+      firstOnly: false
+    }
+
+    const result = context.nodeModel.runQuery(query)
+      .then(result => {
+        var texts = []
+        result.map(node => {
+          texts.push(striptags(node.content))
+        })
+
+        var text = ''
+        texts.map(t => text = `${text} ${t}`)
+        return text
+      })
+    return result ? result : ''
+  }
 
   const resolveLocalizedPaths = (source, context) => {
     const nodeType = source.internal.type
@@ -123,6 +155,11 @@ exports.createResolvers = ({ createResolvers }) => {
       localizedPaths: {
         resolve(source, args, context, info) {
           return resolveLocalizedPaths(source, context)
+        },
+      },
+      textContent: {
+        resolve(source, args, context, info) {
+          return resolveArticleTextContent(source, context)
         },
       },
     },

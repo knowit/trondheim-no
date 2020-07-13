@@ -46,3 +46,11 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+#search-results-container {
+
+}
+
+#search-results-container ul {
+  list-style-type: decimal;
+}
