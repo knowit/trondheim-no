@@ -5,6 +5,7 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkTextHtmlContentNode implements Node {
     content: String
     remoteImages: [File] @link
+    textContent: String
   }
   type FlamelinkArticleContent implements Node {
     tags: [String]

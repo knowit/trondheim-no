@@ -4,20 +4,33 @@ require("dotenv").config({
 })
 
 const resolvePath = (node) => {
-  console.log(node)
-  var parentPath = `/${node.flamelink_locale.split('-')[0]}/`
-  if (node.slug) {
-
-    if (node.parentListingPage) {
-      return `${resolvePath(node.parentListingPage)}/${node.slug}`
-    }
-
-    else {
-      return `${parentPath}/${node.slug}`
-    }
-
+  if (node.path) {
+    console.log(node.path)
+    return node.path
   }
-  return parentPath
+  else {
+    const root = node.flamelink_locale === 'no' ? '/' : '/en/'
+    const slug = node.slug
+
+    var path = root
+
+    var parentListingPage = node.parentListingPage
+    while (parentListingPage != null) {
+      if (parentListingPage.slug != null) {
+        path = `${path}${parentListingPage.slug}/`
+      }
+      parentListingPage = parentListingPage.parentListingPage
+    }
+
+    return `${path}${slug}`
+  }
+}
+
+const resolveContent = (node) => {
+  if (node.content) {
+    return node.content.textContent ? node.content.textContent : node.content
+  }
+  else return ''
 }
 
 module.exports = {
@@ -174,40 +187,20 @@ module.exports = {
           // For any node of type MarkdownRemark, list how to resolve the fields' values
           FlamelinkPageContent: {
             title: node => node.title,
-            content: node => node.content ? node.content.content : node.content,
-            url: node => (
-              `${node.flamelink_locale === 'no' ? '/' : '/en/'}${node.slug}`
-            ),
+            content: node => resolveContent(node),
+            url: node => resolvePath(node),
           },
 
           FlamelinkListingPageContent: {
             title: node => node.localTitle,
             content: node => node.textOnPage,
-            url: node => {
-              const home = node.flamelink_locale === 'no' ? '/' : '/en/'
-              var path = node.slug
-              var parent = node.parentListingPage
-              while (parent) {
-                path = `${parent.slug}/${path}`
-                parent = parent.parentListingPage
-              }
-              return `${home}${path}`
-            },
+            url: node => resolvePath(node),
           },
 
           FlamelinkArticleContent: {
             title: node => node.title,
-            content: node => node.content ? node.content.content : node.content,
-            url: node => {
-              const home = node.flamelink_locale === 'no' ? '/' : '/en/'
-              var path = node.slug
-              var parent = node.parentListingPage
-              while (parent) {
-                path = `${parent.slug}/${path}`
-                parent = parent.parentListingPage
-              }
-              return `${home}${path}`
-            },
+            content: node => resolveContent(node),
+            url: node => resolvePath(node),
           },
         },
         //custom index file name, default is search_index.json

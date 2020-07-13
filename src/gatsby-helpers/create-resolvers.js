@@ -92,6 +92,16 @@ exports.createResolvers = ({ createResolvers }) => {
   }
 
   const resolvers = {
+    FlamelinkTextHtmlContentNode: {
+      textContent: {
+        resolve(source, args, context, info) {
+          if (source.content) {
+            return striptags(source.content.content ? source.content.content : source.content)
+          }
+          else return ''
+        },
+      },
+    },
     FlamelinkListingPageContent: {
       path: {
         resolve(source, args, context, info) {
