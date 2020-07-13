@@ -2,6 +2,11 @@
 const { createRemoteFileNode } = require("gatsby-source-filesystem")
 const { GoogleMapsUrlHelper } = require(`../helpers/url-helper`)
 
+const { attachFields } = require(`gatsby-plugin-node-fields`)
+
+const striptags = require("striptags")
+
+
 function extract_image_urls(htmlBody) {
   var result = []
 
@@ -17,16 +22,57 @@ function extract_image_urls(htmlBody) {
   return result
 }
 
+const getFlamelinkLocale = (node) => {
+  if (node.flamelink_locale) {
+    return node.flamelink_locale
+  }
+  else if (node.parent) {
+    return getFlamelinkLocale(node.parent)
+  }
+  else return null
+}
+
 exports.onCreateNode = async ({
   node,
-  actions: { createNode },
+  actions,
   store,
   cache,
+  getNode,
   createNodeId,
 }) => {
 
+  const { createNode } = actions
+
+  const getTextContent = (node) => {
+    const contentNode = getNode(node.content___NODE ? node.content___NODE : node.content)
+    if (contentNode) {
+      return striptags(contentNode.content)
+    }
+    else return 'None'
+  }
+
+  // Your list of descriptors
+  const descriptors = [
+    {
+      predicate: (node) => (
+        node.internal ? node.internal.type === 'FlamelinkArticleContent' : false
+      ),
+      fields: [
+        {
+          name: 'textContent',
+          getter: node => node,
+          defaultValue: '',
+          transformer: node => getTextContent(node)
+        },
+      ]
+    }
+  ]
+
+  attachFields(node, actions, getNode, descriptors)
+
   if (node.internal.type === "FlamelinkTextHtmlContentNode") {
 
+    node.flamelink_locale = getFlamelinkLocale(node)
     var fileNodes = []
 
     extract_image_urls(node.content).forEach(url => {

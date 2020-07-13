@@ -3,6 +3,16 @@ require("dotenv").config({
   path: `.env.production`,
 })
 
+const nodeIsIndex = (node, locale) => {
+  if (node.flamelink_locale != null) {
+    return node.flamelink_locale === locale
+  }
+  else if (node.parent != null) {
+    return nodeIsIndex(node.parent, locale)
+  }
+  else return false
+}
+
 const resolvePath = (node) => {
   if (node.path) {
     return node.path
@@ -27,17 +37,10 @@ const resolvePath = (node) => {
 
 const striptags = require("striptags")
 const resolveContent = (node) => {
-  if (node.content) {
-    if (node.content.textContent) {
-      return node.content.textContent
-    }
-    else {
-      return striptags(node.content.content ? node.content.content : node.content)
-    }
+  if (node.internal.type === 'FlamelinkTextHtmlContentNode') {
+    console.log(node)
   }
-  else {
-    return ''
-  }
+  return ''
 }
 
 module.exports = {
@@ -169,7 +172,7 @@ module.exports = {
             // ISO 639-1 language codes. See https://lunrjs.com/guides/language_support.html for details
             name: 'no',
             // A function for filtering nodes. () => true by default
-            filterNodes: node => node.flamelink_locale === 'no',
+            filterNodes: node => nodeIsIndex(node, 'no'),
             // Add to index custom entries, that are not actually extracted from gatsby nodes
             customEntries: [],
           },
@@ -177,7 +180,7 @@ module.exports = {
             // ISO 639-1 language codes. See https://lunrjs.com/guides/language_support.html for details
             name: 'en',
             // A function for filtering nodes. () => true by default
-            filterNodes: node => node.flamelink_locale === 'en-US',
+            filterNodes: node => nodeIsIndex(node, 'en-US'),
             // Add to index custom entries, that are not actually extracted from gatsby nodes
             customEntries: [],
           },
@@ -206,7 +209,7 @@ module.exports = {
 
           FlamelinkArticleContent: {
             title: node => node.title,
-            content: node => resolveContent(node),
+            content: node => node.fields.textContent,
             url: node => resolvePath(node),
           },
         },

@@ -5,13 +5,13 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkTextHtmlContentNode implements Node {
     content: String
     remoteImages: [File] @link
-    textContent: String
   }
   type FlamelinkArticleContent implements Node {
     tags: [String]
     path: String
     localizedPaths : [LocalizedPath]
     textContent: String
+    content: FlamelinkTextHtmlContentNode
   }
   type FlamelinkArticleContentFieldLatLong implements Node {
     googleMapsStaticImage: File @link

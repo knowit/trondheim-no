@@ -53,37 +53,6 @@ exports.createResolvers = ({ createResolvers }) => {
       firstOnly: true
     }))
 
-
-  const resolveArticleTextContent = (source, context) => {
-    const nodeType = 'FlamelinkTextHtmlContentNode'
-    const query = {
-      query: {
-        filter: {
-          parent: {
-            id: {
-              eq: source.id
-            }
-          }
-        },
-      },
-      type: nodeType,
-      firstOnly: false
-    }
-
-    const result = context.nodeModel.runQuery(query)
-      .then(result => {
-        var texts = []
-        result.map(node => {
-          texts.push(striptags(node.content))
-        })
-
-        var text = ''
-        texts.map(t => text = `${text} ${t}`)
-        return text
-      })
-    return result ? result : ''
-  }
-
   const resolveLocalizedPaths = (source, context) => {
     const nodeType = source.internal.type
     const nodeId = source._fl_meta_.fl_id
@@ -124,16 +93,6 @@ exports.createResolvers = ({ createResolvers }) => {
   }
 
   const resolvers = {
-    FlamelinkTextHtmlContentNode: {
-      textContent: {
-        resolve(source, args, context, info) {
-          if (source.content) {
-            return striptags(source.content.content ? source.content.content : source.content)
-          }
-          else return ''
-        },
-      },
-    },
     FlamelinkListingPageContent: {
       path: {
         resolve(source, args, context, info) {
@@ -155,11 +114,6 @@ exports.createResolvers = ({ createResolvers }) => {
       localizedPaths: {
         resolve(source, args, context, info) {
           return resolveLocalizedPaths(source, context)
-        },
-      },
-      textContent: {
-        resolve(source, args, context, info) {
-          return resolveArticleTextContent(source, context)
         },
       },
     },
