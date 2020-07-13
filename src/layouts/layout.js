@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import "../style/layout.css"
 import { Helmet } from 'react-helmet'
 import { Link } from "gatsby"
@@ -6,19 +6,7 @@ import Img from "gatsby-image"
 import LocalizationHelper from "../helpers/helpers"
 import { BurgerMenu } from "../components/menu.js"
 
-const Footer = ({ layoutContext }) => {
-  const search = LocalizationHelper.getLocalWord(layoutContext.localization, 'search', layoutContext.locale)
-  return (
-    <footer id="footer-container">
 
-      <form id="search-container">
-        <input type="text" id="search-input" name="search-input" placeholder={`${search}...`}></input>
-        <input id="search-button" type="submit" value={search} />
-      </form>
-
-    </footer>
-  )
-}
 
 const Navigation = ({ layoutContext }) => {
   return <div className="navigation-container">
@@ -38,12 +26,14 @@ const Navigation = ({ layoutContext }) => {
         </Link>
       </div>
     </div>
-
-
   </div>
 }
 
 export default ({ children, layoutContext }) => {
+
+  const [query, setQuery] = useState('')
+  const search = LocalizationHelper.getLocalWord(layoutContext.localization, 'search', layoutContext.locale)
+
   return (
     <div id="layout-container">
       <Helmet
@@ -55,7 +45,20 @@ export default ({ children, layoutContext }) => {
       <div id="children-container">
         {children}
       </div>
-      <Footer id="footer" layoutContext={layoutContext} />
+      <footer id="footer-container">
+
+        <form id="search-container" action={'/search'}>
+          <input type="text" id="search-input" name="query" value={query} placeholder={`${search}...`} onChange={e => setQuery(e.target.value)}></input>
+
+          <Link id='search-button' to={`/search?query=${query}`}>
+            <span id="search-button-word">
+              {search}
+            </span>
+
+          </Link>
+        </form>
+
+      </footer>
     </div>
   )
 }

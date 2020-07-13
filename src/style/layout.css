@@ -59,7 +59,8 @@
 }
 
 #search-container{
-  display: block;
+  display: flex;
+  flex-direction: row;
   float: right;
   margin: 0;
   position: absolute;
@@ -67,26 +68,37 @@
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
   right: 12%;
-  padding: 0;
+  padding: 2px 0;
+  height: 36px;
 }
 
 #search-input{
-  height: 36px;
+  display: block;
   width: 190px;
   margin: 0;
   padding: 0 10px;
   font-size: 16px;
 }
+
 #search-button{
-  height: 40px;
-  width: 70px;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 58px;
   margin: 0;
+  padding: 0;
   color: white;
-  font-size: 16px;
+  
   font-weight: 100;
   background-color: #005aa7;
   border: 0 none;
   cursor: pointer;
+  text-decoration: none;
+}
+
+#search-button-word{
+  margin: auto;
+  font-size: 15px;
 }
 
 *{

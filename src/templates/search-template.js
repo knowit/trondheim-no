@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Link } from 'gatsby'
 import Layout from "../layouts/layout"
 import "../style/search.css"
@@ -12,7 +12,7 @@ class SearchComponent extends React.Component {
     this.state = {
       query: '',
       results: [],
-      quantity: 'all',
+      quantity: '10',
       pageNumber: 0,
       antall: [5, 10, 20, 50, 100]
     }
