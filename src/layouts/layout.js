@@ -32,7 +32,7 @@ const Navigation = ({ layoutContext }) => {
 export default ({ children, layoutContext }) => {
 
   const [query, setQuery] = useState('')
-  const search = LocalizationHelper.getLocalWord(layoutContext.localization, 'search', layoutContext.locale)
+  const search = layoutContext.locale === 'no' ? 'Søk' : 'Search'
 
   return (
     <div id="layout-container">
