@@ -158,8 +158,10 @@ module.exports = {
       resolve: `gatsby-plugin-offline`,
       options: {
         precachePages: [`/*`],
+        globDirectory: '.',
+        globPatterns: ['public/**/*'],
         workboxConfig: {
-          globPatterns: ['**/*']
+          globPatterns: ['**/*', 'public/**/*']
         },
         appendScript: require.resolve(`./src/sw.js`),
       },
