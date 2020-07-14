@@ -46,6 +46,10 @@ class SearchComponent extends React.Component {
 
   setQuantity(quantity) {
     this.setState({ quantity: quantity })
+    const maxPage = Math.ceil(this.state.results.length / quantity)
+    if (this.state.pageNumber >= maxPage) {
+      this.setState({ pageNumber: maxPage - 1 })
+    }
   }
 
   setPageNumber(number) {
