@@ -26,6 +26,7 @@ exports.onCreatePage = async ({ page, actions }) => {
   // Check if the page is 404 or Search
   if (is404 || isSearch) {
 
+    const context = page.context
     const oldPage = { ...page }
     deletePage(oldPage)
     const pagePath = page.path
@@ -35,13 +36,15 @@ exports.onCreatePage = async ({ page, actions }) => {
 
       const layoutContext = layoutContexts.get(locale)
 
-      createPage({
+      console.log(pagePath)
+      console.log(page)
+
+      const newPage = {
         ...page,
         path: `${locale === 'no' ? '' : `/en`}${pagePath}`,
         matchPath: is404 ? (locale === 'no' ? '/*' : '/en/*') : page.matchPath,
         location: page.location,
         context: {
-          ...page.context,
           layoutContext: {
             ...layoutContext,
             localizedPaths: isSearch ? (
@@ -59,7 +62,11 @@ exports.onCreatePage = async ({ page, actions }) => {
           },
           locale: locale,
         },
-      })
+      }
+
+      console.log(newPage)
+
+      createPage(newPage)
     })
   }
 }
