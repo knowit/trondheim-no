@@ -170,7 +170,7 @@ class SearchComponent extends React.Component {
               {
                 this.state.pageNumber > 0
                   ? (
-                    <button key={'next'} className="other-page-button"
+                    <button key={'first'} className="other-page-button"
                       onClick={e => this.setPageNumber(0)}>
                       {this.props.pageContext.locale === 'no' ? 'Første' : 'First'}
                     </button>
@@ -179,7 +179,7 @@ class SearchComponent extends React.Component {
               {
                 this.state.pageNumber > 0
                   ? (
-                    <button key={'last'} className="other-page-button"
+                    <button key={'previous'} className="other-page-button"
                       onClick={e => this.setPageNumber(this.state.pageNumber - 1)}>
                       {this.props.pageContext.locale === 'no' ? 'Forrige' : 'Previous'}
                     </button>

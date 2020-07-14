@@ -47,10 +47,10 @@ export default ({ children, layoutContext }) => {
       </div>
       <footer id="footer-container">
 
-        <form id="search-container" action={'/search'}>
+        <form id="search-container" action={`${layoutContext.locale === 'no' ? '/' : '/en/'}search`}>
           <input type="text" id="search-input" name="query" value={query} placeholder={`${search}...`} onChange={e => setQuery(e.target.value)}></input>
 
-          <Link id='search-button' to={`/search?query=${query}`}>
+          <Link id='search-button' to={`${layoutContext.locale === 'no' ? '/' : '/en/'}search?query=${query}`}>
             <span id="search-button-word">
               {search}
             </span>

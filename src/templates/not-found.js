@@ -57,7 +57,6 @@ const NotFound = ({ pageContext, location }) => {
     )
   }
 
-
   return (
     <Layout layoutContext={pageContext.layoutContext}>
       <div id="outer-container">

@@ -19,65 +19,47 @@ exports.onCreateNode = onCreateNode
 
 exports.onCreatePage = async ({ page, actions }) => {
   const { createPage, deletePage } = actions
-  // Check if the page is a localized 404
-  if (page.path.match(/^\/404\/$/)) {
-    const oldPage = { ...page }
-    const locale = 'no'
-    // Recreate the modified page
-    deletePage(oldPage)
-    var context = page.context
-    context.layoutContext = layoutContexts.get(locale)
-    context.locale = locale
-    createPage({
-      ...page,
-      context: context,
-      location: page.location,
-    })
-  }
-  else if (page.path.match(/^\/[a-z]{2}\/404\/$/)) {
-    const oldPage = { ...page }
-    const langCode = page.path.split(`/`)[1]
-    const locale = (langCode == 'en') ? 'en-US' : langCode
-    page.matchPath = `/${langCode}/*`
-    // Recreate the modified page
-    deletePage(oldPage)
-    var context = page.context
-    context.layoutContext = layoutContexts.get(locale)
-    context.locale = locale
-    createPage({
-      ...page,
-      context: context,
-    })
-  }
 
-  else if (page.path.match(/^\/search\/$/)) {
-    const oldPage = { ...page }
-    const locale = 'no'
-    // Recreate the modified page
-    deletePage(oldPage)
-    var context = page.context
-    context.layoutContext = layoutContexts.get(locale)
-    context.locale = locale
-    createPage({
-      ...page,
-      context: context,
-      location: page.location,
-    })
-  }
+  const is404 = page.path.match(/^\/404\/$/)
+  const isSearch = page.path.match(/^\/search\/$/)
 
-  else if (page.path.match(/^\/[a-z]{2}\/search\/$/)) {
+  // Check if the page is 404 or Search
+  if (is404 || isSearch) {
+
     const oldPage = { ...page }
-    const langCode = page.path.split(`/`)[1]
-    const locale = (langCode == 'en') ? 'en-US' : langCode
-    page.matchPath = `/${langCode}/*`
-    // Recreate the modified page
     deletePage(oldPage)
-    var context = page.context
-    context.layoutContext = layoutContexts.get(locale)
-    context.locale = locale
-    createPage({
-      ...page,
-      context: context,
+    const pagePath = page.path
+    const locales = ['no', 'en-US']
+
+    locales.forEach((locale, index, array) => {
+
+      const layoutContext = layoutContexts.get(locale)
+
+      createPage({
+        ...page,
+        path: `${locale === 'no' ? '' : `/en`}${pagePath}`,
+        matchPath: is404 ? (locale === 'no' ? '/*' : '/en/*') : page.matchPath,
+        location: page.location,
+        context: {
+          ...page.context,
+          layoutContext: {
+            ...layoutContext,
+            localizedPaths: isSearch ? (
+              [
+                {
+                  locale: `no`,
+                  path: `${pagePath}`
+                },
+                {
+                  locale: 'en-US',
+                  path: `/en${pagePath}`
+                },
+              ]
+            ) : layoutContext.localizedPaths
+          },
+          locale: locale,
+        },
+      })
     })
   }
 }
