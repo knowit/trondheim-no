@@ -1,4 +1,8 @@
 
+#search-component-container {
+  margin-bottom: 40px;
+}
+
 #search-input-container{
   width: 200px;
   margin: 10px 0;
@@ -56,17 +60,56 @@
 
 #search-quantity-select select {
   padding: 5px;
+  margin-top: 5px;
+}
+
+#page-number-text{
+  margin-bottom: 15px;
+  margin-top: 10px;
 }
 
 .search-result-item a {
   color: #005aa7;
+  margin-left: 3px;
 }
 
-#search-page-button-container{
-
+.search-result-item {
+  min-height: 50px;
+  margin-bottom: 10px;
 }
-#search-page-button-container button{
-  
+
+#search-page-buttons-container{
+  margin-top: 50px;
+}
+#search-page-buttons-container button{
+  cursor: pointer;
+  background-color: white;
+  border: 0;
+  color: #555;
+  height: 35px;
+  margin: 0 5px;
+  font-size: 16px;
+}
+#search-page-buttons-container button:hover {
+  background-color: #ddd;
+}
+.page-num-button {
+  width: 35px;
+}
+
+ #selected-page-button {
+  font-weight: 600;
+  cursor: default !important;
+  color: black !important;
+  background-color: #f5f5f5 !important;
+}
+
+#selected-page-button:hover {
+  border: 1px solid #428bca; 
+}
+
+.other-page-button {
+  width: 60px;
 }
 
 

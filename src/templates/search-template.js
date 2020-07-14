@@ -122,9 +122,13 @@ class SearchComponent extends React.Component {
 
     const SearchResultItem = ({ url, title, content, index }) => (
       <div className="search-result-item">
-        <b>{index}. <Link to={url}>{title}</Link></b>
+        <b>{index}.
+        <Link to={url}>
+            <EllipsisText className="search-result-content-text" text={title} length={100} />
+          </Link>
+        </b>
         <p>
-          <EllipsisText className="search-result-content-text" text={content} length={200} />
+          <EllipsisText className="search-result-content-text" text={content} length={250} />
         </p>
       </div>
     )
@@ -132,12 +136,16 @@ class SearchComponent extends React.Component {
     const SearchResultsPage = ({ page }) => {
       return (
         <div>
-          <div>
-            {this.props.pageContext.locale === 'no' ? 'Side ' : 'Page '}
-            {this.state.pageNumber + 1}
-            {this.props.pageContext.locale === 'no' ? ' av ' : ' of '}
-            {this.maxPageNumber()}
-          </div>
+          {
+            (this.state.quantity !== 'all')
+              ? (<div id="page-number-text">
+                {this.props.pageContext.locale === 'no' ? 'Side ' : 'Page '}
+                {this.state.pageNumber + 1}
+                {this.props.pageContext.locale === 'no' ? ' av ' : ' of '}
+                {this.maxPageNumber()}
+              </div>)
+              : (<br />)
+          }
           {page.map(r => (
             <SearchResultItem
               key={r.index}
@@ -162,7 +170,8 @@ class SearchComponent extends React.Component {
               {
                 this.state.pageNumber > 0
                   ? (
-                    <button key={'next'} onClick={e => this.setPageNumber(0)}>
+                    <button key={'next'} className="other-page-button"
+                      onClick={e => this.setPageNumber(0)}>
                       {this.props.pageContext.locale === 'no' ? 'Første' : 'First'}
                     </button>
                   ) : null
@@ -170,7 +179,8 @@ class SearchComponent extends React.Component {
               {
                 this.state.pageNumber > 0
                   ? (
-                    <button key={'last'} onClick={e => this.setPageNumber(this.state.pageNumber - 1)}>
+                    <button key={'last'} className="other-page-button"
+                      onClick={e => this.setPageNumber(this.state.pageNumber - 1)}>
                       {this.props.pageContext.locale === 'no' ? 'Forrige' : 'Previous'}
                     </button>
                   ) : null
@@ -182,7 +192,10 @@ class SearchComponent extends React.Component {
                 }
               }).map(p => {
                 return (
-                  <button key={p.index} onClick={e => this.setPageNumber(p.index)}>
+                  <button key={p.index}
+                    id={this.state.pageNumber === p.index ? 'selected-page-button' : null}
+                    className="page-num-button"
+                    onClick={e => this.setPageNumber(p.index)}>
                     {p.index + 1}
                   </button>
                 )
@@ -190,7 +203,8 @@ class SearchComponent extends React.Component {
               {
                 this.state.pageNumber < this.maxPageNumber() - 1
                   ? (
-                    <button key={'next'} onClick={e => this.setPageNumber(this.state.pageNumber + 1)}>
+                    <button key={'next'} className="other-page-button"
+                      onClick={e => this.setPageNumber(this.state.pageNumber + 1)}>
                       {this.props.pageContext.locale === 'no' ? 'Neste' : 'Next'}
                     </button>
                   ) : null
@@ -198,7 +212,8 @@ class SearchComponent extends React.Component {
               {
                 this.state.pageNumber < this.maxPageNumber() - 1
                   ? (
-                    <button key={'last'} onClick={e => this.setPageNumber(this.maxPageNumber() - 1)}>
+                    <button key={'last'} className="other-page-button"
+                      onClick={e => this.setPageNumber(this.maxPageNumber() - 1)}>
                       {this.props.pageContext.locale === 'no' ? 'Siste' : 'Last'}
                     </button>
                   ) : null
@@ -210,7 +225,7 @@ class SearchComponent extends React.Component {
 
 
     return (
-      <div >
+      <div id="search-component-container" >
 
         <div id="search-input-container">
           <input
