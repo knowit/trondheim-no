@@ -5,7 +5,7 @@ import "../style/404.css"
 const NotFoundPage = ({ pageContext, location }) => {
   return pageContext.layoutContext != null
     ? (<NotFound pageContext={pageContext} location={location} />)
-    : (<div>404 not found</div>)
+    : null
 }
 
 export default NotFoundPage
