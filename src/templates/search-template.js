@@ -97,6 +97,10 @@ class SearchComponent extends React.Component {
     return pages
   }
 
+  maxPageNumber() {
+    return Math.ceil(this.state.results.length / this.state.quantity)
+  }
+
 
   render() {
 
@@ -118,7 +122,7 @@ class SearchComponent extends React.Component {
 
     const SearchResultItem = ({ url, title, content, index }) => (
       <div className="search-result-item">
-        <b>{index}: <Link to={url}>{title}</Link></b>
+        <b>{index}. <Link to={url}>{title}</Link></b>
         <p>
           <EllipsisText className="search-result-content-text" text={content} length={200} />
         </p>
@@ -128,6 +132,12 @@ class SearchComponent extends React.Component {
     const SearchResultsPage = ({ page }) => {
       return (
         <div>
+          <div>
+            {this.props.pageContext.locale === 'no' ? 'Side ' : 'Page '}
+            {this.state.pageNumber + 1}
+            {this.props.pageContext.locale === 'no' ? ' av ' : ' of '}
+            {this.maxPageNumber()}
+          </div>
           {page.map(r => (
             <SearchResultItem
               key={r.index}
@@ -148,7 +158,23 @@ class SearchComponent extends React.Component {
         <div>
           <SearchResultsPage page={page} />
           {this.state.quantity === 'all' || pages.length <= 1 ? null : (
-            <div>
+            <div id="search-page-buttons-container">
+              {
+                this.state.pageNumber > 0
+                  ? (
+                    <button key={'next'} onClick={e => this.setPageNumber(0)}>
+                      {this.props.pageContext.locale === 'no' ? 'Første' : 'First'}
+                    </button>
+                  ) : null
+              }
+              {
+                this.state.pageNumber > 0
+                  ? (
+                    <button key={'last'} onClick={e => this.setPageNumber(this.state.pageNumber - 1)}>
+                      {this.props.pageContext.locale === 'no' ? 'Forrige' : 'Previous'}
+                    </button>
+                  ) : null
+              }
               {pages.map(p => {
                 return {
                   index: index++,
@@ -161,6 +187,22 @@ class SearchComponent extends React.Component {
                   </button>
                 )
               })}
+              {
+                this.state.pageNumber < this.maxPageNumber() - 1
+                  ? (
+                    <button key={'next'} onClick={e => this.setPageNumber(this.state.pageNumber + 1)}>
+                      {this.props.pageContext.locale === 'no' ? 'Neste' : 'Next'}
+                    </button>
+                  ) : null
+              }
+              {
+                this.state.pageNumber < this.maxPageNumber() - 1
+                  ? (
+                    <button key={'last'} onClick={e => this.setPageNumber(this.maxPageNumber() - 1)}>
+                      {this.props.pageContext.locale === 'no' ? 'Siste' : 'Last'}
+                    </button>
+                  ) : null
+              }
             </div>
           )}
         </div>)
