@@ -36,9 +36,6 @@ exports.onCreatePage = async ({ page, actions }) => {
 
       const layoutContext = layoutContexts.get(locale)
 
-      console.log(pagePath)
-      console.log(page)
-
       const newPage = {
         ...page,
         path: `${locale === 'no' ? '' : `/en`}${pagePath}`,
@@ -63,8 +60,6 @@ exports.onCreatePage = async ({ page, actions }) => {
           locale: locale,
         },
       }
-
-      console.log(newPage)
 
       createPage(newPage)
     })
