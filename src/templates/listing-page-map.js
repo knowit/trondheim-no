@@ -4,6 +4,7 @@ import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import { Link } from "gatsby"
 import GoogleMap from "../components/map.js"
+import { Online, Offline } from "react-detect-offline"
 
 // Default location
 function GetLocation(pageContext) {
@@ -78,22 +79,33 @@ class ListingPageMap extends React.Component {
       <Layout layoutContext={this.props.pageContext.layoutContext}>
         <div id="outer-container">
           <div id="inner-container">
-            <GoogleMap location={GetLocation(this.props.pageContext)} address={GetAddress(this.props.pageContext)} markers={markers} zoom={13} persistentDisabled={false}
-              width="100%" height="500px" />
+            <Online>
+              <GoogleMap location={GetLocation(this.props.pageContext)} address={GetAddress(this.props.pageContext)} markers={markers} zoom={13} persistentDisabled={false}
+                width="100%" height="500px" />
 
 
-            <div>
-              <form className="map-checkbox-form">
-                {items}
-              </form>
-            </div>
+              <div>
+                <form className="map-checkbox-form">
+                  {items}
+                </form>
+              </div>
 
 
-            <div id="content-container">
-              <h2>{this.props.pageContext.node.mapPageTitle}</h2>
-              <p>{this.props.pageContext.node.mapPageDescription}</p>
-              <Link to={this.props.pageContext.listingPagePath}>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "viewListingPageList", this.props.pageContext.locale)}</Link>
-            </div>
+              <div id="content-container">
+                <h2>{this.props.pageContext.node.mapPageTitle}</h2>
+                <p>{this.props.pageContext.node.mapPageDescription}</p>
+                <Link to={this.props.pageContext.listingPagePath}>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "viewListingPageList", this.props.pageContext.locale)}</Link>
+              </div>
+            </Online>
+
+            <Offline>
+              <div id="content-container">
+                <h2>{this.props.pageContext.node.mapPageTitle}</h2>
+                <p>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "not-available-offline", this.props.pageContext.locale)}</p>
+                <Link to={this.props.pageContext.listingPagePath}>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "go-back", this.props.pageContext.locale)}</Link>
+              </div>
+            </Offline>
+
           </div>
         </div>
       </Layout>
