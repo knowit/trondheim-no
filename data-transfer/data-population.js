@@ -209,6 +209,21 @@ fs.writeFile("./outputs/discardedData.json", JSON.stringify(discardedData), func
 */
 
 
+fs.readFile('./outputs/noMatchDataResolved.json', 'utf8', (err, jsonString) => {
+    if (err) {
+        console.log("Error reading file from disk:", err)
+        return
+    }
+    try {
+        commonData = JSON.parse(jsonString)
+        console.log("Success!") // => "Customer address is: Infinity Loop Drive"
+    } catch (err) {
+        console.log('Error parsing JSON string:', err)
+    }
+})
+
+
+
 
 
 
@@ -246,6 +261,7 @@ async function prepareCategoryReferences() {
 function getCategoryRef(language, catNum) {
     if (language == "no") {
         var cats = catids.filter(val => val.no == catNum);
+        if (cats[0] == null) { console.log(catNum) }
         if (!cats[0].noRef) return null;
         return cats[0].noRef;
     } else if (language == "en") {
@@ -306,78 +322,105 @@ async function createArticles() {
 
         let articles = [];
 
-        const startIndex = 500
-        const quantity = 5
+        const startIndex = 0
+        const quantity = 10
 
         //Create all articles with both Norwegian and English translations
-        for (let i = startIndex; i < startIndex + quantity/*commonData.length*/; i++) {
-            const element = commonData[i];
+        for (let i = startIndex; /*i < startIndex + quantity*/ i < commonData.length; i++) {
 
-            await app.settings.setLocale('no');
-            let noThumbnail = await getThumbnailReference(element.no);
-            const content = await HtmlParser.concatText(element.no.introtext, element.no.fulltext, element.no.images)
-            const contact = await HtmlParser.getContactInfo(content, 'no')
-            const openingHours = await HtmlParser.getOpeningHours(content, 'no')
-            const address = {
-                address: contact.address,
-                lat: 0,
-                lng: 0
+            if (i % 50 === 0) {
+                console.log(`Transfering article no. ${i}`)
             }
 
-            const reducedContent = await HtmlParser.removeLines(content, contact.removedLines.concat(openingHours.removedLines))
+            if (i != 346) { // Do not add student page
 
-            const norwegianArticle = await app.content.add(
-                {
-                    schemaKey: 'article',
-                    data: {
-                        title: element.no.title,
-                        slug: slugify(element.no.title).toLowerCase(),
-                        thumbnail: noThumbnail,
-                        parentListingPage: getCategoryRef("no", element.no.catid),
-                        content: reducedContent,
-                        openingHours: openingHours.result,
-                        contactInfo: contact.result,
-                        address: address, //{ address: '', lat: 0, lng: 0 },
-                        latLong: getLatLong(element.no.metadata.xreference),
-                        tags: []
+                const element = commonData[i];
+
+                if (element != null) {
+
+                    await app.settings.setLocale('no');
+                    let noThumbnail = await getThumbnailReference(element.no);
+                    const content = await HtmlParser.concatText(element.no.introtext, element.no.fulltext, element.no.images)
+                    const contact = await HtmlParser.getContactInfo(content, 'no')
+                    const openingHours = await HtmlParser.getOpeningHours(content, 'no')
+                    const address = {
+                        address: contact.address,
+                        lat: 0,
+                        lng: 0
                     }
-                })
 
-            articles.push(norwegianArticle);
+                    let parentListingPage
+                    try {
+                        parentListingPage = getCategoryRef("no", element.no.catid)
 
-            await app.settings.setLocale('en-US');
-            let enThumbnail = await getThumbnailReference(element.en);
+                    } catch (e) {
+                        console.log(element)
+                        return
+                    }
 
-            const contentEn = await HtmlParser.concatText(element.en.introtext, element.en.fulltext, element.en.images)
-            const contactEn = await HtmlParser.getContactInfo(contentEn, 'en')
-            const addressEn = {
-                address: contactEn.address,
-                lat: 0,
-                lng: 0
+                    const reducedContent = await HtmlParser.removeLines(content, contact.removedLines.concat(openingHours.removedLines))
+
+                    const norwegianArticle = await app.content.add(
+                        {
+                            schemaKey: 'article',
+                            data: {
+                                title: element.no.title,
+                                slug: slugify(element.no.title).toLowerCase(),
+                                thumbnail: noThumbnail,
+                                parentListingPage: parentListingPage,
+                                content: reducedContent,
+                                openingHours: openingHours.result,
+                                contactInfo: contact.result,
+                                address: address, //{ address: '', lat: 0, lng: 0 },
+                                latLong: getLatLong(element.no.metadata.xreference),
+                                tags: []
+                            }
+                        })
+
+                    articles.push({
+                        index: i,
+                        locale: 'no',
+                        title: norwegianArticle.title
+                    });
+
+                    await app.settings.setLocale('en-US');
+                    let enThumbnail = await getThumbnailReference(element.en);
+
+                    const contentEn = await HtmlParser.concatText(element.en.introtext, element.en.fulltext, element.en.images)
+                    const contactEn = await HtmlParser.getContactInfo(contentEn, 'en')
+                    const addressEn = {
+                        address: contactEn.address,
+                        lat: 0,
+                        lng: 0
+                    }
+                    const openingHoursEn = await HtmlParser.getOpeningHours(contentEn, 'en')
+
+                    const reducedContentEn = await HtmlParser.removeLines(contentEn, contactEn.removedLines.concat(openingHoursEn.removedLines))
+
+                    const englishArticle = await app.content.add(
+                        {
+                            schemaKey: 'article',
+                            entryId: norwegianArticle.id,
+                            data: {
+                                title: element.en.title,
+                                slug: slugify(element.en.title).toLowerCase(),
+                                thumbnail: enThumbnail,
+                                parentListingPage: getCategoryRef("en", element.en.catid),
+                                content: reducedContentEn,
+                                openingHours: openingHoursEn.result,
+                                contactInfo: contactEn.result,
+                                address: addressEn,
+                                latLong: getLatLong(element.en.metadata.xreference)
+                            }
+                        })
+
+                    articles.push({
+                        index: i,
+                        locale: 'en-US',
+                        title: englishArticle.title
+                    });
+                }
             }
-            const openingHoursEn = await HtmlParser.getOpeningHours(contentEn, 'en')
-
-            const reducedContentEn = await HtmlParser.removeLines(contentEn, contactEn.removedLines.concat(openingHoursEn.removedLines))
-
-            const englishArticle = await app.content.add(
-                {
-                    schemaKey: 'article',
-                    entryId: norwegianArticle.id,
-                    data: {
-                        title: element.en.title,
-                        slug: slugify(element.en.title).toLowerCase(),
-                        thumbnail: enThumbnail,
-                        parentListingPage: getCategoryRef("en", element.en.catid),
-                        content: reducedContentEn,
-                        openingHours: openingHoursEn.result,
-                        contactInfo: contactEn.result,
-                        address: addressEn,
-                        latLong: getLatLong(element.en.metadata.xreference)
-                    }
-                })
-
-            articles.push(englishArticle);
-
         }
 
         await app.settings.setLocale('no');
@@ -429,7 +472,15 @@ async function createArticles() {
 
             articles.push(englishArticle);
         }
-        //console.log(articles);
+
+        await fs.writeFile("./outputs/article-index.json", JSON.stringify(articles), function (err) {
+            if (err) {
+                console.log(err);
+            }
+        })
+
+        console.log("Transfer complete!")
+
     } catch (error) {
         console.error(error);
     }

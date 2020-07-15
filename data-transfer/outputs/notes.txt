@@ -1,0 +1,123 @@
+Common data:
+0-99 ok
+100-199 ok
+200-299 ok
+300-399 ok
+400-499 ok
+500-599 ok
+600-690 ok
+
+
+missing thumbnail: []
+
+no thumbnail:
+[
+  '119 - Vincents Budde',
+  '211 - Adrian Rockertsen Falkener',
+  '433?? - Kokomo'
+  '404 - Sushi bar, Heimdal',
+  '431 - Domino's Pizza Moholt',
+  '431 - Domino's Pizza Lerkendal',
+  '472 - Minda Øien',
+  '520 - Teater Avant Garden',
+]
+
+
+Add thumbnail manually:
+[
+  113 - en - Eystein Erlendsson,
+]
+
+Delete article manually:
+[
+  '346 - Student'
+]
+
+
+300-350:
+{
+  Warning: Failed to parse [Phone]: <p>Telefon: <a href="&quot;tel:+4793461100">+47 934 61 100</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Phone: <a href="&quot;tel:+4793461100">+47 934 61 100</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Telefon:<a href="&quot;tel:"> +47 400 07 066</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Phone:<a href="&quot;tel:"> +47 400 07 066</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Telefon: <a href="&quot;tel:+4773517515"> +47 73 51 75 15</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Phone: <a href="&quot;tel:+4773517515"> +47 73 51 75 15</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Telefon: <a href="&quot;tel:+4740056108"> +47 400 56 108</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Phone: <a href="&quot;tel:+4740056108"> +47 400 56 108</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Telefon: <a href="&quot;tel:+4792606200">+47 926 06 200</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Phone: <a href="&quot;tel:+4792606200">+47 926 06 200</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Telefon: <a href="&quot;tel:+4773518095"> +47 73 51 80 95</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Phone: <a href="&quot;tel:+4773518095"> +47 73 51 80 95</a></p>
+}
+
+400-450: 
+{
+  Warning: Failed to parse [Phone]: <p>Telefon: <a> +47 73 56 89 00</a></p>
+
+  Warning: Failed to parse [Phone]: <p>Phone: <a> +47 73 56 89 00</a></p>
+
+  Warning: Failed to parse [Phone]: Telefon: <a href="&quot;tel:+4773592145">73 59 21 45</a><br />E-post: <a href="mailto:post@vm.ntnu.no">post@vm.ntnu.no</a><br /> <a class="uk-button uk-button-danger" href="http://www.ntnu.no/vitenskapsmuseet/" target="_blank">Vitenskapsmuseets nettsted</a></div>
+
+  Warning: Failed to parse [Phone]: <p>Phone: <a href="&quot;tel:+4773592145">73 59 21 45</a></p>
+}
+
+450-500
+{
+  Warning: Failed to parse [Website title]: <p>Web: http://oliviarestauranter.no/#!/restaurant/solsiden</p>
+
+  Warning: Failed to parse [Website title]: <p>Web: http://oliviarestauranter.no/#!/restaurant/solsiden</p>
+}
+
+500-550
+{
+  Warning: Failed to parse [Website title]: <p>Web: https://lan-na.no/</p>
+}
+
+550-600
+{
+  Warning: Failed to parse [Website title]: <p>Web: http://www.sushime.no/</p>
+
+  Warning: Failed to parse [Website title]: <p>Web: http://www.sushime.no/</p>
+
+  Warning: Failed to parse [Website title]: <p>Web: http://www.lille-skansen.no/</p>
+
+  Warning: Failed to parse [Website title]: <p>Web: http://www.lille-skansen.no/</p>
+
+  Warning: Failed to parse [Website title]: <p>Web: http://sabrurasushi.no/</p>
+
+  Warning: Failed to parse [Website title]: <p>Web: http://sabrurasushi.no/</p>
+}
+
+600-650
+{
+  Warning: Failed to parse [Website title]: <p>Web: http://heidisbierbar.no/trondheim/</p>
+
+  Warning: Failed to parse [Website title]: <p>Web: http://www.restaurantcredo.no/finnes</p>
+
+  Warning: Failed to parse [Website title]: <p>Web: http://www.restaurantcredo.no/jossa</p>
+
+  Warning: Failed to parse [P-tag content]: <div>Adresse: Haakon VIIs gate 2</div>
+
+  Warning: Failed to parse [P-tag content]: <div>Address: Haakon VII's gate 2</div>
+}
+
+650 ~
+{
+  Warning: Failed to parse [Website title]: <div class="result-shield-container tlid-copy-target" tabindex="0"><em><span class="tlid-translation translation" lang="en"><span title="" class="">This article was originally posted in Norwegian at <a href="https://www.trondelagfylke.no/vare-tjenester/naring-og-innovasjon/virkemidler-og-tilskudd/forskningsmidler/nyhetsarkiv-forskningsmidler/knytter-kontakt-med-flere-bedrifter/">Trondelagfylke.no</a></span></span></em></div>
+}
+
+Resolved data
+{
+  Warning: Failed to parse [Website title]: <p><strong>Website:</strong> https://www.spontanvinbar.no/</p>
+}
