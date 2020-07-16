@@ -7,6 +7,7 @@ import Img from "gatsby-image"
 import { Online, Offline } from "react-detect-offline"
 import HTMLContent from '../components/html-content'
 import Map from "../components/map.js"
+import { Router } from "@reach/router"
 
 
 function ContactInfo(props) {
@@ -109,9 +110,12 @@ const Article = ({ pageContext }) => {
           <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <Online>
-            <Map location={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
-              width="100%" height="400px" />
+            <Router basepath={pageContext.node.path}>
+              <Map location={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
+                width="100%" height="400px" />
+            </Router>
           </Online>
+
           <Offline>
             <OfflineMap></OfflineMap>
           </Offline>

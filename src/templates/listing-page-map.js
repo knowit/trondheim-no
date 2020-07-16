@@ -75,27 +75,35 @@ class ListingPageMap extends React.Component {
       return null
     })
 
+    const MapComponent = () => {
+      return (<span>
+        <GoogleMap location={GetLocation(this.props.pageContext)} address={GetAddress(this.props.pageContext)} markers={markers} zoom={13} persistentDisabled={false}
+          width="100%" height="500px" />
+
+
+        <div>
+          <form className="map-checkbox-form">
+            {items}
+          </form>
+        </div>
+
+
+        <div id="content-container">
+          <h2>{this.props.pageContext.node.mapPageTitle}</h2>
+          <p>{this.props.pageContext.node.mapPageDescription}</p>
+          <Link to={this.props.pageContext.listingPagePath}>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "viewListingPageList", this.props.pageContext.locale)}</Link>
+        </div>
+      </span>)
+    }
+
     return (
       <Layout layoutContext={this.props.pageContext.layoutContext}>
         <div id="outer-container">
           <div id="inner-container">
             <Online>
-              <GoogleMap location={GetLocation(this.props.pageContext)} address={GetAddress(this.props.pageContext)} markers={markers} zoom={13} persistentDisabled={false}
-                width="100%" height="500px" />
-
-
-              <div>
-                <form className="map-checkbox-form">
-                  {items}
-                </form>
-              </div>
-
-
-              <div id="content-container">
-                <h2>{this.props.pageContext.node.mapPageTitle}</h2>
-                <p>{this.props.pageContext.node.mapPageDescription}</p>
-                <Link to={this.props.pageContext.listingPagePath}>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "viewListingPageList", this.props.pageContext.locale)}</Link>
-              </div>
+              <Router basepath={pageContext.mapPath}>
+                <MapComponent />
+              </Router>
             </Online>
 
             <Offline>
