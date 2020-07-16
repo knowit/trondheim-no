@@ -5,6 +5,7 @@ import LocalizationHelper from "../helpers/helpers"
 import { Link } from "gatsby"
 import GoogleMap from "../components/map.js"
 import { Online, Offline } from "react-detect-offline"
+import { Router } from "@reach/router"
 
 // Default location
 function GetLocation(pageContext) {
