@@ -102,7 +102,7 @@ class ListingPageMap extends React.Component {
           <div id="inner-container">
             <Online>
               <Router basepath={pageContext.mapPath}>
-                <MapComponent />
+                <MapComponent path='/' />
               </Router>
             </Online>
 
