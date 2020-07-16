@@ -26,6 +26,11 @@ class GoogleMapsUrlHelper {
   }
 
   static getMarker(node, url, parent = null) {
+
+    if (!node) {
+      return null
+    }
+
     return {
       id: node._fl_meta_.fl_id,
       title: node.title,

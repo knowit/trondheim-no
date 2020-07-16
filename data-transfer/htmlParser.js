@@ -1,7 +1,14 @@
 const mediaUrl = "https://firebasestorage.googleapis.com/v0/b/byportal-218506.appspot.com/o/flamelink%2Fmedia%2F"
 
+const faultyUrl = "failed to process https://firebasestorage.googleapis.com/v0/b/byportal-218506.appspot.com/o/flamelink%2Fmedia%2FSpongdal_260x210mm_300dpi-31.jpg?alt=media"
 
-function getImgTag(filename, alt) {
+function getImgTag(filename, alt, other = null) {
+    const src = `${mediaUrl}${encodeURI(filename)}?alt=media`
+    if (src === faultyUrl) {
+        console.log(filename ? filename : 'filename undefined')
+        console.log(alt ? alt : 'alt undefined')
+        console.log(other ? other : '')
+    }
     return `<img src=\"${mediaUrl}${encodeURI(filename)}?alt=media\" alt=\"${alt}\" />`
 }
 
@@ -30,6 +37,12 @@ class HtmlParser {
 
 
         if (frontImage) {
+            const src = `${mediaUrl}${frontImage}?alt=media`
+            if (src === faultyUrl) {
+                console.log(introtext)
+                console.log(fulltext)
+                console.log(images)
+            }
             val += `<p><img src=\"${mediaUrl}${frontImage}?alt=media\" alt=\"${alt}\"></img></p>`
         }
 
@@ -67,7 +80,7 @@ class HtmlParser {
             if (a) {
                 alt = a[1]
             }
-            result = result.replace(line, getImgTag(path, alt))
+            result = result.replace(line, getImgTag(path, alt, inputString))
             imgTags = regexp.exec(inputString)
         }
         return result

@@ -208,7 +208,7 @@ fs.writeFile("./outputs/discardedData.json", JSON.stringify(discardedData), func
 })
 */
 
-
+/*
 fs.readFile('./outputs/noMatchDataResolved.json', 'utf8', (err, jsonString) => {
     if (err) {
         console.log("Error reading file from disk:", err)
@@ -221,6 +221,8 @@ fs.readFile('./outputs/noMatchDataResolved.json', 'utf8', (err, jsonString) => {
         console.log('Error parsing JSON string:', err)
     }
 })
+*/
+
 
 
 
@@ -360,6 +362,7 @@ async function createArticles() {
 
                     const reducedContent = await HtmlParser.removeLines(content, contact.removedLines.concat(openingHours.removedLines))
 
+                    /*
                     const norwegianArticle = await app.content.add(
                         {
                             schemaKey: 'article',
@@ -382,6 +385,7 @@ async function createArticles() {
                         locale: 'no',
                         title: norwegianArticle.title
                     });
+                    */
 
                     await app.settings.setLocale('en-US');
                     let enThumbnail = await getThumbnailReference(element.en);
@@ -397,6 +401,7 @@ async function createArticles() {
 
                     const reducedContentEn = await HtmlParser.removeLines(contentEn, contactEn.removedLines.concat(openingHoursEn.removedLines))
 
+                    /*
                     const englishArticle = await app.content.add(
                         {
                             schemaKey: 'article',
@@ -419,6 +424,7 @@ async function createArticles() {
                         locale: 'en-US',
                         title: englishArticle.title
                     });
+                    */
                 }
             }
         }
@@ -429,6 +435,7 @@ async function createArticles() {
 
             let thumbnail = await getThumbnailReference(element);
 
+            /*
             const norwegianArticle = await app.content.add(
                 {
                     schemaKey: 'articleNew',
@@ -446,6 +453,7 @@ async function createArticles() {
                 })
 
             articles.push(norwegianArticle);
+            */
         }
 
         await app.settings.setLocale('en-US');
@@ -454,6 +462,7 @@ async function createArticles() {
 
             let thumbnail = await getThumbnailReference(element);
 
+            /*
             const englishArticle = await app.content.add(
                 {
                     schemaKey: 'articleNew',
@@ -471,13 +480,16 @@ async function createArticles() {
                 })
 
             articles.push(englishArticle);
+            */
         }
 
+        /*
         await fs.writeFile("./outputs/article-index.json", JSON.stringify(articles), function (err) {
             if (err) {
                 console.log(err);
             }
         })
+        */
 
         console.log("Transfer complete!")
 
@@ -488,34 +500,4 @@ async function createArticles() {
 
 createArticles();
 
-async function readImage() {
-    try {
-        let image;
-        // fetch("https://www.trondheim.no/images/severdig/baklandet900.png")
-        // .then(res => res.blob())
-        // .then((data) => {
-        //     console.log(data)
-        //     image = data;
-        // });
-        const test = await app.storage.getURL({
-            fileId: '207SSfsVjEc0u0Br4A30',
-            size: {
-                width: 1080,
-                height: 9999,
-                quality: 1
-            }
-        })
-        console.log(test)
-
-        var reference = await firestore.collection('fl_files').doc("bybro900");
-        console.log(reference);
-
-        const fileObject = await app.storage.getFiles({ folderName: 'Root' })
-        console.log(fileObject);
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-// readImage();
 

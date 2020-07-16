@@ -31,6 +31,9 @@ class HtmlNode {
   getLevel() {
     return this.level
   }
+  getType() {
+    return this.type
+  }
   isType(type) {
     return this.type === type
   }
@@ -112,16 +115,44 @@ class ReactDOMHelper {
 
   static createReactComponent(htmlNode, transformImg, index = 0, transformIframe) {
 
+    const voidElements = [
+      'area',
+      'base',
+      'basefont',
+      'bgsound',
+      'br',
+      'col',
+      'command',
+      'embed',
+      'frame',
+      'hr',
+      'image',
+      'input',
+      'isindex',
+      'keygen',
+      'link',
+      'menuitem',
+      'meta',
+      'nextid',
+      'param',
+      'source',
+      'track',
+      'wbr'
+    ]
+
     if (htmlNode.isType('img')) {
       return transformImg(htmlNode.props, index)
     }
 
-    else if (htmlNode.isType('text')) {
-      return htmlNode.props.text
+    else if (voidElements.includes(htmlNode.getType())) {
+      return React.createElement(htmlNode.getType(), {
+        ...htmlNode.props,
+        key: index
+      }, null)
     }
 
-    else if (htmlNode.isType('br')) {
-      return React.createElement('br', { key: index }, null)
+    else if (htmlNode.isType('text')) {
+      return htmlNode.props.text
     }
 
     else if (htmlNode.isType('iframe')) {

@@ -229,8 +229,13 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           const articlePath = articleTreeNode.getPath(locale)
           const parentNode = articleTreeNode.parent.node.get(locale)
           const marker = GoogleMapsUrlHelper.getMarker(articleNode, articlePath, parentNode)
-
-          markers.push(marker)
+          if (marker) {
+            markers.push(marker)
+          }
+          else {
+            console.log(`MISSING MARKER: `)
+            console.log(articleTreeNode)
+          }
         })
 
         const node = treeNode.node.get(locale)

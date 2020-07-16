@@ -1,10 +1,31 @@
 
 const { createRemoteFileNode } = require("gatsby-source-filesystem")
 const { GoogleMapsUrlHelper } = require(`../helpers/url-helper`)
-
 const { attachFields } = require(`gatsby-plugin-node-fields`)
-
 const striptags = require("striptags")
+
+const firestoreUrl = 'https://firebasestorage.googleapis.com/v0/b/byportal-218506.appspot.com/o/flamelink%2Fmedia%2F'
+const firestoreUrlIdentifier = '/v0/b/byportal-218506.appspot.com/o/flamelink%2Fmedia%2F'
+const unencodedLetters = [
+  ' ', 'Æ', 'Ø', 'Å', 'æ', 'ø', 'å', '+'
+]
+
+function requiresEncoding(url) {
+  for (var i = 0; i < url.length; i++) {
+    if (unencodedLetters.includes(url[i])) return true
+  }
+  return false
+}
+
+function encodeLetters(url) {
+  var result = ""
+  for (var i = 0; i < url.length; i++) {
+    if (unencodedLetters.includes(url[i])) {
+      result += encodeURIComponent(url[i])
+    } else result += url[i]
+  }
+  return result
+}
 
 
 function extract_image_urls(htmlBody) {
@@ -16,7 +37,11 @@ function extract_image_urls(htmlBody) {
   }
 
   tags.map(x => x.replace(/.*src="([^"]*)".*/, '$1')).map(url => {
-    result.push(url)
+
+    if (url.includes(firestoreUrlIdentifier) && requiresEncoding(url)) {
+      result.push(encodeLetters(url))
+    }
+    else result.push(url)
   })
 
   return result
@@ -43,6 +68,32 @@ exports.onCreateNode = async ({
 
   const { createNode } = actions
 
+  async function createRemoteFileNodeAsync(url, node) {
+
+    let fileNode
+
+    try {
+      fileNode = await createRemoteFileNode({
+        url: url, // string that points to the URL of the image
+        parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
+        createNode, // helper function in gatsby-node to generate the node
+        createNodeId, // helper function in gatsby-node to generate the node id
+        cache, // Gatsby's cache
+        store, // Gatsby's redux store
+      })
+    }
+    catch (e) {
+      console.log(e)
+    }
+
+    if (fileNode) {
+      return fileNode
+    }
+    else {
+      throw Error(`Failed to create remote file node: ${url}`)
+    }
+  }
+
   const getTextContent = (node) => {
     const contentNode = getNode(node.content___NODE ? node.content___NODE : node.content)
     if (contentNode) {
@@ -68,52 +119,49 @@ exports.onCreateNode = async ({
     }
   ]
 
-  attachFields(node, actions, getNode, descriptors)
+  await attachFields(node, actions, getNode, descriptors)
 
   if (node.internal.type === "FlamelinkTextHtmlContentNode") {
 
-    node.flamelink_locale = getFlamelinkLocale(node)
+    node.flamelink_locale = await getFlamelinkLocale(node)
     var fileNodes = []
 
-    extract_image_urls(node.content).forEach(url => {
+    const imgUrls = await extract_image_urls(node.content)
 
-      createRemoteFileNode({
-        url: url, // string that points to the URL of the image
-        parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
-        createNode, // helper function in gatsby-node to generate the node
-        createNodeId, // helper function in gatsby-node to generate the node id
-        cache, // Gatsby's cache
-        store, // Gatsby's redux store
-      }).then(fileNode => {
-        // if the file was created, attach the new node to the parent node
+    for (var i = 0; i < imgUrls.length; i++) {
+
+      const url = imgUrls[i]
+      let fileNode
+
+      try {
+        fileNode = await createRemoteFileNodeAsync(url, node)
         if (fileNode) {
           fileNodes.push(fileNode.id)
           node.remoteImages = fileNodes
         }
-      })
-    })
+      }
+      catch (e) {
+        console.log(e)
+      }
+    }
   }
 
 
   else if (node.internal.type === 'FlamelinkArticleContentFieldLatLong' && node.latitude && node.longitude) {
 
-    let location = GoogleMapsUrlHelper.getLocation(node)
+    let location = await GoogleMapsUrlHelper.getLocation(node)
+    const url = await GoogleMapsUrlHelper.createStaticGoogleMapUrl(location, [{ location: location }])
 
-    const url = GoogleMapsUrlHelper.createStaticGoogleMapUrl(location, [{ location: location }])
+    let fileNode
 
-
-    createRemoteFileNode({
-      url: encodeURI(url), // string that points to the URL of the image
-      parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
-      createNode, // helper function in gatsby-node to generate the node
-      createNodeId, // helper function in gatsby-node to generate the node id
-      cache, // Gatsby's cache
-      store, // Gatsby's redux store
-    }).then(fileNode => {
-      // if the file was created, attach the new node to the parent node
+    try {
+      fileNode = await createRemoteFileNodeAsync(encodeURI(url), node)
       if (fileNode) {
         node.googleMapsStaticImage = fileNode.id
       }
-    })
+    }
+    catch (e) {
+      console.log(e)
+    }
   }
 }
