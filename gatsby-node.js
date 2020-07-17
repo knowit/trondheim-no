@@ -253,6 +253,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
               layoutContext: pathHelper.layoutContext(node),
               markers: markers,
               listingPagePath: listingPagePath,
+              mapPath: mapPath,
             },
           })
         }
