@@ -56,6 +56,12 @@ exports.createSchemaCustomization = ({ actions }) => {
     page: FlamelinkPageContent
     content: FlamelinkTextHtmlContentNode
   }
+  type FlamelinkStudentPageContentFrontImage implements Node {
+    localFile: File
+  }
+  type FlamelinkStudentPageContentColumnsBackgroundImage implements Node {
+    localFile: File
+  }
   `
   createTypes(typeDefs)
 }
