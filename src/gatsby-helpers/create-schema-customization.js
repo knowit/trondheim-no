@@ -56,10 +56,50 @@ exports.createSchemaCustomization = ({ actions }) => {
     page: FlamelinkPageContent
     content: FlamelinkTextHtmlContentNode
   }
+
+
+  type FlamelinkNavbarContentLogo implements Node {
+    localFile: File
+  }
+
+  type FlamelinkStudentPageContentAdditionalListingPagesThumbnail implements Node {
+    localFile: File
+  }
+
+  type FlamelinkStudentPageContentLinkColumnsIcon implements Node {
+    localFile: File
+  }
+  type FlamelinkStudentPageContentLinkColumnsIcon implements Node {
+    localFile: File
+  }
   type FlamelinkStudentPageContentFrontImage implements Node {
     localFile: File
   }
   type FlamelinkStudentPageContentColumnsBackgroundImage implements Node {
+    localFile: File
+  }
+  type FlamelinkFrontPageContentFrontImage implements Node {
+    localFile: File
+  }
+  type FlamelinkFrontPageContentColumnsBackgroundImage implements Node {
+    localFile: File
+  }
+  type  implements Node {
+    localFile: File
+  }
+  type FlamelinkStudentPageContentAdditionalListingPagesThumbnail implements Node {
+    localFile: File
+  }
+  type FlamelinkStudentPageContentLogoImage implements Node {
+    localFile: File
+  }
+  type FlamelinkStudentPageContentLinkColumnsIcon implements Node {
+    localFile: File
+  }
+  type FlamelinkArticleContentThumbnail implements Node {
+    localFile: File
+  }
+  type FlamelinkDefaultThumbnailsContentFieldImageDeckItemImage implements Node {
     localFile: File
   }
   `
