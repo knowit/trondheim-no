@@ -83,7 +83,7 @@ exports.onCreateNode = async ({
       })
     }
     catch (e) {
-      console.log(e)
+      console.log(`Failed to create remote file node: ${e}`)
     }
 
     if (fileNode) {
