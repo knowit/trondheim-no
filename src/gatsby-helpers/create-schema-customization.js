@@ -99,6 +99,12 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkDefaultThumbnailsContentFieldImageDeckItemImage implements Node {
     localFile: File
   }
+  type FlamelinkStudentPageContentLinkColumnsListingPageThumbnail implements Node {
+    localFile: File
+  }
+  type FlamelinkStudentPageContentLinkColumnsListingPageThumbnail implements Node {
+    localFile: File
+  }
   `
   createTypes(typeDefs)
 }
