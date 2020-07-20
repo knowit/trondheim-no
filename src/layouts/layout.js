@@ -3,7 +3,6 @@ import "../style/layout.css"
 import { Helmet } from 'react-helmet'
 import { Link } from "gatsby"
 import Img from "gatsby-image"
-import LocalizationHelper from "../helpers/helpers"
 import { BurgerMenu } from "../components/menu.js"
 
 
