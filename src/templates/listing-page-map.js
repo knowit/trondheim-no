@@ -78,7 +78,7 @@ class ListingPageMap extends React.Component {
 
     const MapComponent = () => {
       return (<span>
-        <GoogleMap location={GetLocation(this.props.pageContext)} address={GetAddress(this.props.pageContext)} markers={markers} zoom={13} persistentDisabled={false}
+        <GoogleMap locationMarker={GetLocation(this.props.pageContext)} address={GetAddress(this.props.pageContext)} markers={markers} zoom={13} persistentDisabled={false}
           width="100%" height="500px" />
 
 
