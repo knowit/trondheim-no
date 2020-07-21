@@ -49,7 +49,7 @@
     "node-fetch": "^2.6.0",
     "react": "^16.13.1",
     "react-burger-menu": "^2.7.0",
-    "react-country-flag": "^2.2.0",
+    "react-country-flag": "2.1.0",
     "react-detect-offline": "^2.4.0",
     "react-dom": "^16.13.1",
     "react-ellipsis-text": "^1.2.1",

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import "../style/layout.css"
 import { Link } from 'gatsby';
@@ -83,7 +82,7 @@ export class BurgerMenu extends React.Component {
                   width: '1em',
                   height: '1em',
                 }}
-                title="flag" />
+              />
 
               {(this.props.layoutContext.locale === 'no') ? `English` : `Norsk`}
 

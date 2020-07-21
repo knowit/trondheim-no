@@ -162,7 +162,7 @@ module.exports = {
           globPatterns: ['**/*'],
           maximumFileSizeToCacheInBytes: 100000000
         },
-        appendScript: require.resolve(`./src/sw.js`),
+        //appendScript: require.resolve(`./src/sw.js`),
       },
     },
     {
