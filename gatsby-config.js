@@ -159,10 +159,9 @@ module.exports = {
       options: {
         precachePages: [`/*`],
         workboxConfig: {
-          globPatterns: ['**/*'],
           maximumFileSizeToCacheInBytes: 100000000
         },
-        //appendScript: require.resolve(`./src/sw.js`),
+        appendScript: require.resolve(`./src/sw.js`),
       },
     },
     {

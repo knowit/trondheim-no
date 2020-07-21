@@ -99,6 +99,7 @@ const Article = ({ pageContext }) => {
     }
   }
 
+  
 
   return (
 
@@ -111,7 +112,7 @@ const Article = ({ pageContext }) => {
           <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
           <Online>
             <Router basepath={pageContext.node.path}>
-              <Map path='/' location={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
+              <Map path='/' locationMarker={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
                 width="100%" height="400px" />
             </Router>
           </Online>

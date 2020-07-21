@@ -21,7 +21,7 @@ class Map extends Component {
 
     getGoogleLink() {
         var address = this.props.address;
-        var location = this.props.location;
+        var location = this.props.locationMarker;
         var baseURL = "https://www.google.com/maps/search/?api=1"
         if (this.props.address) {
             return baseURL + "&query=" + encodeURI(address);
@@ -39,7 +39,7 @@ class Map extends Component {
 
     render() {
 
-        if (!this.props.location) return "";
+        if (!this.props.locationMarker) return "";
 
         const OnlineMap = ({ props }) => {
             return (
@@ -48,7 +48,7 @@ class Map extends Component {
                         {this.createPersistentGoogleLink()}
                         <GoogleMap
                             id="article-map"
-                            center={this.props.location}
+                            center={this.props.locationMarker}
                             zoom={this.props.zoom}
                             mapContainerStyle={{
                                 height: this.props.height,
