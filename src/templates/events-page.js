@@ -59,7 +59,7 @@ class EventsView extends React.Component {
       const date = new Date(event.startDate)
       const dateString = `${date.getDate()}. ${monthName(date.getMonth())}`
 
-      const ticketString = `CC: ${event.regularPrice},- ${(event.reducedPrice && event.reducedPrice.length != 0) ? `/ ${event.reducedPrice},-` : ''}`
+      const ticketString = `CC: ${event.regularPrice},- ${(event.reducedPrice && event.reducedPrice.length !== 0) ? `/ ${event.reducedPrice},-` : ''}`
       const freeString = LocalizationHelper.getLocalWord(this.props.pageContext.localization, "free", this.props.pageContext.locale)
 
       const priceString = `${event.priceOption === 'non-gratis' ? ticketString : freeString}`
@@ -136,7 +136,7 @@ class EventsView extends React.Component {
               return (
                 <div key={event.id} className="article-container">
                   <a href={event.eventLink}>
-                    <img className="article-thumbnail" src={event.imageURL} />
+                    <img className="article-thumbnail" alt={event.title_nb} src={event.imageURL} />
                   </a>
                   <div className="article-info-container">
                     <h2><a href={event.eventLink}>{event.title_nb}</a></h2>
@@ -159,7 +159,7 @@ class EventsView extends React.Component {
         {this.state.loading ? null
           : (
             <div id="events-more-container">
-              <a id="events-more-button" href="https://trdevents.no" target="_blank">
+              <a id="events-more-button" href="https://trdevents.no" target="_blank" rel="noreferrer">
                 {LocalizationHelper.getLocalWord(this.props.pageContext.localization, "more-events", this.props.pageContext.locale)}
               </a>
             </div>

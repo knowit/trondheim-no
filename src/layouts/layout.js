@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import "../style/layout.css"
 import { Helmet } from 'react-helmet'
 import { Link } from "gatsby"

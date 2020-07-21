@@ -53,6 +53,7 @@ export class BurgerMenu extends React.Component {
           <div className="drop-menu-container">
             <Link
               key={0}
+              role="menuitem"
               className="drop-menu-item-container"
               to={this.props.layoutContext.homePath}>
               {LocalizationHelper.getLocalWord(this.props.layoutContext.localization, 'home', this.props.layoutContext.locale)}
@@ -61,6 +62,7 @@ export class BurgerMenu extends React.Component {
               return (
                 <Link
                   key={key}
+                  role="menuitem"
                   className="drop-menu-item-container"
                   to={node.path}>
                   {node.title}
@@ -72,6 +74,7 @@ export class BurgerMenu extends React.Component {
 
             <Link
               className="drop-menu-item-container"
+              role="menuitem"
               to={this.props.layoutContext.localizedPaths.find(item => item.locale !== this.props.layoutContext.locale).path}>
 
               <ReactCountryFlag
@@ -101,6 +104,7 @@ export class BurgerMenu extends React.Component {
             return (
               <a
                 key={key}
+                role="menuitem"
                 className="drop-menu-item-container"
                 href={node.redirectUrl} target="_blank" rel="noreferrer">
                 {node.title}

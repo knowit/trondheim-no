@@ -266,7 +266,6 @@ class ArticleView extends React.Component {
 
     render() {
         const article = this.props.article;
-        const pageContext = this.props.pageContext;
         var thumbnail = null
 
         if (article.thumbnail != null) {

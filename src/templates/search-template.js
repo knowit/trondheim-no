@@ -25,12 +25,11 @@ class SearchComponent extends React.Component {
 
   setQuery(query) {
     if (!query || !window.__LUNR__) {
-      console.log("error")
       this.setResults([])
-      this.state.query = ''
+      this.setState({ query: '' })
       return
     }
-    this.state.query = query
+    this.setState({ query: query })
     const lunrIndex = window.__LUNR__[this.props.pageContext.locale.split('-')[0]]
     const searchResults = lunrIndex.index.search(query)
     this.setResults(
@@ -93,6 +92,7 @@ class SearchComponent extends React.Component {
           pages.push(currentPage)
           currentPage = []
         }
+        return null
       })
       if (currentPage.length > 0) {
         pages.push(currentPage)
