@@ -17,33 +17,38 @@ function ContactInfo(props) {
   const elements = [];
   var locale = props.locale;
   var index = 0
-  if (props.node.address.address) {
-    elements.push(
-      <div key={index++} className={styles.contactInfo}>
-        <span className={styles.contactInfoHeader}>{`${LocalizationHelper.getLocalWord(props.localization, "address", locale)}:\t`}</span><span>{props.node.address.address}</span>
-      </div>)
+  if (props.node.address) {
+    if (props.node.address.address) {
+      elements.push(
+        <div key={index++} className={styles.contactInfo}>
+          <span className={styles.contactInfoHeader}>{`${LocalizationHelper.getLocalWord(props.localization, "address", locale)}:\t`}</span><span>{props.node.address.address}</span>
+        </div>)
+    }
   }
-  if (props.node.contactInfo.emailAddress) {
-    elements.push(
-      <div key={index++} className={styles.contactInfo}>
-        <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "email", locale) + ": "}</span>
-        <a href={"mailto: " + props.node.contactInfo.emailAddress}>{props.node.contactInfo.emailAddress}</a>
-      </div>)
-  } if (props.node.contactInfo.telephoneNumber) {
-    elements.push(
-      <div key={index++} className={styles.contactInfo}>
-        <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "telephone", locale) + ": "}</span>
-        <a href={"tel: " + props.node.contactInfo.telephoneNumber}>{props.node.contactInfo.telephoneNumber}</a>
-      </div>)
-  } if (props.node.contactInfo.linkToWebsite) {
-    elements.push(<div key={index++} className={styles.contactInfo}>
-      <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "website", locale) + ": "}</span>
-      <a href={props.node.contactInfo.linkToWebsite}>
-        {(props.node.contactInfo.textToShow) ?
-          props.node.contactInfo.textToShow :
-          props.node.contactInfo.linkToWebsite}
-      </a></div>)
+  if (props.node.contactInfo) {
+    if (props.node.contactInfo.emailAddress) {
+      elements.push(
+        <div key={index++} className={styles.contactInfo}>
+          <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "email", locale) + ": "}</span>
+          <a href={"mailto: " + props.node.contactInfo.emailAddress}>{props.node.contactInfo.emailAddress}</a>
+        </div>)
+    } if (props.node.contactInfo.telephoneNumber) {
+      elements.push(
+        <div key={index++} className={styles.contactInfo}>
+          <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "telephone", locale) + ": "}</span>
+          <a href={"tel: " + props.node.contactInfo.telephoneNumber}>{props.node.contactInfo.telephoneNumber}</a>
+        </div>)
+    } if (props.node.contactInfo.linkToWebsite) {
+      elements.push(<div key={index++} className={styles.contactInfo}>
+        <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "website", locale) + ": "}</span>
+        <a href={props.node.contactInfo.linkToWebsite}>
+          {(props.node.contactInfo.textToShow) ?
+            props.node.contactInfo.textToShow :
+            props.node.contactInfo.linkToWebsite}
+        </a></div>)
+    }
   }
+
   if (elements.length > 0) return <div><h3 className={styles.subheading}>{LocalizationHelper.getLocalWord(props.localization, "contactInfo", locale)}</h3><div>{elements}</div></div>
   else return "";
 }
@@ -99,7 +104,7 @@ const Article = ({ pageContext }) => {
     }
   }
 
-  
+
 
   return (
 
