@@ -57,6 +57,10 @@ class SearchComponent extends React.Component {
 
   componentDidMount() {
     const url = new URL(this.props.location.href)
+    console.log(url)
+    url.searchParams.forEach((value, key, parent) => {
+      console.log(`key: ${key}, value: ${value}`)
+    })
 
     const quantity = url.searchParams.get('quantity')
     const query = url.searchParams.get('query')
@@ -71,6 +75,7 @@ class SearchComponent extends React.Component {
     if (page && page > 0) {
       this.setPageNumber(page - 1)
     }
+
   }
 
   splitSearchResults() {
