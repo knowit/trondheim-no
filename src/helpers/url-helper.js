@@ -2,7 +2,7 @@ class GoogleMapsUrlHelper {
 
   static getAddress(node) {
     if (node.address && node.address.address) return node.address.address;
-    return false;
+    return null;
   }
 
   static getLocation(node = null) {
@@ -22,7 +22,7 @@ class GoogleMapsUrlHelper {
       return { lat: node.latitude, lng: node.longitude }
     }
 
-    return false;
+    return null;
   }
 
   static getMarker(node, url, parent = null) {
