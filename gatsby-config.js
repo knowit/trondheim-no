@@ -157,14 +157,10 @@ module.exports = {
     {
       resolve: `gatsby-plugin-offline`,
       options: {
-        importWorkboxFrom: `local`,
-        globDirectory: 'public',
-        precachePages: ['**/*'],
-        globPatterns: ['**/*'],
+        importWorkboxFrom: `cdn`,
         cacheId: `gatsby-plugin-offline`,
         skipWaiting: true,
         clientsClaim: true,
-        directoryIndex: 'index.html',
         workboxConfig: {
           globPatterns: ['**/*'],
           maximumFileSizeToCacheInBytes: 100000000
