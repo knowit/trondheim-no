@@ -69,13 +69,6 @@ const Search = ({ pageContext, location }) => {
 
     if (urlQuery != null) {
       setQuery(urlQuery)
-      const lunrIndex = window.__LUNR__[locale]
-      const searchResults = lunrIndex.index.search(urlQuery)
-      setResults(
-        searchResults.map(({ ref }) => {
-          return lunrIndex.store[ref]
-        })
-      )
     }
     if (urlQuantity != null) {
       setQuantity(urlQuantity)
