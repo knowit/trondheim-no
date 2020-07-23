@@ -157,7 +157,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-offline`,
       options: {
-        precachePages: [`/*`],
+        precachePages: [`/**`],
         workboxConfig: {
           maximumFileSizeToCacheInBytes: 100000000
         },
