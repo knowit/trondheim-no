@@ -24,21 +24,27 @@ const Search = ({ pageContext, location }) => {
     }
     else {
       const lunrIndex = window.__LUNR__[locale]
-      const searchResults = lunrIndex.index.search(query)
-      setResults(
-        searchResults.map(({ ref }) => {
-          return lunrIndex.store[ref]
-        })
-      )
+      if (lunrIndex != null) {
+        const searchResults = lunrIndex.index.search(query)
+        setResults(
+          searchResults.map(({ ref }) => {
+            return lunrIndex.store[ref]
+          })
+        )
 
-      if (quantity === 'all' || quantity === 'alle' || pageNumber < 0) {
-        setPageNumber(0)
-      }
-      else if (pageNumber !== 0) {
-        const maxPage = Math.ceil(results.length / quantity)
-        if (pageNumber >= maxPage) {
-          setPageNumber(maxPage - 1)
+        if (quantity === 'all' || quantity === 'alle' || pageNumber < 0) {
+          setPageNumber(0)
         }
+        else if (pageNumber !== 0) {
+          const maxPage = Math.ceil(results.length / quantity)
+          if (pageNumber >= maxPage) {
+            setPageNumber(maxPage - 1)
+          }
+        }
+      }
+      else {
+        setResults([])
+        setQuery('')
       }
     }
   }, [query])
