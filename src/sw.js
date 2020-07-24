@@ -141,8 +141,3 @@ self.addEventListener('fetch', function (event) {
         }))
 });
 
-
-self.addEventListener('sync', function (event) {
-  console.log('Sync event fired!')
-})
-

@@ -157,12 +157,9 @@ module.exports = {
     {
       resolve: `gatsby-plugin-offline`,
       options: {
-        importWorkboxFrom: `cdn`,
         cacheId: `gatsby-plugin-offline`,
-        skipWaiting: true,
-        clientsClaim: true,
+        precachePages: ['/*', '/en/*', '/search/', '/en/search/', '/404/', '/en/404/'],
         workboxConfig: {
-          globPatterns: ['**/*'],
           maximumFileSizeToCacheInBytes: 100000000
         },
         appendScript: require.resolve(`./src/sw.js`),
