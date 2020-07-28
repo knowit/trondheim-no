@@ -146,15 +146,26 @@ self.addEventListener('message', async (event) => {
     console.log(`App was installed. Precaching pages...`)
     const precacheFiles = self.__WB_MANIFEST
 
-    
+
     const cache = await caches.open(workbox.core.cacheNames.runtime)
 
-    var i = 0
-    while (i < precacheFiles.length) {
-      const file = precacheFiles[i]
-      await workbox.routing.registerRoute(`/${file.url}`, new workbox.strategies.CacheFirst(), 'GET')
-      await cache.add(`/${file.url}`)
-      i++
+    // Add chunks of pages to cache at once
+    const chunkSize = 600
+    var startIndex = 0
+    var stopIndex = Math.min(chunkSize, precacheFiles.length)
+    while (startIndex < precacheFiles.length) {
+
+      console.log(`Caching pages: ${startIndex}/${precacheFiles.length}`)
+
+      const precacheChunk = precacheFiles.slice(startIndex, stopIndex)
+      await cache.addAll(precacheChunk.map(file => {
+        return `/${file.url}`
+      }))
+
+      startIndex = stopIndex
+      if (stopIndex < precacheFiles.length) {
+        stopIndex = Math.min(stopIndex + chunkSize, precacheFiles.length)
+      }
     }
 
     console.log("Caching of pages successful.")
