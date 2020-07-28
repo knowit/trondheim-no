@@ -15,7 +15,7 @@ query {
           localFile {
             name
             childImageSharp {
-              fluid(quality: 90) {
+              fluid(maxWidth: 120, quality: 70) {
                 base64
                 aspectRatio 
                 src 
@@ -57,7 +57,7 @@ query {
       remoteImages {
         url
         childImageSharp {
-        fluid (quality: 90){
+        fluid (maxWidth: 1200, quality: 80){
             base64
             aspectRatio 
             src 
@@ -112,7 +112,7 @@ query {
           localFile {
             name
             childImageSharp {
-              fluid(quality: 90) {
+              fluid(maxWidth: 340, quality: 70) {
                 base64
                 aspectRatio 
                 src 
@@ -204,7 +204,7 @@ query {
           remoteImages {
             url
             childImageSharp {
-              fluid (quality: 90){
+              fluid (maxWidth: 340, quality: 70){
                 base64
                 aspectRatio 
                 src 
@@ -221,7 +221,7 @@ query {
           localFile {
             name
             childImageSharp {
-              fluid(quality: 90) {
+              fluid(maxWidth: 240, quality: 70) {
                 base64
                 aspectRatio 
                 src 
@@ -264,7 +264,7 @@ query {
           remoteImages {
             url
             childImageSharp {
-              fluid (quality: 90){
+              fluid (maxWidth: 1200, quality: 80){
                 base64
                 aspectRatio 
                 src 
@@ -308,7 +308,7 @@ query {
             remoteImages {
               url
               childImageSharp {
-                fluid (quality: 90){
+                fluid (maxWidth: 1200, quality: 80){
                   base64
                   aspectRatio 
                   src 
@@ -325,7 +325,7 @@ query {
             localFile {
               name
               childImageSharp {
-                fluid(quality: 90) {
+                fluid(maxWidth: 240, quality: 70) {
                   base64
                   aspectRatio 
                   src 
@@ -343,7 +343,7 @@ query {
         frontImage{
           localFile {
             childImageSharp {
-              fluid (maxWidth: 9999, quality: 99) {
+              fluid (maxWidth: 2400, quality: 90) {
                 base64
                 aspectRatio 
                 src 
@@ -359,7 +359,7 @@ query {
         columnsBackgroundImage{
           localFile {
             childImageSharp {
-              fluid (maxWidth: 9999, quality: 99) {
+              fluid (maxWidth: 2400, quality: 70) {
                 base64
                 aspectRatio 
                 src 
@@ -407,7 +407,7 @@ query {
             localFile {
               name
               childImageSharp {
-                fluid(quality: 90) {
+                fluid(maxWidth: 340, quality: 90) {
                   base64
                   aspectRatio 
                   src 
@@ -424,7 +424,7 @@ query {
         logoImage {
           localFile {
             childImageSharp {
-              fluid (maxWidth: 9999, quality: 99) {
+              fluid (maxWidth: 120, quality: 90) {
                 base64
                 aspectRatio 
                 src 
@@ -440,7 +440,7 @@ query {
         frontImage {
           localFile {
             childImageSharp {
-              fluid (maxWidth: 9999, quality: 99) {
+              fluid (maxWidth: 2400, quality: 90) {
                 base64
                 aspectRatio 
                 src 
@@ -456,7 +456,7 @@ query {
         columnsBackgroundImage {
           localFile {
             childImageSharp {
-              fluid (maxWidth: 9999, quality: 99) {
+              fluid (maxWidth: 2400, quality: 90) {
                 base64
                 aspectRatio 
                 src 
@@ -507,7 +507,7 @@ query {
             remoteImages {
               url
               childImageSharp {
-                fluid (quality: 90){
+                fluid (maxWidth: 1200, quality: 70){
                   base64
                   aspectRatio 
                   src 
@@ -524,7 +524,7 @@ query {
             localFile {
               name
               childImageSharp {
-                fluid(quality: 90) {
+                fluid(maxWidth: 240, quality: 70) {
                   base64
                   aspectRatio 
                   src 
@@ -586,7 +586,7 @@ query {
         thumbnail {
           localFile {
             childImageSharp {
-              fluid (quality: 90) {
+              fluid (maxWidth: 340, quality: 70) {
                 base64
                 aspectRatio 
                 src 
@@ -605,7 +605,7 @@ query {
           remoteImages {
             url
             childImageSharp {
-              fluid (quality: 90){
+              fluid (maxWidth: 1200, quality: 80){
                 base64
                 aspectRatio 
                 src 
@@ -635,7 +635,7 @@ query {
           googleMapsStaticImage {
             url
             childImageSharp {
-              fluid (quality: 90){
+              fluid (maxWidth: 600, quality: 80){
                 base64
                 aspectRatio 
                 src 

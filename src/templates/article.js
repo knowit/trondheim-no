@@ -95,7 +95,7 @@ const Article = ({ pageContext }) => {
         height: imageNode.childImageSharp.fluid.presentationHeight,
       }
       return (<div className="offline-map-container" style={styles}>
-        <Img className="offline-map-image" fluid={imageNode.childImageSharp.fluid} alt={'Map of location'}></Img>
+        <Img className="offline-map-image" fluid={imageNode.childImageSharp.fluid} alt={'Map of location'} loading="eager"></Img>
       </div>)
     }
 
