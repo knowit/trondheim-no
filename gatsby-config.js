@@ -21,17 +21,17 @@ const resolvePath = (node) => {
     const root = node.flamelink_locale === 'no' ? '/' : '/en/'
     const slug = node.slug
 
-    var path = root
+    var path = slug
 
     var parentListingPage = node.parentListingPage
     while (parentListingPage != null) {
       if (parentListingPage.slug != null) {
-        path = `${path}${parentListingPage.slug}/`
+        path = `${parentListingPage.slug}/${path}`
       }
       parentListingPage = parentListingPage.parentListingPage
     }
 
-    return `${path}${slug}`
+    return `${root}${path}`
   }
 }
 
@@ -158,7 +158,7 @@ module.exports = {
       resolve: `gatsby-plugin-offline`,
       options: {
         cacheId: `gatsby-plugin-offline`,
-        precachePages: ['/*', '/en/*'],
+        precachePages: [],
         workboxConfig: {
           maximumFileSizeToCacheInBytes: 100000000
         },

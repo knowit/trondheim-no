@@ -74,7 +74,8 @@ exports.onCreateNode = async ({
 
     try {
       fileNode = await createRemoteFileNode({
-        url: url, // string that points to the URL of the image
+        // Use small size file for testing. Image must be remote.
+        url: (process.env.TEST) ? (process.env.TEST_IMAGE_URL) : url, // string that points to the URL of the image
         parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
         createNode, // helper function in gatsby-node to generate the node
         createNodeId, // helper function in gatsby-node to generate the node id
