@@ -161,7 +161,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   }
 
   function createEventsPage(listingPageBuilder) {
-    // TODO: Events page
 
     const treeNode = listingPageBuilder.getTreeNode()
     Array.from(treeNode.node.keys()).map(locale => {
@@ -172,14 +171,9 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         component: path.resolve(`./src/templates/events-page.js`),
         context: {
           nodeId: node.id,
-          node: node,
-          parentPath: treeNode.parent.getPath(locale),
-          localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
           locale: locale,
-          layoutContext: pathHelper.layoutContext(node),
         },
       })
-
     })
 
   }
@@ -204,38 +198,9 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     }
 
     else {
-
-      const localization = result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations
       Array.from(treeNode.node.keys()).map(locale => {
-
-        const mapSlug = `${(locale === 'no') ? 'kart-over-' : 'map-of-'}${treeNode.slugs.get(locale)}`
-        const parentPath = treeNode.parent.getPath(locale)
-
-        if (parentPath.slice(-1) != '/') {
-          parentPath = parentPath + '/'
-        }
-
         const mapPath = parentPath + mapSlug
         const listingPagePath = treeNode.getPath(locale)
-
-
-        // Get all markers from child articles and subpage child articles.
-        const markers = []
-
-        treeNode.getAllChildArticles().map(articleTreeNode => {
-
-          const articleNode = articleTreeNode.node.get(locale)
-          const articlePath = articleTreeNode.getPath(locale)
-          const parentNode = articleTreeNode.parent.node.get(locale)
-          const marker = GoogleMapsUrlHelper.getMarker(articleNode, articlePath, parentNode)
-          if (marker) {
-            markers.push(marker)
-          }
-          else {
-            console.log(`MISSING MARKER: `)
-            console.log(articleTreeNode)
-          }
-        })
 
         const node = treeNode.node.get(locale)
 
@@ -247,14 +212,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             context: {
               nodeId: node.id,
               nodeFlamelinkId: node.flamelink_id,
-              node: node,
-              parentPath: treeNode.parent.getPath(locale),
-              localization: localization,
               locale: locale,
-              layoutContext: pathHelper.layoutContext(node),
-              markers: markers,
-              listingPagePath: listingPagePath,
-              mapPath: mapPath,
             },
           })
         }
@@ -267,11 +225,9 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             nodeId: node.id,
             nodeFlamelinkId: node.flamelink_id,
             locale: locale,
-            mapPath: mapPath,
           },
         })
       })
-
     }
   }
 
@@ -280,25 +236,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     Array.from(root.node.keys()).map(locale => {
 
       const node = root.node.get(locale)
-      const frontListingPages = []
-      const columnContent = []
-
-      listingPages.forEach((lsBuilder, id, map) => {
-        const treeNode = lsBuilder.treeNode
-        const node = treeNode.node.get(locale)
-        if (node.showOnFrontPage) {
-          frontListingPages.push(node)
-        }
-        if (node.showOnFrontpageColumns) {
-          columnContent.push({
-            redirectUrl: treeNode.getPath(locale),
-            icon: node.icon,
-            title: node.navigationTitle,
-            subTitle: node.navigationSubtitle,
-            link: true
-          })
-        }
-      })
 
       createPage({
         path: root.getPath(locale),

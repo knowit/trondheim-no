@@ -35,6 +35,26 @@ exports.createResolvers = ({ createResolvers }) => {
     else return ""
   }
 
+  const resolveMapPath = (source) => {
+    if (source.hasMapPage) {
+      const locale = source.flamelink_locale
+      var path = source.mapPageTitle.toLowerCase().split(' ').join('-')
+      var parent = source.parentListingPage
+
+      while (parent != null) {
+        if (parent.slug != null) {
+          path = `${parent.slug}/${path}`
+        }
+        parent = parent.parentListingPage
+      }
+
+      path = `${locale === 'no' ? '' : '/en'}/${path}`
+
+      return path
+    }
+    return null
+  }
+
   const findSource = (context, node, type, locale) => (context.nodeModel.
     runQuery({
       query: {
@@ -97,6 +117,11 @@ exports.createResolvers = ({ createResolvers }) => {
       path: {
         resolve(source, args, context, info) {
           return (resolvePath(source))
+        },
+      },
+      mapPath: {
+        resolve(source, args, context, info) {
+          return (resolveMapPath(source))
         },
       },
       localizedPaths: {

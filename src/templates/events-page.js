@@ -14,9 +14,27 @@ library.add(fas)
 
 export const query = graphql`
   query EventsPageQuery($nodeId: String) {
-    flamelinkListingPageContent (id: {eq: $nodeId}) {
+    node: flamelinkListingPageContent (id: {eq: $nodeId}) {
       id
       flamelink_locale
+      localTitle
+      textOnPage
+      path
+      localizedPaths {
+        locale
+        path
+      }
+    }
+
+    localization: flamelinkListingPageLocalizationContent (flamelink_locale: {eq: "no"}){
+      id
+      translations {
+        key
+        translations{
+          language
+          word
+        }
+      }
     }
   }
 `
@@ -69,7 +87,7 @@ class EventsView extends React.Component {
       const dateString = `${date.getDate()}. ${monthName(date.getMonth())}`
 
       const ticketString = `CC: ${event.regularPrice},- ${(event.reducedPrice && event.reducedPrice.length !== 0) ? `/ ${event.reducedPrice},-` : ''}`
-      const freeString = LocalizationHelper.getLocalWord(this.props.pageContext.localization, "free", this.props.pageContext.locale)
+      const freeString = LocalizationHelper.getLocalWord(this.props.localization, "free", this.props.locale)
 
       const priceString = `${event.priceOption === 'non-gratis' ? ticketString : freeString}`
 
@@ -101,12 +119,12 @@ class EventsView extends React.Component {
     const ErrorMessage = () => (
       <p>
         <Online>
-          {this.props.pageContext.locale === 'no'
+          {this.props.locale === 'no'
             ? 'Noe gikk galt! Prøv igjen senere.'
             : 'Something went wrong! Try again later.'}
         </Online>
         <Offline>
-          {this.props.pageContext.locale === 'no'
+          {this.props.locale === 'no'
             ? 'Noe gikk galt! Sørg for at du er koblet til internett og prøv igjen.'
             : 'Something went wrong! Make sure you are connected to the internet and try again.'}
         </Offline>
@@ -125,7 +143,7 @@ class EventsView extends React.Component {
           ? (<ErrorMessage />)
           : (<p>
             {LocalizationHelper
-              .getLocalWord(this.props.pageContext.localization, "loading", this.props.pageContext.locale)}
+              .getLocalWord(this.props.localization, "loading", this.props.locale)}
           </p>
           )}
 
@@ -169,7 +187,7 @@ class EventsView extends React.Component {
           : (
             <div id="events-more-container">
               <a id="events-more-button" href="https://trdevents.no" target="_blank" rel="noreferrer">
-                {LocalizationHelper.getLocalWord(this.props.pageContext.localization, "more-events", this.props.pageContext.locale)}
+                {LocalizationHelper.getLocalWord(this.props.localization, "more-events", this.props.locale)}
               </a>
             </div>
           )}
@@ -182,26 +200,37 @@ class EventsView extends React.Component {
 
 // Rendered server side
 
-const EventsPage = ({ pageContext }) => {
+export default ({ data }) => {
+
+  const layoutContext = {
+    locale: data.node.flamelink_locale,
+    localizedPaths: data.node.localizedPaths
+  }
 
   return (
-    <Layout layoutContext={pageContext.layoutContext}>
+    <Layout
+      layoutContext={layoutContext}
+      locale={data.node.flamelink_locale}
+      localizedPaths={data.node.localizedPaths}>
+
       <div id="outer-container">
 
         <div id="inner-container">
           <div id="articles-header">
-            <h2>{pageContext.node.localTitle}</h2>
-            <p>{pageContext.node.textOnPage}</p>
+            <h2>{data.node.localTitle}</h2>
+            <p>{data.node.textOnPage}</p>
             <Link
               id="english-button"
-              to={pageContext.node.localizedPaths.find(item => item.locale !== pageContext.locale).path}>
-              {LocalizationHelper.getLocalWord(pageContext.localization, "changeLanguage", pageContext.locale)}
+              to={data.node.localizedPaths.find(item => item.locale !== data.node.flamelink_locale).path}>
+              {LocalizationHelper.getLocalWord(data.localization.translations, "changeLanguage", data.node.flamelink_locale)}
             </Link>
           </div>
 
 
-          <Router basepath={pageContext.node.path}>
-            <EventsView path='/' pageContext={pageContext} />
+          <Router basepath={data.node.path}>
+            <EventsView path='/'
+              localization={data.localization.translations}
+              locale={data.node.flamelink_locale} />
           </Router>
 
         </div>
@@ -209,6 +238,3 @@ const EventsPage = ({ pageContext }) => {
     </Layout>
   )
 }
-
-
-export default EventsPage;

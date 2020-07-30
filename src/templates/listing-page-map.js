@@ -29,9 +29,8 @@ function getLocation(node) {
   return defaultLocation
 }
 
-export default ({ pageContext, data }) => {
+export default ({ data }) => {
 
-  console.log(data)
   const layoutContext = {
     locale: data.node.flamelink_locale,
     localizedPaths: data.node.localizedPaths
@@ -109,7 +108,7 @@ export default ({ pageContext, data }) => {
       <div id="outer-container">
         <div id="inner-container">
           <Online>
-            <Router basepath={pageContext.mapPath}>
+            <Router basepath={data.node.mapPath}>
               <MapComponent path='/' />
             </Router>
           </Online>
@@ -138,6 +137,7 @@ export const query = graphql`
       mapPageTitle
       mapPageDescription
       path
+      mapPath
     }
 
     localization: flamelinkListingPageLocalizationContent (flamelink_locale: {eq: "no"}){

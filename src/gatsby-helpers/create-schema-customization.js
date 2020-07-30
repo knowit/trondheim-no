@@ -34,6 +34,7 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkListingPageContent implements Node {
     parentListingPage: FlamelinkListingPageContent
     path: String
+    mapPath: String
     localizedPaths : [LocalizedPath]
   }
   type FlamelinkFrontPageContent implements Node {
