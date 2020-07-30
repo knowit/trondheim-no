@@ -654,6 +654,8 @@ query {
   allFlamelinkDefaultThumbnailsContent {
     edges {
       node {
+        id
+        flamelink_locale
         imageDeck {
           title
           image {

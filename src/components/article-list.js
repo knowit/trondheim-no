@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import LocalizationHelper from "../helpers/helpers"
 import { Link } from 'gatsby';
 import Img from "gatsby-image"
@@ -7,147 +6,139 @@ import "../style/listing-page.css"
 import EllipsisText from "react-ellipsis-text"
 import ReactDOMHelper from '../helpers/react-dom-helper';
 
-
 const selectedStyle = { backgroundColor: 'grey', color: 'white' };
 const unSelectedStyle = { backgroundColor: 'darkgrey', color: 'black' };
 const SORT_TYPES = ["standard", "date", "title", "random"];
 
-export default class SortableArticleView extends React.Component {
+export default ({ tags, articles, subListingPages, localization, locale, defaultThumbnails }) => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            filterTags: [],
-            sortBy: "standard"
-        };
+    const [filterTags, setFilterTags] = useState([])
+    const [sortBy, setSortBy] = useState('standard')
 
-        this.handleTagToggle = this.handleTagToggle.bind(this);
-        this.handleSortToggle = this.handleSortToggle.bind(this);
-    }
 
-    handleTagToggle(tag) {
-        let filterTags = this.state.filterTags;
-        if (tag === "all") filterTags = [];
+    const handleTagToggle = (tag) => {
+        let filterTagsTemp = filterTags;
+        if (tag === "all") filterTagsTemp = [];
         else {
-            var indexOf = filterTags.findIndex((e) => e === tag);
-            if (indexOf === -1) filterTags.push(tag);
-            else filterTags.splice(indexOf, 1);
+            var indexOf = filterTagsTemp.findIndex((e) => e === tag);
+            if (indexOf === -1) filterTagsTemp.push(tag);
+            else filterTagsTemp.splice(indexOf, 1);
         }
-        this.setState({ filterTags: filterTags });
+        setFilterTags(filterTagsTemp)
     }
 
-    handleSortToggle(sort) {
-        this.setState({ sortBy: sort });
-    }
 
-    render() {
-        return (
-            <div className="article-list-container">
-                <TagFilter
-                    pageContext={this.props.pageContext}
-                    filterTags={this.state.filterTags}
-                    onTagToggle={this.handleTagToggle}
-                />
-                <Sorter
-                    pageContext={this.props.pageContext}
-                    sortBy={this.state.sortBy}
-                    onSortToggle={this.handleSortToggle}
-                />
-                <ArticleList
-                    articles={this.props.pageContext.articles}
-                    subListingPages={this.props.pageContext.subListingPages}
-                    pageContext={this.props.pageContext}
-                    filterTags={this.state.filterTags}
-                    sortBy={this.state.sortBy}
-                />
-            </div>
-        );
-    }
-}
-
-class TagFilter extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.handleTagToggle = this.handleTagToggle.bind(this);
-    }
-
-    handleTagToggle(tag, e) {
-        e.preventDefault();
-        this.props.onTagToggle(tag)
-    }
-
-    render() {
-        const pageContext = this.props.pageContext;
-        const filterTags = this.props.filterTags;
-        const allTags = [];
-
+    const TagFilter = () => {
+        const allTags = []
         allTags.push(
-            <div role="button" tabIndex={0} onKeyPress={(e) => this.handleTagToggle("all", e)} key={allTags.length}
+            <div role="button" tabIndex={0} onKeyPress={(e) => handleTagToggle("all")} key={allTags.length}
                 className="distinct-tag"
                 style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
-                onClick={(e) => this.handleTagToggle("all", e)}>
-                {LocalizationHelper.getLocalWord(pageContext.localization, "all", pageContext.locale)}
-            </div>
-        )
-
-        pageContext.tags.forEach((tag) => {
+                onClick={(e) => handleTagToggle("all")}>
+                {LocalizationHelper.getLocalWord(localization, "all", locale)}
+            </div>)
+        tags.forEach((tag) => {
             allTags.push(
-                <div role="button" tabIndex={0} onKeyPress={(e) => this.handleTagToggle(tag, e)}
+                <div role="button" tabIndex={0} onKeyPress={(e) => handleTagToggle(tag)}
                     key={allTags.length}
                     className="distinct-tag"
                     style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}
-                    onClick={(e) => this.handleTagToggle(tag, e)}>
+                    onClick={(e) => handleTagToggle(tag)}>
                     {tag}
                 </div>)
         })
-
-        return (
-            <div id="all-tags-container">
-                {allTags}
-            </div>
-        )
-    }
-}
-
-class Sorter extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.handleSortToggle = this.handleSortToggle.bind(this);
+        return <div id="all-tags-container">{allTags} </div>
     }
 
-    handleSortToggle(tag, e) {
-        e.preventDefault();
-        this.props.onSortToggle(tag)
-    }
 
-    render() {
-        const pageContext = this.props.pageContext;
-        const sortBy = this.props.sortBy;
+    const Sorter = () => {
         const sortTags = [];
-
         SORT_TYPES.forEach(s => {
-            var tagName = LocalizationHelper.getLocalWord(pageContext.localization, s, pageContext.locale);
+            var tagName = LocalizationHelper.getLocalWord(localization, s, locale);
             sortTags.push(
-                <div role="button" tabIndex={0} onKeyPress={(e) => { this.handleSortToggle(s, e) }}
+                <div role="button" tabIndex={0} onKeyPress={(e) => { setSortBy(s) }}
                     className="distinct-tag"
                     key={sortTags.length}
                     style={sortBy === s ? selectedStyle : unSelectedStyle}
-                    onClick={(e) => this.handleSortToggle(s, e)}
+                    onClick={(e) => setSortBy(s)}
                 >
                     {tagName}
-                </div>
-            );
-        });
+                </div>)
+        })
+
+        return <div id="sort-container"> {sortTags} </div>
+    }
+
+
+    const ArticleList = () => {
+        const articleViews = []
+        subListingPages.forEach((slp) => {
+            slp.tags = [];
+            if (filterTags.length === 0) {
+                articleViews.push(
+                    <ArticleView key={articleViews.length} article={slp} subList={true}
+                        defaultThumbnail={defaultThumbnails.find(node => node.title === "ListingPage Thumbnail").image[0].localFile.childImageSharp.fluid} />
+                )
+            }
+        })
+        articles.forEach((article) => {
+            //Add article to array only if it contains a tag chosen, or ALL is chosen (empty list).
+            if (filterTags.length === 0 || article.tags.some(r => filterTags.includes(r))) {
+                articleViews.push(
+                    <ArticleView article={article} key={article.title}
+                        defaultThumbnail={defaultThumbnails.find(node => node.title === "Article Thumbnail").image[0].localFile.childImageSharp.fluid} />
+                )
+            }
+        })
+        if (sortBy === "date") articleViews.sort(compareArticleViewDate);
+        if (sortBy === "title") articleViews.sort(compareArticleViewTitle);
+        if (sortBy === "random") shuffleArray(articleViews);
+
+        return <div id="articles-container"> {articleViews} </div>
+    }
+
+
+    const ArticleView = ({ article, defaultThumbnail, subList }) => {
+
+        const articleInfo = article.content == null ? "" : ReactDOMHelper.getTextContentFromHtml(article.content.content)
+        var thumbnail = defaultThumbnail
+
+        if (article.thumbnail != null) {
+            if (article.thumbnail.length > 0) {
+                thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
+            }
+        }
 
         return (
-            <div id="sort-container">
-                {sortTags}
+            <div className="article-container">
+                <Img className="article-thumbnail" fluid={thumbnail} />
+                <div className="article-info-container">
+
+                    <h2><Link to={article.path}>{(subList) ? article.navigationTitle : article.title}</Link></h2>
+
+                    <EllipsisText className="article-info-text" text={articleInfo} length={100} />
+
+
+                    <div className="tags-container">
+                        {article.tags.map(function (tag, key) {
+                            return <div className="tag" key={tag}>{tag}</div>
+                        })}
+                    </div>
+                </div>
             </div>
         )
     }
+
+
+    return (
+        <div className="article-list-container">
+            <TagFilter />
+            <Sorter />
+            <ArticleList />
+        </div>
+    );
 }
+
 
 function compareArticleViewDate(a1, a2) {
     /* Must wait for flamelink to fix gatsby-source-flamelink
@@ -191,114 +182,3 @@ function shuffleArray(array) {
     return array;
 }
 
-class ArticleList extends React.Component {
-    render() {
-        const filterTags = this.props.filterTags;
-        const sortBy = this.props.sortBy;
-        const pageContext = this.props.pageContext;
-        const articleViews = [];
-
-        this.props.subListingPages.forEach((slp) => {
-            slp.tags = [];
-            if (filterTags.length === 0) {
-                articleViews.push(
-                    <ArticleView key={articleViews.length} article={slp} pageContext={pageContext} subList={true} />
-                )
-            }
-        })
-
-        this.props.articles.forEach((article) => {
-            //Add article to array only if it contains a tag chosen, or ALL is chosen (empty list).
-            if (filterTags.length === 0 || article.tags.some(r => filterTags.includes(r))) {
-                articleViews.push(
-                    <ArticleView article={article} pageContext={pageContext} key={article.title} />
-                )
-            }
-        });
-
-        if (sortBy === "date") {
-            articleViews.sort(compareArticleViewDate);
-        }
-
-        if (sortBy === "title") {
-            articleViews.sort(compareArticleViewTitle);
-        }
-
-        if (sortBy === "random") {
-            shuffleArray(articleViews);
-        }
-
-        return (
-            <div id="articles-container">
-                {articleViews}
-            </div>
-        )
-    }
-}
-
-class ArticleView extends React.Component {
-
-
-    getDefaultThumbnail() {
-        return this.props.pageContext.layoutContext.defaultThumbnails.find(node => node.title === "Article Thumbnail").image[0].localFile.childImageSharp.fluid
-    }
-
-    getArticleInfo(article) {
-        if (article.content == null) {
-            return ""
-        }
-        else {
-            return ReactDOMHelper.getTextContentFromHtml(article.content.content)
-        }
-    }
-
-    tags(count, tag) {
-        var i = 0
-        var items = []
-        while (i < count) {
-            i++
-            items.push(<div className="tag" key={tag}>
-                {tag}
-            </div>)
-        }
-        return items
-    }
-
-    render() {
-        const article = this.props.article;
-        var thumbnail = null
-
-        if (article.thumbnail != null) {
-            if (article.thumbnail.length > 0) {
-                thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
-            }
-        }
-
-        if (thumbnail == null) {
-            thumbnail = this.getDefaultThumbnail()
-        }
-
-        return (
-            <div className="article-container">
-                <Img className="article-thumbnail" fluid={thumbnail} />
-                <div className="article-info-container">
-
-                    <h2><Link to={article.path}>{(this.props.subList) ? article.navigationTitle : article.title}</Link></h2>
-
-                    <EllipsisText className="article-info-text" text={this.getArticleInfo(article)} length={100} />
-
-
-                    <div className="tags-container">
-                        {article.tags.map(function (tag, key) {
-                            return (
-                                <div className="tag" key={tag}>
-                                    {tag}
-                                </div>
-                            )
-                        })}
-                    </div>
-                </div>
-            </div>
-        )
-    }
-}

@@ -258,21 +258,17 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           })
         }
 
+        const node = treeNode.node.get(locale)
+
         // Create listing page
         createPage({
           path: listingPagePath,
           component: path.resolve(`./src/templates/listing-page.js`),
           context: {
-            nodeId: treeNode.node.get(locale).id,
-            node: treeNode.node.get(locale),
-            parentPath: treeNode.parent.getPath(locale),
-            mapPath: mapPath,
-            subListingPages: listingPageBuilder.getSubListingPages(locale),
-            tags: listingPageBuilder.getTags(locale),
-            articles: listingPageBuilder.getArticles(locale),
-            localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
+            nodeId: node.id,
+            nodeFlamelinkId: node.flamelink_id,
             locale: locale,
-            layoutContext: pathHelper.layoutContext(node),
+            mapPath: mapPath,
           },
         })
       })
@@ -311,10 +307,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         context: {
           nodeId: node.id,
           locale: locale,
-          node: node,
-          slug: root.getSlug(locale),
-          listingPages: frontListingPages,
-          layoutContext: pathHelper.layoutContext(node),
         }
       })
     })
