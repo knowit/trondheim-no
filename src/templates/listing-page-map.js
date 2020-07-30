@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import "../style/listing-page.css"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
@@ -7,130 +7,255 @@ import GoogleMap from "../components/map.js"
 import { Online, Offline } from "react-detect-offline"
 import { Router } from "@reach/router"
 
+const defaultLocation = {
+  lat: 63.4305149,
+  lng: 10.3950528
+}
+
+const defaultAddress = "Trondheim, Norway"
+
+function getLocation(node) {
+
+  if (node.latLong && node.latLong.latitude && node.latLong.longitude) {
+    return { lat: Number(node.latLong.latitude), lng: Number(node.latLong.longitude) };
+  }
+  if (node.address && node.address.lat && node.address.lng) {
+    return { lat: node.address.lat, lng: node.address.lng };
+  }
+  if (node.latitude && node.longitude) {
+    return { lat: node.latitude, lng: node.longitude }
+  }
+
+  return defaultLocation
+}
+
+export default ({ pageContext, data }) => {
+
+  console.log(data)
+  const layoutContext = {
+    locale: data.node.flamelink_locale,
+    localizedPaths: data.node.localizedPaths
+  }
+
+  const markers = data.articlesLevel0.edges.concat(data.articlesLevel1.edges)
+    .map(node => node.node).map(node => {
+      return {
+        id: node._fl_meta_.fl_id,
+        title: node.title,
+        url: node.path,
+        location: getLocation(node),
+        parent: node.parentListingPage.localTitle
+      }
+    })
+
+  const tempMap = new Map()
+  markers.map(marker => tempMap.set(marker.parent, true))
+  const [subListingPages, setSubListingPages] = useState(tempMap)
+  const updateSubListingPages = (key, value) => {
+    setSubListingPages(new Map(subListingPages.set(key, value)))
+  }
+
+  const handleChange = (e, toggle = false) => {
+    const item = e.target.name;
+    const isChecked = (toggle) ? !e.target.checked : e.target.checked
+    updateSubListingPages(item, isChecked)
+  }
+
+
+  var items = []
+
+  subListingPages.forEach((value, key, map) => {
+    items.push(
+      <label className="map-checkbox-container" key={key}>
+        <input
+          name={key}
+          aria-label={key}
+          type="checkbox"
+          checked={value}
+          onChange={handleChange}
+          onKeyPress={(e) => { handleChange(e, true) }}></input>
+        {key}
+
+      </label>
+    )
+  })
+
+
+  const MapComponent = () => {
+    return (<span>
+      <GoogleMap
+        locationMarker={defaultLocation}
+        address={defaultAddress}
+        markers={markers.filter(marker => subListingPages.get(marker.parent))}
+        zoom={13}
+        persistentDisabled={false}
+        width="100%" height="500px" />
+
+      <div>
+        <form className="map-checkbox-form">
+          {items}
+        </form>
+      </div>
+      <div id="content-container">
+        <h2>{data.node.mapPageTitle}</h2>
+        <p>{data.node.mapPageDescription}</p>
+        <Link to={data.node.path}>{LocalizationHelper.getLocalWord(data.localization.translations, "viewListingPageList", data.node.flamelink_locale)}</Link>
+      </div>
+    </span>)
+  }
+
+  return (
+    <Layout layoutContext={layoutContext}>
+      <div id="outer-container">
+        <div id="inner-container">
+          <Online>
+            <Router basepath={pageContext.mapPath}>
+              <MapComponent path='/' />
+            </Router>
+          </Online>
+
+          <Offline>
+            <div id="content-container">
+              <h2>{data.node.mapPageTitle}</h2>
+              <p>{LocalizationHelper.getLocalWord(data.localization.translations, "not-available-offline", data.node.flamelink_locale)}</p>
+              <Link to={data.node.path}>{LocalizationHelper.getLocalWord(data.localization.translations, "go-back", data.node.flamelink_locale)}</Link>
+            </div>
+          </Offline>
+
+        </div>
+      </div>
+    </Layout>
+  )
+}
+
+
 export const query = graphql`
-  query ListingPageMapQuery($nodeId: String) {
-    flamelinkListingPageContent (id: {eq: $nodeId}) {
+  query ListingPageMapQuery($nodeId: String, $nodeFlamelinkId: String) {
+
+    node: flamelinkListingPageContent (id: {eq: $nodeId}) {
       id
       flamelink_locale
+      mapPageTitle
+      mapPageDescription
+      path
+    }
+
+    localization: flamelinkListingPageLocalizationContent (flamelink_locale: {eq: "no"}){
+      id
+      translations {
+        key
+        translations{
+          language
+          word
+        }
+      }
+    }
+
+    articlesLevel0: allFlamelinkArticleContent (filter: { parentListingPage: { id: {eq: $nodeFlamelinkId}}}){
+      edges{
+        node{
+          id
+          flamelink_locale
+          title
+          path
+
+          _fl_meta_{
+            fl_id
+          }
+
+          address {
+            address
+            lat
+            lng
+          }
+
+          parentListingPage{
+            id
+            localTitle
+          }
+
+          latLong {
+            latitude
+            longitude
+            googleMapsStaticImage {
+              url
+              childImageSharp {
+                fluid (maxWidth: 600, quality: 80){
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                } 
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+    articlesLevel1: allFlamelinkArticleContent (filter: { parentListingPage: {parentListingPage: { id: {eq: $nodeFlamelinkId}}}}){
+      edges{
+        node{
+          id
+          flamelink_locale
+          title
+          path
+
+          _fl_meta_{
+            fl_id
+          }
+
+          address {
+            address
+            lat
+            lng
+          }
+
+          parentListingPage{
+            id
+            localTitle
+          }
+
+          latLong {
+            latitude
+            longitude
+            googleMapsStaticImage {
+              url
+              childImageSharp {
+                fluid (maxWidth: 600, quality: 80){
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                } 
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+    subListingPages: allFlamelinkListingPageContent (filter: {parentListingPage: {id: {eq: $nodeFlamelinkId}}}){
+      edges{
+        node{
+          id
+          flamelink_id
+          flamelink_locale
+          path
+          localTitle
+          navigationTitle
+        }
+      }
     }
   }
 `
-
-// Default location
-function GetLocation(pageContext) {
-  return {
-    lat: 63.4305149,
-    lng: 10.3950528
-  }
-}
-
-// Default address
-function GetAddress(pageContext) {
-  return "Trondheim, Norway"
-}
-
-class ListingPageMap extends React.Component {
-
-  constructor(props) {
-    super(props)
-
-    var subListingPages = new Map();
-
-    props.pageContext.markers.map(marker => {
-      if (marker.parent != null) {
-        subListingPages.set(marker.parent, true)
-      }
-      return null
-    })
-
-    this.state = {
-      subListingPages: subListingPages
-    }
-
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(e, toggle = false) {
-    const item = e.target.name;
-    const isChecked = (toggle) ? !e.target.checked : e.target.checked
-    this.setState(prevState => ({ subListingPages: prevState.subListingPages.set(item, isChecked) }));
-
-  }
-
-  render() {
-
-    var items = []
-    var markers = []
-
-    this.state.subListingPages.forEach((value, key, map) => {
-      items.push(
-        <label className="map-checkbox-container" key={key}>
-          <input
-            name={key}
-            aria-label={key}
-            type="checkbox"
-            checked={value}
-            onChange={this.handleChange}
-            onKeyPress={(e) => { this.handleChange(e, true) }}></input>
-          {key}
-
-        </label>
-      )
-    })
-
-    this.props.pageContext.markers.map(marker => {
-      if (this.state.subListingPages.get(marker.parent)) {
-        markers.push(marker)
-      }
-      return null
-    })
-
-    const MapComponent = () => {
-      return (<span>
-        <GoogleMap locationMarker={GetLocation(this.props.pageContext)} address={GetAddress(this.props.pageContext)} markers={markers} zoom={13} persistentDisabled={false}
-          width="100%" height="500px" />
-
-
-        <div>
-          <form className="map-checkbox-form">
-            {items}
-          </form>
-        </div>
-
-
-        <div id="content-container">
-          <h2>{this.props.pageContext.node.mapPageTitle}</h2>
-          <p>{this.props.pageContext.node.mapPageDescription}</p>
-          <Link to={this.props.pageContext.listingPagePath}>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "viewListingPageList", this.props.pageContext.locale)}</Link>
-        </div>
-      </span>)
-    }
-
-    return (
-      <Layout layoutContext={this.props.pageContext.layoutContext}>
-        <div id="outer-container">
-          <div id="inner-container">
-            <Online>
-              <Router basepath={this.props.pageContext.mapPath}>
-                <MapComponent path='/' />
-              </Router>
-            </Online>
-
-            <Offline>
-              <div id="content-container">
-                <h2>{this.props.pageContext.node.mapPageTitle}</h2>
-                <p>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "not-available-offline", this.props.pageContext.locale)}</p>
-                <Link to={this.props.pageContext.listingPagePath}>{LocalizationHelper.getLocalWord(this.props.pageContext.localization, "go-back", this.props.pageContext.locale)}</Link>
-              </div>
-            </Offline>
-
-          </div>
-        </div>
-      </Layout>
-    )
-  }
-
-}
-
-
-export default ListingPageMap

@@ -246,6 +246,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             component: path.resolve(`./src/templates/listing-page-map.js`),
             context: {
               nodeId: node.id,
+              nodeFlamelinkId: node.flamelink_id,
               node: node,
               parentPath: treeNode.parent.getPath(locale),
               localization: localization,
@@ -257,8 +258,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             },
           })
         }
-
-        const node = treeNode.node.get(locale)
 
         // Create listing page
         createPage({
