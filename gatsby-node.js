@@ -141,20 +141,14 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
       const node = treeNode.node.get(locale)
 
-      // Create listing page
+      // Create student page
       createPage({
         path: node.path,
         component: path.resolve(`./src/templates/student.js`),
         context: {
           nodeId: node.id,
-          node: node,
-          studentPageNode: studentPageNode,
-          parentPath: treeNode.parent.getPath(locale),
-          subListingPages: listingPageBuilder.getSubListingPages(locale),
-          articles: listingPageBuilder.getArticles(locale),
-          localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
+          nodeFlamelinkId: node.flamelink_id,
           locale: locale,
-          layoutContext: pathHelper.layoutContext(node),
         },
       })
     })
@@ -199,15 +193,13 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
     else {
       Array.from(treeNode.node.keys()).map(locale => {
-        const mapPath = parentPath + mapSlug
-        const listingPagePath = treeNode.getPath(locale)
 
         const node = treeNode.node.get(locale)
 
-        if (node.hasMapPage) {
+        if (node.hasMapPage && node.mapPath != null) {
           // Create listing page map
           createPage({
-            path: mapPath,
+            path: node.mapPath,
             component: path.resolve(`./src/templates/listing-page-map.js`),
             context: {
               nodeId: node.id,
@@ -219,7 +211,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
         // Create listing page
         createPage({
-          path: listingPagePath,
+          path: node.path,
           component: path.resolve(`./src/templates/listing-page.js`),
           context: {
             nodeId: node.id,

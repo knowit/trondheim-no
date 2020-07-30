@@ -6,25 +6,14 @@ import "../style/student.css"
 import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 
-export const query = graphql`
-  query StudentPageQuery($nodeId: String) {
-    flamelinkStudentPageContent (id: {eq: $nodeId}) {
-      id
-      flamelink_locale
-    }
-  }
-`
-
-
-export default ({ pageContext, data }) => {
-  console.log(data)
+export default ({ data }) => {
   const Navigation = () => {
     return (<div id="student-header-container">
       <div id="student-header-content">
         <div id="languages-container">
-          {pageContext.node.localizedPaths
+          {data.node.localizedPaths
             .sort((a, b) => b.locale.split('-')[0].toUpperCase() > a.locale.split('-')[0].toUpperCase() ? 1 : -1)
-            .map(item => (item.locale === pageContext.node.flamelink_locale)
+            .map(item => (item.locale === data.node.flamelink_locale)
               ? <div key={item.locale} className="language-item">
                 {item.locale.split('-')[0].toUpperCase()}
               </div>
@@ -38,9 +27,9 @@ export default ({ pageContext, data }) => {
         </div>
 
         <div id="student-logo-container">
-          <h2>{pageContext.studentPageNode.headerText} <b>{pageContext.studentPageNode.headerFocusWord}</b></h2>
+          <h2>{data.studentPageNode.headerText} <b>{data.studentPageNode.headerFocusWord}</b></h2>
           <div id="student-logo-image">
-            <Img id="student-logo-image" fluid={pageContext.studentPageNode.logoImage[0].localFile.childImageSharp.fluid}></Img>
+            <Img id="student-logo-image" fluid={data.studentPageNode.logoImage[0].localFile.childImageSharp.fluid}></Img>
           </div>
 
         </div>
@@ -51,8 +40,8 @@ export default ({ pageContext, data }) => {
   const HeaderImage = () => {
     return (
       <BackgroundImage id="student-header-image" Tag="section"
-        fluid={pageContext.studentPageNode.frontImage[0].localFile.childImageSharp.fluid}
-        alt={pageContext.studentPageNode.frontImageAlt}>
+        fluid={data.studentPageNode.frontImage[0].localFile.childImageSharp.fluid}
+        alt={data.studentPageNode.frontImageAlt}>
       </BackgroundImage>
     )
   }
@@ -71,10 +60,10 @@ export default ({ pageContext, data }) => {
   const SubListingPages = () => {
     return (<div id="student-listing-pages-container">
       <div id="student-listing-pages">
-        <h1>{pageContext.node.localTitle}</h1>
+        <h1>{data.node.localTitle}</h1>
         <div id="student-listing-pages-grid-container">
-          {pageContext.subListingPages.map(n => <ListingPage key={n.id} node={n} />)}
-          {pageContext.studentPageNode.additionalListingPages.map(n => <ListingPage key={n.id} node={n} />)}
+          {data.subListingPages.edges.map(node => node.node).map(n => <ListingPage key={n.id} node={n} />)}
+          {data.studentPageNode.additionalListingPages.map(n => <ListingPage key={n.id} node={n} />)}
         </div>
       </div>
     </div>)
@@ -82,7 +71,7 @@ export default ({ pageContext, data }) => {
 
   const CustomContent = () => {
     return (<div id="student-custom-content-container">
-      <HTMLContent htmlContent={pageContext.studentPageNode.customContent} />
+      <HTMLContent htmlContent={data.studentPageNode.customContent} />
     </div>)
   }
 
@@ -137,7 +126,7 @@ export default ({ pageContext, data }) => {
 
 
     const backgroundStyle = {
-      backgroundImage: `url(${pageContext.studentPageNode.columnsBackgroundImage[0].localFile.childImageSharp.fluid.src})`
+      backgroundImage: `url(${data.studentPageNode.columnsBackgroundImage[0].localFile.childImageSharp.fluid.src})`
     }
 
     var index = 0;
@@ -146,7 +135,7 @@ export default ({ pageContext, data }) => {
 
       <div id="student-columns-container" style={backgroundStyle}>
         <div id="student-columns-overlay">
-          {pageContext.studentPageNode.linkColumns.map(node => {
+          {data.studentPageNode.linkColumns.map(node => {
             return (
               <Column
                 key={index++}
@@ -166,3 +155,217 @@ export default ({ pageContext, data }) => {
   </div>)
 
 }
+
+
+
+export const query = graphql`
+  query StudentPageQuery($nodeId: String, $nodeFlamelinkId: String, $locale: String) {
+
+    node: flamelinkListingPageContent (id: {eq: $nodeId}){
+      id
+      flamelink_locale
+      localizedPaths {
+        locale
+        path
+      }
+    }
+
+    subListingPages: allFlamelinkListingPageContent (filter: {parentListingPage: {id: {eq: $nodeFlamelinkId}}}){
+        edges{
+          node{
+            id
+            flamelink_id
+            flamelink_locale
+            path
+
+            localTitle
+            navigationTitle
+
+            thumbnail {
+            localFile {
+              name
+              childImageSharp {
+                fluid(maxWidth: 340, quality: 70) {
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    studentPageNode: flamelinkStudentPageContent (flamelink_locale: {eq: $locale}) {
+      id
+      flamelink_locale
+      headerText
+      headerFocusWord
+
+
+      additionalListingPages {
+          id
+          _fl_meta_{
+            fl_id
+            schema
+          }
+          flamelink_id
+          flamelink_locale
+          navigationTitle
+          navigationSubtitle
+          path
+          thumbnail {
+            localFile {
+              name
+              childImageSharp {
+                fluid(maxWidth: 340, quality: 90) {
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                }
+              }
+            }
+          }
+        }
+
+
+      logoImage {
+          localFile {
+            childImageSharp {
+              fluid (maxWidth: 120, quality: 90) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+
+        frontImage {
+          localFile {
+            childImageSharp {
+              fluid (maxWidth: 2400, quality: 90) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+
+
+        columnsBackgroundImage {
+          localFile {
+            childImageSharp {
+              fluid (maxWidth: 2400, quality: 90) {
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+
+        customContent{
+          content
+          remoteImages {
+            url
+            childImageSharp {
+              fluid (quality: 90){
+                base64
+                aspectRatio 
+                src 
+                srcSet 
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              } 
+            }
+          }
+        }
+
+        linkColumns {
+          title
+          subTitle
+          linkType
+          url
+          listingPage{
+            navigationTitle
+            navigationSubtitle
+            path
+          }
+          page{
+            title
+            subTitle
+            path
+          }
+          content{
+            content
+            remoteImages {
+              url
+              childImageSharp {
+                fluid (maxWidth: 1200, quality: 70){
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                } 
+              }
+            }
+          }
+          icon {
+            localFile {
+              name
+              childImageSharp {
+                fluid(maxWidth: 240, quality: 70) {
+                  base64
+                  aspectRatio 
+                  src 
+                  srcSet 
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                }
+              }
+            }
+          }
+        }
+
+
+        
+
+    }
+  }
+`

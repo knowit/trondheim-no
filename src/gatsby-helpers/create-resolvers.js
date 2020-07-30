@@ -52,7 +52,7 @@ exports.createResolvers = ({ createResolvers }) => {
 
       return path
     }
-    return null
+    return ""
   }
 
   const findSource = (context, node, type, locale) => (context.nodeModel.

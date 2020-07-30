@@ -86,6 +86,7 @@ query {
         }
         slug
         path
+        mapPath
         localizedPaths {
           locale
           path
