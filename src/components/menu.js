@@ -5,7 +5,7 @@ import ReactCountryFlag from "react-country-flag"
 import LocalizationHelper from "../helpers/helpers"
 
 
-const Menu = ({ layoutContext }) => {
+const Menu = ({ locale, localizedPaths }) => {
 
   const query = graphql`
     query MenuQuery {
@@ -34,6 +34,18 @@ const Menu = ({ layoutContext }) => {
               title
               redirectUrl
             }
+          }
+        }
+      }
+      flamelinkLayoutLocalizationContent(flamelink_locale: {eq: "no"}) {
+        id
+        translations {
+          id
+          key
+          translations {
+            id
+            language
+            word
           }
         }
       }
@@ -78,11 +90,11 @@ const Menu = ({ layoutContext }) => {
           <Link
             className="drop-menu-item-container"
             role="menuitem"
-            to={layoutContext.localizedPaths.find(item => item.locale !== layoutContext.locale).path}>
+            to={localizedPaths.find(item => item.locale !== locale).path}>
 
             <ReactCountryFlag
               className="drop-menu-item-flag"
-              countryCode={(layoutContext.locale !== 'no') ? 'NO' : 'GB'}
+              countryCode={(locale !== 'no') ? 'NO' : 'GB'}
               svg
               style={{
                 width: '1em',
@@ -90,7 +102,7 @@ const Menu = ({ layoutContext }) => {
               }}
             />
 
-            {(layoutContext.locale === 'no') ? `English` : `Norsk`}
+            {(locale === 'no') ? `English` : `Norsk`}
 
           </Link>
         </div>
@@ -103,11 +115,9 @@ const Menu = ({ layoutContext }) => {
   return (
     <StaticQuery query={query}
       render={(data) => {
-        const menuData = data.allMenuDataContent.edges.find(node => node.node.locale === layoutContext.locale).node
-        const navbarData = data.allFlamelinkNavbarContent.edges.find(node => node.node.flamelink_locale === layoutContext.locale).node
-        if (navbarData) {
-
-        }
+        const menuData = data.allMenuDataContent.edges.find(node => node.node.locale === locale).node
+        const navbarData = data.allFlamelinkNavbarContent.edges.find(node => node.node.flamelink_locale === locale).node
+        const localization = data.flamelinkLayoutLocalizationContent.translations
         return (
           <div role="menu" tabIndex={0} onKeyPress={toggleMenu} className="menu-container" onClick={toggleMenu}>
             <div className="burger-container">
@@ -116,7 +126,7 @@ const Menu = ({ layoutContext }) => {
               <div className="burger-bar"></div>
             </div>
             <div className="menu-text-container">
-              {LocalizationHelper.getLocalWord(layoutContext.localization, 'menu', layoutContext.locale)}
+              {LocalizationHelper.getLocalWord(localization, 'menu', locale)}
             </div>
             <MenuItems items={menuData ? menuData.menuItems : []} externalItems={navbarData ? (navbarData.extraMenuOptions || []) : []} />
             <Overlay />
