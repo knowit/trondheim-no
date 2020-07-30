@@ -23,6 +23,20 @@ const Menu = ({ layoutContext }) => {
           }
         }
       }
+      allFlamelinkNavbarContent {
+        edges {
+          node {
+            id
+            flamelink_locale
+            extraMenuOptions {
+              id
+              uniqueKey
+              title
+              redirectUrl
+            }
+          }
+        }
+      }
     }
     `
   const [showMenu, setShowMenu] = useState(false)
@@ -35,7 +49,7 @@ const Menu = ({ layoutContext }) => {
     return showMenu ? (<div id="menu-background-overlay" />) : null
   }
 
-  const MenuItems = ({ items }) => {
+  const MenuItems = ({ items, externalItems }) => {
     return showMenu
       ? (
         <div className="drop-menu-container">
@@ -48,6 +62,17 @@ const Menu = ({ layoutContext }) => {
                 to={node.path}>
                 {node.title}
               </Link>
+            )
+          })}
+          {externalItems.map(function (node, key) {
+            return (
+              <a
+                key={key}
+                role="menuitem"
+                className="drop-menu-item-container"
+                href={node.redirectUrl}>
+                {node.title}
+              </a>
             )
           })}
           <Link
@@ -79,6 +104,10 @@ const Menu = ({ layoutContext }) => {
     <StaticQuery query={query}
       render={(data) => {
         const menuData = data.allMenuDataContent.edges.find(node => node.node.locale === layoutContext.locale).node
+        const navbarData = data.allFlamelinkNavbarContent.edges.find(node => node.node.flamelink_locale === layoutContext.locale).node
+        if (navbarData) {
+
+        }
         return (
           <div role="menu" tabIndex={0} onKeyPress={toggleMenu} className="menu-container" onClick={toggleMenu}>
             <div className="burger-container">
@@ -89,7 +118,7 @@ const Menu = ({ layoutContext }) => {
             <div className="menu-text-container">
               {LocalizationHelper.getLocalWord(layoutContext.localization, 'menu', layoutContext.locale)}
             </div>
-            <MenuItems items={menuData ? menuData.menuItems : []} />
+            <MenuItems items={menuData ? menuData.menuItems : []} externalItems={navbarData ? (navbarData.extraMenuOptions || []) : []} />
             <Overlay />
           </div>
         )
