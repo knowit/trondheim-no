@@ -8,6 +8,89 @@ import { Online, Offline } from "react-detect-offline"
 import HTMLContent from '../components/html-content'
 import Map from "../components/map.js"
 import { Router } from "@reach/router"
+import { graphql } from 'gatsby'
+
+export const query = graphql`
+  query ArticleQuery($nodeId: String) {
+
+    flamelinkArticleLocalizationContent (flamelink_locale: {eq: "no"}){
+      id
+      translations {
+        key
+        translations {
+          language
+          word
+        }
+      }
+    }
+
+    flamelinkArticleContent (id: {eq: $nodeId}){
+      id
+      flamelink_locale
+      slug
+      path
+      title
+      tags
+
+      _fl_meta_{
+        fl_id
+      }
+
+      contactInfo {
+        textToShow
+        telephoneNumber
+        linkToWebsite
+        emailAddress
+      }
+
+      address {
+        address
+        lat
+        lng
+      }
+
+      latLong {
+        latitude
+        longitude
+        googleMapsStaticImage {
+          url
+          childImageSharp {
+            fluid (maxWidth: 600, quality: 70){
+              base64
+              aspectRatio 
+              src 
+              srcSet 
+              sizes
+              presentationWidth
+              presentationHeight
+              originalImg
+            } 
+          }
+        }
+      }
+
+      content {
+        content
+        remoteImages {
+          url
+          childImageSharp {
+            fluid (maxWidth: 1200, quality: 80){
+              base64
+              aspectRatio 
+              src 
+              srcSet 
+              sizes
+              presentationWidth
+              presentationHeight
+              originalImg
+            } 
+          }
+        }
+      }
+
+    }
+  }
+`
 
 
 function ContactInfo(props) {
@@ -69,25 +152,64 @@ function OpeningHours(props) {
 
 
 
-const Article = ({ pageContext }) => {
+const Article = ({ pageContext, data }) => {
 
-  const location = GoogleMapsUrlHelper.getLocation(pageContext.node)
-  const address = GoogleMapsUrlHelper.getAddress(pageContext.node)
+  let address = (
+    data.flamelinkArticleContent.address
+    && data.flamelinkArticleContent.address.address
+  ) ? data.flamelinkArticleContent.address.address : null
+
+  let location = {
+    lat: 63.4305149,
+    lng: 10.3950528
+  }
+
+  if (data.flamelinkArticleContent.latLong
+    && data.flamelinkArticleContent.latLong.latitude
+    && data.flamelinkArticleContent.latLong.longitude) {
+    location = {
+      lat: Number(data.flamelinkArticleContent.latLong.latitude),
+      lng: Number(data.flamelinkArticleContent.latLong.longitude)
+    };
+  }
+  if (data.flamelinkArticleContent.address
+    && data.flamelinkArticleContent.address.lat
+    && data.flamelinkArticleContent.address.lng) {
+    location = {
+      lat: data.flamelinkArticleContent.address.lat,
+      lng: data.flamelinkArticleContent.address.lng
+    };
+  }
+  if (data.flamelinkArticleContent.latitude
+    && data.flamelinkArticleContent.longitude) {
+    location = {
+      lat: data.flamelinkArticleContent.latitude,
+      lng: data.flamelinkArticleContent.longitude
+    }
+  }
+
+  const markers = [{
+    id: data.flamelinkArticleContent._fl_meta_.fl_id,
+    title: data.flamelinkArticleContent.title,
+    url: data.flamelinkArticleContent.path,
+    location: location,
+    parent: null
+  }]
 
 
   const ParsedHTML = () => {
-    if (!pageContext.node.content) {
+    if (!data.flamelinkArticleContent.content) {
       return null
     }
     else {
       return (
-        <HTMLContent htmlContent={pageContext.node.content} resizeImg={false} />
+        <HTMLContent htmlContent={data.flamelinkArticleContent.content} resizeImg={false} />
       )
     }
   }
 
   const OfflineMap = () => {
-    const imageNode = pageContext.node.latLong.googleMapsStaticImage
+    const imageNode = data.flamelinkArticleContent.latLong.googleMapsStaticImage
 
     if (imageNode != null) {
       const styles = {
@@ -104,20 +226,28 @@ const Article = ({ pageContext }) => {
     }
   }
 
-
-
   return (
 
-    <Layout layoutContext={pageContext.layoutContext}>
+    <Layout
+      layoutContext={pageContext.layoutContext}
+      locale={data.flamelinkArticleContent.flamelink_locale}
+      localizedPaths={data.flamelinkArticleContent.localizedPaths}>
+
       <div id="outer-container">
         <div id="inner-container">
-          <h2 id="article-title">{pageContext.node.title}</h2>
+          <h2 id="article-title">{data.flamelinkArticleContent.title}</h2>
           <ParsedHTML />
-          <OpeningHours node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
-          <ContactInfo node={pageContext.node} localization={pageContext.localization} locale={pageContext.locale} />
+          <OpeningHours
+            node={data.flamelinkArticleContent}
+            localization={data.flamelinkArticleLocalizationContent.translations}
+            locale={data.flamelinkArticleContent.flamelinklocale} />
+          <ContactInfo
+            node={data.flamelinkArticleContent}
+            localization={data.flamelinkArticleLocalizationContent.translations}
+            locale={data.flamelinkArticleLocalizationContent.flamelink_locale} />
           <Online>
-            <Router basepath={pageContext.node.path}>
-              <Map path='/' locationMarker={location} address={address} markers={pageContext.markers} zoom={15} persistentDisabled={false}
+            <Router basepath={data.flamelinkArticleContent.path}>
+              <Map path='/' locationMarker={location} address={address} markers={markers} zoom={15} persistentDisabled={false}
                 width="100%" height="400px" />
             </Router>
           </Online>

@@ -60,7 +60,7 @@ export default ({ children, layoutContext }) => {
   const locale = layoutContext.locale
   const localizedPaths = layoutContext.localizedPaths
 
-  const search = LocalizationHelper.getLocalWord(localization, 'menu', locale)
+  const search = LocalizationHelper.getLocalWord(localization, 'search', locale)
 
   const Navigation = () => {
     return <div className="navigation-container">
