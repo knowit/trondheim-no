@@ -2,7 +2,6 @@ import React from "react"
 import styles from "../style/article.module.css"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
-import { GoogleMapsUrlHelper } from "../helpers/url-helper"
 import Img from "gatsby-image"
 import { Online, Offline } from "react-detect-offline"
 import HTMLContent from '../components/html-content'
@@ -74,7 +73,7 @@ export const query = graphql`
         remoteImages {
           url
           childImageSharp {
-            fluid (maxWidth: 1200, quality: 80){
+            fluid (maxWidth: 1200, quality: 75){
               base64
               aspectRatio 
               src 
@@ -152,7 +151,12 @@ function OpeningHours(props) {
 
 
 
-const Article = ({ pageContext, data }) => {
+const Article = ({ data }) => {
+
+  const layoutContext = {
+    locale: data.flamelinkArticleContent.flamelink_locale,
+    localizedPaths: data.flamelinkArticleContent.localizedPaths
+  }
 
   let address = (
     data.flamelinkArticleContent.address
@@ -229,7 +233,7 @@ const Article = ({ pageContext, data }) => {
   return (
 
     <Layout
-      layoutContext={pageContext.layoutContext}
+      layoutContext={layoutContext}
       locale={data.flamelinkArticleContent.flamelink_locale}
       localizedPaths={data.flamelinkArticleContent.localizedPaths}>
 
@@ -244,7 +248,7 @@ const Article = ({ pageContext, data }) => {
           <ContactInfo
             node={data.flamelinkArticleContent}
             localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={data.flamelinkArticleLocalizationContent.flamelink_locale} />
+            locale={data.flamelinkArticleContent.flamelink_locale} />
           <Online>
             <Router basepath={data.flamelinkArticleContent.path}>
               <Map path='/' locationMarker={location} address={address} markers={markers} zoom={15} persistentDisabled={false}

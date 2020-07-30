@@ -93,31 +93,22 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     layoutContexts.set(node.flamelink_locale, pathHelper.layoutContext(node))
   })
 
+
   function createArticle(treeNode) {
 
     treeNode.node.forEach((value, key, map) => {
       const node = value
       const locale = key
-      const parent = treeNode.parent.node.get(locale)
-      const marker = GoogleMapsUrlHelper.getMarker(node, treeNode.getPath(locale), parent)
-
       createPage({
         path: treeNode.getPath(locale),
         component: path.resolve('./src/templates/article.js'),
         context: {
-          nodeId: node.id,
-          parentId: parent.id,
-          // Pass context data here (Remove queries from article.js)
-          defaultCenter: { lat: 63.430529, lng: 10.4005522 },
-          localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
-          node: node,
-          layoutContext: pathHelper.layoutContext(node),
-          locale: locale,
-          markers: [marker],
+          nodeId: node.id
         }
       })
     })
   }
+
 
   function createGenericPage(treeNode) {
     treeNode.node.forEach((value, key, map) => {
