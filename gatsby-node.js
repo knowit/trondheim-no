@@ -1,12 +1,7 @@
 
 // You can delete this file if you're not using it
 const path = require(`path`)
-const defaultLocale = 'no'
-const { PathTreeBuilder } = require(`./src/helpers/path-helper`)
-const { GoogleMapsUrlHelper } = require(`./src/helpers/url-helper`)
 const { query } = require('./src/gatsby-helpers/graphql-query')
-
-let layoutContexts = new Map()
 
 const { sourceNodes } = require('./src/gatsby-helpers/source-nodes')
 exports.sourceNodes = sourceNodes
@@ -29,7 +24,6 @@ exports.onCreatePage = async ({ page, actions }) => {
   // Check if the page is 404 or Search
   if (is404 || isSearch) {
 
-    const context = page.context
     const oldPage = { ...page }
     deletePage(oldPage)
     const pagePath = page.path
@@ -37,7 +31,15 @@ exports.onCreatePage = async ({ page, actions }) => {
 
     locales.forEach((locale, index, array) => {
 
-      const layoutContext = layoutContexts.get(locale)
+      const layoutContext = {
+        locale: locale,
+        localizedPaths: locales.map(l => {
+          return {
+            locale: l,
+            path: l === 'no' ? '/' : '/en/'
+          }
+        })
+      }
 
       const newPage = {
         ...page,
@@ -45,21 +47,7 @@ exports.onCreatePage = async ({ page, actions }) => {
         matchPath: is404 ? (locale === 'no' ? '/*' : '/en/*') : page.matchPath,
         location: page.location,
         context: {
-          layoutContext: {
-            ...layoutContext,
-            localizedPaths: isSearch ? (
-              [
-                {
-                  locale: `no`,
-                  path: `${pagePath}`
-                },
-                {
-                  locale: 'en-US',
-                  path: `/en${pagePath}`
-                },
-              ]
-            ) : layoutContext.localizedPaths
-          },
+          layoutContext: layoutContext,
           locale: locale,
         },
       }
@@ -85,189 +73,89 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     return
   }
 
-  let pathHelper = new PathTreeBuilder(result, defaultLocale)
-  const root = pathHelper.build()
-  const listingPages = new Map()
-
   result.data.allFlamelinkFrontPageContent.edges.map(node => node.node).map(node => {
-    layoutContexts.set(node.flamelink_locale, pathHelper.layoutContext(node))
+    createPage({
+      path: node.path,
+      component: path.resolve(`./src/templates/home.js`),
+      context: {
+        nodeId: node.id,
+        locale: node.flamelink_locale,
+      }
+    })
   })
 
-
-  function createArticle(treeNode) {
-
-    treeNode.node.forEach((value, key, map) => {
-      const node = value
-      const locale = key
-      createPage({
-        path: treeNode.getPath(locale),
-        component: path.resolve('./src/templates/article.js'),
-        context: {
-          nodeId: node.id
-        }
-      })
+  result.data.allFlamelinkPageContent.edges.map(node => node.node).map(node => {
+    createPage({
+      path: node.path,
+      component: path.resolve('./src/templates/page.js'),
+      context: {
+        nodeId: node.id,
+        locale: node.flamelink_locale,
+      }
     })
-  }
+  })
 
+  result.data.allFlamelinkListingPageContent.edges.map(node => node.node).map(node => {
 
-  function createGenericPage(treeNode) {
-    treeNode.node.forEach((value, key, map) => {
-      const node = value
-      const locale = key
-      const parent = treeNode.parent.node.get(locale)
-
-      createPage({
-        path: treeNode.getPath(locale),
-        component: path.resolve('./src/templates/page.js'),
-        context: {
-          nodeId: node.id,
-          locale: locale,
-        }
-      })
-    })
-  }
-
-  function createStudentPage(listingPageBuilder) {
-    const treeNode = listingPageBuilder.getTreeNode()
-    Array.from(treeNode.node.keys()).map(locale => {
-
-      const studentPageNode = result.data.allFlamelinkStudentPageContent.edges
-        .map(node => node.node)
-        .find(node => node.flamelink_locale === locale)
-
-
-      const node = treeNode.node.get(locale)
-
-      // Create student page
+    if (node.slug === 'student') {
       createPage({
         path: node.path,
         component: path.resolve(`./src/templates/student.js`),
         context: {
           nodeId: node.id,
           nodeFlamelinkId: node.flamelink_id,
-          locale: locale,
+          locale: node.flamelink_locale,
         },
       })
-    })
-  }
+    }
 
-  function createEventsPage(listingPageBuilder) {
-
-    const treeNode = listingPageBuilder.getTreeNode()
-    Array.from(treeNode.node.keys()).map(locale => {
-      const node = treeNode.node.get(locale)
-
+    else if (node.slug === 'hva-skjer' || node.slug === 'whats-on') {
       createPage({
         path: node.path,
         component: path.resolve(`./src/templates/events-page.js`),
         context: {
           nodeId: node.id,
-          locale: locale,
+          locale: node.flamelink_locale,
         },
       })
-    })
-
-  }
-
-  function createListingPage(listingPageBuilder) {
-
-    const treeNode = listingPageBuilder.getTreeNode()
-
-    var isEventsPage = false
-    treeNode.node.forEach((node, index, map) => {
-      if (node.slug === 'hva-skjer' || node.slug === 'whats-on') {
-        isEventsPage = true
-      }
-    })
-
-    if (isEventsPage) {
-      createEventsPage(listingPageBuilder)
-    }
-
-    else if (treeNode.isStudentPage) {
-      createStudentPage(listingPageBuilder)
     }
 
     else {
-      Array.from(treeNode.node.keys()).map(locale => {
-
-        const node = treeNode.node.get(locale)
-
-        if (node.hasMapPage && node.mapPath != null) {
-          // Create listing page map
-          createPage({
-            path: node.mapPath,
-            component: path.resolve(`./src/templates/listing-page-map.js`),
-            context: {
-              nodeId: node.id,
-              nodeFlamelinkId: node.flamelink_id,
-              locale: locale,
-            },
-          })
-        }
-
-        // Create listing page
+      if (node.hasMapPage && node.mapPath != null) {
+        // Create listing page map
         createPage({
-          path: node.path,
-          component: path.resolve(`./src/templates/listing-page.js`),
+          path: node.mapPath,
+          component: path.resolve(`./src/templates/listing-page-map.js`),
           context: {
             nodeId: node.id,
             nodeFlamelinkId: node.flamelink_id,
-            locale: locale,
+            locale: node.flamelink_locale,
           },
         })
-      })
-    }
-  }
+      }
 
-  function createFrontPage(root, frontPageListingPages) {
-
-    Array.from(root.node.keys()).map(locale => {
-
-      const node = root.node.get(locale)
-
+      // Create listing page
       createPage({
-        path: root.getPath(locale),
-        component: path.resolve(`./src/templates/home.js`),
+        path: node.path,
+        component: path.resolve(`./src/templates/listing-page.js`),
         context: {
           nodeId: node.id,
-          locale: locale,
-        }
+          nodeFlamelinkId: node.flamelink_id,
+          locale: node.flamelink_locale,
+        },
       })
+    }
+  })
+
+  result.data.allFlamelinkArticleContent.edges.map(node => node.node).map(node => {
+    createPage({
+      path: node.path,
+      component: path.resolve('./src/templates/article.js'),
+      context: {
+        nodeId: node.id
+      }
     })
-  }
-
-  for (const treeNode of pathHelper.createNodeIterator()) {
-
-    if (treeNode.isListingPage === true) {
-      listingPages.set(treeNode.id, pathHelper.createListingPageBuilder(treeNode))
-
-      if (treeNode.parent.id != root.id) {
-        listingPages.get(treeNode.parent.id).addSubListingPage(treeNode)
-      }
-    }
-
-    else if (treeNode.isArticle === true) {
-
-      if (treeNode.parent != null) {
-        const parentListingPage = listingPages.get(treeNode.parent.id)
-        if (parentListingPage != null) {
-          parentListingPage.addArticle(treeNode)
-        }
-      }
-      createArticle(treeNode)
-    }
-
-    else if (treeNode.isPage === true) {
-      createGenericPage(treeNode)
-    }
-  }
-
-  listingPages.forEach((value, key, map) =>
-    createListingPage(value)
-  )
-
-  createFrontPage(root, pathHelper.frontPageListingPages)
+  })
 }
 
 

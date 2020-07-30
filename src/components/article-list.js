@@ -72,21 +72,25 @@ export default ({ tags, articles, subListingPages, localization, locale, default
 
     const ArticleList = () => {
         const articleViews = []
+
+        const listingPageDefaultThumbnail = defaultThumbnails.find(node => node.title === "ListingPage Thumbnail")
         subListingPages.forEach((slp) => {
             slp.tags = [];
             if (filterTags.length === 0) {
                 articleViews.push(
                     <ArticleView key={articleViews.length} article={slp} subList={true}
-                        defaultThumbnail={defaultThumbnails.find(node => node.title === "ListingPage Thumbnail").image[0].localFile.childImageSharp.fluid} />
+                        defaultThumbnail={listingPageDefaultThumbnail ? listingPageDefaultThumbnail.image[0].localFile.childImageSharp.fluid : null} />
                 )
             }
         })
+
+        const articleDefaultThumbnail = defaultThumbnails.find(node => node.title === "Article Thumbnail")
         articles.forEach((article) => {
             //Add article to array only if it contains a tag chosen, or ALL is chosen (empty list).
             if (filterTags.length === 0 || article.tags.some(r => filterTags.includes(r))) {
                 articleViews.push(
                     <ArticleView article={article} key={article.title}
-                        defaultThumbnail={defaultThumbnails.find(node => node.title === "Article Thumbnail").image[0].localFile.childImageSharp.fluid} />
+                        defaultThumbnail={articleDefaultThumbnail ? articleDefaultThumbnail.image[0].localFile.childImageSharp.fluid : null} />
                 )
             }
         })
