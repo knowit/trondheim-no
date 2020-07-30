@@ -4,33 +4,32 @@ import Layout from "../layouts/layout"
 import "../style/page.css"
 import { graphql } from "gatsby"
 
-export const query = graphql`
-  query PageQuery($nodeId: String) {
-    flamelinkPageContent (id: {eq: $nodeId}) {
-      id
-      flamelink_locale
-    }
-  }
-`
 
-const Page = ({ pageContext, data }) => {
-  console.log(data)
+export default ({ data }) => {
+
+  const layoutContext = {
+    locale: data.node.flamelink_locale,
+    localizedPaths: data.node.localizedPaths
+  }
 
   const ParsedHTML = () => {
-    if (!pageContext.node.content) {
+    if (!data.node.content) {
       return null
     }
     else {
       return (
-        <HTMLContent htmlContent={pageContext.node.content} resizeImg={true} dropShadow={true} />
+        <HTMLContent htmlContent={data.node.content} resizeImg={true} dropShadow={true} />
       )
     }
   }
 
-  return (<Layout layoutContext={pageContext.layoutContext}>
+  return (<Layout
+    layoutContext={layoutContext}
+    locale={data.node.flamelink_locale}
+    localizedPaths={data.node.localizedPaths}>
     <div id="outer-container">
       <div id="inner-container">
-        <h1 id="page-title">{pageContext.node.title}</h1>
+        <h1 id="page-title">{data.node.title}</h1>
         <div id="page-content-container">
           <ParsedHTML />
         </div>
@@ -39,4 +38,38 @@ const Page = ({ pageContext, data }) => {
   </Layout>)
 }
 
-export default Page
+
+export const query = graphql`
+  query PageQuery($nodeId: String) {
+    node: flamelinkPageContent (id: {eq: $nodeId}) {
+      id
+      flamelink_locale
+      path
+      title
+
+      localizedPaths {
+        locale
+        path
+      }
+
+      content{
+      content
+      remoteImages {
+        url
+        childImageSharp {
+        fluid (maxWidth: 1200, quality: 80){
+            base64
+            aspectRatio 
+            src 
+            srcSet 
+            sizes
+            presentationWidth
+            presentationHeight
+            originalImg
+          } 
+        }
+      }
+    }
+    }
+  }
+`

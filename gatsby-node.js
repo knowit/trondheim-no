@@ -121,9 +121,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         component: path.resolve('./src/templates/page.js'),
         context: {
           nodeId: node.id,
-          localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
-          node: node,
-          layoutContext: pathHelper.layoutContext(node),
           locale: locale,
         }
       })
