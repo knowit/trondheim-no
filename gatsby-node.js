@@ -8,6 +8,9 @@ const { query } = require('./src/gatsby-helpers/graphql-query')
 
 let layoutContexts = new Map()
 
+const { sourceNodes } = require('./src/gatsby-helpers/source-nodes')
+exports.sourceNodes = sourceNodes
+
 const { createResolvers } = require('./src/gatsby-helpers/create-resolvers')
 exports.createResolvers = createResolvers
 

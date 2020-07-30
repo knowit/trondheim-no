@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "../style/layout.css"
-import { Link } from 'gatsby';
+import { Link, graphql, StaticQuery } from 'gatsby';
 import ReactCountryFlag from "react-country-flag"
 import LocalizationHelper from "../helpers/helpers"
 
-export class BurgerMenu extends React.Component {
+/*
+class BurgerMenu extends React.Component {
 
   constructor(props) {
     super(props);
@@ -132,3 +133,83 @@ export class BurgerMenu extends React.Component {
     );
   }
 }
+*/
+
+const Menu = () => {
+
+  const query = graphql`
+query MenuQuery {
+  allMenuDataContent {
+    edges {
+      node {
+        id
+        locale
+        menuItems {
+          locale
+          title
+          slug
+          path
+        }
+      }
+    }
+  }
+}
+`
+  const [showMenu, setShowMenu] = useState(false)
+
+  const toggleMenu = () => {
+    setShowMenu(!showMenu)
+  }
+
+  const Overlay = () => {
+    return showMenu ? (<div id="menu-background-overlay" />) : null
+  }
+
+  const MenuItems = ({ items }) => {
+    console.log(items)
+    return showMenu
+      ? (
+        <div className="drop-menu-container">
+          {items.map(function (node, key) {
+            return (
+              <Link
+                key={key}
+                role="menuitem"
+                className="drop-menu-item-container"
+                to={node.path}>
+                {node.title}
+              </Link>
+            )
+          })}
+        </div>
+      )
+      : (
+        null
+      )
+  }
+
+  return (
+    <StaticQuery query={query}
+      render={(data) => {
+        return (
+          <div role="menu" tabIndex={0} onKeyPress={toggleMenu} className="menu-container" onClick={toggleMenu}>
+            <div className="burger-container">
+              <div className="burger-bar"></div>
+              <div className="burger-bar"></div>
+              <div className="burger-bar"></div>
+            </div>
+            <div className="menu-text-container">
+              MENY
+            </div>
+            <MenuItems items={data.allMenuDataContent.edges[0].node.menuItems} />
+            <Overlay />
+          </div>
+        )
+      }
+      }
+    />
+  );
+
+}
+
+export default Menu

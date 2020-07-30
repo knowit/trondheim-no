@@ -3,7 +3,7 @@ import "../style/layout.css"
 import { Helmet } from 'react-helmet'
 import { Link } from "gatsby"
 import Img from "gatsby-image"
-import { BurgerMenu } from "../components/menu.js"
+import BurgerMenu from "../components/menu.js"
 
 
 

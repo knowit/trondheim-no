@@ -7,7 +7,7 @@ query {
         id
         flamelink_locale
         navbarText
-        childrenFlamelinkNavbarContentFieldExtraMenuOptionsItem {
+        childFlamelinkNavbarContentFieldExtraMenuOptionsItem {
           title
           redirectUrl
         }

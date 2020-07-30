@@ -20,11 +20,16 @@ exports.createSchemaCustomization = ({ actions }) => {
     emailAddress: String
   }
   type FlamelinkNavbarContent implements Node {
-    childrenFlamelinkNavbarContentFieldExtraMenuOptionsItem: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
+    childFlamelinkNavbarContentFieldExtraMenuOptionsItem: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
+    externalMenuItems: [ExtraMenuOption]
   }
   type FlamelinkNavbarContentFieldExtraMenuOptionsItem implements Node {
     title: String!
     redirectUrl: String!
+  }
+  type ExtraMenuOption {
+    title: String,
+    redirectUrl: String
   }
   type FlamelinkListingPageContent implements Node {
     parentListingPage: FlamelinkListingPageContent
