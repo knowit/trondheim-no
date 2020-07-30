@@ -2,10 +2,19 @@ import React from "react"
 import "../style/listing-page.css"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
-import { Link } from "gatsby"
+import { Link, graphql } from "gatsby"
 import GoogleMap from "../components/map.js"
 import { Online, Offline } from "react-detect-offline"
 import { Router } from "@reach/router"
+
+export const query = graphql`
+  query ListingPageMapQuery($nodeId: String) {
+    flamelinkListingPageContent (id: {eq: $nodeId}) {
+      id
+      flamelink_locale
+    }
+  }
+`
 
 // Default location
 function GetLocation(pageContext) {

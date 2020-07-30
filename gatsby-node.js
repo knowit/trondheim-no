@@ -120,6 +120,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         path: treeNode.getPath(locale),
         component: path.resolve('./src/templates/page.js'),
         context: {
+          nodeId: node.id,
           localization: result.data.allFlamelinkArticleLocalizationContent.edges[0].node.translations,
           node: node,
           layoutContext: pathHelper.layoutContext(node),
@@ -145,6 +146,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         path: node.path,
         component: path.resolve(`./src/templates/student.js`),
         context: {
+          nodeId: node.id,
           node: node,
           studentPageNode: studentPageNode,
           parentPath: treeNode.parent.getPath(locale),
@@ -169,6 +171,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         path: node.path,
         component: path.resolve(`./src/templates/events-page.js`),
         context: {
+          nodeId: node.id,
           node: node,
           parentPath: treeNode.parent.getPath(locale),
           localization: result.data.allFlamelinkListingPageLocalizationContent.edges[0].node.translations,
@@ -242,6 +245,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             path: mapPath,
             component: path.resolve(`./src/templates/listing-page-map.js`),
             context: {
+              nodeId: node.id,
               node: node,
               parentPath: treeNode.parent.getPath(locale),
               localization: localization,
@@ -259,6 +263,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           path: listingPagePath,
           component: path.resolve(`./src/templates/listing-page.js`),
           context: {
+            nodeId: treeNode.node.get(locale).id,
             node: treeNode.node.get(locale),
             parentPath: treeNode.parent.getPath(locale),
             mapPath: mapPath,
@@ -304,6 +309,8 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         path: root.getPath(locale),
         component: path.resolve(`./src/templates/home.js`),
         context: {
+          nodeId: node.id,
+          locale: locale,
           node: node,
           slug: root.getSlug(locale),
           listingPages: frontListingPages,

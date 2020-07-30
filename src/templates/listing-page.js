@@ -2,10 +2,20 @@ import React from "react"
 import "../style/listing-page.css"
 import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
-import { Link } from "gatsby"
+import { Link, graphql } from "gatsby"
 import SortableArticleView from "../components/article-list"
 
-const ListingPage = ({ pageContext }) => {
+export const query = graphql`
+  query ListingPageQuery($nodeId: String) {
+    flamelinkListingPageContent (id: {eq: $nodeId}) {
+      id
+      flamelink_locale
+    }
+  }
+`
+
+const ListingPage = ({ pageContext, data }) => {
+  console.log(data)
   const MapButton = () => {
     if (pageContext.node.hasMapPage) {
       return (<Link id="map-button" to={pageContext.mapPath}>{LocalizationHelper.getLocalWord(pageContext.localization, "showOnMap", pageContext.locale)}</Link>)

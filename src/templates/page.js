@@ -2,8 +2,19 @@ import React from "react"
 import HTMLContent from "../components/html-content"
 import Layout from "../layouts/layout"
 import "../style/page.css"
+import { graphql } from "gatsby"
 
-const Page = ({ pageContext }) => {
+export const query = graphql`
+  query PageQuery($nodeId: String) {
+    flamelinkPageContent (id: {eq: $nodeId}) {
+      id
+      flamelink_locale
+    }
+  }
+`
+
+const Page = ({ pageContext, data }) => {
+  console.log(data)
 
   const ParsedHTML = () => {
     if (!pageContext.node.content) {

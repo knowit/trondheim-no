@@ -3,7 +3,7 @@ import { Router } from "@reach/router"
 import "../style/listing-page.css"
 import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
-import { Link } from "gatsby"
+import { Link, graphql } from "gatsby"
 import Loader from "react-spinners/ClipLoader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -11,6 +11,15 @@ import { fas } from "@fortawesome/free-solid-svg-icons"
 import { Online, Offline } from "react-detect-offline"
 
 library.add(fas)
+
+export const query = graphql`
+  query EventsPageQuery($nodeId: String) {
+    flamelinkListingPageContent (id: {eq: $nodeId}) {
+      id
+      flamelink_locale
+    }
+  }
+`
 
 const trdEventsUrl = `https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`
 

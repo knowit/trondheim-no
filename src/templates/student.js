@@ -1,13 +1,23 @@
 import React from "react"
-import { Link } from "gatsby"
+import { Link, graphql } from "gatsby"
 import BackgroundImage from 'gatsby-background-image'
 import Img from "gatsby-image/withIEPolyfill"
 import "../style/student.css"
 import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 
+export const query = graphql`
+  query StudentPageQuery($nodeId: String) {
+    flamelinkStudentPageContent (id: {eq: $nodeId}) {
+      id
+      flamelink_locale
+    }
+  }
+`
 
-export default ({ pageContext }) => {
+
+export default ({ pageContext, data }) => {
+  console.log(data)
   const Navigation = () => {
     return (<div id="student-header-container">
       <div id="student-header-content">
