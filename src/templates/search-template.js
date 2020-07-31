@@ -5,15 +5,13 @@ import "../style/search.css"
 import EllipsisText from "react-ellipsis-text"
 import { Router } from "@reach/router"
 
-const Search = ({ pageContext, location }) => {
+const Search = ({ location, locale }) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [quantity, setQuantity] = useState(10)
   const [pageNumber, setPageNumber] = useState(0)
   const [locationHref, setLocationHref] = useState(location.href)
   const antall = [5, 10, 20, 50, 100]
-  const locale = pageContext.locale.split('-')[0]
-
 
   // Only re-run if query changes
   useEffect(() => {
@@ -23,7 +21,7 @@ const Search = ({ pageContext, location }) => {
       return
     }
     else {
-      const lunrIndex = window.__LUNR__[locale]
+      const lunrIndex = window.__LUNR__[locale.split('-')[0]]
       if (lunrIndex != null) {
         const searchResults = lunrIndex.index.search(query)
         setResults(
@@ -119,9 +117,9 @@ const Search = ({ pageContext, location }) => {
 
   const SearchResultQuantityText = ({ children }) => (
     <div id="search-result-quantity-container">
-      <span>{`${pageContext.locale === 'no' ? 'Antall' : 'Total'}: `}</span>
+      <span>{`${locale === 'no' ? 'Antall' : 'Total'}: `}</span>
       {children}
-      <span>{pageContext.locale === 'no' ? ' resultater funnet.' : ' results found.'}</span>
+      <span>{locale === 'no' ? ' resultater funnet.' : ' results found.'}</span>
     </div>
   )
 
@@ -152,9 +150,9 @@ const Search = ({ pageContext, location }) => {
         {
           (quantity !== 'all')
             ? (<div id="page-number-text">
-              {pageContext.locale === 'no' ? 'Side ' : 'Page '}
+              {locale === 'no' ? 'Side ' : 'Page '}
               {pageNumber + 1}
-              {pageContext.locale === 'no' ? ' av ' : ' of '}
+              {locale === 'no' ? ' av ' : ' of '}
               {maxPageNumber()}
             </div>)
             : (<br />)
@@ -185,7 +183,7 @@ const Search = ({ pageContext, location }) => {
                 ? (
                   <button key={'first'} className="other-page-button"
                     onClick={e => setPageNumber(0)}>
-                    {pageContext.locale === 'no' ? 'Første' : 'First'}
+                    {locale === 'no' ? 'Første' : 'First'}
                   </button>
                 ) : null
             }
@@ -194,7 +192,7 @@ const Search = ({ pageContext, location }) => {
                 ? (
                   <button key={'previous'} className="other-page-button"
                     onClick={e => setPageNumber(pageNumber - 1)}>
-                    {pageContext.locale === 'no' ? 'Forrige' : 'Previous'}
+                    {locale === 'no' ? 'Forrige' : 'Previous'}
                   </button>
                 ) : null
             }
@@ -218,7 +216,7 @@ const Search = ({ pageContext, location }) => {
                 ? (
                   <button key={'next'} className="other-page-button"
                     onClick={e => setPageNumber(pageNumber + 1)}>
-                    {pageContext.locale === 'no' ? 'Neste' : 'Next'}
+                    {locale === 'no' ? 'Neste' : 'Next'}
                   </button>
                 ) : null
             }
@@ -227,7 +225,7 @@ const Search = ({ pageContext, location }) => {
                 ? (
                   <button key={'last'} className="other-page-button"
                     onClick={e => setPageNumber(maxPageNumber() - 1)}>
-                    {pageContext.locale === 'no' ? 'Siste' : 'Last'}
+                    {locale === 'no' ? 'Siste' : 'Last'}
                   </button>
                 ) : null
             }
@@ -257,7 +255,7 @@ const Search = ({ pageContext, location }) => {
 
       <div id="search-quantity-select">
         <span>
-          {pageContext.locale === 'no' ? 'Vis antall:' : 'Display quantity:'}
+          {locale === 'no' ? 'Vis antall:' : 'Display quantity:'}
         </span>
         <select
           value={quantity}
@@ -266,7 +264,7 @@ const Search = ({ pageContext, location }) => {
             <option key={n} value={n}>{n}</option>
           ))}
           <option key={'all'} value={'all'}>
-            {pageContext.locale === 'no' ? 'Alle' : 'All'}
+            {locale === 'no' ? 'Alle' : 'All'}
           </option>
         </select>
       </div>
@@ -284,14 +282,17 @@ const path = (locale) => (
   locale === 'no' ? '/search' : '/en/search'
 )
 
-export default ({ pageContext, location }) => {
+export default ({ location, locale, localizedPaths }) => {
   return (
-    <Layout layoutContext={pageContext.layoutContext}>
+    <Layout
+      layoutContext={{}}
+      locale={locale}
+      localizedPaths={localizedPaths} >
       <div id="outer-container">
         <div id="inner-container">
 
-          <Router basepath={path(pageContext.locale)}>
-            <Search path={'/'} pageContext={pageContext} location={location} />
+          <Router basepath={path(locale)}>
+            <Search path={'/'} location={location} locale={locale} />
           </Router>
 
         </div>

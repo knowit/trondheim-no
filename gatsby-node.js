@@ -31,24 +31,19 @@ exports.onCreatePage = async ({ page, actions }) => {
 
     locales.forEach((locale, index, array) => {
 
-      const layoutContext = {
-        locale: locale,
-        localizedPaths: locales.map(l => {
-          return {
-            locale: l,
-            path: l === 'no' ? '/' : '/en/'
-          }
-        })
-      }
-
       const newPage = {
         ...page,
         path: `${locale === 'no' ? '' : `/en`}${pagePath}`,
         matchPath: is404 ? (locale === 'no' ? '/*' : '/en/*') : page.matchPath,
         location: page.location,
         context: {
-          layoutContext: layoutContext,
           locale: locale,
+          localizedPaths: locales.map(l => {
+            return {
+              locale: l,
+              path: l === 'no' ? '/' : '/en/'
+            }
+          })
         },
       }
 
