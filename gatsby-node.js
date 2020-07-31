@@ -15,43 +15,6 @@ exports.createSchemaCustomization = createSchemaCustomization
 const { onCreateNode } = require('./src/gatsby-helpers/on-create-node')
 exports.onCreateNode = onCreateNode
 
-exports.onCreatePage = async ({ page, actions }) => {
-  const { createPage, deletePage } = actions
-
-  const is404 = page.path.match(/^\/404\/$/)
-  const isSearch = page.path.match(/^\/search\/$/)
-
-  // Check if the page is 404 or Search
-  if (is404 || isSearch) {
-
-    const oldPage = { ...page }
-    deletePage(oldPage)
-    const pagePath = page.path
-    const locales = ['no', 'en-US']
-
-    locales.forEach((locale, index, array) => {
-
-      const newPage = {
-        ...page,
-        path: `${locale === 'no' ? '' : `/en`}${pagePath}`,
-        matchPath: is404 ? (locale === 'no' ? '/*' : '/en/*') : page.matchPath,
-        location: page.location,
-        context: {
-          locale: locale,
-          localizedPaths: locales.map(l => {
-            return {
-              locale: l,
-              path: l === 'no' ? '/' : '/en/'
-            }
-          })
-        },
-      }
-
-      createPage(newPage)
-    })
-  }
-}
-
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
@@ -67,6 +30,42 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       }`)
     return
   }
+
+
+  const locales = ['no', 'en-US']
+  const localizedPaths = locales.map(l => {
+    return {
+      locale: l,
+      path: l === 'no' ? '/' : '/en/'
+    }
+  })
+
+  // Create 404
+  locales.map(locale => {
+    const pagePath = '/404/'
+    createPage({
+      path: `${locale === 'no' ? '' : `/en`}${pagePath}`,
+      component: require.resolve('./src/templates/not-found.js'),
+      matchPath: (locale === 'no' ? '/*' : '/en/*'),
+      context: {
+        locale: locale,
+        localizedPaths: localizedPaths
+      },
+    })
+  })
+
+  // Create search
+  locales.map(locale => {
+    const pagePath = '/search/'
+    createPage({
+      path: `${locale === 'no' ? '' : `/en`}${pagePath}`,
+      component: require.resolve('./src/templates/search-template.js'),
+      context: {
+        locale: locale,
+        localizedPaths: localizedPaths
+      },
+    })
+  })
 
   result.data.allFlamelinkFrontPageContent.edges.map(node => node.node).map(node => {
     createPage({

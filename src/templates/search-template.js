@@ -282,22 +282,21 @@ const path = (locale) => (
   locale === 'no' ? '/search' : '/en/search'
 )
 
-export default ({ location, locale, localizedPaths }) => {
+export default ({ pageContext, location }) => {
   return (
     <Layout
-      locale={locale}
-      localizedPaths={localizedPaths} >
+      locale={pageContext.locale}
+      localizedPaths={pageContext.localizedPaths} >
       <div id="outer-container">
         <div id="inner-container">
 
-          <Router basepath={path(locale)}>
-            <Search path={'/'} location={location} locale={locale} />
+          <Router basepath={path(pageContext.locale)}>
+            <Search path={'/'} location={location} locale={pageContext.locale} />
           </Router>
 
         </div>
       </div>
     </Layout>
-
   )
 }
 
