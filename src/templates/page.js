@@ -7,11 +7,6 @@ import { graphql } from "gatsby"
 
 export default ({ data }) => {
 
-  const layoutContext = {
-    locale: data.node.flamelink_locale,
-    localizedPaths: data.node.localizedPaths
-  }
-
   const ParsedHTML = () => {
     if (!data.node.content) {
       return null
@@ -24,7 +19,6 @@ export default ({ data }) => {
   }
 
   return (<Layout
-    layoutContext={layoutContext}
     locale={data.node.flamelink_locale}
     localizedPaths={data.node.localizedPaths}>
     <div id="outer-container">

@@ -11,10 +11,6 @@ export default ({ data }) => {
 
   const locale = data.flamelinkListingPageContent.flamelink_locale
   const localization = data.flamelinkListingPageLocalizationContent.translations
-  const layoutContext = {
-    locale: locale,
-    localizedPaths: data.flamelinkListingPageContent.localizedPaths
-  }
 
   var tags = []
   data.allFlamelinkArticleContent.edges.map(node => node.node).map(node => {
@@ -35,7 +31,6 @@ export default ({ data }) => {
   }
   return (
     <Layout
-      layoutContext={layoutContext}
       locale={locale}
       localizedPaths={data.flamelinkListingPageContent.localizedPaths}>
 

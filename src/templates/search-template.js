@@ -285,7 +285,6 @@ const path = (locale) => (
 export default ({ location, locale, localizedPaths }) => {
   return (
     <Layout
-      layoutContext={{}}
       locale={locale}
       localizedPaths={localizedPaths} >
       <div id="outer-container">

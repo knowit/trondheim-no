@@ -7,11 +7,11 @@ import BurgerMenu from "../components/menu.js"
 import LocalizationHelper from '../helpers/helpers'
 
 
-export default ({ children, layoutContext }) => {
+export default ({ children, locale, localizedPaths }) => {
 
   const data = useStaticQuery(graphql`
     query LayoutQuery {
-      flamelinkLayoutLocalizationContent(flamelink_locale: {eq: "no"}) {
+      localization: flamelinkLayoutLocalizationContent(flamelink_locale: {eq: "no"}) {
         id
         translations {
           id
@@ -23,7 +23,7 @@ export default ({ children, layoutContext }) => {
           }
         }
       }
-      allFlamelinkNavbarContent {
+      navbar: allFlamelinkNavbarContent {
         edges {
           node {
             id
@@ -52,13 +52,8 @@ export default ({ children, layoutContext }) => {
   `)
 
   const [query, setQuery] = useState('')
-  const localization = data.flamelinkLayoutLocalizationContent.translations
-  const navbar = data.allFlamelinkNavbarContent.edges
-    .find(node => node.node.flamelink_locale === layoutContext.locale).node
-
-  // For when layoutcontext is replaced by individual variables
-  const locale = layoutContext.locale
-  const localizedPaths = layoutContext.localizedPaths
+  const localization = data.localization.translations
+  const navbar = data.navbar.edges.map(node => node.node).find(node => node.flamelink_locale === locale)
 
   const search = LocalizationHelper.getLocalWord(localization, 'search', locale)
 

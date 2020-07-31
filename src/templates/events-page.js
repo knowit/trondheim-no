@@ -202,14 +202,8 @@ class EventsView extends React.Component {
 
 export default ({ data }) => {
 
-  const layoutContext = {
-    locale: data.node.flamelink_locale,
-    localizedPaths: data.node.localizedPaths
-  }
-
   return (
     <Layout
-      layoutContext={layoutContext}
       locale={data.node.flamelink_locale}
       localizedPaths={data.node.localizedPaths}>
 

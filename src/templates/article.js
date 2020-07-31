@@ -9,87 +9,7 @@ import Map from "../components/map.js"
 import { Router } from "@reach/router"
 import { graphql } from 'gatsby'
 
-export const query = graphql`
-  query ArticleQuery($nodeId: String) {
 
-    flamelinkArticleLocalizationContent (flamelink_locale: {eq: "no"}){
-      id
-      translations {
-        key
-        translations {
-          language
-          word
-        }
-      }
-    }
-
-    flamelinkArticleContent (id: {eq: $nodeId}){
-      id
-      flamelink_locale
-      slug
-      path
-      title
-      tags
-
-      _fl_meta_{
-        fl_id
-      }
-
-      contactInfo {
-        textToShow
-        telephoneNumber
-        linkToWebsite
-        emailAddress
-      }
-
-      address {
-        address
-        lat
-        lng
-      }
-
-      latLong {
-        latitude
-        longitude
-        googleMapsStaticImage {
-          url
-          childImageSharp {
-            fluid (maxWidth: 600, quality: 70){
-              base64
-              aspectRatio 
-              src 
-              srcSet 
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
-            } 
-          }
-        }
-      }
-
-      content {
-        content
-        remoteImages {
-          url
-          childImageSharp {
-            fluid (maxWidth: 1200, quality: 75){
-              base64
-              aspectRatio 
-              src 
-              srcSet 
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
-            } 
-          }
-        }
-      }
-
-    }
-  }
-`
 
 
 function ContactInfo(props) {
@@ -151,7 +71,7 @@ function OpeningHours(props) {
 
 
 
-const Article = ({ data }) => {
+export default ({ data }) => {
 
   const layoutContext = {
     locale: data.flamelinkArticleContent.flamelink_locale,
@@ -233,7 +153,6 @@ const Article = ({ data }) => {
   return (
 
     <Layout
-      layoutContext={layoutContext}
       locale={data.flamelinkArticleContent.flamelink_locale}
       localizedPaths={data.flamelinkArticleContent.localizedPaths}>
 
@@ -266,4 +185,84 @@ const Article = ({ data }) => {
   )
 }
 
-export default Article
+export const query = graphql`
+  query ArticleQuery($nodeId: String) {
+
+    flamelinkArticleLocalizationContent (flamelink_locale: {eq: "no"}){
+      id
+      translations {
+        key
+        translations {
+          language
+          word
+        }
+      }
+    }
+
+    flamelinkArticleContent (id: {eq: $nodeId}){
+      id
+      flamelink_locale
+      slug
+      path
+      title
+      tags
+
+      _fl_meta_{
+        fl_id
+      }
+
+      contactInfo {
+        textToShow
+        telephoneNumber
+        linkToWebsite
+        emailAddress
+      }
+
+      address {
+        address
+        lat
+        lng
+      }
+
+      latLong {
+        latitude
+        longitude
+        googleMapsStaticImage {
+          url
+          childImageSharp {
+            fluid (maxWidth: 600, quality: 70){
+              base64
+              aspectRatio 
+              src 
+              srcSet 
+              sizes
+              presentationWidth
+              presentationHeight
+              originalImg
+            } 
+          }
+        }
+      }
+
+      content {
+        content
+        remoteImages {
+          url
+          childImageSharp {
+            fluid (maxWidth: 1200, quality: 75){
+              base64
+              aspectRatio 
+              src 
+              srcSet 
+              sizes
+              presentationWidth
+              presentationHeight
+              originalImg
+            } 
+          }
+        }
+      }
+
+    }
+  }
+`

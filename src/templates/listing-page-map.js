@@ -31,11 +31,6 @@ function getLocation(node) {
 
 export default ({ data }) => {
 
-  const layoutContext = {
-    locale: data.node.flamelink_locale,
-    localizedPaths: data.node.localizedPaths
-  }
-
   const markers = data.articlesLevel0.edges.concat(data.articlesLevel1.edges)
     .map(node => node.node).map(node => {
       return {
@@ -104,7 +99,7 @@ export default ({ data }) => {
   }
 
   return (
-    <Layout layoutContext={layoutContext}>
+    <Layout locale={data.node.flamelink_locale} localizedPaths={data.node.localizedPaths}>
       <div id="outer-container">
         <div id="inner-container">
           <Online>
