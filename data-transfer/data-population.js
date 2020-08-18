@@ -1,190 +1,203 @@
+var admin = require("firebase-admin")
 
-var admin = require('firebase-admin')
-
-var flamelink = require('flamelink/app');
-require('flamelink/content');
-require('flamelink/storage');
-require('flamelink/settings');
+var flamelink = require("flamelink/app")
+require("flamelink/content")
+require("flamelink/storage")
+require("flamelink/settings")
 
 const firebaseApp = admin.initializeApp({
-    credential: admin.credential.cert("C:/Users/levis/OneDrive/Skrivebord/byportal-218506-firebase-adminsdk-milcl-2de53579c7.json"),
-    databaseURL: 'https://byportal-218506.firebaseio.com',
-    storageBucket: 'byportal-218506.appspot.com'
+  credential: admin.credential.cert(
+    "C:/Users/levis/OneDrive/Skrivebord/byportal-218506-firebase-adminsdk-milcl-2de53579c7.json"
+  ),
+  databaseURL: "https://byportal-218506.firebaseio.com",
+  storageBucket: "byportal-218506.appspot.com",
 })
 
 const storage = admin.storage().bucket()
 
-
-
-var firestore = firebaseApp.firestore();
+var firestore = firebaseApp.firestore()
 
 const app = flamelink({
-    firebaseApp,
-    locale: 'no',
-    dbType: 'cf'
+  firebaseApp,
+  locale: "no",
+  dbType: "cf",
 })
 
 const enApp = flamelink({
-    firebaseApp,
-    locale: 'en-US',
-    dbType: 'cf'
+  firebaseApp,
+  locale: "en-US",
+  dbType: "cf",
 })
 
-const slugify = require('slugify');
-const fetch = require('node-fetch');
+const slugify = require("slugify")
+const fetch = require("node-fetch")
 
-const { HtmlParser } = require('./htmlParser.js')
+const { HtmlParser } = require("./htmlParser.js")
 
-var rawno = require("./inputs/raw-no.json");
-var rawen = require("./inputs/raw-en.json");
+var rawno = require("./inputs/raw-no.json")
+var rawen = require("./inputs/raw-en.json")
 
-var norData = rawno[2].data;
-var engData = rawen[2].data;
+var norData = rawno[2].data
+var engData = rawen[2].data
 
 const JSONkeys = ["images", "urls", "attribs", "metadata"]
 
-var catids = require("./inputs/categories.json");
+var catids = require("./inputs/categories.json")
 
 //state : -2 => testing, 0 => disabled
 
 // Parse JSON object within the JSON of the raw data
 
 for (let i = 0; i < norData.length; i++) {
-    const element = norData[i];
-    for (let j = 0; j < JSONkeys.length; j++) {
-        const key = JSONkeys[j];
-        element[key] = JSON.parse(element[key]);
-    }
-    element.catid = element.catid.split(",")[0];
+  const element = norData[i]
+  for (let j = 0; j < JSONkeys.length; j++) {
+    const key = JSONkeys[j]
+    element[key] = JSON.parse(element[key])
+  }
+  element.catid = element.catid.split(",")[0]
 }
 
 for (let i = 0; i < engData.length; i++) {
-    const element = engData[i];
-    for (let j = 0; j < JSONkeys.length; j++) {
-        const key = JSONkeys[j];
-        element[key] = JSON.parse(element[key]);
-    }
-    element.catid = element.catid.split(",")[0];
+  const element = engData[i]
+  for (let j = 0; j < JSONkeys.length; j++) {
+    const key = JSONkeys[j]
+    element[key] = JSON.parse(element[key])
+  }
+  element.catid = element.catid.split(",")[0]
 }
 
 function isSameCategory(norCat, engCat) {
-    var possibleCategories = catids.filter(val => val.no == norCat);
-    var compatible = false;
-    possibleCategories.forEach(cat => {
-        if (cat.en == engCat) {
-            compatible = true;
-        }
-    });
-    return compatible;
+  var possibleCategories = catids.filter((val) => val.no == norCat)
+  var compatible = false
+  possibleCategories.forEach((cat) => {
+    if (cat.en == engCat) {
+      compatible = true
+    }
+  })
+  return compatible
 }
 
 function shouldBeKept(article, language) {
-    if (article.state < 1) return false;
+  if (article.state < 1) return false
 
-    if (language == "no") {
-        if (["-1", "2", "12", "28", "90", "81"].includes(article.catid)) return false;
-    }
-    if (language == "en") {
-        if (["-1", "2", "28", "10", "33"].includes(article.catid)) return false;
-    }
+  if (language == "no") {
+    if (["-1", "2", "12", "28", "90", "81"].includes(article.catid))
+      return false
+  }
+  if (language == "en") {
+    if (["-1", "2", "28", "10", "33"].includes(article.catid)) return false
+  }
 
-    return true;
+  return true
 }
 
-var discardedData = [];
+var discardedData = []
 
 function cleanData(array, language) {
+  var reducedArray = array.reduce(function (result, element) {
+    if (shouldBeKept(element, language)) {
+      result.push(element)
+    } else {
+      discardedData.push(element)
+    }
+    return result
+  }, [])
 
-    var reducedArray = array.reduce(function (result, element) {
-        if (shouldBeKept(element, language)) {
-            result.push(element);
-        } else {
-            discardedData.push(element);
-        }
-        return result;
-    }, []);
-
-    if (language == "no") norData = reducedArray;
-    if (language == "en") engData = reducedArray;
+  if (language == "no") norData = reducedArray
+  if (language == "en") engData = reducedArray
 }
 
-cleanData(norData, "no");
-cleanData(engData, "en");
+cleanData(norData, "no")
+cleanData(engData, "en")
 
-var commonData = [];
-var errorData = [];
-var noMatchData = [];
+var commonData = []
+var errorData = []
+var noMatchData = []
 
-
-var counter = 0;
-var errorCounter = 0;
-var noEnglishCounter = 0;
+var counter = 0
+var errorCounter = 0
+var noEnglishCounter = 0
 norData.map((norVal) => {
+  var nor_imgs = norVal.images
 
-    var nor_imgs = norVal.images;
-
-    var innerCounter = 0;
-    var matchFound = false;
-    for (let index = 0; index < engData.length; index++) {
-        const engVal = engData[index];
-        var eng_imgs = engVal.images;
-        if (
-            isSameCategory(norVal.catid, engVal.catid) &&
-            (norVal.title == engVal.title ||
-                norVal.alias == engVal.alias ||
-                (nor_imgs.image_intro && eng_imgs.image_intro && nor_imgs.image_intro.split("/").pop() == eng_imgs.image_intro.split("/").pop()) ||
-                (nor_imgs.float_intro && eng_imgs.float_intro && nor_imgs.float_intro.split("/").pop() == eng_imgs.float_intro.split("/").pop()) ||
-                (nor_imgs.image_fulltext && eng_imgs.image_fulltext && nor_imgs.image_fulltext.split("/").pop() == eng_imgs.image_fulltext.split("/").pop()) ||
-                (nor_imgs.float_fulltext && eng_imgs.float_fulltext && nor_imgs.float_fulltext.split("/").pop() == eng_imgs.float_fulltext.split("/").pop()))
-        ) {
-            matchFound = true;
-            commonData.push({ no: norVal, en: engVal });
-            counter++;
-            innerCounter++;
-            if (innerCounter > 1) {
-                errorCounter++;
-                if (innerCounter == 2) errorData.push(commonData.pop());
-                var prev = errorData.push(commonData.pop());
-                prev = errorData[prev - 1];
-            }
-        }
+  var innerCounter = 0
+  var matchFound = false
+  for (let index = 0; index < engData.length; index++) {
+    const engVal = engData[index]
+    var eng_imgs = engVal.images
+    if (
+      isSameCategory(norVal.catid, engVal.catid) &&
+      (norVal.title == engVal.title ||
+        norVal.alias == engVal.alias ||
+        (nor_imgs.image_intro &&
+          eng_imgs.image_intro &&
+          nor_imgs.image_intro.split("/").pop() ==
+            eng_imgs.image_intro.split("/").pop()) ||
+        (nor_imgs.float_intro &&
+          eng_imgs.float_intro &&
+          nor_imgs.float_intro.split("/").pop() ==
+            eng_imgs.float_intro.split("/").pop()) ||
+        (nor_imgs.image_fulltext &&
+          eng_imgs.image_fulltext &&
+          nor_imgs.image_fulltext.split("/").pop() ==
+            eng_imgs.image_fulltext.split("/").pop()) ||
+        (nor_imgs.float_fulltext &&
+          eng_imgs.float_fulltext &&
+          nor_imgs.float_fulltext.split("/").pop() ==
+            eng_imgs.float_fulltext.split("/").pop()))
+    ) {
+      matchFound = true
+      commonData.push({ no: norVal, en: engVal })
+      counter++
+      innerCounter++
+      if (innerCounter > 1) {
+        errorCounter++
+        if (innerCounter == 2) errorData.push(commonData.pop())
+        var prev = errorData.push(commonData.pop())
+        prev = errorData[prev - 1]
+      }
     }
-    if (!matchFound) {
-        noEnglishCounter++;
-        noMatchData.push(norVal);
-    }
+  }
+  if (!matchFound) {
+    noEnglishCounter++
+    noMatchData.push(norVal)
+  }
 })
 
-var norwegianNoMatch = JSON.parse(JSON.stringify(noMatchData));
-var englishNoMatch = [];
+var norwegianNoMatch = JSON.parse(JSON.stringify(noMatchData))
+var englishNoMatch = []
 
 engData.map((x) => {
-    var matchFound = false;
-    for (let index = 0; !matchFound && index < commonData.length; index++) {
-        const element = commonData[index].en.id;
-        if (x.id == element) {
-            matchFound = true;
-        }
+  var matchFound = false
+  for (let index = 0; !matchFound && index < commonData.length; index++) {
+    const element = commonData[index].en.id
+    if (x.id == element) {
+      matchFound = true
     }
-    if (!matchFound) {
-        noMatchData.push(x);
-        englishNoMatch.push(x);
-    }
+  }
+  if (!matchFound) {
+    noMatchData.push(x)
+    englishNoMatch.push(x)
+  }
 })
 
-noMatchData = { no: norwegianNoMatch, en: englishNoMatch };
+noMatchData = { no: norwegianNoMatch, en: englishNoMatch }
 
-console.log("Found matches: " + commonData.length);
-console.log("Found Errors: " + errorData.length);
-console.log("No English version found: " + noEnglishCounter);
-console.log("No Norwegian version found: " + (engData.length - (counter - errorCounter)));
-console.log("No Match Found: " + (noMatchData.no.length + noMatchData.en.length));
-console.log("Discarded Data: " + discardedData.length);
+console.log("Found matches: " + commonData.length)
+console.log("Found Errors: " + errorData.length)
+console.log("No English version found: " + noEnglishCounter)
+console.log(
+  "No Norwegian version found: " + (engData.length - (counter - errorCounter))
+)
+console.log(
+  "No Match Found: " + (noMatchData.no.length + noMatchData.en.length)
+)
+console.log("Discarded Data: " + discardedData.length)
 
-console.log("Total Norwegian Data: " + norData.length);
-console.log("Total English Data: " + engData.length);
+console.log("Total Norwegian Data: " + norData.length)
+console.log("Total English Data: " + engData.length)
 
-var fs = require('fs');
+var fs = require("fs")
 /*
 fs.writeFile("./outputs/commonData.json", JSON.stringify(commonData), function (err) {
     if (err) {
@@ -223,146 +236,152 @@ fs.readFile('./outputs/noMatchDataResolved.json', 'utf8', (err, jsonString) => {
 })
 */
 
-
-
-
-
-
-
 function getLatLong(xreference) {
-    if (xreference && xreference != "") {
-        return { latitude: xreference.split(",")[0], longitude: xreference.split(",")[1] }
-    } else {
-        return null;
+  if (xreference && xreference != "") {
+    return {
+      latitude: xreference.split(",")[0],
+      longitude: xreference.split(",")[1],
     }
+  } else {
+    return null
+  }
 }
 
 async function prepareCategoryReferences() {
+  try {
+    const noCategories = await app.content.get({ schemaKey: "listingPage" })
+    const enCategories = await enApp.content.get({ schemaKey: "listingPage" })
+    var noValues = Object.values(noCategories)
+    var enValues = Object.values(enCategories)
 
-    try {
-        const noCategories = await app.content.get({ schemaKey: "listingPage" });
-        const enCategories = await enApp.content.get({ schemaKey: "listingPage" });
-        var noValues = Object.values(noCategories);
-        var enValues = Object.values(enCategories);
+    catids.forEach((element) => {
+      if (!(element.noSlug == "" || element.enSlug == "")) {
+        var noCatID = noValues.filter((val) => val.slug == element.noSlug)
+        var enCatID = enValues.filter((val) => val.slug == element.enSlug)
 
-        catids.forEach(element => {
-            if (!(element.noSlug == "" || element.enSlug == "")) {
-                var noCatID = noValues.filter(val => val.slug == element.noSlug);
-                var enCatID = enValues.filter(val => val.slug == element.enSlug);
-
-                element.noRef = firestore.collection('fl_content').doc(noCatID[0].id);
-                element.enRef = firestore.collection('fl_content').doc(enCatID[0].id);
-            }
-        });
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
+        element.noRef = firestore.collection("fl_content").doc(noCatID[0].id)
+        element.enRef = firestore.collection("fl_content").doc(enCatID[0].id)
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
 }
 
 function getCategoryRef(language, catNum) {
-    if (language == "no") {
-        var cats = catids.filter(val => val.no == catNum);
-        if (cats[0] == null) { console.log(catNum) }
-        if (!cats[0].noRef) return null;
-        return cats[0].noRef;
-    } else if (language == "en") {
-        var cats = catids.filter(val => val.en == catNum);
-        if (!cats[0].enRef) return null;
-        return cats[0].enRef;
-    } else {
-        throw new error;
+  if (language == "no") {
+    var cats = catids.filter((val) => val.no == catNum)
+    if (cats[0] == null) {
+      console.log(catNum)
     }
+    if (!cats[0].noRef) return null
+    return cats[0].noRef
+  } else if (language == "en") {
+    var cats = catids.filter((val) => val.en == catNum)
+    if (!cats[0].enRef) return null
+    return cats[0].enRef
+  } else {
+    throw new error()
+  }
 }
 
 async function getImageReference(imageString) {
-    var files = await firestore.collection('fl_files').where('file', '==', imageString).get();
-    var reference = [];
-    if (!files.empty) {
-        files.forEach(file => {
-            if (reference.length === 0) {
-                reference.push(firestore.collection('fl_files').doc(file.id));
-            }
-        })
-    }
-    return reference;
+  var files = await firestore
+    .collection("fl_files")
+    .where("file", "==", imageString)
+    .get()
+  var reference = []
+  if (!files.empty) {
+    files.forEach((file) => {
+      if (reference.length === 0) {
+        reference.push(firestore.collection("fl_files").doc(file.id))
+      }
+    })
+  }
+  return reference
 }
 
-
 function stripPath(string) {
-    var splitString = String(string).split("/");
-    return splitString.pop();
+  var splitString = String(string).split("/")
+  return splitString.pop()
 }
 
 async function getThumbnailReference(article) {
-
-    if (article.images.image_intro) {
-        return await getImageReference(stripPath(article.images.image_intro));
-    } else if (article.images.image_fulltext) {
-        return await getImageReference(stripPath(article.images.image_fulltext));
-    } else {
-        // Find first image in the text, and use that as thumbnail.
-        let str;
-        let strs = String(article.introtext).split("src=\"");
-        if (strs.length > 1) {
-            strs = strs[1].split("\"");
-            (strs.length > 1) ? str = strs[0] : str = null;
-        }
-        if (str) {
-            return await getImageReference(str);
-        } else {
-            return null;
-        }
+  if (article.images.image_intro) {
+    return await getImageReference(stripPath(article.images.image_intro))
+  } else if (article.images.image_fulltext) {
+    return await getImageReference(stripPath(article.images.image_fulltext))
+  } else {
+    // Find first image in the text, and use that as thumbnail.
+    let str
+    let strs = String(article.introtext).split('src="')
+    if (strs.length > 1) {
+      strs = strs[1].split('"')
+      strs.length > 1 ? (str = strs[0]) : (str = null)
     }
+    if (str) {
+      return await getImageReference(str)
+    } else {
+      return null
+    }
+  }
 }
 
 async function createArticles() {
+  try {
+    await prepareCategoryReferences()
 
-    try {
+    let articles = []
 
-        await prepareCategoryReferences();
+    const startIndex = 0
+    const quantity = 10
 
-        let articles = [];
+    //Create all articles with both Norwegian and English translations
+    for (
+      let i = startIndex;
+      /*i < startIndex + quantity*/ i < commonData.length;
+      i++
+    ) {
+      if (i % 50 === 0) {
+        console.log(`Transfering article no. ${i}`)
+      }
 
-        const startIndex = 0
-        const quantity = 10
+      if (i != 346) {
+        // Do not add student page
 
-        //Create all articles with both Norwegian and English translations
-        for (let i = startIndex; /*i < startIndex + quantity*/ i < commonData.length; i++) {
+        const element = commonData[i]
 
-            if (i % 50 === 0) {
-                console.log(`Transfering article no. ${i}`)
-            }
+        if (element != null) {
+          await app.settings.setLocale("no")
+          let noThumbnail = await getThumbnailReference(element.no)
+          const content = await HtmlParser.concatText(
+            element.no.introtext,
+            element.no.fulltext,
+            element.no.images
+          )
+          const contact = await HtmlParser.getContactInfo(content, "no")
+          const openingHours = await HtmlParser.getOpeningHours(content, "no")
+          const address = {
+            address: contact.address,
+            lat: 0,
+            lng: 0,
+          }
 
-            if (i != 346) { // Do not add student page
+          let parentListingPage
+          try {
+            parentListingPage = getCategoryRef("no", element.no.catid)
+          } catch (e) {
+            console.log(element)
+            return
+          }
 
-                const element = commonData[i];
+          const reducedContent = await HtmlParser.removeLines(
+            content,
+            contact.removedLines.concat(openingHours.removedLines)
+          )
 
-                if (element != null) {
-
-                    await app.settings.setLocale('no');
-                    let noThumbnail = await getThumbnailReference(element.no);
-                    const content = await HtmlParser.concatText(element.no.introtext, element.no.fulltext, element.no.images)
-                    const contact = await HtmlParser.getContactInfo(content, 'no')
-                    const openingHours = await HtmlParser.getOpeningHours(content, 'no')
-                    const address = {
-                        address: contact.address,
-                        lat: 0,
-                        lng: 0
-                    }
-
-                    let parentListingPage
-                    try {
-                        parentListingPage = getCategoryRef("no", element.no.catid)
-
-                    } catch (e) {
-                        console.log(element)
-                        return
-                    }
-
-                    const reducedContent = await HtmlParser.removeLines(content, contact.removedLines.concat(openingHours.removedLines))
-
-                    /*
+          /*
                     const norwegianArticle = await app.content.add(
                         {
                             schemaKey: 'article',
@@ -387,21 +406,31 @@ async function createArticles() {
                     });
                     */
 
-                    await app.settings.setLocale('en-US');
-                    let enThumbnail = await getThumbnailReference(element.en);
+          await app.settings.setLocale("en-US")
+          let enThumbnail = await getThumbnailReference(element.en)
 
-                    const contentEn = await HtmlParser.concatText(element.en.introtext, element.en.fulltext, element.en.images)
-                    const contactEn = await HtmlParser.getContactInfo(contentEn, 'en')
-                    const addressEn = {
-                        address: contactEn.address,
-                        lat: 0,
-                        lng: 0
-                    }
-                    const openingHoursEn = await HtmlParser.getOpeningHours(contentEn, 'en')
+          const contentEn = await HtmlParser.concatText(
+            element.en.introtext,
+            element.en.fulltext,
+            element.en.images
+          )
+          const contactEn = await HtmlParser.getContactInfo(contentEn, "en")
+          const addressEn = {
+            address: contactEn.address,
+            lat: 0,
+            lng: 0,
+          }
+          const openingHoursEn = await HtmlParser.getOpeningHours(
+            contentEn,
+            "en"
+          )
 
-                    const reducedContentEn = await HtmlParser.removeLines(contentEn, contactEn.removedLines.concat(openingHoursEn.removedLines))
+          const reducedContentEn = await HtmlParser.removeLines(
+            contentEn,
+            contactEn.removedLines.concat(openingHoursEn.removedLines)
+          )
 
-                    /*
+          /*
                     const englishArticle = await app.content.add(
                         {
                             schemaKey: 'article',
@@ -425,17 +454,17 @@ async function createArticles() {
                         title: englishArticle.title
                     });
                     */
-                }
-            }
         }
+      }
+    }
 
-        await app.settings.setLocale('no');
-        for (let i = 0; i < 0/*noMatchData.no.length*/; i++) {
-            const element = noMatchData.no[i];
+    await app.settings.setLocale("no")
+    for (let i = 0; i < 0 /*noMatchData.no.length*/; i++) {
+      const element = noMatchData.no[i]
 
-            let thumbnail = await getThumbnailReference(element);
+      let thumbnail = await getThumbnailReference(element)
 
-            /*
+      /*
             const norwegianArticle = await app.content.add(
                 {
                     schemaKey: 'articleNew',
@@ -454,15 +483,15 @@ async function createArticles() {
 
             articles.push(norwegianArticle);
             */
-        }
+    }
 
-        await app.settings.setLocale('en-US');
-        for (let i = 0; i < 0/*noMatchData.en.length*/; i++) {
-            const element = noMatchData.en[i];
+    await app.settings.setLocale("en-US")
+    for (let i = 0; i < 0 /*noMatchData.en.length*/; i++) {
+      const element = noMatchData.en[i]
 
-            let thumbnail = await getThumbnailReference(element);
+      let thumbnail = await getThumbnailReference(element)
 
-            /*
+      /*
             const englishArticle = await app.content.add(
                 {
                     schemaKey: 'articleNew',
@@ -481,9 +510,9 @@ async function createArticles() {
 
             articles.push(englishArticle);
             */
-        }
+    }
 
-        /*
+    /*
         await fs.writeFile("./outputs/article-index.json", JSON.stringify(articles), function (err) {
             if (err) {
                 console.log(err);
@@ -491,13 +520,10 @@ async function createArticles() {
         })
         */
 
-        console.log("Transfer complete!")
-
-    } catch (error) {
-        console.error(error);
-    }
+    console.log("Transfer complete!")
+  } catch (error) {
+    console.error(error)
+  }
 }
 
-createArticles();
-
-
+createArticles()

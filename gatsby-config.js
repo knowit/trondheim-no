@@ -1,4 +1,3 @@
-
 require("dotenv").config({
   path: `.env.production`,
 })
@@ -6,19 +5,16 @@ require("dotenv").config({
 const nodeIsIndex = (node, locale) => {
   if (node.flamelink_locale != null) {
     return node.flamelink_locale === locale
-  }
-  else if (node.parent != null) {
+  } else if (node.parent != null) {
     return nodeIsIndex(node.parent, locale)
-  }
-  else return false
+  } else return false
 }
 
 const resolvePath = (node) => {
   if (node.path) {
     return node.path
-  }
-  else {
-    const root = node.flamelink_locale === 'no' ? '/' : '/en/'
+  } else {
+    const root = node.flamelink_locale === "no" ? "/" : "/en/"
     const slug = node.slug
 
     var path = slug
@@ -37,10 +33,10 @@ const resolvePath = (node) => {
 
 const striptags = require("striptags")
 const resolveContent = (node) => {
-  if (node.internal.type === 'FlamelinkTextHtmlContentNode') {
+  if (node.internal.type === "FlamelinkTextHtmlContentNode") {
     console.log(node)
   }
-  return ''
+  return ""
 }
 
 module.exports = {
@@ -62,11 +58,11 @@ module.exports = {
               maxWidth: 800,
               linkImagesToOriginal: false,
               sizeByPixelDensity: true,
-              showCaptions: true
-            }
+              showCaptions: true,
+            },
           },
-        ]
-      }
+        ],
+      },
     },
     `gatsby-transformer-sharp`,
     {
@@ -78,17 +74,16 @@ module.exports = {
       },
     },
     {
-
       resolve: `gatsby-mdx-fix`,
       options: {
-        extensions: ['.mdx', '.md'],
+        extensions: [".mdx", ".md"],
         gatsbyRemarkPlugins: [
           `gatsby-remark-relative-images`,
           {
             resolve: `gatsby-remark-images`,
             options: {
               maxWidth: 860,
-              backgroundColor: 'none',
+              backgroundColor: "none",
             },
           },
         ],
@@ -96,28 +91,31 @@ module.exports = {
     },
 
     {
-      resolve: 'gatsby-source-flamelink',
+      resolve: "gatsby-source-flamelink",
       options: {
         firebaseConfig: {
           projectId: process.env.GATSBY_FLAMELINK_PROJECT_ID,
           clientEmail: process.env.GATSBY_FLAMELINK_CLIENT_EMAIL,
-          privateKey: process.env.GATSBY_FLAMELINK_PRIVATE_KEY.replace(/\\n/g, '\n'),
+          privateKey: process.env.GATSBY_FLAMELINK_PRIVATE_KEY.replace(
+            /\\n/g,
+            "\n"
+          ),
           databaseURL: process.env.GATSBY_FLAMELINK_DATABASE_URL,
           storageBucket: process.env.GATSBY_FLAMELINK_STORAGE_BUCKET,
         },
-        dbType: 'cf',
-        environment: 'production',
+        dbType: "cf",
+        environment: "production",
         content: true,
         populate: true,
         navigation: true,
-        globals: true
-      }
+        globals: true,
+      },
     },
     {
       resolve: `gatsby-plugin-remote-images`,
       options: {
-        nodeType: 'file',
-        imagePath: 'edges[].node.url',
+        nodeType: "file",
+        imagePath: "edges[].node.url",
       },
     },
     {
@@ -130,8 +128,8 @@ module.exports = {
         background_color: `#f7f0eb`,
         theme_color: `#000000`,
         display: `standalone`,
-        scope: '/',
-        cache_busting_mode: 'none',
+        scope: "/",
+        cache_busting_mode: "none",
         icons: [
           {
             src: `images/logo192.png`,
@@ -160,7 +158,7 @@ module.exports = {
         cacheId: `gatsby-plugin-offline`,
         precachePages: [],
         workboxConfig: {
-          maximumFileSizeToCacheInBytes: 100000000
+          maximumFileSizeToCacheInBytes: 100000000,
         },
         appendScript: require.resolve(`./src/sw.js`),
       },
@@ -171,17 +169,17 @@ module.exports = {
         languages: [
           {
             // ISO 639-1 language codes. See https://lunrjs.com/guides/language_support.html for details
-            name: 'no',
+            name: "no",
             // A function for filtering nodes. () => true by default
-            filterNodes: node => nodeIsIndex(node, 'no'),
+            filterNodes: (node) => nodeIsIndex(node, "no"),
             // Add to index custom entries, that are not actually extracted from gatsby nodes
             customEntries: [],
           },
           {
             // ISO 639-1 language codes. See https://lunrjs.com/guides/language_support.html for details
-            name: 'en',
+            name: "en",
             // A function for filtering nodes. () => true by default
-            filterNodes: node => nodeIsIndex(node, 'en-US'),
+            filterNodes: (node) => nodeIsIndex(node, "en-US"),
             // Add to index custom entries, that are not actually extracted from gatsby nodes
             customEntries: [],
           },
@@ -189,36 +187,35 @@ module.exports = {
         // Fields to index. If store === true value will be stored in index file.
         // Attributes for custom indexing logic. See https://lunrjs.com/docs/lunr.Builder.html for details
         fields: [
-          { name: 'title', store: true, attributes: { boost: 20 } },
-          { name: 'content', store: true },
-          { name: 'url', store: true },
+          { name: "title", store: true, attributes: { boost: 20 } },
+          { name: "content", store: true },
+          { name: "url", store: true },
         ],
         // How to resolve each field's value for a supported node type
         resolvers: {
-
           FlamelinkPageContent: {
-            title: node => node.title,
-            content: node => resolveContent(node),
-            url: node => resolvePath(node),
+            title: (node) => node.title,
+            content: (node) => resolveContent(node),
+            url: (node) => resolvePath(node),
           },
 
           FlamelinkListingPageContent: {
-            title: node => node.localTitle,
-            content: node => node.textOnPage,
-            url: node => resolvePath(node),
+            title: (node) => node.localTitle,
+            content: (node) => node.textOnPage,
+            url: (node) => resolvePath(node),
           },
 
           FlamelinkArticleContent: {
-            title: node => node.title,
-            content: node => node.fields.textContent,
-            url: node => resolvePath(node),
+            title: (node) => node.title,
+            content: (node) => node.fields.textContent,
+            url: (node) => resolvePath(node),
           },
         },
         //custom index file name, default is search_index.json
-        filename: 'search_index.json',
+        filename: "search_index.json",
         //custom options on fetch api call for search_ındex.json
         fetchOptions: {
-          credentials: 'same-origin'
+          credentials: "same-origin",
         },
       },
     },

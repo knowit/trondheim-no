@@ -1,5 +1,4 @@
 function resolvePath(node) {
-
   const rootPath = getRootPath(node.flamelink_locale)
   var path = node.slug
 
@@ -15,46 +14,49 @@ function resolvePath(node) {
 }
 
 function getRootPath(locale) {
-  return locale === 'no' ? '/' : `/${locale.split('-')[0]}/`
+  return locale === "no" ? "/" : `/${locale.split("-")[0]}/`
 }
 
 function resolveMenuData(node) {
-
   const resolvers = [
     {
-      type: 'FlamelinkFrontPageContent',
+      type: "FlamelinkFrontPageContent",
       resolver: (node) => {
         return {
-          title: node.flamelink_locale === 'no' ? 'Hjem' : 'Home',
-          slug: '',
+          title: node.flamelink_locale === "no" ? "Hjem" : "Home",
+          slug: "",
           locale: node.flamelink_locale,
-          path: getRootPath(node.flamelink_locale)
+          path: getRootPath(node.flamelink_locale),
         }
-      }
+      },
     },
 
     {
-      type: 'FlamelinkListingPageContent',
+      type: "FlamelinkListingPageContent",
       resolver: (node) => {
-        return (node.showInDropMenu) ? {
-          title: node.navigationTitle,
-          slug: node.slug,
-          locale: node.flamelink_locale,
-          path: resolvePath(node),
-        } : null
-      }
+        return node.showInDropMenu
+          ? {
+              title: node.navigationTitle,
+              slug: node.slug,
+              locale: node.flamelink_locale,
+              path: resolvePath(node),
+            }
+          : null
+      },
     },
 
     {
-      type: 'FlamelinkPageContent',
+      type: "FlamelinkPageContent",
       resolver: (node) => {
-        return (node.showInDropMenu) ? {
-          title: node.title,
-          slug: node.slug,
-          locale: node.flamelink_locale,
-          path: `${getRootPath(node.flamelink_locale)}${node.slug}`,
-        } : null
-      }
+        return node.showInDropMenu
+          ? {
+              title: node.title,
+              slug: node.slug,
+              locale: node.flamelink_locale,
+              path: `${getRootPath(node.flamelink_locale)}${node.slug}`,
+            }
+          : null
+      },
     },
   ]
 
@@ -65,7 +67,7 @@ function resolveMenuData(node) {
         const r = resolvers[i]
         if (r.type === node.internal.type) {
           result = r.resolver(node)
-          break;
+          break
         }
       }
     }
@@ -73,12 +75,24 @@ function resolveMenuData(node) {
   return result
 }
 
-exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getNodesByType, getNode }) => {
+exports.sourceNodes = async ({
+  actions,
+  createNodeId,
+  createContentDigest,
+  getNodesByType,
+  getNode,
+}) => {
   const { createNode } = actions
 
   console.log("Sourcing nodes...\n")
 
-  async function createSourceNode(type, data, key, parent = null, children = []) {
+  async function createSourceNode(
+    type,
+    data,
+    key,
+    parent = null,
+    children = []
+  ) {
     const nodeContent = JSON.stringify(data)
     const nodeMeta = {
       id: await createNodeId(key),
@@ -88,8 +102,8 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getNo
         type: type,
         mediaType: `text/html`,
         content: nodeContent,
-        contentDigest: await createContentDigest(data)
-      }
+        contentDigest: await createContentDigest(data),
+      },
     }
     const node = Object.assign({}, data, nodeMeta)
     await createNode(node)
@@ -97,21 +111,16 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getNo
   }
 
   var menuDataMap = new Map()
-  let [
-    frontPage,
-    pages,
-    listingPages,
-    navbar,
-  ] = await Promise.all([
-    getNodesByType('FlamelinkFrontPageContent'),
-    getNodesByType('FlamelinkPageContent'),
-    getNodesByType('FlamelinkListingPageContent'),
-    getNodesByType('FlamelinkNavbarContent')
+  let [frontPage, pages, listingPages, navbar] = await Promise.all([
+    getNodesByType("FlamelinkFrontPageContent"),
+    getNodesByType("FlamelinkPageContent"),
+    getNodesByType("FlamelinkListingPageContent"),
+    getNodesByType("FlamelinkNavbarContent"),
   ])
 
   const result = frontPage.concat(pages).concat(listingPages)
 
-  result.map(node => {
+  result.map((node) => {
     const locale = node.flamelink_locale
     if (!menuDataMap.has(locale)) {
       menuDataMap.set(locale, new Array())
@@ -122,11 +131,11 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getNo
     }
   })
 
-  Array.from(menuDataMap.keys()).map(locale => {
+  Array.from(menuDataMap.keys()).map((locale) => {
     const data = {
       locale: locale,
-      menuItems: menuDataMap.get(locale)
+      menuItems: menuDataMap.get(locale),
     }
-    createSourceNode('MenuDataContent', data, `${locale}-0`)
+    createSourceNode("MenuDataContent", data, `${locale}-0`)
   })
 }

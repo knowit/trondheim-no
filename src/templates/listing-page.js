@@ -5,37 +5,38 @@ import Layout from "../layouts/layout"
 import { Link, graphql } from "gatsby"
 import SortableArticleView from "../components/article-list"
 
-
-
 export default ({ data }) => {
-
   const locale = data.flamelinkListingPageContent.flamelink_locale
   const localization = data.flamelinkListingPageLocalizationContent.translations
 
   var tags = []
-  data.allFlamelinkArticleContent.edges.map(node => node.node).map(node => {
-    if (node.tags) {
-      node.tags.map(tag => {
-        if (!tags.includes(tag)) {
-          tags.push(tag)
-        }
-      })
-    }
-  })
+  data.allFlamelinkArticleContent.edges
+    .map((node) => node.node)
+    .map((node) => {
+      if (node.tags) {
+        node.tags.map((tag) => {
+          if (!tags.includes(tag)) {
+            tags.push(tag)
+          }
+        })
+      }
+    })
 
   const MapButton = () => {
     if (data.flamelinkListingPageContent.hasMapPage) {
-      return (<Link id="map-button" to={data.flamelinkListingPageContent.mapPath}>{LocalizationHelper.getLocalWord(localization, "showOnMap", locale)}</Link>)
-    }
-    else return null
+      return (
+        <Link id="map-button" to={data.flamelinkListingPageContent.mapPath}>
+          {LocalizationHelper.getLocalWord(localization, "showOnMap", locale)}
+        </Link>
+      )
+    } else return null
   }
   return (
     <Layout
       locale={locale}
-      localizedPaths={data.flamelinkListingPageContent.localizedPaths}>
-
+      localizedPaths={data.flamelinkListingPageContent.localizedPaths}
+    >
       <div id="outer-container">
-
         <div id="inner-container">
           <div id="articles-header">
             <h2>{data.flamelinkListingPageContent.localTitle}</h2>
@@ -43,8 +44,17 @@ export default ({ data }) => {
             <MapButton />
             <Link
               id="english-button"
-              to={data.flamelinkListingPageContent.localizedPaths.find(item => item.locale !== locale).path}>
-              {LocalizationHelper.getLocalWord(localization, "changeLanguage", locale)}
+              to={
+                data.flamelinkListingPageContent.localizedPaths.find(
+                  (item) => item.locale !== locale
+                ).path
+              }
+            >
+              {LocalizationHelper.getLocalWord(
+                localization,
+                "changeLanguage",
+                locale
+              )}
             </Link>
           </div>
 
@@ -52,22 +62,28 @@ export default ({ data }) => {
             data={data}
             tags={tags}
             localization={localization}
-            articles={data.allFlamelinkArticleContent.edges.map(node => node.node)}
-            subListingPages={data.allFlamelinkListingPageContent.edges.map(node => node.node)}
+            articles={data.allFlamelinkArticleContent.edges.map(
+              (node) => node.node
+            )}
+            subListingPages={data.allFlamelinkListingPageContent.edges.map(
+              (node) => node.node
+            )}
             locale={locale}
-            defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck} />
-
+            defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck}
+          />
         </div>
       </div>
     </Layout>
   )
 }
 
-
 export const query = graphql`
-  query ListingPageQuery($nodeId: String, $nodeFlamelinkId: String, $locale: String) {
-
-    flamelinkListingPageLocalizationContent (flamelink_locale: {eq: "no"}){
+  query ListingPageQuery(
+    $nodeId: String
+    $nodeFlamelinkId: String
+    $locale: String
+  ) {
+    flamelinkListingPageLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
       translations {
         key
@@ -78,7 +94,7 @@ export const query = graphql`
       }
     }
 
-    flamelinkListingPageContent (id: {eq: $nodeId}) {
+    flamelinkListingPageContent(id: { eq: $nodeId }) {
       id
       flamelink_id
       flamelink_locale
@@ -94,26 +110,28 @@ export const query = graphql`
       }
     }
 
-    allFlamelinkListingPageContent (filter: {parentListingPage: {id: {eq: $nodeFlamelinkId}}}){
-        edges{
-          node{
-            id
-            flamelink_id
-            flamelink_locale
-            path
+    allFlamelinkListingPageContent(
+      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+    ) {
+      edges {
+        node {
+          id
+          flamelink_id
+          flamelink_locale
+          path
 
-            localTitle
-            navigationTitle
+          localTitle
+          navigationTitle
 
-            thumbnail {
+          thumbnail {
             localFile {
               name
               childImageSharp {
                 fluid(maxWidth: 340, quality: 70) {
                   base64
-                  aspectRatio 
-                  src 
-                  srcSet 
+                  aspectRatio
+                  src
+                  srcSet
                   sizes
                   presentationWidth
                   presentationHeight
@@ -126,29 +144,31 @@ export const query = graphql`
       }
     }
 
-    allFlamelinkArticleContent (filter: {parentListingPage: {id: {eq: $nodeFlamelinkId}}}) {
-        edges {
-          node {
+    allFlamelinkArticleContent(
+      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+    ) {
+      edges {
+        node {
+          id
+          flamelink_locale
+          slug
+          tags
+          title
+          path
+
+          parentListingPage {
             id
-            flamelink_locale
-            slug
-            tags
-            title
-            path
+            localTitle
+          }
 
-            parentListingPage {
-              id
-              localTitle
-            }
-
-            thumbnail {
+          thumbnail {
             localFile {
               childImageSharp {
-                fluid (maxWidth: 340, quality: 70) {
+                fluid(maxWidth: 340, quality: 70) {
                   base64
-                  aspectRatio 
-                  src 
-                  srcSet 
+                  aspectRatio
+                  src
+                  srcSet
                   sizes
                   presentationWidth
                   presentationHeight
@@ -161,29 +181,28 @@ export const query = graphql`
       }
     }
 
-
-    flamelinkDefaultThumbnailsContent (flamelink_locale: {eq: $locale}) {
+    flamelinkDefaultThumbnailsContent(flamelink_locale: { eq: $locale }) {
       id
       flamelink_locale
       imageDeck {
-          title
-          image {
-            localFile {
-              childImageSharp {
-                fluid(quality: 90) {
-                  base64
-                  aspectRatio 
-                  src 
-                  srcSet 
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
-                }
+        title
+        image {
+          localFile {
+            childImageSharp {
+              fluid(quality: 90) {
+                base64
+                aspectRatio
+                src
+                srcSet
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
               }
             }
           }
         }
+      }
     }
   }
 `

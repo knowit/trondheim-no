@@ -1,13 +1,14 @@
 exports.createResolvers = ({ createResolvers }) => {
-
   const striptags = require("striptags")
 
   const resolvePath = (source) => {
     if (!source._fl_meta_) {
       return ""
     }
-    if (source._fl_meta_.schema === 'listingPage' || source._fl_meta_.schema === 'article') {
-
+    if (
+      source._fl_meta_.schema === "listingPage" ||
+      source._fl_meta_.schema === "article"
+    ) {
       const locale = source.flamelink_locale
       var path = source.slug
       var parent = source.parentListingPage
@@ -19,26 +20,20 @@ exports.createResolvers = ({ createResolvers }) => {
         parent = parent.parentListingPage
       }
 
-      path = `${locale === 'no' ? '' : '/en'}/${path}`
+      path = `${locale === "no" ? "" : "/en"}/${path}`
 
       return path
-    }
-
-    else if (source._fl_meta_.schema === 'page') {
-      return `${source.flamelink_locale === 'no' ? '' : '/en'}/${source.slug}`
-    }
-
-    else if (source._fl_meta_.schema === 'frontPage') {
-      return source.flamelink_locale === 'no' ? '/' : '/en'
-    }
-
-    else return ""
+    } else if (source._fl_meta_.schema === "page") {
+      return `${source.flamelink_locale === "no" ? "" : "/en"}/${source.slug}`
+    } else if (source._fl_meta_.schema === "frontPage") {
+      return source.flamelink_locale === "no" ? "/" : "/en"
+    } else return ""
   }
 
   const resolveMapPath = (source) => {
     if (source.hasMapPage) {
       const locale = source.flamelink_locale
-      var path = source.mapPageTitle.toLowerCase().split(' ').join('-')
+      var path = source.mapPageTitle.toLowerCase().split(" ").join("-")
       var parent = source.parentListingPage
 
       while (parent != null) {
@@ -48,30 +43,30 @@ exports.createResolvers = ({ createResolvers }) => {
         parent = parent.parentListingPage
       }
 
-      path = `${locale === 'no' ? '' : '/en'}/${path}`
+      path = `${locale === "no" ? "" : "/en"}/${path}`
 
       return path
     }
     return ""
   }
 
-  const findSource = (context, node, type, locale) => (context.nodeModel.
-    runQuery({
+  const findSource = (context, node, type, locale) =>
+    context.nodeModel.runQuery({
       query: {
         filter: {
           _fl_meta_: {
             fl_id: {
-              eq: node._fl_meta_.fl_id
-            }
+              eq: node._fl_meta_.fl_id,
+            },
           },
           flamelink_locale: {
-            eq: locale
-          }
+            eq: locale,
+          },
         },
       },
       type: type,
-      firstOnly: true
-    }))
+      firstOnly: true,
+    })
 
   const resolveLocalizedPaths = (source, context) => {
     const nodeType = source.internal.type
@@ -81,29 +76,29 @@ exports.createResolvers = ({ createResolvers }) => {
     const query = {
       query: {
         filter: {
-          _fl_meta_: (nodeSchemaType === 'single')
-            ? {
-              schema: {
-                eq: nodeSchema
-              }
-            }
-
-            : {
-              fl_id: {
-                eq: nodeId
-              }
-            }
+          _fl_meta_:
+            nodeSchemaType === "single"
+              ? {
+                  schema: {
+                    eq: nodeSchema,
+                  },
+                }
+              : {
+                  fl_id: {
+                    eq: nodeId,
+                  },
+                },
         },
       },
       type: nodeType,
-      firstOnly: false
+      firstOnly: false,
     }
-    const result = context.nodeModel.runQuery(query).then(result => {
+    const result = context.nodeModel.runQuery(query).then((result) => {
       var paths = []
-      result.map(node => {
+      result.map((node) => {
         paths.push({
           locale: node.flamelink_locale,
-          path: resolvePath(node)
+          path: resolvePath(node),
         })
       })
 
@@ -116,12 +111,12 @@ exports.createResolvers = ({ createResolvers }) => {
     FlamelinkListingPageContent: {
       path: {
         resolve(source, args, context, info) {
-          return (resolvePath(source))
+          return resolvePath(source)
         },
       },
       mapPath: {
         resolve(source, args, context, info) {
-          return (resolveMapPath(source))
+          return resolveMapPath(source)
         },
       },
       localizedPaths: {
@@ -133,7 +128,7 @@ exports.createResolvers = ({ createResolvers }) => {
     FlamelinkArticleContent: {
       path: {
         resolve(source, args, context, info) {
-          return (resolvePath(source))
+          return resolvePath(source)
         },
       },
       localizedPaths: {
@@ -145,7 +140,7 @@ exports.createResolvers = ({ createResolvers }) => {
     FlamelinkFrontPageContent: {
       path: {
         resolve(source, args, context, info) {
-          return (resolvePath(source))
+          return resolvePath(source)
         },
       },
       localizedPaths: {
@@ -155,17 +150,23 @@ exports.createResolvers = ({ createResolvers }) => {
       },
       linkColumns: {
         resolve(source, args, context, info) {
-          return source.linkColumns.map(column =>
-            findSource(context, column, 'FlamelinkLinkItemContent', source.flamelink_locale).then(node => ({
-              ...node
-            })))
+          return source.linkColumns.map((column) =>
+            findSource(
+              context,
+              column,
+              "FlamelinkLinkItemContent",
+              source.flamelink_locale
+            ).then((node) => ({
+              ...node,
+            }))
+          )
         },
       },
     },
     FlamelinkStudentPageContent: {
       path: {
         resolve(source, args, context, info) {
-          return (resolvePath(source))
+          return resolvePath(source)
         },
       },
       localizedPaths: {
@@ -175,29 +176,39 @@ exports.createResolvers = ({ createResolvers }) => {
       },
       additionalListingPages: {
         resolve(source, args, context, info) {
-          const result = source.additionalListingPages.map(listingPage =>
-            findSource(context, listingPage, 'FlamelinkListingPageContent', source.flamelink_locale)
-              .then(node => ({
-                ...node,
-                path: resolvePath(node)
-              })))
+          const result = source.additionalListingPages.map((listingPage) =>
+            findSource(
+              context,
+              listingPage,
+              "FlamelinkListingPageContent",
+              source.flamelink_locale
+            ).then((node) => ({
+              ...node,
+              path: resolvePath(node),
+            }))
+          )
           return result ? result : []
         },
       },
       linkColumns: {
         resolve(source, args, context, info) {
-          return source.linkColumns.map(column =>
-            findSource(context, column, 'FlamelinkLinkItemContent', source.flamelink_locale)
-              .then(node => ({
-                ...node
-              })))
+          return source.linkColumns.map((column) =>
+            findSource(
+              context,
+              column,
+              "FlamelinkLinkItemContent",
+              source.flamelink_locale
+            ).then((node) => ({
+              ...node,
+            }))
+          )
         },
       },
     },
     FlamelinkPageContent: {
       path: {
         resolve(source, args, context, info) {
-          return (resolvePath(source))
+          return resolvePath(source)
         },
       },
       localizedPaths: {
@@ -210,36 +221,40 @@ exports.createResolvers = ({ createResolvers }) => {
       listingPage: {
         resolve(source, args, context, info) {
           if (source.listingPage._fl_meta_) {
-
-            return findSource(context, source.listingPage, 'FlamelinkListingPageContent', source.flamelink_locale)
-              .then(node => {
-                return {
-                  ...node,
-                  path: resolvePath(node)
-                }
-              })
-          }
-          else return null
-        }
+            return findSource(
+              context,
+              source.listingPage,
+              "FlamelinkListingPageContent",
+              source.flamelink_locale
+            ).then((node) => {
+              return {
+                ...node,
+                path: resolvePath(node),
+              }
+            })
+          } else return null
+        },
       },
       page: {
         resolve(source, args, context, info) {
           if (source.page != null) {
-
-            return (source.page._fl_meta_ != null) ? findSource(context, source.page, 'FlamelinkPageContent', source.flamelink_locale)
-              .then(node => {
-                return {
-                  ...node,
-                  path: resolvePath(node)
-                }
-              }) : null
-
-          }
-
-          else return null
-        }
-      }
-    }
+            return source.page._fl_meta_ != null
+              ? findSource(
+                  context,
+                  source.page,
+                  "FlamelinkPageContent",
+                  source.flamelink_locale
+                ).then((node) => {
+                  return {
+                    ...node,
+                    path: resolvePath(node),
+                  }
+                })
+              : null
+          } else return null
+        },
+      },
+    },
   }
   createResolvers(resolvers)
 }

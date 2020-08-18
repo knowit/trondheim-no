@@ -1,43 +1,45 @@
-import React from "react";
+import React from "react"
 
-import { InfoWindow, Marker } from "@react-google-maps/api";
+import { InfoWindow, Marker } from "@react-google-maps/api"
 import { Link } from "gatsby"
 
 export default class MapMarker extends React.Component {
   state = {
-    mapMarker: null
-  };
+    mapMarker: null,
+  }
 
-  onLoad = mapMarker => {
+  onLoad = (mapMarker) => {
     this.setState({
-      mapMarker
-    });
-  };
+      mapMarker,
+    })
+  }
 
   onClick = () => {
-    const { isInfoOpen, isSelected, markerData, onClick } = this.props;
+    const { isInfoOpen, isSelected, markerData, onClick } = this.props
 
-    const isOpen = isSelected ? !isInfoOpen : true;
+    const isOpen = isSelected ? !isInfoOpen : true
 
-    onClick(isOpen, markerData.id);
-  };
+    onClick(isOpen, markerData.id)
+  }
 
-  renderInfoWindow = markerId => {
-    const { isInfoOpen, isSelected, markerData } = this.props;
-    const { mapMarker } = this.state;
+  renderInfoWindow = (markerId) => {
+    const { isInfoOpen, isSelected, markerData } = this.props
+    const { mapMarker } = this.state
 
     if (!isInfoOpen || !isSelected || !mapMarker) {
-      return null;
+      return null
     }
     return (
       <InfoWindow anchor={mapMarker}>
-        <div><Link to={markerData.url}>{markerData.title}</Link></div>
+        <div>
+          <Link to={markerData.url}>{markerData.title}</Link>
+        </div>
       </InfoWindow>
-    );
-  };
+    )
+  }
 
   render() {
-    const { clusterer, markerData } = this.props;
+    const { clusterer, markerData } = this.props
 
     return (
       <Marker
@@ -46,12 +48,11 @@ export default class MapMarker extends React.Component {
         onClick={this.onClick}
         position={{
           lat: markerData.location.lat,
-          lng: markerData.location.lng
+          lng: markerData.location.lng,
         }}
-
       >
         {this.renderInfoWindow(markerData.id)}
       </Marker>
-    );
+    )
   }
 }

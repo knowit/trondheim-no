@@ -9,18 +9,20 @@ import { Router } from "@reach/router"
 
 const defaultLocation = {
   lat: 63.4305149,
-  lng: 10.3950528
+  lng: 10.3950528,
 }
 
 const defaultAddress = "Trondheim, Norway"
 
 function getLocation(node) {
-
   if (node.latLong && node.latLong.latitude && node.latLong.longitude) {
-    return { lat: Number(node.latLong.latitude), lng: Number(node.latLong.longitude) };
+    return {
+      lat: Number(node.latLong.latitude),
+      lng: Number(node.latLong.longitude),
+    }
   }
   if (node.address && node.address.lat && node.address.lng) {
-    return { lat: node.address.lat, lng: node.address.lng };
+    return { lat: node.address.lat, lng: node.address.lng }
   }
   if (node.latitude && node.longitude) {
     return { lat: node.latitude, lng: node.longitude }
@@ -30,31 +32,31 @@ function getLocation(node) {
 }
 
 export default ({ data }) => {
-
-  const markers = data.articlesLevel0.edges.concat(data.articlesLevel1.edges)
-    .map(node => node.node).map(node => {
+  const markers = data.articlesLevel0.edges
+    .concat(data.articlesLevel1.edges)
+    .map((node) => node.node)
+    .map((node) => {
       return {
         id: node._fl_meta_.fl_id,
         title: node.title,
         url: node.path,
         location: getLocation(node),
-        parent: node.parentListingPage.localTitle
+        parent: node.parentListingPage.localTitle,
       }
     })
 
   const tempMap = new Map()
-  markers.map(marker => tempMap.set(marker.parent, true))
+  markers.map((marker) => tempMap.set(marker.parent, true))
   const [subListingPages, setSubListingPages] = useState(tempMap)
   const updateSubListingPages = (key, value) => {
     setSubListingPages(new Map(subListingPages.set(key, value)))
   }
 
   const handleChange = (e, toggle = false) => {
-    const item = e.target.name;
-    const isChecked = (toggle) ? !e.target.checked : e.target.checked
+    const item = e.target.name
+    const isChecked = toggle ? !e.target.checked : e.target.checked
     updateSubListingPages(item, isChecked)
   }
-
 
   var items = []
 
@@ -67,66 +69,89 @@ export default ({ data }) => {
           type="checkbox"
           checked={value}
           onChange={handleChange}
-          onKeyPress={(e) => { handleChange(e, true) }}></input>
+          onKeyPress={(e) => {
+            handleChange(e, true)
+          }}
+        ></input>
         {key}
-
       </label>
     )
   })
 
-
   const MapComponent = () => {
-    return (<span>
-      <GoogleMap
-        locationMarker={defaultLocation}
-        address={defaultAddress}
-        markers={markers.filter(marker => subListingPages.get(marker.parent))}
-        zoom={13}
-        persistentDisabled={false}
-        width="100%" height="500px" />
+    return (
+      <span>
+        <GoogleMap
+          locationMarker={defaultLocation}
+          address={defaultAddress}
+          markers={markers.filter((marker) =>
+            subListingPages.get(marker.parent)
+          )}
+          zoom={13}
+          persistentDisabled={false}
+          width="100%"
+          height="500px"
+        />
 
-      <div>
-        <form className="map-checkbox-form">
-          {items}
-        </form>
-      </div>
-      <div id="content-container">
-        <h2>{data.node.mapPageTitle}</h2>
-        <p>{data.node.mapPageDescription}</p>
-        <Link to={data.node.path}>{LocalizationHelper.getLocalWord(data.localization.translations, "viewListingPageList", data.node.flamelink_locale)}</Link>
-      </div>
-    </span>)
+        <div>
+          <form className="map-checkbox-form">{items}</form>
+        </div>
+        <div id="content-container">
+          <h2>{data.node.mapPageTitle}</h2>
+          <p>{data.node.mapPageDescription}</p>
+          <Link to={data.node.path}>
+            {LocalizationHelper.getLocalWord(
+              data.localization.translations,
+              "viewListingPageList",
+              data.node.flamelink_locale
+            )}
+          </Link>
+        </div>
+      </span>
+    )
   }
 
   return (
-    <Layout locale={data.node.flamelink_locale} localizedPaths={data.node.localizedPaths}>
+    <Layout
+      locale={data.node.flamelink_locale}
+      localizedPaths={data.node.localizedPaths}
+    >
       <div id="outer-container">
         <div id="inner-container">
           <Online>
             <Router basepath={data.node.mapPath}>
-              <MapComponent path='/' />
+              <MapComponent path="/" />
             </Router>
           </Online>
 
           <Offline>
             <div id="content-container">
               <h2>{data.node.mapPageTitle}</h2>
-              <p>{LocalizationHelper.getLocalWord(data.localization.translations, "not-available-offline", data.node.flamelink_locale)}</p>
-              <Link to={data.node.path}>{LocalizationHelper.getLocalWord(data.localization.translations, "go-back", data.node.flamelink_locale)}</Link>
+              <p>
+                {LocalizationHelper.getLocalWord(
+                  data.localization.translations,
+                  "not-available-offline",
+                  data.node.flamelink_locale
+                )}
+              </p>
+              <Link to={data.node.path}>
+                {LocalizationHelper.getLocalWord(
+                  data.localization.translations,
+                  "go-back",
+                  data.node.flamelink_locale
+                )}
+              </Link>
             </div>
           </Offline>
-
         </div>
       </div>
     </Layout>
   )
 }
 
-
 export const query = graphql`
   query ListingPageMapQuery($nodeId: String, $nodeFlamelinkId: String) {
-
-    node: flamelinkListingPageContent (id: {eq: $nodeId}) {
+    node: flamelinkListingPageContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
       mapPageTitle
@@ -135,26 +160,30 @@ export const query = graphql`
       mapPath
     }
 
-    localization: flamelinkListingPageLocalizationContent (flamelink_locale: {eq: "no"}){
+    localization: flamelinkListingPageLocalizationContent(
+      flamelink_locale: { eq: "no" }
+    ) {
       id
       translations {
         key
-        translations{
+        translations {
           language
           word
         }
       }
     }
 
-    articlesLevel0: allFlamelinkArticleContent (filter: { parentListingPage: { id: {eq: $nodeFlamelinkId}}}){
-      edges{
-        node{
+    articlesLevel0: allFlamelinkArticleContent(
+      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+    ) {
+      edges {
+        node {
           id
           flamelink_locale
           title
           path
 
-          _fl_meta_{
+          _fl_meta_ {
             fl_id
           }
 
@@ -164,7 +193,7 @@ export const query = graphql`
             lng
           }
 
-          parentListingPage{
+          parentListingPage {
             id
             localTitle
           }
@@ -175,16 +204,16 @@ export const query = graphql`
             googleMapsStaticImage {
               url
               childImageSharp {
-                fluid (maxWidth: 600, quality: 80){
+                fluid(maxWidth: 600, quality: 80) {
                   base64
-                  aspectRatio 
-                  src 
-                  srcSet 
+                  aspectRatio
+                  src
+                  srcSet
                   sizes
                   presentationWidth
                   presentationHeight
                   originalImg
-                } 
+                }
               }
             }
           }
@@ -192,16 +221,21 @@ export const query = graphql`
       }
     }
 
-
-    articlesLevel1: allFlamelinkArticleContent (filter: { parentListingPage: {parentListingPage: { id: {eq: $nodeFlamelinkId}}}}){
-      edges{
-        node{
+    articlesLevel1: allFlamelinkArticleContent(
+      filter: {
+        parentListingPage: {
+          parentListingPage: { id: { eq: $nodeFlamelinkId } }
+        }
+      }
+    ) {
+      edges {
+        node {
           id
           flamelink_locale
           title
           path
 
-          _fl_meta_{
+          _fl_meta_ {
             fl_id
           }
 
@@ -211,7 +245,7 @@ export const query = graphql`
             lng
           }
 
-          parentListingPage{
+          parentListingPage {
             id
             localTitle
           }
@@ -222,16 +256,16 @@ export const query = graphql`
             googleMapsStaticImage {
               url
               childImageSharp {
-                fluid (maxWidth: 600, quality: 80){
+                fluid(maxWidth: 600, quality: 80) {
                   base64
-                  aspectRatio 
-                  src 
-                  srcSet 
+                  aspectRatio
+                  src
+                  srcSet
                   sizes
                   presentationWidth
                   presentationHeight
                   originalImg
-                } 
+                }
               }
             }
           }
@@ -239,10 +273,11 @@ export const query = graphql`
       }
     }
 
-
-    subListingPages: allFlamelinkListingPageContent (filter: {parentListingPage: {id: {eq: $nodeFlamelinkId}}}){
-      edges{
-        node{
+    subListingPages: allFlamelinkListingPageContent(
+      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+    ) {
+      edges {
+        node {
           id
           flamelink_id
           flamelink_locale

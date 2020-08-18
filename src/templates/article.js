@@ -4,130 +4,193 @@ import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import Img from "gatsby-image"
 import { Online, Offline } from "react-detect-offline"
-import HTMLContent from '../components/html-content'
+import HTMLContent from "../components/html-content"
 import Map from "../components/map.js"
 import { Router } from "@reach/router"
-import { graphql } from 'gatsby'
-
-
-
+import { graphql } from "gatsby"
 
 function ContactInfo(props) {
+  if (!props.node.contactInfo && !props.node.address.address) return ""
 
-  if (!props.node.contactInfo && !props.node.address.address) return "";
-
-  const elements = [];
-  var locale = props.locale;
+  const elements = []
+  var locale = props.locale
   var index = 0
   if (props.node.address) {
     if (props.node.address.address) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>{`${LocalizationHelper.getLocalWord(props.localization, "address", locale)}:\t`}</span><span>{props.node.address.address}</span>
-        </div>)
+          <span
+            className={styles.contactInfoHeader}
+          >{`${LocalizationHelper.getLocalWord(
+            props.localization,
+            "address",
+            locale
+          )}:\t`}</span>
+          <span>{props.node.address.address}</span>
+        </div>
+      )
     }
   }
   if (props.node.contactInfo) {
     if (props.node.contactInfo.emailAddress) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "email", locale) + ": "}</span>
-          <a href={"mailto: " + props.node.contactInfo.emailAddress}>{props.node.contactInfo.emailAddress}</a>
-        </div>)
-    } if (props.node.contactInfo.telephoneNumber) {
+          <span className={styles.contactInfoHeader}>
+            {LocalizationHelper.getLocalWord(
+              props.localization,
+              "email",
+              locale
+            ) + ": "}
+          </span>
+          <a href={"mailto: " + props.node.contactInfo.emailAddress}>
+            {props.node.contactInfo.emailAddress}
+          </a>
+        </div>
+      )
+    }
+    if (props.node.contactInfo.telephoneNumber) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "telephone", locale) + ": "}</span>
-          <a href={"tel: " + props.node.contactInfo.telephoneNumber}>{props.node.contactInfo.telephoneNumber}</a>
-        </div>)
-    } if (props.node.contactInfo.linkToWebsite) {
-      elements.push(<div key={index++} className={styles.contactInfo}>
-        <span className={styles.contactInfoHeader}>{LocalizationHelper.getLocalWord(props.localization, "website", locale) + ": "}</span>
-        <a href={props.node.contactInfo.linkToWebsite}>
-          {(props.node.contactInfo.textToShow) ?
-            props.node.contactInfo.textToShow :
-            props.node.contactInfo.linkToWebsite}
-        </a></div>)
+          <span className={styles.contactInfoHeader}>
+            {LocalizationHelper.getLocalWord(
+              props.localization,
+              "telephone",
+              locale
+            ) + ": "}
+          </span>
+          <a href={"tel: " + props.node.contactInfo.telephoneNumber}>
+            {props.node.contactInfo.telephoneNumber}
+          </a>
+        </div>
+      )
+    }
+    if (props.node.contactInfo.linkToWebsite) {
+      elements.push(
+        <div key={index++} className={styles.contactInfo}>
+          <span className={styles.contactInfoHeader}>
+            {LocalizationHelper.getLocalWord(
+              props.localization,
+              "website",
+              locale
+            ) + ": "}
+          </span>
+          <a href={props.node.contactInfo.linkToWebsite}>
+            {props.node.contactInfo.textToShow
+              ? props.node.contactInfo.textToShow
+              : props.node.contactInfo.linkToWebsite}
+          </a>
+        </div>
+      )
     }
   }
 
-  if (elements.length > 0) return <div><h3 className={styles.subheading}>{LocalizationHelper.getLocalWord(props.localization, "contactInfo", locale)}</h3><div>{elements}</div></div>
-  else return "";
+  if (elements.length > 0)
+    return (
+      <div>
+        <h3 className={styles.subheading}>
+          {LocalizationHelper.getLocalWord(
+            props.localization,
+            "contactInfo",
+            locale
+          )}
+        </h3>
+        <div>{elements}</div>
+      </div>
+    )
+  else return ""
 }
 
 function OpeningHours(props) {
-  const elements = [];
+  const elements = []
   var index = 0
-  var locale = props.locale;
+  var locale = props.locale
   if (props.node.openingHours && props.node.openingHours.content) {
-    elements.push(<h3 key={index++} className={styles.subheading}>{LocalizationHelper.getLocalWord(props.localization, "openingHours", locale)}</h3>);
     elements.push(
-      <div key={index++} dangerouslySetInnerHTML={{ __html: props.node.openingHours.content }}></div>
+      <h3 key={index++} className={styles.subheading}>
+        {LocalizationHelper.getLocalWord(
+          props.localization,
+          "openingHours",
+          locale
+        )}
+      </h3>
+    )
+    elements.push(
+      <div
+        key={index++}
+        dangerouslySetInnerHTML={{ __html: props.node.openingHours.content }}
+      ></div>
     )
   }
   if (elements.length > 0) return <div key={index++}>{elements}</div>
-  else return "";
+  else return ""
 }
 
-
-
 export default ({ data }) => {
-
   const layoutContext = {
     locale: data.flamelinkArticleContent.flamelink_locale,
-    localizedPaths: data.flamelinkArticleContent.localizedPaths
+    localizedPaths: data.flamelinkArticleContent.localizedPaths,
   }
 
-  let address = (
-    data.flamelinkArticleContent.address
-    && data.flamelinkArticleContent.address.address
-  ) ? data.flamelinkArticleContent.address.address : null
+  let address =
+    data.flamelinkArticleContent.address &&
+    data.flamelinkArticleContent.address.address
+      ? data.flamelinkArticleContent.address.address
+      : null
 
   let location = {
     lat: 63.4305149,
-    lng: 10.3950528
+    lng: 10.3950528,
   }
 
-  if (data.flamelinkArticleContent.latLong
-    && data.flamelinkArticleContent.latLong.latitude
-    && data.flamelinkArticleContent.latLong.longitude) {
+  if (
+    data.flamelinkArticleContent.latLong &&
+    data.flamelinkArticleContent.latLong.latitude &&
+    data.flamelinkArticleContent.latLong.longitude
+  ) {
     location = {
       lat: Number(data.flamelinkArticleContent.latLong.latitude),
-      lng: Number(data.flamelinkArticleContent.latLong.longitude)
-    };
+      lng: Number(data.flamelinkArticleContent.latLong.longitude),
+    }
   }
-  if (data.flamelinkArticleContent.address
-    && data.flamelinkArticleContent.address.lat
-    && data.flamelinkArticleContent.address.lng) {
+  if (
+    data.flamelinkArticleContent.address &&
+    data.flamelinkArticleContent.address.lat &&
+    data.flamelinkArticleContent.address.lng
+  ) {
     location = {
       lat: data.flamelinkArticleContent.address.lat,
-      lng: data.flamelinkArticleContent.address.lng
-    };
+      lng: data.flamelinkArticleContent.address.lng,
+    }
   }
-  if (data.flamelinkArticleContent.latitude
-    && data.flamelinkArticleContent.longitude) {
+  if (
+    data.flamelinkArticleContent.latitude &&
+    data.flamelinkArticleContent.longitude
+  ) {
     location = {
       lat: data.flamelinkArticleContent.latitude,
-      lng: data.flamelinkArticleContent.longitude
+      lng: data.flamelinkArticleContent.longitude,
     }
   }
 
-  const markers = [{
-    id: data.flamelinkArticleContent._fl_meta_.fl_id,
-    title: data.flamelinkArticleContent.title,
-    url: data.flamelinkArticleContent.path,
-    location: location,
-    parent: null
-  }]
-
+  const markers = [
+    {
+      id: data.flamelinkArticleContent._fl_meta_.fl_id,
+      title: data.flamelinkArticleContent.title,
+      url: data.flamelinkArticleContent.path,
+      location: location,
+      parent: null,
+    },
+  ]
 
   const ParsedHTML = () => {
     if (!data.flamelinkArticleContent.content) {
       return null
-    }
-    else {
+    } else {
       return (
-        <HTMLContent htmlContent={data.flamelinkArticleContent.content} resizeImg={false} />
+        <HTMLContent
+          htmlContent={data.flamelinkArticleContent.content}
+          resizeImg={false}
+        />
       )
     }
   }
@@ -140,22 +203,26 @@ export default ({ data }) => {
         width: imageNode.childImageSharp.fluid.presentationWidth,
         height: imageNode.childImageSharp.fluid.presentationHeight,
       }
-      return (<div className="offline-map-container" style={styles}>
-        <Img className="offline-map-image" fluid={imageNode.childImageSharp.fluid} alt={'Map of location'} loading="eager"></Img>
-      </div>)
-    }
-
-    else {
-      return (<div></div>)
+      return (
+        <div className="offline-map-container" style={styles}>
+          <Img
+            className="offline-map-image"
+            fluid={imageNode.childImageSharp.fluid}
+            alt={"Map of location"}
+            loading="eager"
+          ></Img>
+        </div>
+      )
+    } else {
+      return <div></div>
     }
   }
 
   return (
-
     <Layout
       locale={data.flamelinkArticleContent.flamelink_locale}
-      localizedPaths={data.flamelinkArticleContent.localizedPaths}>
-
+      localizedPaths={data.flamelinkArticleContent.localizedPaths}
+    >
       <div id="outer-container">
         <div id="inner-container">
           <h2 id="article-title">{data.flamelinkArticleContent.title}</h2>
@@ -163,22 +230,31 @@ export default ({ data }) => {
           <OpeningHours
             node={data.flamelinkArticleContent}
             localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={data.flamelinkArticleContent.flamelinklocale} />
+            locale={data.flamelinkArticleContent.flamelinklocale}
+          />
           <ContactInfo
             node={data.flamelinkArticleContent}
             localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={data.flamelinkArticleContent.flamelink_locale} />
+            locale={data.flamelinkArticleContent.flamelink_locale}
+          />
           <Online>
             <Router basepath={data.flamelinkArticleContent.path}>
-              <Map path='/' locationMarker={location} address={address} markers={markers} zoom={15} persistentDisabled={false}
-                width="100%" height="400px" />
+              <Map
+                path="/"
+                locationMarker={location}
+                address={address}
+                markers={markers}
+                zoom={15}
+                persistentDisabled={false}
+                width="100%"
+                height="400px"
+              />
             </Router>
           </Online>
 
           <Offline>
             <OfflineMap></OfflineMap>
           </Offline>
-
         </div>
       </div>
     </Layout>
@@ -187,8 +263,7 @@ export default ({ data }) => {
 
 export const query = graphql`
   query ArticleQuery($nodeId: String) {
-
-    flamelinkArticleLocalizationContent (flamelink_locale: {eq: "no"}){
+    flamelinkArticleLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
       translations {
         key
@@ -199,7 +274,7 @@ export const query = graphql`
       }
     }
 
-    flamelinkArticleContent (id: {eq: $nodeId}){
+    flamelinkArticleContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
       slug
@@ -207,7 +282,7 @@ export const query = graphql`
       title
       tags
 
-      _fl_meta_{
+      _fl_meta_ {
         fl_id
       }
 
@@ -230,16 +305,16 @@ export const query = graphql`
         googleMapsStaticImage {
           url
           childImageSharp {
-            fluid (maxWidth: 600, quality: 70){
+            fluid(maxWidth: 600, quality: 70) {
               base64
-              aspectRatio 
-              src 
-              srcSet 
+              aspectRatio
+              src
+              srcSet
               sizes
               presentationWidth
               presentationHeight
               originalImg
-            } 
+            }
           }
         }
       }
@@ -249,20 +324,19 @@ export const query = graphql`
         remoteImages {
           url
           childImageSharp {
-            fluid (maxWidth: 1200, quality: 75){
+            fluid(maxWidth: 1200, quality: 75) {
               base64
-              aspectRatio 
-              src 
-              srcSet 
+              aspectRatio
+              src
+              srcSet
               sizes
               presentationWidth
               presentationHeight
               originalImg
-            } 
+            }
           }
         }
       }
-
     }
   }
 `
