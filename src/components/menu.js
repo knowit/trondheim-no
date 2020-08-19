@@ -61,7 +61,7 @@ const Menu = ({ locale, localizedPaths }) => {
 
   const MenuItems = ({ items, externalItems }) => {
     return showMenu ? (
-      <div className="drop-menu-container">
+      <div className="drop-menu-container" role="menu">
         {items.map(function (node, key) {
           return (
             <Link
@@ -121,7 +121,7 @@ const Menu = ({ locale, localizedPaths }) => {
           data.flamelinkLayoutLocalizationContent.translations
         return (
           <div
-            role="menu"
+            role="button"
             tabIndex={0}
             onKeyPress={toggleMenu}
             className="menu-container"
