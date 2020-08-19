@@ -1,11 +1,9 @@
-
-var React = require('react');
-var HtmlToReact = require('html-to-react')
-var HtmlToReactParser = require('html-to-react').Parser;
-var ReactDOMServer = require('react-dom/server')
+var React = require("react")
+var HtmlToReact = require("html-to-react")
+var HtmlToReactParser = require("html-to-react").Parser
+var ReactDOMServer = require("react-dom/server")
 
 class HtmlNode {
-
   constructor(type, props = {}) {
     this.children = []
     this.type = type
@@ -43,26 +41,24 @@ class HtmlNode {
 
     if (this.props.text) {
       string = `${string} ${this.props.text}`
-    }
-    else {
-      string = `${string} \ttype: ${this.type}\tprops${JSON.stringify(this.props)}`
+    } else {
+      string = `${string} \ttype: ${this.type}\tprops${JSON.stringify(
+        this.props
+      )}`
     }
     return string
   }
-
 }
 
 class ReactDOMHelper {
-
   static getTextContentFromHtml(htmlInput) {
-
     function getText(htmlNode) {
       var text = ""
       if (htmlNode.isType("text")) {
-        text += htmlNode.props.text ? htmlNode.props.text : ''
+        text += htmlNode.props.text ? htmlNode.props.text : ""
       }
 
-      htmlNode.getChildren().map(childNode => {
+      htmlNode.getChildren().map((childNode) => {
         text += getText(childNode)
         return childNode
       })
@@ -70,9 +66,8 @@ class ReactDOMHelper {
       return text
     }
 
-    const root = new HtmlNode('div')
+    const root = new HtmlNode("div")
     const element = this.parseToReact(htmlInput)
-
 
     React.Children.map(element, (child) => {
       const childNode = this.buildHtmlTree(child)
@@ -84,12 +79,10 @@ class ReactDOMHelper {
     return getText(root)
   }
 
-
   static buildHtmlTree(element, level = 1) {
     if (element.props) {
       const childNode = new HtmlNode(element.type, element.props)
       childNode.setLevel(level)
-
 
       if (element.props.children) {
         React.Children.map(element.props.children, (child) => {
@@ -101,72 +94,74 @@ class ReactDOMHelper {
       }
 
       return childNode
-
-    }
-    else if (typeof element === 'string') {
-      const childNode = new HtmlNode('text', { text: element })
+    } else if (typeof element === "string") {
+      const childNode = new HtmlNode("text", { text: element })
       childNode.setLevel(level)
       return childNode
-    }
-    else {
+    } else {
       return null
     }
   }
 
-  static createReactComponent(htmlNode, transformImg, index = 0, transformIframe) {
-
+  static createReactComponent(
+    htmlNode,
+    transformImg,
+    index = 0,
+    transformIframe
+  ) {
     const voidElements = [
-      'area',
-      'base',
-      'basefont',
-      'bgsound',
-      'br',
-      'col',
-      'command',
-      'embed',
-      'frame',
-      'hr',
-      'image',
-      'input',
-      'isindex',
-      'keygen',
-      'link',
-      'menuitem',
-      'meta',
-      'nextid',
-      'param',
-      'source',
-      'track',
-      'wbr'
+      "area",
+      "base",
+      "basefont",
+      "bgsound",
+      "br",
+      "col",
+      "command",
+      "embed",
+      "frame",
+      "hr",
+      "image",
+      "input",
+      "isindex",
+      "keygen",
+      "link",
+      "menuitem",
+      "meta",
+      "nextid",
+      "param",
+      "source",
+      "track",
+      "wbr",
     ]
 
-    if (htmlNode.isType('img')) {
+    if (htmlNode.isType("img")) {
       return transformImg(htmlNode.props, index)
-    }
-
-    else if (voidElements.includes(htmlNode.getType())) {
-      return React.createElement(htmlNode.getType(), {
-        ...htmlNode.props,
-        key: index
-      }, null)
-    }
-
-    else if (htmlNode.isType('text')) {
+    } else if (voidElements.includes(htmlNode.getType())) {
+      return React.createElement(
+        htmlNode.getType(),
+        {
+          ...htmlNode.props,
+          key: index,
+        },
+        null
+      )
+    } else if (htmlNode.isType("text")) {
       return htmlNode.props.text
-    }
-
-    else if (htmlNode.isType('iframe')) {
+    } else if (htmlNode.isType("iframe")) {
       return transformIframe(htmlNode, index)
-    }
-
-    else {
+    } else {
       var children = []
 
       var childIndex = 0
 
-      htmlNode.getChildren().map(child => {
+      htmlNode.getChildren().map((child) => {
         children.push(
-          this.createReactComponent(child, transformImg, childIndex, transformIframe)
+          this.createReactComponent(
+            child,
+            transformImg,
+            childIndex,
+            transformIframe
+          )
         )
         childIndex += 1
         return child
@@ -176,8 +171,8 @@ class ReactDOMHelper {
       if (htmlNode.props.href) {
         attribs.href = htmlNode.props.href
       }
-      if (htmlNode.type === 'p') {
-        attribs.className = 'pdiv'
+      if (htmlNode.type === "p") {
+        attribs.className = "pdiv"
       }
       if (htmlNode.props.width) {
         attribs.width = htmlNode.props.width
@@ -190,19 +185,17 @@ class ReactDOMHelper {
       }
 
       return React.createElement(
-        (htmlNode.type === 'p') ? 'div' : htmlNode.type,
+        htmlNode.type === "p" ? "div" : htmlNode.type,
         attribs,
-        children)
+        children
+      )
     }
   }
 
-
   static buildReactComponent(htmlInput, transformImg, transformIframe) {
-
-    const root = new HtmlNode('div')
-    root.props = { id: 'html-content-container' }
+    const root = new HtmlNode("div")
+    root.props = { id: "html-content-container" }
     const element = this.parseToReact(htmlInput)
-
 
     React.Children.map(element, (child) => {
       const childNode = this.buildHtmlTree(child)
@@ -211,17 +204,20 @@ class ReactDOMHelper {
       }
     })
 
-    const reactElement = this.createReactComponent(root, transformImg, 0, transformIframe)
+    const reactElement = this.createReactComponent(
+      root,
+      transformImg,
+      0,
+      transformIframe
+    )
 
     return reactElement
-
   }
 
   static isType(node, type) {
-    if (node.type === 'tag') {
+    if (node.type === "tag") {
       return node.tagName === type
-    }
-    else {
+    } else {
       return false
     }
   }
@@ -234,15 +230,13 @@ class ReactDOMHelper {
         const child = node.childNodes[i]
         if (this.isType(child, type)) {
           hasChildType = true
-        }
-        else {
+        } else {
           hasChildType = this.hasChildOfType(child, type)
         }
         i += 1
       }
       return hasChildType
-    }
-    else {
+    } else {
       return false
     }
   }
@@ -250,20 +244,17 @@ class ReactDOMHelper {
   static hasParentOfType(node, type) {
     if (node.parent == null) {
       return false
-    }
-    else {
+    } else {
       if (this.isType(node.parent, type)) {
         return true
-      }
-      else {
+      } else {
         return this.hasParentOfType(node.parent, type)
       }
     }
   }
 
   static parseToReact(htmlInput) {
-
-    var htmlToReactParser = new HtmlToReactParser();
+    var htmlToReactParser = new HtmlToReactParser()
     return htmlToReactParser.parse(htmlInput)
   }
 
@@ -272,9 +263,8 @@ class ReactDOMHelper {
   }
 
   static processNodes(htmlInput, shouldProcess, process) {
-
     var isValidNode = function () {
-      return true;
+      return true
     }
 
     var processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React)
@@ -284,34 +274,33 @@ class ReactDOMHelper {
         replaceChildren: true,
         // Custom <h1> processing
         shouldProcessNode: function (node) {
-          return shouldProcess(node);
+          return shouldProcess(node)
         },
         processNode: function (node, children, index) {
-          return process(node, children);
-        }
+          return process(node, children)
+        },
       },
       {
         // Anything else
         shouldProcessNode: function (node) {
-          return true;
+          return true
         },
-        processNode: processNodeDefinitions.processDefaultNode
-      }
-    ];
+        processNode: processNodeDefinitions.processDefaultNode,
+      },
+    ]
 
     var htmlToReactParser = new HtmlToReactParser()
 
-    var reactComponent = htmlToReactParser.parseWithInstructions(htmlInput, isValidNode,
-      processingInstructions);
+    var reactComponent = htmlToReactParser.parseWithInstructions(
+      htmlInput,
+      isValidNode,
+      processingInstructions
+    )
 
     return reactComponent
   }
 
-  static buildReactElement(node) {
-
-  }
-
-
+  static buildReactElement(node) {}
 }
 
 export default ReactDOMHelper

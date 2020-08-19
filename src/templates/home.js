@@ -2,76 +2,79 @@ import React from "react"
 import "../style/home.css"
 import Layout from "../layouts/layout"
 import { Link, graphql } from "gatsby"
-import BackgroundImage from 'gatsby-background-image'
-import Img from 'gatsby-image'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { library } from "@fortawesome/fontawesome-svg-core";
+import BackgroundImage from "gatsby-background-image"
+import Img from "gatsby-image"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { library } from "@fortawesome/fontawesome-svg-core"
 import { fas } from "@fortawesome/free-solid-svg-icons"
-import HTMLContent from '../components/html-content'
-import ReactDOMHelper from '../helpers/react-dom-helper'
-
+import HTMLContent from "../components/html-content"
+import ReactDOMHelper from "../helpers/react-dom-helper"
 
 library.add(fas)
 
-
 export default ({ data }) => {
-
   const FrontpageColumns = () => {
-
     const Column = ({ node }) => {
-
       const Content = () => ReactDOMHelper.parseToReact(node.content.content)
 
       const Ref = ({ children }) => {
-        if (node.linkType === 'listingPage' || node.linkType === 'page') {
-          const path = node.linkType === 'listingPage' ? node.listingPage.path : node.page.path
-          return (<Link className="frontpage-column-link" to={path}>{children}</Link>)
-        }
-        else if (node.linkType === 'url') {
-          return (<a className="frontpage-column-link" href={node.url}>{children}</a>)
-        }
-        else return children
+        if (node.linkType === "listingPage" || node.linkType === "page") {
+          const path =
+            node.linkType === "listingPage"
+              ? node.listingPage.path
+              : node.page.path
+          return (
+            <Link className="frontpage-column-link" to={path}>
+              {children}
+            </Link>
+          )
+        } else if (node.linkType === "url") {
+          return (
+            <a className="frontpage-column-link" href={node.url}>
+              {children}
+            </a>
+          )
+        } else return children
       }
 
-
-      return (<div className="frontpage-column-item-container">
-        <div className="frontpage-column-image-container">
-          <Ref>
-            {node.icon ? <Img className="frontpage-column-image"
-              fluid={node.icon[0].localFile.childImageSharp.fluid}
-              alt="thumbnail" /> : null}
-          </Ref>
-        </div>
-        <div className="frontpage-column-info-container">
-          <h2>
+      return (
+        <div className="frontpage-column-item-container">
+          <div className="frontpage-column-image-container">
             <Ref>
-              {node.title}
+              {node.icon ? (
+                <Img
+                  className="frontpage-column-image"
+                  fluid={node.icon[0].localFile.childImageSharp.fluid}
+                  alt="thumbnail"
+                />
+              ) : null}
             </Ref>
-          </h2>
-          <h4 >
-            <Ref>
-              <Content />
-            </Ref>
-          </h4>
+          </div>
+          <div className="frontpage-column-info-container">
+            <h2>
+              <Ref>{node.title}</Ref>
+            </h2>
+            <h4>
+              <Ref>
+                <Content />
+              </Ref>
+            </h4>
+          </div>
         </div>
-      </div>)
+      )
     }
 
     const backgroundStyle = {
-      backgroundImage: `url(${data.flamelinkFrontPageContent.columnsBackgroundImage[0].localFile.childImageSharp.fluid.src})`
+      backgroundImage: `url(${data.flamelinkFrontPageContent.columnsBackgroundImage[0].localFile.childImageSharp.fluid.src})`,
     }
 
-    var index = 0;
+    var index = 0
 
     return (
-
       <div id="frontpage-columns-container" style={backgroundStyle}>
         <div id="frontpage-columns-overlay">
-          {data.flamelinkFrontPageContent.linkColumns.map(node => {
-            return (
-              <Column
-                key={index++}
-                node={node} />)
+          {data.flamelinkFrontPageContent.linkColumns.map((node) => {
+            return <Column key={index++} node={node} />
           })}
         </div>
       </div>
@@ -79,25 +82,42 @@ export default ({ data }) => {
   }
 
   const FrontpageCards = () => {
-
     const Card = (props) => {
       return (
-        <div className="frontpage-card" style={{ backgroundColor: props.backgroundColor, color: props.color }}>
+        <div
+          className="frontpage-card"
+          style={{ backgroundColor: props.backgroundColor, color: props.color }}
+        >
           <div className="frontpage-card-icon">
-            <FontAwesomeIcon icon={props.icon.name} color={props.icon.color} size={'2x'} />
+            <FontAwesomeIcon
+              icon={props.icon.name}
+              color={props.icon.color}
+              size={"2x"}
+            />
           </div>
           <div className="frontpage-card-content">
-            <h2 className="frontpage-card-title" style={{ color: props.textColor }}>{props.title}</h2>
+            <h2
+              className="frontpage-card-title"
+              style={{ color: props.textColor }}
+            >
+              {props.title}
+            </h2>
             <div className="frontpage-card-links-container">
               {props.links.map((link, key) => {
                 return (
-                  <a className="frontpage-card-link" key={key} href={link.url} style={{ color: props.textColor }}>{link.text}</a>
+                  <a
+                    className="frontpage-card-link"
+                    key={key}
+                    href={link.url}
+                    style={{ color: props.textColor }}
+                  >
+                    {link.text}
+                  </a>
                 )
-              })
-              }
+              })}
             </div>
           </div>
-        </div >
+        </div>
       )
     }
 
@@ -106,78 +126,99 @@ export default ({ data }) => {
         {data.flamelinkFrontPageContent.bottomCards.map((item, key) => {
           const icon = {
             name: item.iconName,
-            color: item.iconColor
+            color: item.iconColor,
           }
           return (
-            <Card key={key} title={item.title} icon={icon} links={item.links} backgroundColor={item.backgroundColor} textColor={item.textColor} />
+            <Card
+              key={key}
+              title={item.title}
+              icon={icon}
+              links={item.links}
+              backgroundColor={item.backgroundColor}
+              textColor={item.textColor}
+            />
           )
         })}
       </div>
     )
   }
 
+  return (
+    <Layout
+      locale={data.flamelinkFrontPageContent.flamelink_locale}
+      localizedPaths={data.flamelinkFrontPageContent.localizedPaths}
+    >
+      <div id="outer-container">
+        <div id="header-container">
+          <BackgroundImage
+            id="header-image"
+            Tag="section"
+            fluid={
+              data.flamelinkFrontPageContent.frontImage[0].localFile
+                .childImageSharp.fluid
+            }
+            alt={data.flamelinkFrontPageContent.frontImageAlt}
+          >
+            <h3>{data.flamelinkFrontPageContent.headerText}</h3>
+            <h1>{data.flamelinkFrontPageContent.headerFocusWord}</h1>
+          </BackgroundImage>
 
-  return <Layout
-    locale={data.flamelinkFrontPageContent.flamelink_locale}
-    localizedPaths={data.flamelinkFrontPageContent.localizedPaths}>
-
-    <div id="outer-container">
-      <div id="header-container">
-
-        <BackgroundImage id="header-image" Tag="section"
-          fluid={data.flamelinkFrontPageContent.frontImage[0].localFile.childImageSharp.fluid}
-          alt={data.flamelinkFrontPageContent.frontImageAlt}>
-
-          <h3>{data.flamelinkFrontPageContent.headerText}</h3>
-          <h1>{data.flamelinkFrontPageContent.headerFocusWord}</h1>
-
-        </BackgroundImage>
-
-
-        <div id="header-subtext"><span>{data.flamelinkFrontPageContent.frontImageAlt}</span></div>
-      </div>
-
-      <div id="content-container">
-        <h2>{data.flamelinkFrontPageContent.navigationText}</h2>
-
-        <div id="navigation-menu-container">
-          {data.allFlamelinkListingPageContent.edges.map(node => node.node)
-            .map(function (node, key) {
-              if (node.thumbnail) {
-                return (
-                  <div key={key} className="navigation-box-container">
-                    <Img className="navigation-box-thumbnail"
-                      fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
-                      alt="thumbnail" />
-                    <h2><Link className="navigation-box-title" to={node.path}>{node.navigationTitle}</Link></h2>
-                    <h4>{node.navigationSubtitle}</h4>
-                  </div>)
-              }
-              else {
-                return null
-              }
-            })}
+          <div id="header-subtext">
+            <span>{data.flamelinkFrontPageContent.frontImageAlt}</span>
+          </div>
         </div>
-        <FrontpageColumns />
-        <div id="custom-content-container">
-          <HTMLContent htmlContent={data.flamelinkFrontPageContent.customContent} />
-        </div>
-        <FrontpageCards />
 
+        <div id="content-container">
+          <h2>{data.flamelinkFrontPageContent.navigationText}</h2>
+
+          <div id="navigation-menu-container">
+            {data.allFlamelinkListingPageContent.edges
+              .map((node) => node.node)
+              .map(function (node, key) {
+                if (node.thumbnail) {
+                  return (
+                    <div key={key} className="navigation-box-container">
+                      <Img
+                        className="navigation-box-thumbnail"
+                        fluid={
+                          node.thumbnail[0].localFile.childImageSharp.fluid
+                        }
+                        alt="thumbnail"
+                      />
+                      <h2>
+                        <Link className="navigation-box-title" to={node.path}>
+                          {node.navigationTitle}
+                        </Link>
+                      </h2>
+                      <h4>{node.navigationSubtitle}</h4>
+                    </div>
+                  )
+                } else {
+                  return null
+                }
+              })}
+          </div>
+          <FrontpageColumns />
+          <div id="custom-content-container">
+            <HTMLContent
+              htmlContent={data.flamelinkFrontPageContent.customContent}
+            />
+          </div>
+          <FrontpageCards />
+        </div>
       </div>
-    </div>
-  </Layout>
+    </Layout>
+  )
 }
-
-
 
 export const query = graphql`
   query FrontPageQuery($nodeId: String, $locale: String) {
-
-    allFlamelinkListingPageContent (filter: {
-        showOnFrontPage: {eq: true},
-        flamelink_locale: {eq: $locale}
-      }) {
+    allFlamelinkListingPageContent(
+      filter: {
+        showOnFrontPage: { eq: true }
+        flamelink_locale: { eq: $locale }
+      }
+    ) {
       edges {
         node {
           id
@@ -193,9 +234,9 @@ export const query = graphql`
               childImageSharp {
                 fluid(maxWidth: 340, quality: 70) {
                   base64
-                  aspectRatio 
-                  src 
-                  srcSet 
+                  aspectRatio
+                  src
+                  srcSet
                   sizes
                   presentationWidth
                   presentationHeight
@@ -204,13 +245,11 @@ export const query = graphql`
               }
             }
           }
-
-
         }
       }
     }
 
-    flamelinkFrontPageContent (id: {eq: $nodeId}) {
+    flamelinkFrontPageContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
       path
@@ -223,98 +262,79 @@ export const query = graphql`
       headerText
       navigationText
 
-      customContent{
+      customContent {
+        content
+        remoteImages {
+          url
+          childImageSharp {
+            fluid(maxWidth: 1200, quality: 80) {
+              base64
+              aspectRatio
+              src
+              srcSet
+              sizes
+              presentationWidth
+              presentationHeight
+              originalImg
+            }
+          }
+        }
+      }
+
+      bottomCards {
+        title
+        textColor
+        backgroundColor
+        iconName
+        iconColor
+        links {
+          text
+          url
+        }
+      }
+
+      linkColumns {
+        title
+        subTitle
+        linkType
+        url
+        listingPage {
+          navigationTitle
+          navigationSubtitle
+          path
+        }
+        page {
+          title
+          subTitle
+          path
+        }
+        content {
           content
           remoteImages {
             url
             childImageSharp {
-              fluid (maxWidth: 1200, quality: 80){
+              fluid(maxWidth: 1200, quality: 80) {
                 base64
-                aspectRatio 
-                src 
-                srcSet 
+                aspectRatio
+                src
+                srcSet
                 sizes
                 presentationWidth
                 presentationHeight
                 originalImg
-              } 
-            }
-          }
-        }
-
-        bottomCards {
-          title
-          textColor
-          backgroundColor
-          iconName
-          iconColor
-          links {
-            text
-            url
-          }
-        }
-
-        linkColumns {
-          title
-          subTitle
-          linkType
-          url
-          listingPage{
-            navigationTitle
-            navigationSubtitle
-            path
-          }
-          page{
-            title
-            subTitle
-            path
-          }
-          content{
-            content
-            remoteImages {
-              url
-              childImageSharp {
-                fluid (maxWidth: 1200, quality: 80){
-                  base64
-                  aspectRatio 
-                  src 
-                  srcSet 
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
-                } 
-              }
-            }
-          }
-          icon {
-            localFile {
-              name
-              childImageSharp {
-                fluid(maxWidth: 240, quality: 70) {
-                  base64
-                  aspectRatio 
-                  src 
-                  srcSet 
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
-                }
               }
             }
           }
         }
-
-        frontImageAlt
-        frontImage{
+        icon {
           localFile {
+            name
             childImageSharp {
-              fluid (maxWidth: 2400, quality: 90) {
+              fluid(maxWidth: 240, quality: 70) {
                 base64
-                aspectRatio 
-                src 
-                srcSet 
+                aspectRatio
+                src
+                srcSet
                 sizes
                 presentationWidth
                 presentationHeight
@@ -323,23 +343,42 @@ export const query = graphql`
             }
           }
         }
+      }
 
-        columnsBackgroundImage{
-          localFile {
-            childImageSharp {
-              fluid (maxWidth: 2400, quality: 70) {
-                base64
-                aspectRatio 
-                src 
-                srcSet 
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
-              }
+      frontImageAlt
+      frontImage {
+        localFile {
+          childImageSharp {
+            fluid(maxWidth: 2400, quality: 90) {
+              base64
+              aspectRatio
+              src
+              srcSet
+              sizes
+              presentationWidth
+              presentationHeight
+              originalImg
             }
           }
         }
+      }
+
+      columnsBackgroundImage {
+        localFile {
+          childImageSharp {
+            fluid(maxWidth: 2400, quality: 70) {
+              base64
+              aspectRatio
+              src
+              srcSet
+              sizes
+              presentationWidth
+              presentationHeight
+              originalImg
+            }
+          }
+        }
+      }
     }
   }
 `
