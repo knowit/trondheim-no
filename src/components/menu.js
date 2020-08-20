@@ -27,7 +27,6 @@ const Menu = ({ locale, localizedPaths }) => {
             id
             flamelink_locale
             extraMenuOptions {
-              id
               uniqueKey
               title
               redirectUrl
