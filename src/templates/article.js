@@ -286,6 +286,11 @@ export const query = graphql`
         fl_id
       }
 
+      localizedPaths {
+        locale
+        path
+      }
+
       contactInfo {
         textToShow
         telephoneNumber
