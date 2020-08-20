@@ -21,13 +21,14 @@ exports.createSchemaCustomization = ({ actions }) => {
   }
   type FlamelinkNavbarContent implements Node {
     childFlamelinkNavbarContentFieldExtraMenuOptionsItem: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
-    externalMenuItems: [ExtraMenuOption]
+    extraMenuOptions: [ExtraMenuOption]
   }
   type FlamelinkNavbarContentFieldExtraMenuOptionsItem implements Node {
     title: String!
     redirectUrl: String!
   }
   type ExtraMenuOption {
+    uniqueKey: String,
     title: String,
     redirectUrl: String
   }
