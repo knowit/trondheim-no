@@ -133,7 +133,7 @@ export default ({ data }) => {
 
   let address =
     data.flamelinkArticleContent.address &&
-    data.flamelinkArticleContent.address.address
+      data.flamelinkArticleContent.address.address
       ? data.flamelinkArticleContent.address.address
       : null
 
@@ -218,6 +218,18 @@ export default ({ data }) => {
     }
   }
 
+  const Copyright = () => {
+    const copyright = data.flamelinkArticleContent.copyright
+    if (copyright) {
+      if (copyright.content) {
+        return (<div id="copyright-container" style={{ marginTop: '30px' }}>
+          <HTMLContent htmlContent={{ content: copyright.content, remoteImages: [] }} resizeImg={false} />
+        </div>)
+      }
+    }
+    return null
+  }
+
   return (
     <Layout
       locale={data.flamelinkArticleContent.flamelink_locale}
@@ -255,6 +267,7 @@ export default ({ data }) => {
           <Offline>
             <OfflineMap></OfflineMap>
           </Offline>
+          <Copyright />
         </div>
       </div>
     </Layout>
@@ -289,6 +302,11 @@ export const query = graphql`
       localizedPaths {
         locale
         path
+      }
+
+      copyright {
+        title
+        content
       }
 
       contactInfo {

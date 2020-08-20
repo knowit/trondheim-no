@@ -12,6 +12,11 @@ exports.createSchemaCustomization = ({ actions }) => {
     localizedPaths : [LocalizedPath]
     textContent: String
     content: FlamelinkTextHtmlContentNode
+    copyright: Copyright
+  }
+  type Copyright {
+    title: String
+    content: String
   }
   type FlamelinkArticleContentFieldLatLong implements Node {
     googleMapsStaticImage: File @link
