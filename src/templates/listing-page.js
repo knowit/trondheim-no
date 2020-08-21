@@ -32,32 +32,11 @@ export default ({ data }) => {
     } else return null
   }
   return (
-    <Layout
-      locale={locale}
-      localizedPaths={data.flamelinkListingPageContent.localizedPaths}
-    >
-      <div id="outer-container">
-        <div id="inner-container">
+      <div id="listing-page-outer-container">
+        <div id="listing-page-inner-container">
           <div id="articles-header">
-            <h2>{data.flamelinkListingPageContent.localTitle}</h2>
-            <p>{data.flamelinkListingPageContent.textOnPage}</p>
             <MapButton />
-            <Link
-              id="english-button"
-              to={
-                data.flamelinkListingPageContent.localizedPaths.find(
-                  (item) => item.locale !== locale
-                ).path
-              }
-            >
-              {LocalizationHelper.getLocalWord(
-                localization,
-                "changeLanguage",
-                locale
-              )}
-            </Link>
           </div>
-
           <SortableArticleView
             data={data}
             tags={tags}
@@ -72,8 +51,7 @@ export default ({ data }) => {
             defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck}
           />
         </div>
-      </div>
-    </Layout>
+    </div>
   )
 }
 
