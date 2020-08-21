@@ -6,7 +6,7 @@ import "../style/listing-page.css"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 import ArticleView from "./article-box"
 
-const selectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" }
+const selectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" ,  "font-weight": "bold",}
 const unSelectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" }
 const SORT_TYPES = ["standard", "date", "title", "random"]
 
