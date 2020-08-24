@@ -3,9 +3,8 @@ import LocalizationHelper from "../helpers/helpers"
 import "../style/listing-page.css"
 import ArticleView from "./article-box"
 
-const selectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" ,  "font-weight": "bold",}
+const selectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" ,  "font-weight": "bold"}
 const unSelectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" }
-const SORT_TYPES = ["standard", "date", "title", "random"]
 
 export default ({
   tags,
@@ -16,7 +15,6 @@ export default ({
   defaultThumbnails,
 }) => {
   const [filterTags, setFilterTags] = useState([])
-  const [sortBy, setSortBy] = useState("standard")
 
   const handleTagToggle = (tag) => {
     let filterTagsTemp = filterTags
@@ -119,10 +117,7 @@ export default ({
         )
       }
     })
-    if (sortBy === "date") articleViews.sort(compareArticleViewDate)
-    if (sortBy === "title") articleViews.sort(compareArticleViewTitle)
-    if (sortBy === "random") shuffleArray(articleViews)
-
+    articleViews.sort(compareArticleViewTitle)
     return <div id="articles-container"> {articleViews} </div>
   }
 
@@ -135,18 +130,6 @@ export default ({
   )
 }
 
-function compareArticleViewDate(a1, a2) {
-  /* Must wait for flamelink to fix gatsby-source-flamelink
-    let a1Date = a1.props.pageContext.node._fl_meta_.lastModifiedDate;
-    let a2Date = a2.props.pageContext.node._fl_meta_.lastModifiedDate;
-    */
-  let a1Date = -1,
-    a2Date = 1
-
-  if (a1Date < a2Date) return -1
-  if (a1Date > a2Date) return 1
-  return 0
-}
 
 function compareArticleViewTitle(a1, a2) {
   let a1Title = a1.props.subList
@@ -161,24 +144,4 @@ function compareArticleViewTitle(a1, a2) {
   if (a1Title < a2Title) return -1
   if (a1Title > a2Title) return 1
   return 0
-}
-
-function shuffleArray(array) {
-  var currentIndex = array.length,
-    temporaryValue,
-    randomIndex
-
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex)
-    currentIndex -= 1
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex]
-    array[currentIndex] = array[randomIndex]
-    array[randomIndex] = temporaryValue
-  }
-
-  return array
 }
