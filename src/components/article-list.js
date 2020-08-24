@@ -29,7 +29,7 @@ export default ({
       if (indexOf === -1) filterTagsTemp.push(tag)
       else filterTagsTemp.splice(indexOf, 1)
     }
-    setFilterTags(filterTagsTemp)
+    setFilterTags(filterTagsTemp.slice())
   }
 
   const TagFilter = () => {
