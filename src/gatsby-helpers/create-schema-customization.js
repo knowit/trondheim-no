@@ -63,6 +63,12 @@ exports.createSchemaCustomization = ({ actions }) => {
     page: FlamelinkPageContent
     content: FlamelinkTextHtmlContentNode
   }
+  type FlamelinkNewFrontPageContent implements Node {
+    path: String
+    localizedPaths: [LocalizedPath]
+    frontPageAttractions: [FlamelinkArticleContent]
+    frontPageMaps: [FlamelinkListingPageContent]
+  }
   `
   createTypes(typeDefs)
 }

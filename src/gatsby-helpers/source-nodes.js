@@ -32,6 +32,18 @@ function resolveMenuData(node) {
     },
 
     {
+      type: "FlamelinkNewFrontPageContent",
+      resolver: (node) => {
+        return {
+          title: node.flamelink_locale === "no" ? "Hjem" : "Home",
+          slug: "",
+          locale: node.flamelink_locale,
+          path: getRootPath(node.flamelink_locale),
+        }
+      },
+    },
+
+    {
       type: "FlamelinkListingPageContent",
       resolver: (node) => {
         return node.showInDropMenu
