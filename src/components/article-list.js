@@ -1,9 +1,6 @@
 import React, { useState } from "react"
 import LocalizationHelper from "../helpers/helpers"
-import { Link } from "gatsby"
-import Img from "gatsby-image"
 import "../style/listing-page.css"
-import ReactDOMHelper from "../helpers/react-dom-helper"
 import ArticleView from "./article-box"
 
 const selectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" ,  "font-weight": "bold",}
@@ -29,7 +26,7 @@ export default ({
       if (indexOf === -1) filterTagsTemp.push(tag)
       else filterTagsTemp.splice(indexOf, 1)
     }
-    setFilterTags(filterTagsTemp)
+    setFilterTags(filterTagsTemp.slice())
   }
 
   const TagFilter = () => {
@@ -72,30 +69,6 @@ export default ({
         </div>
       </div>
       )
-  }
-
-  const Sorter = () => {
-    const sortTags = []
-    SORT_TYPES.forEach((s) => {
-      var tagName = LocalizationHelper.getLocalWord(localization, s, locale)
-      sortTags.push(
-        <div
-          role="button"
-          tabIndex={0}
-          onKeyPress={(e) => {
-            setSortBy(s)
-          }}
-          className="distinct-tag"
-          key={sortTags.length}
-          style={sortBy === s ? selectedStyle : unSelectedStyle}
-          onClick={(e) => setSortBy(s)}
-        >
-          {tagName}
-        </div>
-      )
-    })
-
-    return <div id="sort-container"> {sortTags} </div>
   }
 
   const ArticleList = () => {

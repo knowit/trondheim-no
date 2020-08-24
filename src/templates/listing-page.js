@@ -33,7 +33,6 @@ export default ({ data }) => {
   }
   return (
       <div id="listing-page-outer-container">
-        <div id="listing-page-inner-container">
           <div id="articles-header">
             <MapButton />
           </div>
@@ -50,7 +49,6 @@ export default ({ data }) => {
             locale={locale}
             defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck}
           />
-        </div>
     </div>
   )
 }

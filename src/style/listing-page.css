@@ -6,10 +6,9 @@
 
 #listing-page-outer-container{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   background-color: #FCFCFC;
 }
-
 
 #articles-header{
   display:flex;
