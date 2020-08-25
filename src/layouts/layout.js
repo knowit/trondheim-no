@@ -70,9 +70,8 @@ export default ({ children, locale, localizedPaths }) => {
     }
   `)
 
-  const menuItems = data.menu.edges
-    .find((it) => it.node.locale === locale)
-    .node.menuItems
+  const menuItems = data.menu.edges.find((it) => it.node.locale === locale).node
+    .menuItems
 
   const Navigation = ({ items }) => {
     return (

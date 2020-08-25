@@ -19,10 +19,13 @@ export default ({ data }) => {
 
   const Card = (props) => {
     return (
-      <Link to={props.to ? props.to : ""} className={"card-item-container " + props.className}>
+      <Link
+        to={props.to ? props.to : ""}
+        className={"card-item-container " + props.className}
+      >
         <img src={props.icon.url} alt="icon" />
         <h2>{props.title}</h2>
-        {props.subtitle ? <p>{props.subtitle}</p> : null }
+        {props.subtitle ? <p>{props.subtitle}</p> : null}
       </Link>
     )
   }
@@ -106,13 +109,13 @@ export default ({ data }) => {
           alt={data.flamelinkNewFrontPageContent.frontImageAlt}
         >
           <ImageText text={data.flamelinkNewFrontPageContent.frontImageAlt} />
-        <div id="chevron-container">
-          <FontAwesomeIcon icon="chevron-down" />
-        </div>
+          <div id="chevron-container">
+            <FontAwesomeIcon icon="chevron-down" />
+          </div>
         </BackgroundImage>
         <div id="overflow-container">
-            <Attractions />
-            <Maps />
+          <Attractions />
+          <Maps />
         </div>
       </div>
     </Layout>

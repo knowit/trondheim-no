@@ -33,9 +33,6 @@
 #attractions-container {
   margin-bottom: 50px;
 }
- 
-#maps-container {
-}
 
 .title {
   max-width: 50%;
@@ -54,7 +51,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  /* animation: chevron .5s linear 1s 2; */
+  animation: chevron .5s linear 1s 2;
 }
 
 @keyframes chevron {
@@ -106,7 +103,6 @@
   #header-image
   {
     min-height: 50vh;
-    /* display: block; */
     padding: 0;
   }
 
