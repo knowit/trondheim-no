@@ -69,6 +69,9 @@ exports.createSchemaCustomization = ({ actions }) => {
     frontPageAttractions: [FlamelinkArticleContent]
     frontPageMaps: [FlamelinkListingPageContent]
   }
+  type FlamelinkNewFrontPageContentFrontPageAttractionsLatLong implements Node {
+    googleMapsStaticImage: File @link
+  }
   `
   createTypes(typeDefs)
 }
