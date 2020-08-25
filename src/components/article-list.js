@@ -75,6 +75,10 @@ export default ({
     if (data.flamelinkListingPageContent.hasMapPage) {
       return (
         <Link id="map-button" to={data.flamelinkListingPageContent.mapPath}>
+          <img
+            alt="maps_icon"
+            src="https://firebasestorage.googleapis.com/v0/b/byportal-218506.appspot.com/o/flamelink%2Fmedia%2Fmaps_icon.t654A4BV83RLrL3y1SSA.svg?alt=media&token=205b8c7d-a899-455c-b089-e90b6d51e4f6"
+          />
           {LocalizationHelper.getLocalWord(localization, "showOnMap", locale)}
         </Link>
       )
@@ -109,6 +113,7 @@ export default ({
     const articleDefaultThumbnail = defaultThumbnails.find(
       (node) => node.title === "Article Thumbnail"
     )
+
     articles.forEach((article) => {
       //Add article to array only if it contains a tag chosen, or ALL is chosen (empty list).
       if (
@@ -132,15 +137,14 @@ export default ({
     articleViews.sort(compareArticleViewTitle)
     return <div id="articles-container"> {articleViews} </div>
   }
-  
 
   return (
     <div>
     <div id="articles-header">
-      <div id="tagbox">
+      <div id="tags-box">
         <TagFilter />
       </div>
-      <div id="mapbox">
+      <div id="map-button-box">
         <MapButton />
       </div>
     </div>
