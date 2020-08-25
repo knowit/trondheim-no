@@ -20,6 +20,7 @@ export default ({ data }) => {
   const Card = (props) => {
     return (
       <Link to={props.to ? props.to : ""} className={"card-item-container " + props.className}>
+        <img src={props.icon.url} alt="icon" />
         <h2>{props.title}</h2>
         {props.subtitle ? <p>{props.subtitle}</p> : null }
       </Link>
@@ -36,6 +37,11 @@ export default ({ data }) => {
               title={item.title}
               subtitle={item.parentListingPage.title}
               to={item.path}
+              icon={
+                item.frontPageIcon
+                  ? item.frontPageIcon[0]
+                  : data.flamelinkNewFrontPageContent.attractionsDefaultIcon[0]
+              }
             />
           )
         })}
@@ -47,7 +53,14 @@ export default ({ data }) => {
     return (
       <div className="cards-container">
         {props.items.map((item) => {
-          return <Card className="maps-background" title={item.title} to={item.mapPath}/>
+          return (
+            <Card
+              className="maps-background"
+              title={item.title}
+              to={item.mapPath}
+              icon={data.flamelinkNewFrontPageContent.mapsDefaultIcon[0]}
+            />
+          )
         })}
       </div>
     )
@@ -130,6 +143,9 @@ export const query = graphql`
       }
       frontImageAlt
       attractionsTitle
+      attractionsDefaultIcon {
+        url
+      }
       frontPageAttractions {
         flamelink_id
         title
@@ -137,8 +153,14 @@ export const query = graphql`
         parentListingPage {
           title: localTitle
         }
+        frontPageIcon {
+          url
+        }
       }
       mapsTitle
+      mapsDefaultIcon {
+        url
+      }
       frontPageMaps {
         title: mapPageTitle
         mapPath
