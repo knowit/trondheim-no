@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import LocalizationHelper from "../helpers/helpers"
 import "../style/listing-page.css"
 import ArticleView from "./article-box"
+import { Link } from "gatsby"
 
 const selectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" ,  "font-weight": "bold"}
 const unSelectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" }
@@ -13,6 +14,7 @@ export default ({
   localization,
   locale,
   defaultThumbnails,
+  data
 }) => {
   const [filterTags, setFilterTags] = useState([])
 
@@ -26,6 +28,7 @@ export default ({
     }
     setFilterTags(filterTagsTemp.slice())
   }
+  
 
   const TagFilter = () => {
     const allTags = []
@@ -67,6 +70,15 @@ export default ({
         </div>
       </div>
       )
+  }
+  const MapButton = () => {
+    if (data.flamelinkListingPageContent.hasMapPage) {
+      return (
+        <Link id="map-button" to={data.flamelinkListingPageContent.mapPath}>
+          {LocalizationHelper.getLocalWord(localization, "showOnMap", locale)}
+        </Link>
+      )
+    } else return null
   }
 
   const ArticleList = () => {
@@ -120,12 +132,23 @@ export default ({
     articleViews.sort(compareArticleViewTitle)
     return <div id="articles-container"> {articleViews} </div>
   }
+  
 
   return (
+    <div>
+    <div id="articles-header">
+      <div id="tagbox">
+        <TagFilter />
+      </div>
+      <div id="mapbox">
+        <MapButton />
+      </div>
+    </div>
     <div className="article-list-container">
-      <TagFilter />
+      
       {/*<Sorter />*/}
       <ArticleList />
+    </div>
     </div>
   )
 }

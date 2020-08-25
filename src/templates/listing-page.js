@@ -21,21 +21,9 @@ export default ({ data }) => {
         })
       }
     })
-
-  const MapButton = () => {
-    if (data.flamelinkListingPageContent.hasMapPage) {
-      return (
-        <Link id="map-button" to={data.flamelinkListingPageContent.mapPath}>
-          {LocalizationHelper.getLocalWord(localization, "showOnMap", locale)}
-        </Link>
-      )
-    } else return null
-  }
   return (
       <div id="listing-page-outer-container">
-          <div id="articles-header">
-            <MapButton />
-          </div>
+          
           <SortableArticleView
             data={data}
             tags={tags}
