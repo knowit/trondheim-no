@@ -3,12 +3,9 @@ import "../style/home.css"
 import Layout from "../layouts/layout"
 import { Link, graphql } from "gatsby"
 import BackgroundImage from "gatsby-background-image"
-import Img from "gatsby-image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { fas } from "@fortawesome/free-solid-svg-icons"
-import HTMLContent from "../components/html-content"
-import ReactDOMHelper from "../helpers/react-dom-helper"
 
 library.add(fas)
 
