@@ -12,9 +12,9 @@ export default ({ data }) => {
   var tags = []
   data.allFlamelinkArticleContent.edges
     .map((node) => node.node)
-    .map((node) => {
+    .forEach((node) => {
       if (node.tags) {
-        node.tags.map((tag) => {
+        node.tags.forEach((tag) => {
           if (!tags.includes(tag)) {
             tags.push(tag)
           }
