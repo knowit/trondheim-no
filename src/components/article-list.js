@@ -145,7 +145,7 @@ export default ({
   }
 
   return (
-    <div>
+    <div id="listing-page-container">
       <div id="articles-header">
         <div>
           <TagFilter />
