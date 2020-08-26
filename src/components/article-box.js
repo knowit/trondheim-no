@@ -2,13 +2,8 @@ import React from "react"
 import { Link } from "gatsby"
 import Img from "gatsby-image"
 import "../style/article-box.css"
-import ReactDOMHelper from "../helpers/react-dom-helper"
 
 export default ({ article, defaultThumbnail, subList }) => {
-  const articleInfo =
-    article.content == null
-      ? ""
-      : ReactDOMHelper.getTextContentFromHtml(article.content.content)
   var thumbnail = defaultThumbnail
 
   if (article.thumbnail != null) {

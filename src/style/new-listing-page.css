@@ -120,6 +120,8 @@
   
   #articles-header > :first-child{
     margin-right: auto;
+    display: flex;
+    align-items: center;
   }
   
   #articles-header > :nth-child(2){
@@ -128,6 +130,6 @@
   }
   
   #map-button img {
-    width: 40px;
+    width: 25px;
     height: auto;
   }

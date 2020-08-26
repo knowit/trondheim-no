@@ -1,9 +1,8 @@
 import React from "react"
 import "../style/listing-page.css"
-import LocalizationHelper from "../helpers/helpers"
-import Layout from "../layouts/layout"
-import { Link, graphql } from "gatsby"
+import { graphql } from "gatsby"
 import SortableArticleView from "../components/article-list"
+import Layout from "../layouts/layout"
 
 export default ({ data }) => {
   const locale = data.flamelinkListingPageContent.flamelink_locale
@@ -12,9 +11,9 @@ export default ({ data }) => {
   var tags = []
   data.allFlamelinkArticleContent.edges
     .map((node) => node.node)
-    .map((node) => {
+    .forEach((node) => {
       if (node.tags) {
-        node.tags.map((tag) => {
+        node.tags.forEach((tag) => {
           if (!tags.includes(tag)) {
             tags.push(tag)
           }
@@ -22,7 +21,11 @@ export default ({ data }) => {
       }
     })
   return (
-    <div id="listing-page-outer-container">
+    <Layout 
+      locale={locale}
+      localizedPaths={data.flamelinkListingPageContent.localizedPaths}
+      id="listing-page-outer-container"
+    >
       <SortableArticleView
         data={data}
         tags={tags}
@@ -36,7 +39,7 @@ export default ({ data }) => {
         locale={locale}
         defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck}
       />
-    </div>
+    </Layout>
   )
 }
 
