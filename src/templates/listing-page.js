@@ -22,21 +22,20 @@ export default ({ data }) => {
       }
     })
   return (
-      <div id="listing-page-outer-container">
-          
-          <SortableArticleView
-            data={data}
-            tags={tags}
-            localization={localization}
-            articles={data.allFlamelinkArticleContent.edges.map(
-              (node) => node.node
-            )}
-            subListingPages={data.allFlamelinkListingPageContent.edges.map(
-              (node) => node.node
-            )}
-            locale={locale}
-            defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck}
-          />
+    <div id="listing-page-outer-container">
+      <SortableArticleView
+        data={data}
+        tags={tags}
+        localization={localization}
+        articles={data.allFlamelinkArticleContent.edges.map(
+          (node) => node.node
+        )}
+        subListingPages={data.allFlamelinkListingPageContent.edges.map(
+          (node) => node.node
+        )}
+        locale={locale}
+        defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck}
+      />
     </div>
   )
 }

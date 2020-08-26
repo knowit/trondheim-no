@@ -4,8 +4,12 @@ import "../style/new-listing-page.css"
 import ArticleView from "./article-box"
 import { Link } from "gatsby"
 
-const selectedStyle = { backgroundColor: "#f5b891",  color: "black", "fontWeight": "bold"}
-const unSelectedStyle = { backgroundColor: "#f5b891", color: "black"}
+const selectedStyle = {
+  backgroundColor: "#f5b891",
+  color: "black",
+  fontWeight: "bold",
+}
+const unSelectedStyle = { backgroundColor: "#f5b891", color: "black" }
 
 export default ({
   tags,
@@ -14,7 +18,7 @@ export default ({
   localization,
   locale,
   defaultThumbnails,
-  data
+  data,
 }) => {
   const [filterTags, setFilterTags] = useState([])
 
@@ -28,7 +32,6 @@ export default ({
     }
     setFilterTags(filterTagsTemp.slice())
   }
-  
 
   const TagFilter = () => {
     const allTags = []
@@ -63,13 +66,16 @@ export default ({
     return (
       <div id="tag-filter-container">
         <div id="tag-container-text">
-        {LocalizationHelper.getLocalWord(localization, "filterText", locale).toUpperCase()}:
+          {LocalizationHelper.getLocalWord(
+            localization,
+            "filterText",
+            locale
+          ).toUpperCase()}
+          :
         </div>
-        <div id="all-tags-container">
-          {allTags}
-        </div>
+        <div id="all-tags-container">{allTags}</div>
       </div>
-      )
+    )
   }
   const MapButton = () => {
     if (data.flamelinkListingPageContent.hasMapPage) {
@@ -140,21 +146,20 @@ export default ({
 
   return (
     <div>
-    <div id="articles-header">
-      <div>
-        <TagFilter />
+      <div id="articles-header">
+        <div>
+          <TagFilter />
+        </div>
+        <div>
+          <MapButton />
+        </div>
       </div>
-      <div>
-        <MapButton />
+      <div className="article-list-container">
+        <ArticleList />
       </div>
-    </div>
-    <div className="article-list-container">
-      <ArticleList />
-    </div>
     </div>
   )
 }
-
 
 function compareArticleViewTitle(a1, a2) {
   let a1Title = a1.props.subList

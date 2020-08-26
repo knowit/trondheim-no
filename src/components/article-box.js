@@ -7,8 +7,8 @@ import ReactDOMHelper from "../helpers/react-dom-helper"
 export default ({ article, defaultThumbnail, subList }) => {
   const articleInfo =
     article.content == null
-    ? ""
-    : ReactDOMHelper.getTextContentFromHtml(article.content.content)
+      ? ""
+      : ReactDOMHelper.getTextContentFromHtml(article.content.content)
   var thumbnail = defaultThumbnail
 
   if (article.thumbnail != null) {
@@ -20,18 +20,16 @@ export default ({ article, defaultThumbnail, subList }) => {
   return (
     <Link className="article-container" to={article.path}>
       <Img className="article-thumbnail" fluid={thumbnail} />
-        <h2>
-          {subList ? article.navigationTitle : article.title}
-        </h2>
-        <div className="tags-container">
-          {article.tags.map(function (tag, key) {
-            return (
-              <div className="tag" key={tag}>
-                {tag}
-              </div>
-            )
-          })}
-        </div>
+      <h2>{subList ? article.navigationTitle : article.title}</h2>
+      <div className="tags-container">
+        {article.tags.map(function (tag, key) {
+          return (
+            <div className="tag" key={tag}>
+              {tag}
+            </div>
+          )
+        })}
+      </div>
     </Link>
   )
 }
