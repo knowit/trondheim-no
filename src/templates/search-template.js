@@ -10,7 +10,7 @@ const Search = ({ location, locale }) => {
   const [results, setResults] = useState([])
   const [quantity, setQuantity] = useState(10)
   const [pageNumber, setPageNumber] = useState(0)
-  const [locationHref, setLocationHref] = useState(location.href)
+  const [locationHref] = useState(location.href)
   const antall = [5, 10, 20, 50, 100]
 
   // Only re-run if query changes
@@ -48,7 +48,7 @@ const Search = ({ location, locale }) => {
   useEffect(() => {
     if (quantity === "all" || quantity === "alle" || pageNumber < 0) {
       setPageNumber(0)
-    } else if (pageNumber != 0) {
+    } else if (pageNumber !== 0) {
       const maxPage = Math.ceil(results.length / quantity)
       if (pageNumber >= maxPage) {
         setPageNumber(maxPage - 1)
@@ -255,7 +255,7 @@ const Search = ({ location, locale }) => {
 
       <div id="search-quantity-select">
         <span>{locale === "no" ? "Vis antall:" : "Display quantity:"}</span>
-        <select value={quantity} onChange={(e) => setQuantity(e.target.value)}>
+        <select value={quantity} onBlur={(e) => setQuantity(e.target.value)}>
           {antall.map((n) => (
             <option key={n} value={n}>
               {n}

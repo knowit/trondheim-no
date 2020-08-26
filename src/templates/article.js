@@ -126,11 +126,6 @@ function OpeningHours(props) {
 }
 
 export default ({ data }) => {
-  const layoutContext = {
-    locale: data.flamelinkArticleContent.flamelink_locale,
-    localizedPaths: data.flamelinkArticleContent.localizedPaths,
-  }
-
   let address =
     data.flamelinkArticleContent.address &&
       data.flamelinkArticleContent.address.address
