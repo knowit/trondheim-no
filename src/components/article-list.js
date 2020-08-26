@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import LocalizationHelper from "../helpers/helpers"
-import "../style/listing-page.css"
+import "../style/new-listing-page.css"
 import ArticleView from "./article-box"
 import { Link } from "gatsby"
 
-const selectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" ,  "fontWeight": "bold"}
-const unSelectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" }
+const selectedStyle = { backgroundColor: "#f5b891",  color: "black", "fontWeight": "bold"}
+const unSelectedStyle = { backgroundColor: "#f5b891", color: "black"}
 
 export default ({
   tags,
@@ -60,8 +60,6 @@ export default ({
         </div>
       )
     })
-    console.log(localization)
-    console.log(locale)
     return (
       <div id="tag-filter-container">
         <div id="tag-container-text">
@@ -143,16 +141,14 @@ export default ({
   return (
     <div>
     <div id="articles-header">
-      <div id="tags-box">
+      <div>
         <TagFilter />
       </div>
-      <div id="map-button-box">
+      <div>
         <MapButton />
       </div>
     </div>
     <div className="article-list-container">
-      
-      {/*<Sorter />*/}
       <ArticleList />
     </div>
     </div>
