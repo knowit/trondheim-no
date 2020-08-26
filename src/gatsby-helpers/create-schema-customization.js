@@ -43,11 +43,6 @@ exports.createSchemaCustomization = ({ actions }) => {
     mapPath: String
     localizedPaths : [LocalizedPath]
   }
-  type FlamelinkFrontPageContent implements Node {
-    path: String
-    localizedPaths : [LocalizedPath]
-    linkColumns: [FlamelinkLinkItemContent]
-  }
   type FlamelinkStudentPageContent implements Node {
     path: String
     localizedPaths : [LocalizedPath]
@@ -67,6 +62,15 @@ exports.createSchemaCustomization = ({ actions }) => {
     listingPage: FlamelinkListingPageContent
     page: FlamelinkPageContent
     content: FlamelinkTextHtmlContentNode
+  }
+  type FlamelinkNewFrontPageContent implements Node {
+    path: String
+    localizedPaths: [LocalizedPath]
+    frontPageAttractions: [FlamelinkArticleContent]
+    frontPageMaps: [FlamelinkListingPageContent]
+  }
+  type FlamelinkNewFrontPageContentFrontPageAttractionsLatLong implements Node {
+    googleMapsStaticImage: File @link
   }
   `
   createTypes(typeDefs)

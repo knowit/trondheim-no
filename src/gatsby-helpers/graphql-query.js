@@ -25,7 +25,7 @@ query {
     }
   }
 
-  allFlamelinkFrontPageContent {
+  allFlamelinkNewFrontPageContent {
     edges {
       node {
         id

@@ -25,7 +25,7 @@ exports.createResolvers = ({ createResolvers }) => {
       return path
     } else if (source._fl_meta_.schema === "page") {
       return `${source.flamelink_locale === "no" ? "" : "/en"}/${source.slug}`
-    } else if (source._fl_meta_.schema === "frontPage") {
+    } else if (source._fl_meta_.schema === "newFrontPage") {
       return source.flamelink_locale === "no" ? "/" : "/en"
     } else return ""
   }
@@ -137,7 +137,7 @@ exports.createResolvers = ({ createResolvers }) => {
         },
       },
     },
-    FlamelinkFrontPageContent: {
+    FlamelinkNewFrontPageContent: {
       path: {
         resolve(source, args, context, info) {
           return resolvePath(source)
@@ -148,13 +148,27 @@ exports.createResolvers = ({ createResolvers }) => {
           return resolveLocalizedPaths(source, context)
         },
       },
-      linkColumns: {
+      frontPageAttractions: {
         resolve(source, args, context, info) {
-          return source.linkColumns.map((column) =>
+          return source.frontPageAttractions.map((attraction) =>
             findSource(
               context,
-              column,
-              "FlamelinkLinkItemContent",
+              attraction,
+              "FlamelinkArticleContent",
+              source.flamelink_locale
+            ).then((node) => ({
+              ...node,
+            }))
+          )
+        },
+      },
+      frontPageMaps: {
+        resolve(source, args, context, info) {
+          return source.frontPageMaps.map((map) =>
+            findSource(
+              context,
+              map,
+              "FlamelinkListingPageContent",
               source.flamelink_locale
             ).then((node) => ({
               ...node,
@@ -163,6 +177,7 @@ exports.createResolvers = ({ createResolvers }) => {
         },
       },
     },
+
     FlamelinkStudentPageContent: {
       path: {
         resolve(source, args, context, info) {

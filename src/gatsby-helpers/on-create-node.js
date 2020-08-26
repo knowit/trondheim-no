@@ -137,7 +137,9 @@ exports.onCreateNode = async ({
       }
     }
   } else if (
-    node.internal.type === "FlamelinkArticleContentFieldLatLong" &&
+    (node.internal.type === "FlamelinkArticleContentFieldLatLong" ||
+      node.internal.type ===
+        "FlamelinkNewFrontPageContentFrontPageAttractionsLatLong") &&
     node.latitude &&
     node.longitude
   ) {
