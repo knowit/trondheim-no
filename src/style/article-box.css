@@ -1,3 +1,7 @@
+* {
+  font-family: 'PT Sans', 'Arial', 'Arial Unicode MS', 'Helvetica,sans-serif';
+}
+
 .article-container{
   margin: 10px;
   text-decoration: none;
@@ -47,11 +51,10 @@
 .tag{
   display: inline-block;
   text-decoration: none;
-  background-color: rgb(225, 225, 225);
   margin: 3px;
   padding: 5px 15px 5px 15px;
   color: rgb(61, 61, 61);
   font-size: 14px;
-  letter-spacing: 0;
+  font-style: normal;
   background-color: #FCFCFC;
 }
