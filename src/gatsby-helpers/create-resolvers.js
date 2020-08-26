@@ -25,10 +25,7 @@ exports.createResolvers = ({ createResolvers }) => {
       return path
     } else if (source._fl_meta_.schema === "page") {
       return `${source.flamelink_locale === "no" ? "" : "/en"}/${source.slug}`
-    } else if (
-      source._fl_meta_.schema === "frontPage" ||
-      source._fl_meta_.schema === "newFrontPage"
-    ) {
+    } else if (source._fl_meta_.schema === "newFrontPage") {
       return source.flamelink_locale === "no" ? "/" : "/en"
     } else return ""
   }
@@ -140,33 +137,6 @@ exports.createResolvers = ({ createResolvers }) => {
         },
       },
     },
-    FlamelinkFrontPageContent: {
-      path: {
-        resolve(source, args, context, info) {
-          return resolvePath(source)
-        },
-      },
-      localizedPaths: {
-        resolve(source, args, context, info) {
-          return resolveLocalizedPaths(source, context)
-        },
-      },
-      linkColumns: {
-        resolve(source, args, context, info) {
-          return source.linkColumns.map((column) =>
-            findSource(
-              context,
-              column,
-              "FlamelinkLinkItemContent",
-              source.flamelink_locale
-            ).then((node) => ({
-              ...node,
-            }))
-          )
-        },
-      },
-    },
-
     FlamelinkNewFrontPageContent: {
       path: {
         resolve(source, args, context, info) {
