@@ -1,383 +1,140 @@
-#header-container{
-  display: block;
-  width: 100%;
-  background-color: black;
+#header-container {
+  height: 100vh;
 }
 
-#header-image{
-  display: block;
-  background-repeat: no-repeat;
-  background-size: 100%;
-  width: 100%;
-  padding-bottom: 28%;
+#header-image,
+#header-image::before,
+#header-image::after {
+  box-sizing: border-box;
+  background-attachment: fixed;
 }
 
-#header-image h3{
-  font-size: 18pt;
-  text-align: center;
-  letter-spacing: 4px;
-  font-weight: 100;
-  padding-top: 1.5em;
-  font-weight: 100;
-  color: white;
-  justify-content: center;
+#header-image {
+  min-height: 100vh;
+  padding: 50px;
 }
 
-#header-image h1{
-font-size: 78pt;
-text-align: center;
-font-weight: 600;
-padding-top: 0px;
-color: white;
-  justify-content: center;
+#image-text {
+  position: absolute;
+  padding: 20px;
+  background-color: #fcfcfc;
+  width: 25%;
+  right: 0;
+  top: 0;
+  margin: 50px;
 }
 
-@media only screen and (max-width: 600px) {
-  #header-image h3{
-    font-size: 16pt;
-  }
-  #header-image h1{
-    font-size: 60pt;
-  }
-}
-@media only screen and (max-width: 500px) {
-  #header-image h3{
-    font-size: 14pt;
-  }
-  #header-image h1{
-    font-size: 50pt;
-  }
+#overflow-container {
+  box-sizing: border-box;
+  padding: 50px;
+  min-height: 100vh;
 }
 
-@media only screen and (max-width: 400px) {
-  #header-image h1{
-    font-size: 42pt;
-  }
+#attractions-container {
+  margin-bottom: 50px;
 }
 
-@media only screen and (max-width: 350px) {
-  #header-image h3{
-    font-size: 12pt;
-  }
-  #header-image h1{
-    font-size: 36pt;
-  }
-}
-
-#header-subtext{
-  display: flex;
-  color: white;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-size: 14px;
-  height: 46px;
-  width: 100%;
-  font-weight: 100;
-}
-
-
-#content-container{
-  display: block;
-  justify-content: center;
-  align-items: center;
-}
-
-#content-container h2 {
-  margin-top: 10px;
-  font-size: 28pt;
-
-  letter-spacing: 2px;
-  font-weight: 100;
-  padding-top: 20px;
-  text-align: center;
-}
-
-#navigation-menu-container{
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  align-items: center;
-  max-width: 1200px;
-  margin: 10px auto;
-}
-
-.navigation-box-container{
-  flex: 1;
-  max-width: 370px;
-  width: 370px;
-  min-width: 370px;
-  height: 420px;
-  margin: 10px;
-  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
-}
-
-@media only screen and (max-width: 1200px) {
-  #navigation-menu-container{
-    padding: 0 1em;
-  }
-}
-@media only screen and (max-width: 850px) {
-  #navigation-menu-container{
-    padding: 0;
-  }
-}
-@media only screen and (max-width: 800px) {
-  #navigation-menu-container{
-    padding: 0 1em;
-  }
-}
-@media only screen and (max-width: 600px) {
-  #navigation-menu-container{
-    padding: 0;
-  }
-}
-
-
-.navigation-box-thumbnail{
-  width: 100%;
-  height: 70%;
-  display: block;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-}
-
-.navigation-box-title{
-  color: rgba(20, 70, 170, 1);
-  text-decoration: none;
-  letter-spacing: 3px;
-}
-
-.navigation-box-title:hover{
-  color: rgb(10, 33, 90);
-  text-decoration: none;
-}
-
-.navigation-box-container h4{
-  text-align: center;
-  font-weight: 500;
-  font-size: 13pt;
-  margin-top: 14px;
-  letter-spacing: 1px;
-  overflow: hidden;
-}
-
-@media only screen and (max-width: 800px) {
-  .navigation-box-container{
-    width: 100%;
-    max-width: 100%;
-    margin: 20px;
-  }
-}
-
-#frontpage-columns-container{
-  margin-top: 50px;
-  height: auto;
-  width: 100%;
-  background-position: center center;
-  background-size: cover;
-  line-height: 25.71px;
-  color: #fff;
-  text-align: center;
-  font-size: 18px;
-  background-repeat: repeat;
-  background-attachment: scroll;
-}
-#frontpage-columns-overlay{
-  background-color: rgba(0,0,0,0.75);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  padding: 2em 0;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.frontpage-column-item-container{
-  display: block;
-  color: white;
-  height: auto;
-  min-width: 200px;
-  width: 220px;
-  padding: 3em 2em;
-  border-left: 1px solid white;
-}
-.frontpage-column-item-container:first-child{
-  border-left: 0;
-}
-
-.frontpage-column-image-container{
-  width: 100%;
-  min-height: 70px;
-}
-
-.frontpage-column-image{
-  margin: auto;
-  width: 55px;
-}
-
-.frontpage-column-info-container{
-  height: auto;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.frontpage-column-info-container h2{
-  padding: 0;
-  margin: 0;
-  min-height: 40px;
-  height: auto;
-}
-
-
-.frontpage-column-info-container h2 a{
-  height: auto;
-  color: white;
-  margin: 0;
-  font-size: 30px;
-  font-weight: 600;
-  letter-spacing: 0;
-}
-
-.frontpage-column-info-container h4 a {
-  text-decoration: underline;
-  color: white;
-  margin: 0;
-  padding: 0;
-  width: auto;
-}
-
-.frontpage-column-info-container h4 p{
-  margin: 0;
-  padding: 0;
-  width: auto;
-  font-weight: 600;
-  letter-spacing: 0;
-  color: white;
-}
-
-.frontpage-column-link:hover{
-  text-decoration: none;
-}
-
-@media only screen and (max-width: 1200px) {
-  .frontpage-column-item-container {
-    width: 40%;
-    max-width: 400px;
-  }
-  .frontpage-column-item-container:nth-child(odd){
-    border-left: 0;
-  }
-  #content-container .frontpage-column-info-container h2{
-    padding-top: 0;
-    margin-top: 0;
-  }
-}
-@media only screen and (max-width: 800px) {
-  .frontpage-column-item-container {
-    border-left: 0;
-    border-bottom: 1px solid #007de8;
-    width: 85%;
-    max-width: 85%;
-  }
-}
-
-
-#frontpage-cards-container{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 2em 1.5em;
-}
-
-.frontpage-card{
+.title {
+  max-width: 50%;
   display: inline-flex;
-  flex-direction: row;
-  width: 300px;
-  height: auto;
-  min-height: 100px;
-  margin: 10px 10px;
-  padding: 2em 1.5em;
+  padding: 20px;
+  margin-bottom: 25px;
+  text-transform: uppercase;
 }
 
-.frontpage-card-content{
+#chevron-container {
+  text-align: center;
+  font-size: 100px;
+  line-height: 0;
+  color: #fcfcfc;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  animation: chevron .5s linear 1s 2;
+}
+
+@keyframes chevron {
+  from {
+    bottom: 0;
+  }
+  50% {
+    bottom: -1rem;
+  }
+  to {
+    bottom: 0;
+  }
+}
+
+.attractions-background {
+  background-color: #EBC1A7;
+}
+
+.maps-background {
+  background-color: #C2CDE0
+}
+
+.cards-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.card-item-container {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  padding: 0 0.5em;
-}
-.frontpage-card-icon{
-  display: block;
-  margin: 0;
-  padding: 0;
-}
-#content-container h2.frontpage-card-title{
-  display: flex;
-  font-weight: 600;
-  font-size: 32px;
-  padding: 0;
-  margin: 0;
-  letter-spacing: 0;
-  align-content: flex-start;
-}
-.frontpage-card-links-container{
-  margin-top: 8px;
-  display: flex;
-  flex-direction: column;
-}
-.frontpage-card-links-container a{
-  margin-top: 2px;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 30%;
+  min-width: 15em;
+  max-width: 25em;
+  height: 20em;
+  color: #1C1C1C;
+  text-decoration: none;
 }
 
-@media only screen and (max-width: 800px) {
-  #frontpage-cards-container{
-    padding: 2em 1em;
-  }
-  .frontpage-card{
-    width: 100%;
-    padding: 3em 3em;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .frontpage-card-icon{
-    margin: 0 auto 20px auto;
-  }
-  .frontpage-card-content{
-    margin: auto;
-  }
-
-  #content-container h2.frontpage-card-title{
-    display: inline-block;
-    text-align: center;
-    width: 100%;
-  }
+.card-item-container h2 {
+  text-transform: uppercase;
 }
 
 @media only screen and (max-width: 600px) {
-
-  .frontpage-card{
-    padding: 3em 1em;
-    margin: 10px 0;
-    width: 100%;
+  #header-image
+  {
+    min-height: 50vh;
+    padding: 0;
   }
-}
 
-@media only screen and (max-width: 400px) {
-
-  #content-container h2.frontpage-card-title{
-    display: inline-block;
-    text-align: flex-start;
-    width: 100%;
+  #image-text {
+    display: block;
+    float: unset;
+    width: auto;
+    margin: 20px 10px;
+    bottom: 0;
+    top: unset;
+    left: 0;
   }
-}
 
+  .cards-container {
+    flex-direction: column;
+  }
 
-#custom-content-container{
-  margin-top: 2em;
-  display: flex;
-  justify-content: center;
+  .card-item-container {
+    width: 100%;
+    margin-bottom: 25px;
+  }
+
+  .card-item-container:last-of-type {
+    margin: 0;
+  }
+
+  .title {
+    max-width: 100%;
+  }
+
+  #chevron-container {
+    display: none;
+  }
+
 }

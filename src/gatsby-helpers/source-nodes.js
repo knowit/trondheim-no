@@ -20,7 +20,7 @@ function getRootPath(locale) {
 function resolveMenuData(node) {
   const resolvers = [
     {
-      type: "FlamelinkFrontPageContent",
+      type: "FlamelinkNewFrontPageContent",
       resolver: (node) => {
         return {
           title: node.flamelink_locale === "no" ? "Hjem" : "Home",
@@ -112,7 +112,7 @@ exports.sourceNodes = async ({
 
   var menuDataMap = new Map()
   let [frontPage, pages, listingPages, navbar] = await Promise.all([
-    getNodesByType("FlamelinkFrontPageContent"),
+    getNodesByType("FlamelinkNewFrontPageContent"),
     getNodesByType("FlamelinkPageContent"),
     getNodesByType("FlamelinkListingPageContent"),
     getNodesByType("FlamelinkNavbarContent"),
