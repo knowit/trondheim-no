@@ -4,7 +4,7 @@ import "../style/listing-page.css"
 import ArticleView from "./article-box"
 import { Link } from "gatsby"
 
-const selectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" ,  "font-weight": "bold"}
+const selectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" ,  "fontWeight": "bold"}
 const unSelectedStyle = { backgroundColor: "#f5b891", color: "black", padding: "10px" }
 
 export default ({
@@ -60,10 +60,12 @@ export default ({
         </div>
       )
     })
+    console.log(localization)
+    console.log(locale)
     return (
       <div id="tag-filter-container">
         <div id="tag-container-text">
-          VELG FILTER:
+        {LocalizationHelper.getLocalWord(localization, "filterText", locale).toUpperCase()}:
         </div>
         <div id="all-tags-container">
           {allTags}
