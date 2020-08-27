@@ -35,6 +35,21 @@ A grouping of related **Article** objects. For example, if you have several arti
 
 A single, standalone page displaying content that does not conform to the other schema types. The content is customizable through Flamelink's WYSIWYG editor, and will be rendered on the site very similar to how it looks in the editor. An example use case is the site's "About us" page, which contains some rich text and a few images, which are entered to the page's **Content** field. If we were to write "about-us" in the page's **Slug** field, then the content will be rendered on a standalone page located at `trondheim.no/about-us`.
 
+### Copyright
+
+If you need to add a copyright disclaimer at the bottom of an **Article**, then you may create one using the **Copyright** schema. When you have created your copyright disclaimer, navigate to the **Article** in which you want it shown, find the article's **Copyright** field and select the one you created.
+
+### Layout
+
+A grouping of different schemas representing the layout of different pages, such as the **Front Page** and the **Student Page**. Any information related to the pages that are not auto-generated will be stored in a schema within the **Layout** group.
+
+### Navbar
+
+Contains information about the site's menu bar.
+
+### Default thumbnails
+
+For each schema to which it applies, select a default thumbnail to be shown for objects which does not have a specified thumbnail.
 
 
 ## Frontend (React.js + Gatsby.js)
