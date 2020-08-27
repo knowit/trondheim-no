@@ -13,7 +13,9 @@ The [Gatsby Cloud](https://gatsbyjs.com) platform pulls the codebase from this G
 
 Whenever Gatsby Cloud successfully builds the site, it is deployed to [Netlify](https://netlify.com). Netlify deploys the site so that it is accessible through the web.
 
+
 ![Architecture Diagram](/static/images/trondheim-no-architecture.png)
+
 
 ## Flamelink (Headless CMS)
 
@@ -21,13 +23,18 @@ If you are a content editor of this site, then your first step should be to fami
 
 As an editor, you should become familiar with the "content" section of Flamelink (accessible through the sidebar menu). This is where you add, update, and delete the content that should be shown on the page. Below is a reference guide for the different schema types and their functions.
 
-#### Article
+### Article
 
-The **Article** schema describes the majority of content on the site. One article object contains information to be shown on a single subpage of the site, for example a single restaurant. All articles must have a title, a slug, and a parent **Listing page**. The article content may be edited through a what-you-see-is-what-you-get (WYSIWYG) editor, and it will be rendered on the built site looking very similar to how it looks in the Flamelink editor. Furthermore the **Article** schema has optional fields which may be provided only if they apply, such as tags, copyright disclaimers, opening hours, contact info, and a location. Hovever, these can be left blank when not used.
+Describes the majority of content on the site. One article object contains information to be shown on a single subpage of the site, for example a single restaurant. All articles must have a title, a slug, and a parent **Listing page**. The article content may be edited through a what-you-see-is-what-you-get (WYSIWYG) editor, and it will be rendered on the built site looking very similar to how it looks in the Flamelink editor. Furthermore the **Article** schema has optional fields which may be provided only if they apply, such as tags, copyright disclaimers, opening hours, contact info, and a location. Hovever, these can be left blank when not used.
 
-#### Listing Page
+### Listing Page
 
-The **Listing Page** schema type is a grouping of related **Article** objects. For example, if you have several articles which all represent different restaurants, you would provide them all with a parent listing page named "Restaurants". In many ways, the **Listing Page** may be thought of as a *category* of **Article**. A single listing page will show a list of all its child articles, with the ability to filter the list view by the article's tags.
+A grouping of related **Article** objects. For example, if you have several articles which all represent different restaurants, you would provide them all with a parent listing page named "Restaurants". In many ways, the **Listing Page** may be thought of as a *category* of **Article**. A single listing page will show a list of all its child articles, with the ability to filter the list view by the article's tags.
+
+### Page
+
+A single, standalone page displaying content that does not conform to the other schema types. The content is customizable through Flamelink's WYSIWYG editor, and will be rendered on the site very similar to how it looks in the editor. An example use case is the site's "About us" page, which contains some rich text and a few images, which are entered to the page's **Content** field. If we were to write "about-us" in the page's **Slug** field, then the content will be rendered on a standalone page located at `trondheim.no/about-us`.
+
 
 
 ## Frontend (React.js + Gatsby.js)
