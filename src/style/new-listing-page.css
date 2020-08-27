@@ -1,44 +1,29 @@
-
-
-* {
-    font-family: 'PT Sans', 'Arial', 'Arial Unicode MS', 'Helvetica,sans-serif';
-  }
-
-  #articles-header h2{
-    width: 100%;
-    height: 60px;
-    color: black;
-    letter-spacing: 0px;
-    text-align: left;
-    font-size: 20pt;
-  }
-
   #listing-page-container{
+    background-color: var(--main-bg-color);
     display: flex;
     flex-direction: column;
-    background-color: #FCFCFC;
     height: 100%;
   }
   
   #map-button{
+    color: var(--main-txt-color);
+    background-color: var(--main-map-btn-color);
     display: flex;
     flex-direction: column;
     height: 100%;
     min-width: 140px;
     text-align: center;
-    color: Black;
     text-decoration: none;
     align-items: center;
     justify-content: center;
-    background-color: #C2CDE0;
     font-size: 20px;
     padding: 20px;
   }
   
   #map-button:hover{
+    background-color:var(--main-map-btn-color-hover);
     text-decoration: none;
     cursor: pointer;
-    background-color:#C8D6E0;
   }
   
   #tag-filter-container{
@@ -48,6 +33,7 @@
   }
   
   #tag-container-text{
+    color: var(--main-txt-color);
     font-size: 20px;
     margin-right: 20px;
     margin-bottom: 10px;
@@ -60,33 +46,27 @@
     flex-flow: wrap;
   }
 
- .selectedStyle {
-    padding: 5px 10px 5px 10px;
+  .selectedStyle, .unSelectedStyle {
+    background-color: var(--main-hover-color);
+    padding: var(--main-tag-padding);
+    color: var(--main-txt-color);
+    opacity: 1;
     margin: 0 5px 5px 0;
     border: 0px;
     cursor: pointer;
     font-size: 14px;
-    text-transform: uppercase;
-    background-color: #f5b891;
-    color: black;
-    font-weight: bold;
+    text-transform: capitalize;
   }
-  .unSelectedStyle { 
-    padding: 5px 10px 5px 10px;
-    margin: 0 5px 5px 0;
-    border: 0px;
-    cursor: pointer;
-    font-size: 14px;
-    text-transform: uppercase;
-    background-color: #f5b891;
-    color: black
+
+  .selectedStyle {
+    font-weight: bold;
   }
   
   .article-list-container{
+    background-color: var(--main-bg-color);
     display: block;
     width: 100%;
     height: 100%;
-    background-color: #FCFCFC;
   }
   
   #articles-container{
@@ -99,26 +79,8 @@
     height: auto;
   }
   
-  .article-container h2{
-    color: rgba(20, 70, 170, 1);
-    text-decoration: none;
-    letter-spacing: 0px;
-    font-size: 22pt;
-    text-align: left;
-    display: block;
-    margin: 0;
-    padding: 0;
-    flex-grow: 1;
-  }
-  
-  .article-container h2 a{
-    color: black;
-    text-decoration: inherit;
-    flex-grow: 1;
-    font-size: 24px;
-  }
-  
   #articles-header{
+    background-color: var(--main-bg-color-opacity);
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -129,7 +91,6 @@
     left: 0;
     right: 0;
     z-index: 1;
-    background-color: rgba(252, 252, 252, 0.86);
   }
   
   #articles-header > :first-child{

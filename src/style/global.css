@@ -11,6 +11,17 @@
   font-family: 'PT Sans',Arial,'Arial Unicode MS',Helvetica,sans-serif;
 }
 
+:root {
+  --main-txt-color: #1C1C1C;
+  --main-bg-color: #FCFCFC;
+  --main-bg-color-opacity: rgba(252,252,252,0.86);
+  --main-primary-color: #9CADA5;
+  --main-hover-color: #F5B891;
+  --main-tag-padding: 5px 10px 5px 10px;
+  --main-map-btn-color: #C2CDE0;
+  --main-map-btn-color-hover: #C8D6E0;
+}
+
 html{
   height: 100%;
   width: 100%;

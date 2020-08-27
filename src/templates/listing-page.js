@@ -29,6 +29,7 @@ export default ({ data }) => {
         })
       }
     })
+  tags.sort()
 
   const MapButton = () => {
     if (data.flamelinkListingPageContent.hasMapPage) {
