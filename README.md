@@ -80,10 +80,9 @@ If you are a developer who wish to make changes to the code, start with the foll
 
 There are two main ways through which you can run the site locally on your computer.
 
-**Develop** mode is run by executing `gatsby develop`.
-This mode pulls data from Flamelink and builds the site once, then re-renders the site using the same data each time code changes are detected. This is the best way when you are developing new features, or troubleshooting and/or fixing bugs, because it allows you to see code changes in real time. If you need to re-build often, it is recommended to set the environment variable `TEST` to true and `TEST_IMAGE_URL` to an url linking to a very small image in the `.env.development` file, in order to reduce build time. The site will be hosted on `localhost:8000`.
+* **Develop** mode is run by executing `gatsby develop`. This mode pulls data from Flamelink and builds the site once, then re-renders the site using the same data each time code changes are detected. This is the best way when you are developing new features, or troubleshooting and/or fixing bugs, because it allows you to see code changes in real time. If you need to re-build often, it is recommended to set the environment variable `TEST` to true and `TEST_IMAGE_URL` to an url linking to a very small image in the `.env.development` file, in order to reduce build time. The site will be hosted on `localhost:8000`.
 
-If you want to **Build** the site to see how it will function in production, run `gatsby build` in order to build the static site files, and then run `gatsby serve` in order to serve the built site on `localhost:9000`. This mode does not provide live update as code is changed, but provides a view of how the site will appear in production. 
+* If you want to **Build** the site to see how it will function in production, run `gatsby build` in order to build the static site files, and then run `gatsby serve` in order to serve the built site on `localhost:9000`. This mode does not provide live update as code is changed, but provides a view of how the site will appear in production. 
 
 
 ## Gatsby Cloud
