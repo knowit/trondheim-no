@@ -61,7 +61,7 @@ If you are a developer who wish to make changes to the code, start with the foll
 1. Clone this repository by running `git clone https://github.com/leevi978/trondheim-demo.git`
 2. Navigate to the cloned repo's folder by running `cd trondheim-demo`
 3. Install all of the required node modules by running `npm install`
-4. Acquire the following environment variables, and add them to files for the development and production environments, named `.env.development` and `.env.production`, respectfully, both located in the root folder of the project:
+4. Acquire the following environment variables, and add them to files for the development and production environments, named `.env.development` and `.env.production`, respectfully, both located in the root folder of the project. They may be obtained from the Gatsby Cloud project's environment variables.
     * GATSBY_FLAMELINK_CLIENT_EMAIL
     * GATSBY_FLAMELINK_DATABASE_URL
     * GATSBY_FLAMELINK_PRIVATE_KEY
@@ -88,6 +88,29 @@ If you want to **Build** the site to see how it will function in production, run
 
 ## Gatsby Cloud
 
+[Gatsby Cloud](https://gatsbyjs.com) pulls the code from a specified branch of this Github repository. Log in to the platform using credentials provided by your administrator, or have the administrator invite you to the Gatsby Cloud project as a collaborator. Enter the Gatsby Cloud project dashboard named `trondheim-demo` and you will get an overview of all previous an ongoing builds of the site. For each build, you may access a build log, so that if something goes wrong, you should be able to access the specific error message if there is one.
+
+#### Choosing repository
+
+You may choose which repository the Gatsby Cloud project should pull code from by accessing `site-settings -> general` and then edit `site details`. By default, the project will usually point to the `master` branch, which contains production-ready code.
+
+#### Inviting contributors
+
+To provide another user with access to the Gatsby Cloud project, go to `site-settings -> general` and then click `invite contributor`.
+
+#### Edit environment variables
+
+To edit the environment variables used in production, go to `site-settings -> general` and scroll down to see the `environment variables` field. Change these variables only if necessary!
+
+#### Enable / Disable builds
+
+If you for some reason need to enable or disable builds, go to `site-settings -> builds` and select or deselect `builds`. The previously built sites will still be available and deployed to Netlify, but future builds will only trigger if the `builds` field is selected.
+
 ## Netlify
 
+[Netlify](https://netlify.com) simply deploys the site after it has been built by Gatsby Cloud. Netlify will have a log of previous successful and attempted builds, but will only deploy the ones that were successful. Access the Netlify project named `trondheim-no` using credentials provided by your administrator.
+
+#### Deploy a previous build
+
+If you for some reason need to roll back to deploy a previous deploy, enter the project and navigate to the `deploys` tab where you will see a list of previous deploys. Click on the deploy you wish to publish and select `publish deploy`. You may also lock publishing to a single deploy, so that new deploys aren't published automatically. 
 
