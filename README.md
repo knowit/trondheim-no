@@ -1,13 +1,12 @@
 # Documentation
 
 
-
-
 ## Architecture
 
 This site uses four technologies: Flamelink, Gatsby Cloud and Netlify in addition to the front-end, which is build using React.js and Gatsby.js. In this section we will provide a brief overview of the role of each module, and in the subsequent sections we will describe each one in more detail. 
 
-![Trondheim-no Architecture Diagram](/static/images/trondheim-no-architexture.png)
+![Architecture Diagram](/static/images/trondheim-no-architecture.png)
+
 
 [Flamelink](https://flamelink.io) is the content management system (CMS), and it is the most important module to the editors of the site's content. Flamelink provides a user interface through which the editor may add or update the site's content without needing any knowledge of programming or the rest of the site's architecture.
 
