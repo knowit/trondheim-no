@@ -128,7 +128,7 @@ function OpeningHours(props) {
 export default ({ data }) => {
   let address =
     data.flamelinkArticleContent.address &&
-      data.flamelinkArticleContent.address.address
+    data.flamelinkArticleContent.address.address
       ? data.flamelinkArticleContent.address.address
       : null
 
@@ -217,9 +217,14 @@ export default ({ data }) => {
     const copyright = data.flamelinkArticleContent.copyright
     if (copyright) {
       if (copyright.content) {
-        return (<div id="copyright-container" style={{ marginTop: '30px' }}>
-          <HTMLContent htmlContent={{ content: copyright.content, remoteImages: [] }} resizeImg={false} />
-        </div>)
+        return (
+          <div id="copyright-container" style={{ marginTop: "30px" }}>
+            <HTMLContent
+              htmlContent={{ content: copyright.content, remoteImages: [] }}
+              resizeImg={false}
+            />
+          </div>
+        )
       }
     }
     return null

@@ -1,19 +1,10 @@
-import React , {useState} from "react"
-import "../style/listing-page.css"
+import React, { useState } from "react"
 import { graphql } from "gatsby"
 import Layout from "../layouts/layout"
-
 import LocalizationHelper from "../helpers/helpers"
 import "../style/new-listing-page.css"
 import ArticleView from "../components/article-box"
 import { Link } from "gatsby"
-
-const selectedStyle = {
-  backgroundColor: "#f5b891",
-  color: "black",
-  fontWeight: "bold",
-}
-const unSelectedStyle = { backgroundColor: "#f5b891", color: "black" }
 
 export default ({ data }) => {
   const locale = data.flamelinkListingPageContent.flamelink_locale
@@ -74,8 +65,9 @@ export default ({ data }) => {
         tabIndex={0}
         onKeyPress={(e) => handleTagToggle("all")}
         key={allTags.length}
-        className="distinct-tag"
-        style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
+        className={
+          filterTags.length === 0 ? "selectedStyle" : "unSelectedStyle"
+        }
         onClick={(e) => handleTagToggle("all")}
       >
         {LocalizationHelper.getLocalWord(localization, "all", locale)}
@@ -88,8 +80,9 @@ export default ({ data }) => {
           tabIndex={0}
           onKeyPress={(e) => handleTagToggle(tag)}
           key={allTags.length}
-          className="distinct-tag"
-          style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}
+          className={
+            filterTags.includes(tag) ? "selectedStyle" : "unSelectedStyle"
+          }
           onClick={(e) => handleTagToggle(tag)}
         >
           {tag}
@@ -110,7 +103,6 @@ export default ({ data }) => {
       </div>
     )
   }
-  
 
   const ArticleList = () => {
     const articleViews = []
@@ -164,26 +156,26 @@ export default ({ data }) => {
     articleViews.sort(compareArticleViewTitle)
     return <div id="articles-container"> {articleViews} </div>
   }
-  
+
   return (
-    <Layout 
+    <Layout
       locale={locale}
       localizedPaths={data.flamelinkListingPageContent.localizedPaths}
       id="listing-page-outer-container"
     >
       <div id="listing-page-container">
-      <div id="articles-header">
-        <div>
-          <TagFilter />
+        <div id="articles-header">
+          <div>
+            <TagFilter />
+          </div>
+          <div>
+            <MapButton />
+          </div>
         </div>
-        <div>
-          <MapButton />
+        <div className="article-list-container">
+          <ArticleList />
         </div>
       </div>
-      <div className="article-list-container">
-        <ArticleList />
-      </div>
-    </div>
     </Layout>
   )
 }

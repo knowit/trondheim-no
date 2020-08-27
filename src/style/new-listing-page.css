@@ -59,14 +59,27 @@
     flex-wrap: row wrap;
     flex-flow: wrap;
   }
-  
-  .distinct-tag{
+
+ .selectedStyle {
     padding: 5px 10px 5px 10px;
     margin: 0 5px 5px 0;
     border: 0px;
     cursor: pointer;
     font-size: 14px;
     text-transform: uppercase;
+    background-color: #f5b891;
+    color: black;
+    font-weight: bold;
+  }
+  .unSelectedStyle { 
+    padding: 5px 10px 5px 10px;
+    margin: 0 5px 5px 0;
+    border: 0px;
+    cursor: pointer;
+    font-size: 14px;
+    text-transform: uppercase;
+    background-color: #f5b891;
+    color: black
   }
   
   .article-list-container{
@@ -103,7 +116,6 @@
     text-decoration: inherit;
     flex-grow: 1;
     font-size: 24px;
-  
   }
   
   #articles-header{
