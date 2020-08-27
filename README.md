@@ -54,6 +54,38 @@ For each schema to which it applies, select a default thumbnail to be shown for 
 
 ## Frontend (React.js + Gatsby.js)
 
+If you are a developer who wish to make changes to the code, start with the following steps
+
+#### Set up environment
+
+1. Clone this repository by running `git clone https://github.com/leevi978/trondheim-demo.git`
+2. Navigate to the cloned repo's folder by running `cd trondheim-demo`
+3. Install all of the required node modules by running `npm install`
+4. Acquire the following environment variables, and add them to files for the development and production environments, named `.env.development` and `.env.production`, respectfully, both located in the root folder of the project:
+    * GATSBY_FLAMELINK_CLIENT_EMAIL
+    * GATSBY_FLAMELINK_DATABASE_URL
+    * GATSBY_FLAMELINK_PRIVATE_KEY
+    * GATSBY_FLAMELINK_PROJECT_ID
+    * GATSBY_FLAMELINK_STORAGE_BUCKET
+    * GATSBY_GOOGLE_API
+    * GATSBY_CONCURRENT_DOWNLOAD
+    * GOOGLE_APPLICATION_CREDENTIALS
+    * WORKER_TOPIC
+    * TOPIC
+    * TEST
+    * TEST_IMAGE_URL
+    
+    
+#### Running locally
+
+There are two main ways through which you can run the site locally on your computer.
+
+**Develop** mode is run by executing `gatsby develop`.
+This mode pulls data from Flamelink and builds the site once, then re-renders the site using the same data each time code changes are detected. This is the best way when you are developing new features, or troubleshooting and/or fixing bugs, because it allows you to see code changes in real time. If you need to re-build often, it is recommended to set the environment variable `TEST` to true and `TEST_IMAGE_URL` to an url linking to a very small image in the `.env.development` file, in order to reduce build time. The site will be hosted on `localhost:8000`.
+
+If you want to **Build** the site to see how it will function in production, run `gatsby build` in order to build the static site files, and then run `gatsby serve` in order to serve the built site on `localhost:9000`. This mode does not provide live update as code is changed, but provides a view of how the site will appear in production. 
+
+
 ## Gatsby Cloud
 
 ## Netlify
