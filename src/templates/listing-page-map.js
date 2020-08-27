@@ -14,6 +14,13 @@ const defaultLocation = {
 
 const defaultAddress = "Trondheim, Norway"
 
+const selectedStyle = {
+  backgroundColor: "#f5b891",
+  color: "black",
+  fontWeight: "bold",
+}
+const unSelectedStyle = { backgroundColor: "#f5b891", color: "black" }
+
 function getLocation(node) {
   if (node.latLong && node.latLong.latitude && node.latLong.longitude) {
     return {
