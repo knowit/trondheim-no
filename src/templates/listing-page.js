@@ -3,7 +3,7 @@ import { graphql } from "gatsby"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import "../style/new-listing-page.css"
-import ArticleView from "../components/article-box"
+import ArticleView from "../components/article-card"
 import { Link } from "gatsby"
 
 export default ({ data }) => {

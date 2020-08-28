@@ -1,0 +1,52 @@
+p {
+    margin-bottom: 1em;
+    font-weight: 100;
+}
+
+img {
+    max-width: 100%;
+}
+
+.subheading {
+    color: black;
+    text-align: left;
+    margin-bottom: 1em;
+    font-size: 22px;
+}
+
+.contact-info-container{
+    display: flex;
+    min-height: 100px;
+    flex-flow: row;
+    flex-wrap: wrap;
+}
+
+.contactInfo {
+    text-decoration: none;
+    padding: 5px;
+    margin: auto;
+}
+
+.contactInfo > a {
+    color: var(--main-txt-color);
+    text-decoration: none;
+}
+
+.contactInfoHeader {
+    font-weight: bold;
+}
+
+#lower-container{
+    width: 100%;
+}
+
+.mapContainer {
+    border: 1px solid gray;
+    padding: 5px;
+    box-shadow: 5px 10px 5px grey;
+}
+
+.containerElement {
+    height: 400px; 
+    width: 100%; 
+}

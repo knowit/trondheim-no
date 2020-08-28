@@ -1,5 +1,5 @@
 import React from "react"
-import styles from "../style/article.module.css"
+import "../style/article.css"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import Img from "gatsby-image"
@@ -8,6 +8,8 @@ import HTMLContent from "../components/html-content"
 import Map from "../components/map.js"
 import { Router } from "@reach/router"
 import { graphql } from "gatsby"
+
+const listingPageColor = "#F5B891"
 
 function ContactInfo(props) {
   if (!props.node.contactInfo && !props.node.address.address) return ""
@@ -18,14 +20,7 @@ function ContactInfo(props) {
   if (props.node.address) {
     if (props.node.address.address) {
       elements.push(
-        <div key={index++} className={styles.contactInfo}>
-          <span
-            className={styles.contactInfoHeader}
-          >{`${LocalizationHelper.getLocalWord(
-            props.localization,
-            "address",
-            locale
-          )}:\t`}</span>
+        <div key={index++} className="contactInfo">
           <span>{props.node.address.address}</span>
         </div>
       )
@@ -34,14 +29,7 @@ function ContactInfo(props) {
   if (props.node.contactInfo) {
     if (props.node.contactInfo.emailAddress) {
       elements.push(
-        <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>
-            {LocalizationHelper.getLocalWord(
-              props.localization,
-              "email",
-              locale
-            ) + ": "}
-          </span>
+        <div key={index++} className="contactInfo">
           <a href={"mailto: " + props.node.contactInfo.emailAddress}>
             {props.node.contactInfo.emailAddress}
           </a>
@@ -50,14 +38,7 @@ function ContactInfo(props) {
     }
     if (props.node.contactInfo.telephoneNumber) {
       elements.push(
-        <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>
-            {LocalizationHelper.getLocalWord(
-              props.localization,
-              "telephone",
-              locale
-            ) + ": "}
-          </span>
+        <div key={index++} className="contactInfo">
           <a href={"tel: " + props.node.contactInfo.telephoneNumber}>
             {props.node.contactInfo.telephoneNumber}
           </a>
@@ -66,18 +47,11 @@ function ContactInfo(props) {
     }
     if (props.node.contactInfo.linkToWebsite) {
       elements.push(
-        <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>
-            {LocalizationHelper.getLocalWord(
-              props.localization,
-              "website",
-              locale
-            ) + ": "}
+        <div key={index++} className="contactInfo">
+          <span className="contactInfoHeader">
           </span>
           <a href={props.node.contactInfo.linkToWebsite}>
-            {props.node.contactInfo.textToShow
-              ? props.node.contactInfo.textToShow
-              : props.node.contactInfo.linkToWebsite}
+            {props.node.contactInfo.linkToWebsite}
           </a>
         </div>
       )
@@ -86,15 +60,15 @@ function ContactInfo(props) {
 
   if (elements.length > 0)
     return (
-      <div>
-        <h3 className={styles.subheading}>
+      <div className="contact-info-container" style={{backgroundColor:listingPageColor}}>
+          <div key={index++} className="contactInfo">
           {LocalizationHelper.getLocalWord(
             props.localization,
             "contactInfo",
             locale
-          )}
-        </h3>
-        <div>{elements}</div>
+          )}:
+          </div>
+        {elements}
       </div>
     )
   else return ""
@@ -106,7 +80,7 @@ function OpeningHours(props) {
   var locale = props.locale
   if (props.node.openingHours && props.node.openingHours.content) {
     elements.push(
-      <h3 key={index++} className={styles.subheading}>
+      <h3 key={index++} className="subheading">
         {LocalizationHelper.getLocalWord(
           props.localization,
           "openingHours",
@@ -229,7 +203,6 @@ export default ({ data }) => {
     }
     return null
   }
-
   return (
     <Layout
       locale={data.flamelinkArticleContent.flamelink_locale}
@@ -329,6 +302,24 @@ export const query = graphql`
           url
           childImageSharp {
             fluid(maxWidth: 600, quality: 70) {
+              base64
+              aspectRatio
+              src
+              srcSet
+              sizes
+              presentationWidth
+              presentationHeight
+              originalImg
+            }
+          }
+        }
+      }
+
+      thumbnail {
+        localFile {
+          name
+          childImageSharp {
+            fluid(maxWidth: 340, quality: 70) {
               base64
               aspectRatio
               src

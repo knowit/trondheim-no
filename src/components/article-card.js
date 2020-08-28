@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
 import Img from "gatsby-image"
-import "../style/article-box.css"
+import "../style/article-card.css"
 
 export default ({ article, defaultThumbnail, subList, listingPageColor }) => {
   var thumbnail = defaultThumbnail
@@ -11,10 +11,9 @@ export default ({ article, defaultThumbnail, subList, listingPageColor }) => {
       thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
     }
   }
-  console.log(listingPageColor)
 
   return (
-    <Link className="article-container" to={article.path} style={{backgroundColor: listingPageColor}}>
+    <Link className="article-container" to={article.path} style={{backgroundColor:listingPageColor}}>
       <Img className="article-thumbnail" fluid={thumbnail} />
       <h2>{subList ? article.navigationTitle : article.title}</h2>
       <div className="tags-container">
