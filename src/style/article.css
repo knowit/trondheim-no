@@ -50,3 +50,20 @@ img {
     height: 400px; 
     width: 100%; 
 }
+
+#tags-container{
+    display: flex;
+    flex-direction: column;
+    float: right;
+    margin-left: 20px;
+}
+
+#article-content-container{
+    display: flex;
+    padding: 5%;
+    align-items: center;
+}
+
+#html-content{
+    margin-right: auto;
+}

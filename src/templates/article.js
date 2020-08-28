@@ -203,6 +203,20 @@ export default ({ data }) => {
     }
     return null
   }
+
+  const Tags = (props) => (
+    <div id="tags-container">
+      {props.tags.map(function (tag, key) {
+        return (
+          <div className="tag" key={tag} style={{backgroundColor: listingPageColor}}>
+            {tag}
+          </div>
+        )
+      })}
+    </div>
+  )
+
+  
   return (
     <Layout
       locale={data.flamelinkArticleContent.flamelink_locale}
@@ -211,12 +225,17 @@ export default ({ data }) => {
       <div id="outer-container">
         <div id="inner-container">
           <h2 id="article-title">{data.flamelinkArticleContent.title}</h2>
-          <ParsedHTML />
-          <OpeningHours
-            node={data.flamelinkArticleContent}
-            localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={data.flamelinkArticleContent.flamelinklocale}
-          />
+          <div id="article-content-container">
+            <div id="html-content">
+              <ParsedHTML />
+              <OpeningHours
+                node={data.flamelinkArticleContent}
+                localization={data.flamelinkArticleLocalizationContent.translations}
+                locale={data.flamelinkArticleContent.flamelinklocale}
+              />
+            </div>
+            <Tags tags={data.flamelinkArticleContent.tags}/>
+          </div>
           <ContactInfo
             node={data.flamelinkArticleContent}
             localization={data.flamelinkArticleLocalizationContent.translations}
