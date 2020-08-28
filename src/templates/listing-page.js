@@ -16,11 +16,11 @@ export default ({ data }) => {
   const articles = data.allFlamelinkArticleContent.edges.map(
     (node) => node.node
   )
-
+  const listingPageColor = data.flamelinkListingPageContent.listingPageColor
   var tags = []
   data.allFlamelinkArticleContent.edges
-    .map((node) => node.node)
-    .forEach((node) => {
+  .map((node) => node.node)
+      .forEach((node) => {
       if (node.tags) {
         node.tags.forEach((tag) => {
           if (!tags.includes(tag)) {
@@ -69,6 +69,7 @@ export default ({ data }) => {
         className={
           filterTags.length === 0 ? "selectedStyle" : "unSelectedStyle"
         }
+        style={{backgroundColor:listingPageColor}}
         onClick={(e) => handleTagToggle("all")}
       >
         {LocalizationHelper.getLocalWord(localization, "all", locale)}
@@ -84,6 +85,7 @@ export default ({ data }) => {
           className={
             filterTags.includes(tag) ? "selectedStyle" : "unSelectedStyle"
           }
+          style={{backgroundColor:listingPageColor}}
           onClick={(e) => handleTagToggle(tag)}
         >
           {tag}
@@ -125,6 +127,7 @@ export default ({ data }) => {
                     .fluid
                 : null
             }
+            listingPageColor={listingPageColor}
           />
         )
       }
@@ -150,6 +153,7 @@ export default ({ data }) => {
                     .fluid
                 : null
             }
+            listingPageColor={listingPageColor}
           />
         )
       }
@@ -223,6 +227,7 @@ export const query = graphql`
       hasMapPage
       localTitle
       textOnPage
+      listingPageColor
       localizedPaths {
         locale
         path

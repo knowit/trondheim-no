@@ -3,7 +3,7 @@ import { Link } from "gatsby"
 import Img from "gatsby-image"
 import "../style/article-box.css"
 
-export default ({ article, defaultThumbnail, subList }) => {
+export default ({ article, defaultThumbnail, subList, listingPageColor }) => {
   var thumbnail = defaultThumbnail
 
   if (article.thumbnail != null) {
@@ -11,9 +11,10 @@ export default ({ article, defaultThumbnail, subList }) => {
       thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
     }
   }
+  console.log(listingPageColor)
 
   return (
-    <Link className="article-container" to={article.path}>
+    <Link className="article-container" to={article.path} style={{backgroundColor: listingPageColor}}>
       <Img className="article-thumbnail" fluid={thumbnail} />
       <h2>{subList ? article.navigationTitle : article.title}</h2>
       <div className="tags-container">
