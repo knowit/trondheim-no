@@ -93,17 +93,14 @@ exports.createResolvers = ({ createResolvers }) => {
       type: nodeType,
       firstOnly: false,
     }
-    const result = context.nodeModel.runQuery(query).then((result) => {
-      var paths = []
+    const result = context.nodeModel.runQuery(query).then((result) =>
       result.map((node) => {
-        paths.push({
+        return {
           locale: node.flamelink_locale,
           path: resolvePath(node),
-        })
+        }
       })
-
-      return paths
-    })
+    )
     return result
   }
 
