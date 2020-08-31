@@ -9,7 +9,6 @@ import Map from "../components/map.js"
 import { Router } from "@reach/router"
 import { graphql } from "gatsby"
 
-const listingPageColor = "#F5B891"
 
 function ContactInfo(props) {
   if (!props.node.contactInfo && !props.node.address.address) return ""
@@ -60,7 +59,7 @@ function ContactInfo(props) {
 
   if (elements.length > 0)
     return (
-      <div className="contact-info-container" style={{backgroundColor:listingPageColor}}>
+      <div className="contact-info-container" style={{backgroundColor:props.listingPageColor}}>
           <div key={index++} className="contactInfo">
           {LocalizationHelper.getLocalWord(
             props.localization,
@@ -163,7 +162,7 @@ export default ({ data }) => {
       )
     }
   }
-
+  
   const OfflineMap = () => {
     const imageNode = data.flamelinkArticleContent.latLong.googleMapsStaticImage
 
@@ -203,7 +202,16 @@ export default ({ data }) => {
     }
     return null
   }
+  // Checks for granparent listing page and inherits its color if its exist. Else take parents color. This to
+  // require just one color change in the CMS.
+  const listingPageColor = data.flamelinkArticleContent.parentListingPage.parentListingPage.listingPageColor ?
+    data.flamelinkArticleContent.parentListingPage.parentListingPage.listingPageColor : 
+    data.flamelinkArticleContent.parentListingPage.listingPageColor
 
+  const defaultImage = data.flamelinkDefaultThumbnailsContent.imageDeck.find(
+    (node) => node.title === "Listing Page Thumbnail"
+  ).image[0].localFile.childImageSharp
+  console.log(defaultImage)
   const Tags = (props) => (
     <div id="tags-container">
       {props.tags.map(function (tag, key) {
@@ -216,7 +224,7 @@ export default ({ data }) => {
     </div>
   )
 
-  
+
   return (
     <Layout
       locale={data.flamelinkArticleContent.flamelink_locale}
@@ -224,7 +232,14 @@ export default ({ data }) => {
     >
       <div id="outer-container">
         <div id="inner-container">
-          <h2 id="article-title">{data.flamelinkArticleContent.title}</h2>
+          <div id="article-image-container">
+            <Img id="article-image" fluid={data.flamelinkArticleContent.thumbnail[0] ? 
+            data.flamelinkArticleContent.thumbnail[0].localFile.childImageSharp.fluid : 
+            defaultImage} />
+            <div id="article-title" style={{backgroundColor: listingPageColor}}>
+              {data.flamelinkArticleContent.title}
+            </div>
+          </div>
           <div id="article-content-container">
             <div id="html-content">
               <ParsedHTML />
@@ -240,8 +255,9 @@ export default ({ data }) => {
             node={data.flamelinkArticleContent}
             localization={data.flamelinkArticleLocalizationContent.translations}
             locale={data.flamelinkArticleContent.flamelink_locale}
+            listingPageColor={listingPageColor}
           />
-          <Online>
+          {/* <Online>
             <Router basepath={data.flamelinkArticleContent.path}>
               <Map
                 path="/"
@@ -259,7 +275,7 @@ export default ({ data }) => {
           <Offline>
             <OfflineMap></OfflineMap>
           </Offline>
-          <Copyright />
+          <Copyright /> */}
         </div>
       </div>
     </Layout>
@@ -267,7 +283,10 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query ArticleQuery($nodeId: String) {
+  query ArticleQuery(
+    $nodeId: String
+    $locale: String
+    ) {
     flamelinkArticleLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
       translations {
@@ -338,7 +357,7 @@ export const query = graphql`
         localFile {
           name
           childImageSharp {
-            fluid(maxWidth: 340, quality: 70) {
+            fluid(maxWidth: 600, quality: 100) {
               base64
               aspectRatio
               src
@@ -370,6 +389,38 @@ export const query = graphql`
           }
         }
       }
+
+      parentListingPage {
+          listingPageColor
+          parentListingPage{
+            listingPageColor
+          }
+      }
     }
+
+    flamelinkDefaultThumbnailsContent(flamelink_locale: { eq: $locale }) {
+      id
+      flamelink_locale
+      imageDeck {
+        title
+        image {
+          localFile {
+            childImageSharp {
+              fluid(quality: 90) {
+                base64
+                aspectRatio
+                src
+                srcSet
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
+              }
+            }
+          }
+        }
+      }
+    }
+
   }
 `

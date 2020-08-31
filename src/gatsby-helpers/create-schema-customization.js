@@ -7,6 +7,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     remoteImages: [File] @link
   }
   type FlamelinkArticleContent implements Node {
+    parentListingPage: FlamelinkListingPageContent
     tags: [String]
     path: String
     localizedPaths : [LocalizedPath]

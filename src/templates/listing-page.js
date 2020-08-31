@@ -7,16 +7,20 @@ import ArticleView from "../components/article-card"
 import { Link } from "gatsby"
 
 export default ({ data }) => {
+  console.log(data.flamelinkListingPageContent)
   const locale = data.flamelinkListingPageContent.flamelink_locale
   const localization = data.flamelinkListingPageLocalizationContent.translations
   const defaultThumbnails = data.flamelinkDefaultThumbnailsContent.imageDeck
+  //inherits the color if the listingpage have a parent listingpage.
+  const listingPageColor = data.flamelinkListingPageContent.parentListingPage.listingPageColor ?
+    data.flamelinkListingPageContent.parentListingPage.listingPageColor :
+    data.flamelinkListingPageContent.listingPageColor
   const subListingPages = data.allFlamelinkListingPageContent.edges.map(
     (node) => node.node
   )
   const articles = data.allFlamelinkArticleContent.edges.map(
     (node) => node.node
   )
-  const listingPageColor = data.flamelinkListingPageContent.listingPageColor
   var tags = []
   data.allFlamelinkArticleContent.edges
   .map((node) => node.node)
@@ -231,6 +235,9 @@ export const query = graphql`
       localizedPaths {
         locale
         path
+      }
+      parentListingPage{
+        listingPageColor
       }
     }
 
