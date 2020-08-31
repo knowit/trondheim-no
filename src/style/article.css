@@ -15,7 +15,7 @@ img {
 }
 
 .contact-info-container{
-    background-color: var(--main-hover);
+    background-color: var(--main-hover-color);
     display: flex;
     min-height: 100px;
     flex-flow: row;
@@ -56,13 +56,13 @@ img {
     display: flex;
     flex-direction: column;
     float: right;
-    margin-left: 20px;
+    margin-left: 50px;
+    margin-top: 50px;
 }
 
 #article-content-container{
     display: flex;
     padding: 5%;
-    align-items: center;
 }
 
 #html-content{
@@ -92,4 +92,15 @@ img {
     bottom: 80px;
     z-index: 2;
     text-transform: uppercase;
+}
+
+.article-tag{
+  color: var(--main-txt-color);
+  padding: var(--main-tag-padding);
+  background-color: var(--main-hover-color);
+  display: inline-block;
+  text-decoration: none;
+  margin: 3px;
+  font-size: 14px;
+  font-style: normal;
 }

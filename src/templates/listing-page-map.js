@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import "../style/listing-page.css"
+//import "../style/listing-page.css"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import { Link, graphql } from "gatsby"

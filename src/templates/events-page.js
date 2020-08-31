@@ -1,6 +1,6 @@
 import React from "react"
 import { Router } from "@reach/router"
-import "../style/listing-page.css"
+//import "../style/listing-page.css"
 import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
 import { Link, graphql } from "gatsby"

@@ -8,6 +8,7 @@ import HTMLContent from "../components/html-content"
 import Map from "../components/map.js"
 import { Router } from "@reach/router"
 import { graphql } from "gatsby"
+import listingPage from "./listing-page"
 
 
 function ContactInfo(props) {
@@ -210,13 +211,13 @@ export default ({ data }) => {
 
   const defaultImage = data.flamelinkDefaultThumbnailsContent.imageDeck.find(
     (node) => node.title === "Listing Page Thumbnail"
-  ).image[0].localFile.childImageSharp
-  console.log(defaultImage)
+  ).image[0].localFile.childImageSharp.fluid
+  
   const Tags = (props) => (
     <div id="tags-container">
       {props.tags.map(function (tag, key) {
         return (
-          <div className="tag" key={tag} style={{backgroundColor: listingPageColor}}>
+          <div className="article-tag" key={tag} style={{backgroundColor: listingPageColor}}>
             {tag}
           </div>
         )
@@ -235,7 +236,7 @@ export default ({ data }) => {
           <div id="article-image-container">
             <Img id="article-image" fluid={data.flamelinkArticleContent.thumbnail[0] ? 
             data.flamelinkArticleContent.thumbnail[0].localFile.childImageSharp.fluid : 
-            defaultImage} />
+            defaultImage} style={{maxHeight: "80vh"}}/>
             <div id="article-title" style={{backgroundColor: listingPageColor}}>
               {data.flamelinkArticleContent.title}
             </div>
@@ -406,7 +407,7 @@ export const query = graphql`
         image {
           localFile {
             childImageSharp {
-              fluid(quality: 90) {
+              fluid(maxWidth: 600, quality: 90) {
                 base64
                 aspectRatio
                 src
