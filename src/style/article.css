@@ -56,8 +56,8 @@ img {
     display: flex;
     flex-direction: column;
     float: right;
-    margin-left: 50px;
-    margin-top: 50px;
+    margin-left: 40px;
+    margin-top: 40px;
 }
 
 #article-content-container{

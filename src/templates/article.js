@@ -51,7 +51,9 @@ function ContactInfo(props) {
           <span className="contactInfoHeader">
           </span>
           <a href={props.node.contactInfo.linkToWebsite}>
-            {props.node.contactInfo.linkToWebsite}
+            {props.node.contactInfo.textToShow 
+            ? props.node.contactInfo.textToShow
+            : props.node.contactInfo.linkToWebsite}
           </a>
         </div>
       )
@@ -258,7 +260,7 @@ export default ({ data }) => {
             locale={data.flamelinkArticleContent.flamelink_locale}
             listingPageColor={listingPageColor}
           />
-          {/* <Online>
+          <Online>
             <Router basepath={data.flamelinkArticleContent.path}>
               <Map
                 path="/"
@@ -276,7 +278,7 @@ export default ({ data }) => {
           <Offline>
             <OfflineMap></OfflineMap>
           </Offline>
-          <Copyright /> */}
+          <Copyright />
         </div>
       </div>
     </Layout>
