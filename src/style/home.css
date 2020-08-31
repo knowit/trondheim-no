@@ -40,6 +40,7 @@
   padding: 20px;
   margin-bottom: 25px;
   text-transform: uppercase;
+  box-sizing: border-box;
 }
 
 #chevron-container {
@@ -51,7 +52,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  animation: chevron .5s linear 1s 2;
+  animation: chevron 0.5s linear 1s 2;
 }
 
 @keyframes chevron {
@@ -67,22 +68,22 @@
 }
 
 .attractions-background {
-  background-color: #EBC1A7;
+  background-color: #ebc1a7;
 }
 
 .maps-background {
-  background-color: #C2CDE0
+  background-color: #c2cde0;
 }
 
 .cards-container {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   justify-content: space-between;
   text-align: center;
 }
 
 .card-item-container {
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,7 +92,7 @@
   min-width: 15em;
   max-width: 25em;
   height: 20em;
-  color: #1C1C1C;
+  color: #1c1c1c;
   text-decoration: none;
 }
 
@@ -99,13 +100,28 @@
   text-transform: uppercase;
 }
 
-@media only screen and (max-width: 600px) {
-  #header-image
-  {
+@media only screen and (max-width: 980px) {
+  #image-text {
+    width: 50%;
+  }
+
+  #header-image,
+  #header-image::before,
+  #header-image::after {
+    background-attachment: scroll;
+    z-index: -1;
+  }
+  #header-image {
     min-height: 50vh;
     padding: 0;
   }
 
+  #chevron-container {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 600px) {
   #image-text {
     display: block;
     float: unset;
@@ -122,6 +138,7 @@
 
   .card-item-container {
     width: 100%;
+    max-width: none;
     margin-bottom: 25px;
   }
 
@@ -130,11 +147,7 @@
   }
 
   .title {
-    max-width: 100%;
+    width: 100%;
+    max-width: none;
   }
-
-  #chevron-container {
-    display: none;
-  }
-
 }
