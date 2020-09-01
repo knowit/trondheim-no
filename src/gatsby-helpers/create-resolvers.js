@@ -1,5 +1,6 @@
 exports.createResolvers = ({ createResolvers }) => {
   const striptags = require("striptags")
+  const { UrlHelper } = require("../helpers/url-helper")
 
   const resolvePath = (source) => {
     if (!source._fl_meta_) {
@@ -28,6 +29,27 @@ exports.createResolvers = ({ createResolvers }) => {
     } else if (source._fl_meta_.schema === "newFrontPage") {
       return source.flamelink_locale === "no" ? "/" : "/en"
     } else return ""
+  }
+
+  const resolveNavigationPath = (source) => {
+    const resolveChildren = (item, url) => {
+      url += item.url
+      const children = item.flamelink_children.map((child) =>
+        resolveChildren(child, url)
+      )
+      return {
+        ...item,
+        flamelink_children: children,
+        url,
+      }
+    }
+    return source.items.map((it) => {
+      if (UrlHelper.validURL(it.url)) {
+        return it
+      }
+      const url = source.flamelink_locale === "no" ? "" : "/en"
+      return resolveChildren(it, url)
+    })
   }
 
   const resolveMapPath = (source) => {
@@ -105,6 +127,13 @@ exports.createResolvers = ({ createResolvers }) => {
   }
 
   const resolvers = {
+    FlamelinkSidebarMainMenuNavigation: {
+      items: {
+        resolve(source) {
+          return resolveNavigationPath(source)
+        },
+      },
+    },
     FlamelinkListingPageContent: {
       path: {
         resolve(source, args, context, info) {
