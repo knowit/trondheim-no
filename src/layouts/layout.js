@@ -2,7 +2,7 @@ import React from "react"
 import "../style/layout.css"
 import { Helmet } from "react-helmet"
 import { Link, graphql, useStaticQuery } from "gatsby"
-import className from "classnames";
+import className from "classnames"
 
 export default ({ children, locale, localizedPaths }) => {
   const data = useStaticQuery(graphql`
@@ -95,7 +95,10 @@ export default ({ children, locale, localizedPaths }) => {
   ).items
 
   const re = /^(?:\/en)?\/([\w\-\_]+)(?:\/\S+|$)/
-  const root = re.exec(window.location.pathname)[1]
+  const root =
+    window.location.pathname !== "/"
+      ? re.exec(window.location.pathname)[1]
+      : null
 
   const Navigation = ({ items }) => {
     return (
@@ -136,14 +139,12 @@ export default ({ children, locale, localizedPaths }) => {
 
     const cn = className({
       active: item.root === root,
-      'nav-item-container': true,
+      "nav-item-container": true,
     })
 
     return (
       <div className={cn}>
-        <Link to={item.url}>
-          {item.title}
-        </Link>
+        <Link to={item.url}>{item.title}</Link>
         <SubItems show={item.root === root} />
       </div>
     )
