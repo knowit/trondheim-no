@@ -47,23 +47,7 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
-    {
-      resolve: `gatsby-transformer-remark`,
-      options: {
-        plugins: [
-          `gatsby-remark-relative-images`,
-          {
-            resolve: `gatsby-remark-images`,
-            options: {
-              maxWidth: 800,
-              linkImagesToOriginal: false,
-              sizeByPixelDensity: true,
-              showCaptions: true,
-            },
-          },
-        ],
-      },
-    },
+    
     `gatsby-transformer-sharp`,
     {
       resolve: `gatsby-plugin-sharp`,
@@ -71,22 +55,6 @@ module.exports = {
         useMozJpeg: false,
         stripMetadata: false,
         defaultQuality: 90,
-      },
-    },
-    {
-      resolve: `gatsby-mdx-fix`,
-      options: {
-        extensions: [".mdx", ".md"],
-        gatsbyRemarkPlugins: [
-          `gatsby-remark-relative-images`,
-          {
-            resolve: `gatsby-remark-images`,
-            options: {
-              maxWidth: 860,
-              backgroundColor: "none",
-            },
-          },
-        ],
       },
     },
 
