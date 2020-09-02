@@ -67,7 +67,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     })
   })
 
-  result.data.allFlamelinkNewFrontPageContent.edges
+  result.data.allFlamelinkFrontPageContent.edges
     .map((node) => node.node)
     .map((node) => {
       createPage({
