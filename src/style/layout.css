@@ -1,8 +1,10 @@
 #layout-container {
-  /* min-height: 100vh;
-  display: flex; */
   display: grid;
   grid-template-columns: minmax(250px, 20%) 1fr;
+  min-height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  background-color: #fcfcfc;
 }
 
 .nav-item-container.active {
@@ -27,7 +29,7 @@
 
 .nav-item-container {
   margin-bottom: 1rem;
-  font-size: 22px;
+  font-size: 24px;
 }
 
 
@@ -43,11 +45,13 @@
 
 .child-item-container > a {
   font-size: 18px;
-  margin: .3rem 0;
+  margin: 0.3rem 0;
 }
 
 #layout-content-container {
   flex-grow: 1;
+  max-height: 100vh;
+  overflow-y: scroll;
 }
 
 #header {
