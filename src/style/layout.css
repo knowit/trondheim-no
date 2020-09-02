@@ -20,7 +20,7 @@
 }
 
 #secondary-menu > .nav-item-container.active {
-  border-left: 0.2rem solid #475778;
+  border-left: 0.2rem solid #262f40;
   padding-left: 1rem;
 }
 
@@ -29,7 +29,7 @@
 }
 
 #secondary-menu > .nav-item-container.active > a {
-  color: #475778;
+  color: #262f40;
 }
 
 #menu-container a {
