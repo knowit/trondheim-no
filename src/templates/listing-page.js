@@ -12,9 +12,10 @@ export default ({ data }) => {
   const localization = data.flamelinkListingPageLocalizationContent.translations
   const defaultThumbnails = data.flamelinkDefaultThumbnailsContent.imageDeck
   //inherits the color if the listingpage have a parent listingpage.
-  const listingPageColor = data.flamelinkListingPageContent.parentListingPage.listingPageColor ?
-    data.flamelinkListingPageContent.parentListingPage.listingPageColor :
-    data.flamelinkListingPageContent.listingPageColor
+  const listingPageColor = data.flamelinkListingPageContent.parentListingPage
+    .listingPageColor
+    ? data.flamelinkListingPageContent.parentListingPage.listingPageColor
+    : data.flamelinkListingPageContent.listingPageColor
   const subListingPages = data.allFlamelinkListingPageContent.edges.map(
     (node) => node.node
   )
@@ -23,8 +24,8 @@ export default ({ data }) => {
   )
   var tags = []
   data.allFlamelinkArticleContent.edges
-  .map((node) => node.node)
-      .forEach((node) => {
+    .map((node) => node.node)
+    .forEach((node) => {
       if (node.tags) {
         node.tags.forEach((tag) => {
           if (!tags.includes(tag)) {
@@ -73,7 +74,7 @@ export default ({ data }) => {
         className={
           filterTags.length === 0 ? "selectedStyle" : "unSelectedStyle"
         }
-        style={{backgroundColor:listingPageColor}}
+        style={{ backgroundColor: listingPageColor }}
         onClick={(e) => handleTagToggle("all")}
       >
         {LocalizationHelper.getLocalWord(localization, "all", locale)}
@@ -89,7 +90,7 @@ export default ({ data }) => {
           className={
             filterTags.includes(tag) ? "selectedStyle" : "unSelectedStyle"
           }
-          style={{backgroundColor:listingPageColor}}
+          style={{ backgroundColor: listingPageColor }}
           onClick={(e) => handleTagToggle(tag)}
         >
           {tag}
@@ -236,7 +237,7 @@ export const query = graphql`
         locale
         path
       }
-      parentListingPage{
+      parentListingPage {
         listingPageColor
       }
     }

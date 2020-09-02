@@ -10,7 +10,6 @@ import { Router } from "@reach/router"
 import { graphql } from "gatsby"
 import listingPage from "./listing-page"
 
-
 function ContactInfo(props) {
   if (!props.node.contactInfo && !props.node.address.address) return ""
 
@@ -48,12 +47,11 @@ function ContactInfo(props) {
     if (props.node.contactInfo.linkToWebsite) {
       elements.push(
         <div key={index++} className="contactInfo">
-          <span className="contactInfoHeader">
-          </span>
+          <span className="contactInfoHeader"></span>
           <a href={props.node.contactInfo.linkToWebsite}>
-            {props.node.contactInfo.textToShow 
-            ? props.node.contactInfo.textToShow
-            : props.node.contactInfo.linkToWebsite}
+            {props.node.contactInfo.textToShow
+              ? props.node.contactInfo.textToShow
+              : props.node.contactInfo.linkToWebsite}
           </a>
         </div>
       )
@@ -62,14 +60,18 @@ function ContactInfo(props) {
 
   if (elements.length > 0)
     return (
-      <div className="contact-info-container" style={{backgroundColor:props.listingPageColor}}>
-          <div key={index++} className="contactInfo">
+      <div
+        className="contact-info-container"
+        style={{ backgroundColor: props.listingPageColor }}
+      >
+        <div key={index++} className="contactInfo">
           {LocalizationHelper.getLocalWord(
             props.localization,
             "contactInfo",
             locale
-          )}:
-          </div>
+          )}
+          :
+        </div>
         {elements}
       </div>
     )
@@ -165,7 +167,7 @@ export default ({ data }) => {
       )
     }
   }
-  
+
   const OfflineMap = () => {
     const imageNode = data.flamelinkArticleContent.latLong.googleMapsStaticImage
 
@@ -207,26 +209,31 @@ export default ({ data }) => {
   }
   // Checks for granparent listing page and inherits its color if its exist. Else take parents color. This to
   // require just one color change in the CMS.
-  const listingPageColor = data.flamelinkArticleContent.parentListingPage.parentListingPage.listingPageColor ?
-    data.flamelinkArticleContent.parentListingPage.parentListingPage.listingPageColor : 
-    data.flamelinkArticleContent.parentListingPage.listingPageColor
+  const listingPageColor = data.flamelinkArticleContent.parentListingPage
+    .parentListingPage.listingPageColor
+    ? data.flamelinkArticleContent.parentListingPage.parentListingPage
+        .listingPageColor
+    : data.flamelinkArticleContent.parentListingPage.listingPageColor
 
   const defaultImage = data.flamelinkDefaultThumbnailsContent.imageDeck.find(
     (node) => node.title === "Listing Page Thumbnail"
   ).image[0].localFile.childImageSharp.fluid
-  
+
   const Tags = (props) => (
     <div id="tags-container">
       {props.tags.map(function (tag, key) {
         return (
-          <div className="article-tag" key={tag} style={{backgroundColor: listingPageColor}}>
+          <div
+            className="article-tag"
+            key={tag}
+            style={{ backgroundColor: listingPageColor }}
+          >
             {tag}
           </div>
         )
       })}
     </div>
   )
-
 
   return (
     <Layout
@@ -236,10 +243,20 @@ export default ({ data }) => {
       <div id="outer-container">
         <div id="inner-container">
           <div id="article-image-container">
-            <Img id="article-image" fluid={data.flamelinkArticleContent.thumbnail[0] ? 
-            data.flamelinkArticleContent.thumbnail[0].localFile.childImageSharp.fluid : 
-            defaultImage} style={{maxHeight: "80vh"}}/>
-            <div id="article-title" style={{backgroundColor: listingPageColor}}>
+            <Img
+              id="article-image"
+              fluid={
+                data.flamelinkArticleContent.thumbnail[0]
+                  ? data.flamelinkArticleContent.thumbnail[0].localFile
+                      .childImageSharp.fluid
+                  : defaultImage
+              }
+              style={{ maxHeight: "80vh" }}
+            />
+            <div
+              id="article-title"
+              style={{ backgroundColor: listingPageColor }}
+            >
               {data.flamelinkArticleContent.title}
             </div>
           </div>
@@ -248,11 +265,13 @@ export default ({ data }) => {
               <ParsedHTML />
               <OpeningHours
                 node={data.flamelinkArticleContent}
-                localization={data.flamelinkArticleLocalizationContent.translations}
+                localization={
+                  data.flamelinkArticleLocalizationContent.translations
+                }
                 locale={data.flamelinkArticleContent.flamelinklocale}
               />
             </div>
-            <Tags tags={data.flamelinkArticleContent.tags}/>
+            <Tags tags={data.flamelinkArticleContent.tags} />
           </div>
           <ContactInfo
             node={data.flamelinkArticleContent}
@@ -286,10 +305,7 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query ArticleQuery(
-    $nodeId: String
-    $locale: String
-    ) {
+  query ArticleQuery($nodeId: String, $locale: String) {
     flamelinkArticleLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
       translations {
@@ -394,10 +410,10 @@ export const query = graphql`
       }
 
       parentListingPage {
+        listingPageColor
+        parentListingPage {
           listingPageColor
-          parentListingPage{
-            listingPageColor
-          }
+        }
       }
     }
 
@@ -424,6 +440,5 @@ export const query = graphql`
         }
       }
     }
-
   }
 `

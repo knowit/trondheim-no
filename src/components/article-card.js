@@ -13,7 +13,11 @@ export default ({ article, defaultThumbnail, subList, listingPageColor }) => {
   }
 
   return (
-    <Link className="article-container" to={article.path} style={{backgroundColor:listingPageColor}}>
+    <Link
+      className="article-container"
+      to={article.path}
+      style={{ backgroundColor: listingPageColor }}
+    >
       <Img className="article-thumbnail" fluid={thumbnail} />
       <h2>{subList ? article.navigationTitle : article.title}</h2>
       <div className="tags-container">
