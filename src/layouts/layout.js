@@ -1,7 +1,8 @@
-import React from "react"
+import React, { useState } from "react"
 import "../style/layout.css"
 import { Helmet } from "react-helmet"
 import { Link, graphql, useStaticQuery } from "gatsby"
+import Img from "gatsby-image"
 import className from "classnames"
 
 export default ({ children, locale, localizedPaths }) => {
@@ -22,29 +23,27 @@ export default ({ children, locale, localizedPaths }) => {
         }
       }
       navbar: allFlamelinkNavbarContent {
-        edges {
-          node {
-            id
-            flamelink_locale
-            navbarText
-            extraMenuOptions {
-              uniqueKey
-              title
-              redirectUrl
-            }
-            logo {
-              localFile {
-                childImageSharp {
-                  fluid(maxWidth: 120, quality: 70) {
-                    base64
-                    aspectRatio
-                    src
-                    srcSet
-                    sizes
-                    presentationWidth
-                    presentationHeight
-                    originalImg
-                  }
+        nodes {
+          id
+          flamelink_locale
+          navbarText
+          extraMenuOptions {
+            uniqueKey
+            title
+            redirectUrl
+          }
+          logo {
+            localFile {
+              childImageSharp {
+                fluid(maxWidth: 120, quality: 70) {
+                  base64
+                  aspectRatio
+                  src
+                  srcSet
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
                 }
               }
             }
@@ -84,6 +83,19 @@ export default ({ children, locale, localizedPaths }) => {
           }
         }
       }
+
+      allFlamelinkSidebarSecondaryMenuNavigation {
+        nodes {
+          id
+          flamelink_locale
+          items {
+            uuid
+            title
+            url
+            root
+          }
+        }
+      }
     }
   `)
 
@@ -94,11 +106,9 @@ export default ({ children, locale, localizedPaths }) => {
     (it) => it.flamelink_locale === locale
   ).items
 
-  const re = /^(?:\/en)?\/([\w\-\_]+)(?:\/\S+|$)/
-  const root =
-    window.location.pathname !== "/"
-      ? re.exec(window.location.pathname)[1]
-      : null
+  const sidebarSecondaryMenu = data.allFlamelinkSidebarSecondaryMenuNavigation.nodes.find(
+    (it) => it.flamelink_locale === locale
+  ).items
 
   const Navigation = ({ items }) => {
     return (
@@ -137,15 +147,22 @@ export default ({ children, locale, localizedPaths }) => {
       return null
     }
 
+    const [isPartial, setIsPartial] = useState(false)
+    const isPartiallyActive = ({ isPartiallyCurrent }) => {
+      setIsPartial(isPartiallyCurrent)
+    }
+
     const cn = className({
-      active: item.root === root,
+      active: isPartial,
       "nav-item-container": true,
     })
 
     return (
       <div className={cn}>
-        <Link to={item.url}>{item.title}</Link>
-        <SubItems show={item.root === root} />
+        <Link getProps={isPartiallyActive} to={item.url}>
+          {item.title}
+        </Link>
+        <SubItems show={isPartial} />
       </div>
     )
   }
@@ -173,7 +190,18 @@ export default ({ children, locale, localizedPaths }) => {
         <button>menu</button>
         <p>TRONDHEIM</p>
       </header>
-      <Menu id="menu" items={sidebarMainMenu} />
+      <div id="menu-container">
+        <Menu id="menu" items={sidebarMainMenu} />
+        <Menu id="secondary-menu" items={sidebarSecondaryMenu} />
+        <div id="sidebar-bottom">
+          <Img
+            fluid={
+              data.navbar.nodes.find((it) => it.flamelink_locale === locale)
+                .logo[0].localFile.childImageSharp.fluid
+            }
+          ></Img>
+        </div>
+      </div>
       <div id="layout-content-container">{children}</div>
     </div>
   )

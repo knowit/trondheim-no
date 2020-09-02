@@ -45,7 +45,10 @@ exports.createResolvers = ({ createResolvers }) => {
     }
     return source.items.map((it) => {
       if (UrlHelper.validURL(it.url)) {
-        return it
+        return {
+          ...it,
+          url: UrlHelper.fixHttp(it.url)
+        }
       }
       const url = source.flamelink_locale === "no" ? "" : "/en"
       return resolveChildren(it, url)
@@ -128,6 +131,13 @@ exports.createResolvers = ({ createResolvers }) => {
 
   const resolvers = {
     FlamelinkSidebarMainMenuNavigation: {
+      items: {
+        resolve(source) {
+          return resolveNavigationPath(source)
+        },
+      },
+    },
+    FlamelinkSidebarSecondaryMenuNavigation: {
       items: {
         resolve(source) {
           return resolveNavigationPath(source)

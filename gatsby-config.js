@@ -107,7 +107,10 @@ module.exports = {
         environment: "production",
         content: true,
         populate: true,
-        navigation: [{ navigationKey: "sidebarMainMenu", structure: "nested" }],
+        navigation: [
+          { navigationKey: "sidebarMainMenu", structure: "nested" },
+          { navigationKey: "sidebarSecondaryMenu", structure: "nested" },
+        ],
         globals: true,
       },
     },

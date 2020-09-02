@@ -10,6 +10,13 @@ class UrlHelper {
     return !!pattern.test(str);
   }
 
+  static fixHttp(url) {
+    if (!url.startsWith("http")) {
+      url = "//" + url
+    }
+    return url
+  }
+
 }
 
 class GoogleMapsUrlHelper {

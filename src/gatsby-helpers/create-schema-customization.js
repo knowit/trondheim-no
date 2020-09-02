@@ -7,10 +7,13 @@ exports.createSchemaCustomization = ({ actions }) => {
     remoteImages: [File] @link
   }
   type FlamelinkSidebarMainMenuNavigation implements Node {
-    items: [FlamelinkSidebarMainMenuNavigationItems]
+    items: [FlamelinkNavigationItems]
   }
-  type FlamelinkSidebarMainMenuNavigationItems {
-    flamelink_children: [FlamelinkSidebarMainMenuNavigationItems]
+  type FlamelinkSidebarSecondaryMenuNavigation implements Node {
+    items: [FlamelinkNavigationItems]
+  }
+  type FlamelinkNavigationItems {
+    flamelink_children: [FlamelinkNavigationItems]
   }
   type FlamelinkArticleContent implements Node {
     tags: [String]
