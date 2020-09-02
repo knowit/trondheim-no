@@ -1,7 +1,10 @@
-import React from "react"
+import React, {useState} from "react"
 import "../style/layout.css"
 import { Helmet } from "react-helmet"
 import { Link, graphql, useStaticQuery } from "gatsby"
+import Img from "gatsby-image"
+import BurgerMenu from "../components/menu.js"
+import LocalizationHelper from "../helpers/helpers"
 
 export default ({ children, locale, localizedPaths }) => {
   const data = useStaticQuery(graphql`
