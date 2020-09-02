@@ -161,21 +161,16 @@ export default ({ data }) => {
     <Layout
       locale={locale}
       localizedPaths={data.flamelinkListingPageContent.localizedPaths}
-      id="listing-page-outer-container"
     >
-      <div id="listing-page-container">
-        <div id="articles-header">
-          <div>
-            <TagFilter />
-          </div>
-          <div>
-            <MapButton />
-          </div>
+      <div id="articles-header">
+        <div>
+          <TagFilter />
         </div>
-        <div className="article-list-container">
-          <ArticleList />
+        <div>
+          <MapButton />
         </div>
       </div>
+      <ArticleList />
     </Layout>
   )
 }
