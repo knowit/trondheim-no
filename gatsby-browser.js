@@ -18,8 +18,10 @@ export const onServiceWorkerUpdateReady = () => {
   }
 }
 
-export const onClientEntry = () => {
-  window.onappinstalled = () => {
-    window.navigator.serviceWorker.controller.postMessage("onappinstalled")
-  }
-}
+export const registerServiceWorker = () => true
+
+// export const onClientEntry = () => {
+//   window.onappinstalled = () => {
+//     window.navigator.serviceWorker.controller.postMessage("onappinstalled")
+//   }
+// }

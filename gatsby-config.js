@@ -152,17 +152,7 @@ module.exports = {
         ],
       },
     },
-    {
-      resolve: `gatsby-plugin-offline`,
-      options: {
-        cacheId: `gatsby-plugin-offline`,
-        precachePages: [],
-        workboxConfig: {
-          maximumFileSizeToCacheInBytes: 100000000,
-        },
-        appendScript: require.resolve(`./src/sw.js`),
-      },
-    },
+    `gatsby-plugin-offline`,
     {
       resolve: `gatsby-plugin-lunr`,
       options: {
