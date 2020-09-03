@@ -18,10 +18,17 @@ export const onServiceWorkerUpdateReady = () => {
   }
 }
 
-export const registerServiceWorker = () => true
-
-// export const onClientEntry = () => {
-//   window.onappinstalled = () => {
-//     window.navigator.serviceWorker.controller.postMessage("onappinstalled")
-//   }
-// }
+//Automaticly use serivice worker in the default location static/sw.js
+//https://www.gatsbyjs.com/docs/add-offline-support-with-a-service-worker/
+export const registerServiceWorker = async (args, _ref3) => true
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        // Registration was successful
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, function(err) {
+        // registration failed :(
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    });
+}

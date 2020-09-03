@@ -152,7 +152,11 @@ module.exports = {
         ],
       },
     },
-    `gatsby-plugin-offline`,
+    {resolve: `gatsby-plugin-offline`,
+      options: {
+        precachePages: [`/`, `/en`],
+      }
+    },
     {
       resolve: `gatsby-plugin-lunr`,
       options: {
