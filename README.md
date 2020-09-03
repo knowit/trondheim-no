@@ -1,9 +1,8 @@
 # Documentation
 
-
 ## Architecture
 
-This site uses four technologies: Flamelink, Gatsby Cloud and Netlify in addition to the front-end, which is build using React.js and Gatsby.js. In this section we will provide a brief overview of the role of each module, and in the subsequent sections we will describe each one in more detail. 
+This site uses four technologies: Flamelink, Gatsby Cloud and Netlify in addition to the front-end, which is build using React.js and Gatsby.js. In this section we will provide a brief overview of the role of each module, and in the subsequent sections we will describe each one in more detail.
 
 [Flamelink](https://flamelink.io) is the content management system (CMS), and it is the most important module to the editors of the site's content. Flamelink provides a user interface through which the editor may add or update the site's content without needing any knowledge of programming or the rest of the site's architecture.
 
@@ -13,13 +12,11 @@ The [Gatsby Cloud](https://gatsbyjs.com) platform pulls the codebase from this G
 
 Whenever Gatsby Cloud successfully builds the site, it is deployed to [Netlify](https://netlify.com). Netlify deploys the site so that it is accessible through the web.
 
-
 ![Architecture Diagram](/static/images/trondheim-no-architecture.png)
-
 
 ## Flamelink (Headless CMS)
 
-If you are a content editor of this site, then your first step should be to familiarize yourself with [Flamelink](https://flamelink.io). This site pulls data from a Flamelink project named **TRONDHEIM.NO** with project-id **byportal-218506**. The site's administrators should provide you with the required login credentials to access the project. Once you have logged in and accessed the project, then you should see an overview of all the content grouped by schema. 
+If you are a content editor of this site, then your first step should be to familiarize yourself with [Flamelink](https://flamelink.io). This site pulls data from a Flamelink project named **TRONDHEIM.NO** with project-id **byportal-218506**. The site's administrators should provide you with the required login credentials to access the project. Once you have logged in and accessed the project, then you should see an overview of all the content grouped by schema.
 
 As an editor, you should become familiar with the "content" section of Flamelink (accessible through the sidebar menu). This is where you add, update, and delete the content that should be shown on the page. Below is a reference guide for the different schema types and their functions.
 
@@ -29,7 +26,7 @@ Describes the majority of content on the site. One article object contains infor
 
 #### Listing Page
 
-A grouping of related **Article** objects. For example, if you have several articles which all represent different restaurants, you would provide them all with a parent listing page named "Restaurants". In many ways, the **Listing Page** may be thought of as a *category* of **Article**. A single listing page will show a list of all its child articles, with the ability to filter the list view by the article's tags.
+A grouping of related **Article** objects. For example, if you have several articles which all represent different restaurants, you would provide them all with a parent listing page named "Restaurants". In many ways, the **Listing Page** may be thought of as a _category_ of **Article**. A single listing page will show a list of all its child articles, with the ability to filter the list view by the article's tags.
 
 #### Page
 
@@ -51,7 +48,6 @@ Contains information about the site's menu bar.
 
 For each schema to which it applies, select a default thumbnail to be shown for objects which does not have a specified thumbnail.
 
-
 ## Frontend (React.js + Gatsby.js)
 
 If you are a developer who wish to make changes to the code, start with the following steps
@@ -62,28 +58,27 @@ If you are a developer who wish to make changes to the code, start with the foll
 2. Navigate to the cloned repo's folder by running `cd trondheim-demo`
 3. Install all of the required node modules by running `npm install`
 4. Acquire the following environment variables, and add them to files for the development and production environments, named `.env.development` and `.env.production`, respectfully, both located in the root folder of the project. They may be obtained from the Gatsby Cloud project's environment variables.
-    * GATSBY_FLAMELINK_CLIENT_EMAIL
-    * GATSBY_FLAMELINK_DATABASE_URL
-    * GATSBY_FLAMELINK_PRIVATE_KEY
-    * GATSBY_FLAMELINK_PROJECT_ID
-    * GATSBY_FLAMELINK_STORAGE_BUCKET
-    * GATSBY_GOOGLE_API
-    * GATSBY_CONCURRENT_DOWNLOAD
-    * GOOGLE_APPLICATION_CREDENTIALS
-    * WORKER_TOPIC
-    * TOPIC
-    * TEST
-    * TEST_IMAGE_URL
-    
-    
+
+   - GATSBY_FLAMELINK_CLIENT_EMAIL
+   - GATSBY_FLAMELINK_DATABASE_URL
+   - GATSBY_FLAMELINK_PRIVATE_KEY
+   - GATSBY_FLAMELINK_PROJECT_ID
+   - GATSBY_FLAMELINK_STORAGE_BUCKET
+   - GATSBY_GOOGLE_API
+   - GATSBY_CONCURRENT_DOWNLOAD
+   - GOOGLE_APPLICATION_CREDENTIALS
+   - WORKER_TOPIC
+   - TOPIC
+   - TEST
+   - TEST_IMAGE_URL
+
 #### Running locally
 
 There are two main ways through which you can run the site locally on your computer.
 
-* **Develop** mode is run by executing `gatsby develop`. This mode pulls data from Flamelink and builds the site once, then re-renders the site using the same data each time code changes are detected. This is the best way when you are developing new features, or troubleshooting and/or fixing bugs, because it allows you to see code changes in real time. If you need to re-build often, it is recommended to set the environment variable `TEST` to true and `TEST_IMAGE_URL` to an url linking to a very small image in the `.env.development` file, in order to reduce build time. The site will be hosted on `localhost:8000`.
+- **Develop** mode is run by executing `gatsby develop`. This mode pulls data from Flamelink and builds the site once, then re-renders the site using the same data each time code changes are detected. This is the best way when you are developing new features, or troubleshooting and/or fixing bugs, because it allows you to see code changes in real time. If you need to re-build often, it is recommended to set the environment variable `TEST` to true and `TEST_IMAGE_URL` to an url linking to a very small image in the `.env.development` file, in order to reduce build time. The site will be hosted on `localhost:8000`.
 
-* If you want to **Build** the site to see how it will function in production, run `gatsby build` in order to build the static site files, and then run `gatsby serve` in order to serve the built site on `localhost:9000`. This mode does not provide live update as code is changed, but provides a view of how the site will appear in production. 
-
+- If you want to **Build** the site to see how it will function in production, run `gatsby build` in order to build the static site files, and then run `gatsby serve` in order to serve the built site on `localhost:9000`. This mode does not provide live update as code is changed, but provides a view of how the site will appear in production.
 
 ## Gatsby Cloud
 
@@ -111,5 +106,4 @@ If you for some reason need to enable or disable builds, go to `site-settings ->
 
 #### Deploy a previous build
 
-If you for some reason need to roll back to deploy a previous deploy, enter the project and navigate to the `deploys` tab where you will see a list of previous deploys. Click on the deploy you wish to publish and select `publish deploy`. You may also lock publishing to a single deploy, so that new deploys aren't published automatically. 
-
+If you for some reason need to roll back to deploy a previous deploy, enter the project and navigate to the `deploys` tab where you will see a list of previous deploys. Click on the deploy you wish to publish and select `publish deploy`. You may also lock publishing to a single deploy, so that new deploys aren't published automatically.
