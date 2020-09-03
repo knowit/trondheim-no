@@ -1,7 +1,10 @@
-import React from "react"
+import React, {useState} from "react"
 import "../style/layout.css"
 import { Helmet } from "react-helmet"
 import { Link, graphql, useStaticQuery } from "gatsby"
+import Img from "gatsby-image"
+import BurgerMenu from "../components/menu.js"
+import LocalizationHelper from "../helpers/helpers"
 
 export default ({ children, locale, localizedPaths }) => {
   const data = useStaticQuery(graphql`
@@ -26,11 +29,6 @@ export default ({ children, locale, localizedPaths }) => {
             id
             flamelink_locale
             navbarText
-            extraMenuOptions {
-              uniqueKey
-              title
-              redirectUrl
-            }
             logo {
               localFile {
                 childImageSharp {
@@ -50,41 +48,39 @@ export default ({ children, locale, localizedPaths }) => {
           }
         }
       }
-      menu: allMenuDataContent {
-        edges {
-          node {
-            id
-            locale
-            menuItems {
-              locale
-              title
-              slug
-              path
-            }
-          }
-        }
-      }
     }
   `)
 
-  const menuItems = data.menu.edges.find((it) => it.node.locale === locale).node
-    .menuItems
+  const [query, setQuery] = useState("")
+  const localization = data.localization.translations
+  const navbar = data.navbar.edges
+    .map((node) => node.node)
+    .find((node) => node.flamelink_locale === locale)
 
-  const Navigation = ({ items }) => {
+  const search = LocalizationHelper.getLocalWord(localization, "search", locale)
+
+  const Navigation = () => {
     return (
       <div className="navigation-container">
-        {items.map(function (node, key) {
-          return (
+        <div className="navigation-content-container">
+          <BurgerMenu locale={locale} localizedPaths={localizedPaths} />
+
+          <div className="logo-container">
             <Link
-              key={key}
-              role="menuitem"
-              className="drop-menu-item-container"
-              to={node.path}
+              id="trondheimno-link"
+              to={locale === "no" ? "/" : `/${locale.split("-")[0]}/`}
             >
-              {node.title}
+              <div className="logo-text">{navbar.navbarText}</div>
+
+              <div className="logo">
+                <Img
+                  fluid={navbar.logo[0].localFile.childImageSharp.fluid}
+                  alt="Trondheim logo"
+                />
+              </div>
             </Link>
-          )
-        })}
+          </div>
+        </div>
       </div>
     )
   }
@@ -98,8 +94,34 @@ export default ({ children, locale, localizedPaths }) => {
           content="The official website for Trondheim."
         />
       </Helmet>
-      <Navigation id="navbar" items={menuItems} />
+      <Navigation id="navbar" />
       <div id="children-container">{children}</div>
+      <footer id="footer-container">
+        <form
+          id="search-container"
+          action={`${
+            locale === "no" ? "/" : `/${locale.split("-")[0]}/`
+          }search`}
+        >
+          <input
+            type="text"
+            id="search-input"
+            name="query"
+            value={query}
+            placeholder={`${search}...`}
+            onChange={(e) => setQuery(e.target.value)}
+          ></input>
+
+          <Link
+            id="search-button"
+            to={`${
+              locale === "no" ? "/" : `/${locale.split("-")[0]}/`
+            }search?query=${query}`}
+          >
+            <span id="search-button-word">{search}</span>
+          </Link>
+        </form>
+      </footer>
     </div>
   )
 }
