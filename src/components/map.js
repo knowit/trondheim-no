@@ -1,39 +1,32 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 import { GoogleMap, LoadScript, MarkerClusterer } from "@react-google-maps/api"
 import styles from "../style/map.module.css"
 import MapMarker from "./map-marker.js"
 
-class Map extends Component {
-  state = {
-    isInfoOpen: false,
-    selectedMarkerId: null,
-    noOfClusters: null,
-  }
-
-  onClick = (isInfoOpen, selectedMarkerId) => {
-    this.setState({
-      isInfoOpen,
-      selectedMarkerId,
-    })
-  }
-
-  getGoogleLink() {
-    var address = this.props.address
-    var location = this.props.locationMarker
-    var baseURL = "https://www.google.com/maps/search/?api=1"
-    if (this.props.address) {
+export default ({
+  address,
+  markers,
+  locationMarker,
+  persistentDisabled,
+  zoom,
+  height,
+  width,
+}) => {
+  const getGoogleLink = () => {
+    const baseURL = "https://www.google.com/maps/search/?api=1"
+    if (address) {
       return baseURL + "&query=" + encodeURI(address)
     } else {
-      return baseURL + "&query=" + location.lat + "," + location.lng
+      return baseURL + "&query=" + locationMarker.lat + "," + locationMarker.lng
     }
   }
 
-  createPersistentGoogleLink() {
-    if (this.props.persistentDisabled) return ""
+  const createPersistentGoogleLink = () => {
+    if (persistentDisabled) return ""
     else {
       return (
         <a
-          href={this.getGoogleLink()}
+          href={getGoogleLink()}
           style={{
             width: "68px",
             height: "26px",
@@ -52,51 +45,57 @@ class Map extends Component {
     }
   }
 
-  render() {
-    if (!this.props.locationMarker) return ""
+  if (!locationMarker) return ""
 
-    const OnlineMap = ({ props }) => {
-      return (
-        <LoadScript googleMapsApiKey={process.env.GATSBY_GOOGLE_API}>
-          <div style={{ position: "relative" }}>
-            {this.createPersistentGoogleLink()}
-            <GoogleMap
-              id="article-map"
-              center={this.props.locationMarker}
-              zoom={this.props.zoom}
-              mapContainerStyle={{
-                height: this.props.height,
-                width: this.props.width,
-              }}
-            >
-              <MarkerClusterer gridSize={1}>
-                {(clusterer) =>
-                  this.props.markers.map((markerData) => (
-                    <MapMarker
-                      key={markerData.id}
-                      clusterer={clusterer}
-                      markerData={markerData}
-                      isSelected={markerData.id === this.state.selectedMarkerId}
-                      isInfoOpen={
-                        markerData.id === this.state.selectedMarkerId &&
-                        this.state.isInfoOpen
-                      }
-                      onClick={this.onClick}
-                    />
-                  ))
-                }
-              </MarkerClusterer>
-            </GoogleMap>
-          </div>
-        </LoadScript>
-      )
+  const Cluster = () => {
+    const [isInfoOpen, setInfoOpen] = useState(false)
+    const [selectedMarkerId, setSelectedMarkerId] = useState(null)
+    const onClick = (newIsInfoOpen, newSelectedMarkerId) => {
+      setInfoOpen(newIsInfoOpen)
+      setSelectedMarkerId(newSelectedMarkerId)
     }
-
     return (
-      <div className={styles.mapContainer}>
-        <OnlineMap />
-      </div>
+      <MarkerClusterer gridSize={1}>
+        {(clusterer) =>
+          markers.map((markerData) => (
+            <MapMarker
+              key={markerData.id}
+              clusterer={clusterer}
+              markerData={markerData}
+              isSelected={markerData.id === selectedMarkerId}
+              isInfoOpen={markerData.id === selectedMarkerId && isInfoOpen}
+              onClick={onClick}
+            />
+          ))
+        }
+      </MarkerClusterer>
     )
   }
+
+  const OnlineMap = () => {
+    return (
+      <LoadScript googleMapsApiKey={process.env.GATSBY_GOOGLE_API}>
+        <div style={{ position: "relative" }}>
+          {createPersistentGoogleLink()}
+        </div>
+        <GoogleMap
+          id="article-map"
+          center={locationMarker}
+          zoom={zoom}
+          mapContainerStyle={{
+            height,
+            width,
+          }}
+        >
+          <Cluster />
+        </GoogleMap>
+      </LoadScript>
+    )
+  }
+
+  return (
+    <div className={styles.mapContainer}>
+      <OnlineMap />
+    </div>
+  )
 }
-export default Map
