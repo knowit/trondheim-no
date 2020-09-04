@@ -32,9 +32,8 @@ function getLocation(node) {
 }
 
 export default ({ data }) => {
-  const markers = data.articlesLevel0.edges
-    .concat(data.articlesLevel1.edges)
-    .map((node) => node.node)
+  const markers = data.articlesLevel0.nodes
+    .concat(data.articlesLevel1.nodes)
     .map((node) => {
       return {
         id: node._fl_meta_.fl_id,
@@ -176,44 +175,42 @@ export const query = graphql`
     articlesLevel0: allFlamelinkArticleContent(
       filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
     ) {
-      edges {
-        node {
+      nodes {
+        id
+        flamelink_locale
+        title
+        path
+
+        _fl_meta_ {
+          fl_id
+        }
+
+        address {
+          address
+          lat
+          lng
+        }
+
+        parentListingPage {
           id
-          flamelink_locale
-          title
-          path
+          localTitle
+        }
 
-          _fl_meta_ {
-            fl_id
-          }
-
-          address {
-            address
-            lat
-            lng
-          }
-
-          parentListingPage {
-            id
-            localTitle
-          }
-
-          latLong {
-            latitude
-            longitude
-            googleMapsStaticImage {
-              url
-              childImageSharp {
-                fluid(maxWidth: 600, quality: 80) {
-                  base64
-                  aspectRatio
-                  src
-                  srcSet
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
-                }
+        latLong {
+          latitude
+          longitude
+          googleMapsStaticImage {
+            url
+            childImageSharp {
+              fluid(maxWidth: 600, quality: 80) {
+                base64
+                aspectRatio
+                src
+                srcSet
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
               }
             }
           }
@@ -228,44 +225,42 @@ export const query = graphql`
         }
       }
     ) {
-      edges {
-        node {
+      nodes {
+        id
+        flamelink_locale
+        title
+        path
+
+        _fl_meta_ {
+          fl_id
+        }
+
+        address {
+          address
+          lat
+          lng
+        }
+
+        parentListingPage {
           id
-          flamelink_locale
-          title
-          path
+          localTitle
+        }
 
-          _fl_meta_ {
-            fl_id
-          }
-
-          address {
-            address
-            lat
-            lng
-          }
-
-          parentListingPage {
-            id
-            localTitle
-          }
-
-          latLong {
-            latitude
-            longitude
-            googleMapsStaticImage {
-              url
-              childImageSharp {
-                fluid(maxWidth: 600, quality: 80) {
-                  base64
-                  aspectRatio
-                  src
-                  srcSet
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
-                }
+        latLong {
+          latitude
+          longitude
+          googleMapsStaticImage {
+            url
+            childImageSharp {
+              fluid(maxWidth: 600, quality: 80) {
+                base64
+                aspectRatio
+                src
+                srcSet
+                sizes
+                presentationWidth
+                presentationHeight
+                originalImg
               }
             }
           }
