@@ -152,10 +152,18 @@ module.exports = {
         ],
       },
     },
-    {resolve: `gatsby-plugin-offline`,
+    {
+      resolve: `gatsby-plugin-offline`,
       options: {
-        precachePages: [`/`, `/en`],
-      }
+        precachePages: [
+          "/", "/en",
+          "/hoteller/**/*", "/en/hotels/**/*", 
+          "/shopping/**/*", "/en/shopping-areas/**/*",
+          "/severdig/**/*", "/en/attractions/**/*",
+          "/spisesteder/**/*", "/en/restaurants/**/*",
+          "/ut-pa-tur/**/*", "/en/hiking-and-walks/**/*"
+        ],
+      },
     },
     {
       resolve: `gatsby-plugin-lunr`,
