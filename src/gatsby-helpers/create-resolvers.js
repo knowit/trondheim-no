@@ -124,6 +124,17 @@ exports.createResolvers = ({ createResolvers }) => {
           return resolveLocalizedPaths(source, context)
         },
       },
+      parentListingPage: {
+        async resolve(source, args, context, info) {
+          // Check if parentListingPage is not null
+          // And if it is an Array, that it contains at least one element
+          return !!source.parentListingPage &&
+            (!Array.isArray(source.parentListingPage) ||
+              !!source.parentListingPage.length)
+            ? source.parentListingPage
+            : null
+        },
+      },
     },
     FlamelinkArticleContent: {
       path: {

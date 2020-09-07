@@ -5,7 +5,7 @@ import LocalizationHelper from "../helpers/helpers"
 import Img from "gatsby-image"
 import { Online, Offline } from "react-detect-offline"
 import HTMLContent from "../components/html-content"
-import Map from "../components/map.js"
+import Map, { LoadScript } from "../components/map"
 import { Router } from "@reach/router"
 import { graphql } from "gatsby"
 
@@ -250,18 +250,20 @@ export default ({ data }) => {
             locale={data.flamelinkArticleContent.flamelink_locale}
           />
           <Online>
-            <Router basepath={data.flamelinkArticleContent.path}>
-              <Map
-                path="/"
-                locationMarker={location}
-                address={address}
-                markers={markers}
-                zoom={15}
-                persistentDisabled={false}
-                width="100%"
-                height="400px"
-              />
-            </Router>
+            <LoadScript>
+              <Router basepath={data.flamelinkArticleContent.path}>
+                <Map
+                  path="/"
+                  locationMarker={location}
+                  address={address}
+                  markers={markers}
+                  zoom={15}
+                  persistentDisabled={false}
+                  width="100%"
+                  height="400px"
+                />
+              </Router>
+            </LoadScript>
           </Online>
 
           <Offline>
