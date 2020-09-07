@@ -154,18 +154,3 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
 }
-
-// exports.onPostbuild = async() => {
-//   console.log("onpostbuild yeee")
-//   if ('serviceWorker' in navigator) {
-//     window.addEventListener('load', function() {
-//       navigator.serviceWorker.register('static/sw.js').then(function(registration) {
-//         // Registration was successful
-//         console.log('ServiceWorker registration successful with scope: ', registration.scope);
-//       }, function(err) {
-//         // registration failed :(
-//         console.log('ServiceWorker registration failed: ', err);
-//       });
-//     });
-//   }
-// }
