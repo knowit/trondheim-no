@@ -3,7 +3,7 @@ import "../style/listing-page.css"
 import Layout from "../layouts/layout"
 import LocalizationHelper from "../helpers/helpers"
 import { Link, graphql } from "gatsby"
-import GoogleMap from "../components/map.js"
+import GoogleMap, { LoadScript } from "../components/map"
 import { Online, Offline } from "react-detect-offline"
 import { Router } from "@reach/router"
 
@@ -44,40 +44,39 @@ export default ({ data }) => {
       }
     })
 
-  const tempMap = new Map()
-  markers.map((marker) => tempMap.set(marker.parent, true))
-  const [subListingPages, setSubListingPages] = useState(tempMap)
-  const updateSubListingPages = (key, value) => {
-    setSubListingPages(new Map(subListingPages.set(key, value)))
-  }
-
-  const handleChange = (e, toggle = false) => {
-    const item = e.target.name
-    const isChecked = toggle ? !e.target.checked : e.target.checked
-    updateSubListingPages(item, isChecked)
-  }
-
-  var items = []
-
-  subListingPages.forEach((value, key, map) => {
-    items.push(
-      <label className="map-checkbox-container" key={key}>
-        <input
-          name={key}
-          aria-label={key}
-          type="checkbox"
-          checked={value}
-          onChange={handleChange}
-          onKeyPress={(e) => {
-            handleChange(e, true)
-          }}
-        ></input>
-        {key}
-      </label>
-    )
-  })
-
   const MapComponent = () => {
+    const tempMap = new Map()
+    markers.map((marker) => tempMap.set(marker.parent, true))
+    const [subListingPages, setSubListingPages] = useState(tempMap)
+    const updateSubListingPages = (key, value) => {
+      setSubListingPages(new Map(subListingPages.set(key, value)))
+    }
+
+    const handleChange = (e, toggle = false) => {
+      const item = e.target.name
+      const isChecked = toggle ? !e.target.checked : e.target.checked
+      updateSubListingPages(item, isChecked)
+    }
+
+    var items = []
+
+    subListingPages.forEach((value, key, map) => {
+      items.push(
+        <label className="map-checkbox-container" key={key}>
+          <input
+            name={key}
+            aria-label={key}
+            type="checkbox"
+            checked={value}
+            onChange={handleChange}
+            onKeyPress={(e) => {
+              handleChange(e, true)
+            }}
+          ></input>
+          {key}
+        </label>
+      )
+    })
     return (
       <span>
         <GoogleMap
@@ -118,9 +117,11 @@ export default ({ data }) => {
       <div id="outer-container">
         <div id="inner-container">
           <Online>
-            <Router basepath={data.node.mapPath}>
-              <MapComponent path="/" />
-            </Router>
+            <LoadScript>
+              <Router basepath={data.node.mapPath}>
+                <MapComponent path="/" />
+              </Router>
+            </LoadScript>
           </Online>
 
           <Offline>

@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import { GoogleMap, LoadScript, MarkerClusterer } from "@react-google-maps/api"
-import styles from "../style/map.module.css"
+import { GoogleMap, MarkerClusterer } from "@react-google-maps/api"
+import styles from "../../style/map.module.css"
 import MapMarker from "./map-marker.js"
 
 export default ({
@@ -72,30 +72,20 @@ export default ({
     )
   }
 
-  const OnlineMap = () => {
-    return (
-      <LoadScript googleMapsApiKey={process.env.GATSBY_GOOGLE_API}>
-        <div style={{ position: "relative" }}>
-          {createPersistentGoogleLink()}
-        </div>
-        <GoogleMap
-          id="article-map"
-          center={locationMarker}
-          zoom={zoom}
-          mapContainerStyle={{
-            height,
-            width,
-          }}
-        >
-          <Cluster />
-        </GoogleMap>
-      </LoadScript>
-    )
-  }
-
   return (
     <div className={styles.mapContainer}>
-      <OnlineMap />
+      <div style={{ position: "relative" }}>{createPersistentGoogleLink()}</div>
+      <GoogleMap
+        id="article-map"
+        center={locationMarker}
+        zoom={zoom}
+        mapContainerStyle={{
+          height,
+          width,
+        }}
+      >
+        <Cluster />
+      </GoogleMap>
     </div>
   )
 }
