@@ -13,6 +13,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     textContent: String
     content: FlamelinkTextHtmlContentNode
     copyright: Copyright
+    parentListingPage: FlamelinkListingPageContent
   }
   type Copyright {
     title: String
