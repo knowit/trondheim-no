@@ -62,6 +62,7 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
           style={{
             width: props.width ? props.width : "100%",
             height: props.height ? props.height : "100%",
+            border: "1px solid rgb(219, 219, 219)",
           }}
         >
           <Online>
