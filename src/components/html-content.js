@@ -1,5 +1,6 @@
 import React from "react"
 import ReactDOMHelper from "../helpers/react-dom-helper"
+import "../style/html-content.css"
 import Img from "gatsby-image"
 import Iframe from "react-iframe"
 import { Online } from "react-detect-offline"
@@ -55,15 +56,11 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
     },
     (htmlNode, index) => {
       const props = htmlNode.props
-
       return (
         <div
           key={index}
-          style={{
-            width: props.width ? props.width : "100%",
-            height: props.height ? props.height : "100%",
-            border: "1px solid rgb(219, 219, 219)",
-          }}
+          //classname from widget link to style each widget individually
+          className={props.src.match(/(?<=www\.+).*?(?=\.+com)/gs)}
         >
           <Online>
             <Iframe

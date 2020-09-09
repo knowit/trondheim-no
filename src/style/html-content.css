@@ -1,0 +1,42 @@
+.instagram{
+  background: white;
+  max-width: 540px;
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid rgb(219, 219, 219);
+  box-shadow: none;
+  display: block;
+  margin: 0px 0px 12px;
+  min-width: 326px;
+  padding: 0px;
+  height: 934px;
+}
+
+@media only screen and (max-width: 640px) {
+  .instagram{
+    height: 890px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .instagram{
+    height: 934px;
+  }
+}
+
+@media only screen and (max-width: 460px) {
+  .instagram{
+    height: 820px;
+  }
+}
+
+@media only screen and (max-width: 370px) {
+  .instagram{
+    height: 767px;
+  }
+}
+
+.youtube{
+  height: 100%;
+  width: 100%
+}
