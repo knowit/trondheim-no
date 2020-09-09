@@ -123,12 +123,14 @@ module.exports = {
     {
       resolve: `gatsby-plugin-offline`,
       options: {
-        cacheId: `gatsby-plugin-offline`,
-        precachePages: [],
-        workboxConfig: {
-          maximumFileSizeToCacheInBytes: 100000000,
-        },
-        appendScript: require.resolve(`./src/sw.js`),
+        precachePages: [
+          "/", "/en",
+          "/hoteller/**/*", "/en/hotels/**/*", 
+          "/shopping/**/*", "/en/shopping-areas/**/*",
+          "/severdig/**/*", "/en/attractions/**/*",
+          "/spisesteder/**/*", "/en/restaurants/**/*",
+          "/ut-pa-tur/**/*", "/en/hiking-and-walks/**/*"
+        ],
       },
     },
     {
