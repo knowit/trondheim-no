@@ -72,42 +72,43 @@ class EventsView extends React.Component {
       })
   }
 
-  render() {
-    const categoriesString = (event) =>
-      event.categories
-        .map((category) => singleCategoryString(category))
-        .join(",\t")
+  categoriesString(event) {
+    return event.categories
+      .map((category) => this.singleCategoryString(category))
+      .join(",\t")
+  }
 
-    const singleCategoryString = (fullText) =>
-      fullText
-        .split("_")
-        .map(
-          (word) =>
-            `${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`
-        )
-        .join(" ")
+  singleCategoryString(fullText) {
+    return fullText
+      .split("_")
+      .map(
+        (word) =>
+          `${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`
+      )
+      .join(" ")
+  }
 
-    const monthName = (month) => {
-      const monthArray = [
-        "",
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Okt",
-        "Nov",
-        "Des",
-      ]
-      return monthArray[month]
-    }
+  monthName(month) {
+    const monthArray = [
+      "",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des",
+    ]
+    return monthArray[month]
+  }
 
-    const timeString = (event) => {
-      const date = new Date(event.startDate)
-      const dateString = `${date.getDate()}. ${monthName(date.getMonth())}`
+  timeString(event) {
+    const date = new Date(event.startDate)
+      const dateString = `${date.getDate()}. ${this.monthName(date.getMonth())}`
 
       const ticketString = `CC: ${event.regularPrice},- ${
         event.reducedPrice && event.reducedPrice.length !== 0
@@ -125,7 +126,9 @@ class EventsView extends React.Component {
         }`
 
       return `${dateString} @ ${event.startTime} | ${priceString}`
-    }
+  }
+
+  render() {
 
     const EventInfoRow = (props) => (
       <div className="event-info-row">
@@ -144,11 +147,11 @@ class EventsView extends React.Component {
     )
 
     const Categories = ({ event }) => (
-      <EventInfoRow icon="tags" text={categoriesString(event)} />
+      <EventInfoRow icon="tags" text={this.categoriesString(event)} />
     )
 
     const Time = ({ event }) => (
-      <EventInfoRow icon="clock" text={timeString(event)} />
+      <EventInfoRow icon="clock" text={this.timeString(event)} />
     )
 
     const ErrorMessage = () => (
