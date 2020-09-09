@@ -188,14 +188,16 @@ class EventsView extends React.Component {
       </div>
     )
 
+
     const Content = () => {
+      var i = 0;
       return this.state.loading ? (
         <Loading />
       ) : (
           <div id="articles-container">
             {this.state.events.map((event) => {
               return (
-                <div key={event.id} className="article-container">
+                <div key={i++} className="article-container">
                   <a href={event.eventLink}>
                     <img
                       className="article-thumbnail"
