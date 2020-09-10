@@ -17,6 +17,7 @@ export default ({
   localization,
   locale,
   defaultThumbnails,
+  mapPage
 }) => {
   const [filterTags, setFilterTags] = useState([])
   const [sortBy, setSortBy] = useState("standard")
@@ -62,7 +63,11 @@ export default ({
         </div>
       )
     })
-    return <div id="all-tags-container">{allTags} </div>
+    
+    return tags.length 
+    ? <div id="all-tags-container">{allTags} </div>
+    : null
+
   }
 
   const Sorter = () => {
@@ -86,7 +91,9 @@ export default ({
       )
     })
 
-    return <div id="sort-container"> {sortTags} </div>
+    return tags.length  
+    ? <div id="sort-container"> {sortTags} </div>
+    : null
   }
 
   const ArticleList = () => {
@@ -156,13 +163,12 @@ export default ({
         thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
       }
     }
-
     return (
       <div className="article-container">
         <Img className="article-thumbnail" fluid={thumbnail} />
         <div className="article-info-container">
           <h2>
-            <Link to={article.path}>
+            <Link to={mapPage? article.mapPath : article.path}>
               {subList ? article.navigationTitle : article.title}
             </Link>
           </h2>
