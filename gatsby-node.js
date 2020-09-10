@@ -115,6 +115,15 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             locale: node.flamelink_locale,
           },
         })
+      } else if (node.slug === "kart" || node.slug === "maps") {
+        createPage({
+          path: node.path,
+          component: path.resolve(`./src/templates/map-page.js`),
+          context: {
+            nodeId: node.id,
+            locale: node.flamelink_locale,
+          },
+        })
       } else {
         if (node.hasMapPage && node.mapPath != null) {
           // Create listing page map
