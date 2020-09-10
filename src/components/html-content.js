@@ -60,7 +60,7 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
         <div
           key={index}
           //classname from widget link to style each widget individually
-          className={props.src.match(/(?<=www\.+).*?(?=\.+com)/gs)}
+          className={props.src.replace(/\?.*$/g, "").match(/(?<=\w+\.+).*?(?=\.+\w+)/g)}
         >
           <Online>
             <Iframe
