@@ -41,8 +41,6 @@ export const query = graphql`
   }
 `
 
-const trdEventsUrl = `https://us-central1-trdevents-224613.cloudfunctions.net/getNextEvents?numEvents=20`
-
 // Rendered at client
 
 class EventsView extends React.Component {
@@ -53,60 +51,70 @@ class EventsView extends React.Component {
 
   componentDidMount() {
     console.log("Fetching events from trdevents.no...")
-    fetch(trdEventsUrl)
-      .then((response) => response.json())
+
+    fetch(this.props.trdEventsUrl)
+
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("HTTP status " + response.status);
+        }
+        return response.json()
+      })
+
       .then((data) => {
         console.log("Fetch complete!")
-        this.setState({ loading: false, events: data })
+        this.setState({ loading: false, events: data.body })
       })
+
       .catch((error) => {
         console.log(error)
         this.setState({ loadError: true })
       })
   }
 
-  render() {
-    const categoriesString = (event) =>
-      event.categories
-        .map((category) => singleCategoryString(category))
-        .join(",\t")
+  categoriesString(event) {
+    return event.categories
+      .map((category) => this.singleCategoryString(category))
+      .join(",\t")
+  }
 
-    const singleCategoryString = (fullText) =>
-      fullText
-        .split("_")
-        .map(
-          (word) =>
-            `${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`
-        )
-        .join(" ")
+  singleCategoryString(fullText) {
+    return fullText
+      .split("_")
+      .map(
+        (word) =>
+          `${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`
+      )
+      .join(" ")
+  }
 
-    const monthName = (month) => {
-      const monthArray = [
-        "",
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Okt",
-        "Nov",
-        "Des",
-      ]
-      return monthArray[month]
-    }
+  monthName(month) {
+    const monthArray = [
+      "",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des",
+    ]
+    return monthArray[month]
+  }
 
-    const timeString = (event) => {
-      const date = new Date(event.startDate)
-      const dateString = `${date.getDate()}. ${monthName(date.getMonth())}`
+  timeString(event) {
+    const date = new Date(event.startDate)
+      const dateString = `${date.getDate()}. ${this.monthName(date.getMonth())}`
 
       const ticketString = `CC: ${event.regularPrice},- ${
         event.reducedPrice && event.reducedPrice.length !== 0
           ? `/ ${event.reducedPrice},-`
           : ""
-      }`
+        }`
       const freeString = LocalizationHelper.getLocalWord(
         this.props.localization,
         "free",
@@ -115,10 +123,12 @@ class EventsView extends React.Component {
 
       const priceString = `${
         event.priceOption === "non-gratis" ? ticketString : freeString
-      }`
+        }`
 
       return `${dateString} @ ${event.startTime} | ${priceString}`
-    }
+  }
+
+  render() {
 
     const EventInfoRow = (props) => (
       <div className="event-info-row">
@@ -137,11 +147,11 @@ class EventsView extends React.Component {
     )
 
     const Categories = ({ event }) => (
-      <EventInfoRow icon="tags" text={categoriesString(event)} />
+      <EventInfoRow icon="tags" text={this.categoriesString(event)} />
     )
 
     const Time = ({ event }) => (
-      <EventInfoRow icon="clock" text={timeString(event)} />
+      <EventInfoRow icon="clock" text={this.timeString(event)} />
     )
 
     const ErrorMessage = () => (
@@ -170,47 +180,49 @@ class EventsView extends React.Component {
         {this.state.loadError ? (
           <ErrorMessage />
         ) : (
-          <p>
-            {LocalizationHelper.getLocalWord(
-              this.props.localization,
-              "loading",
-              this.props.locale
-            )}
-          </p>
-        )}
+            <p>
+              {LocalizationHelper.getLocalWord(
+                this.props.localization,
+                "loading",
+                this.props.locale
+              )}
+            </p>
+          )}
       </div>
     )
 
+
     const Content = () => {
+      var i = 0;
       return this.state.loading ? (
         <Loading />
       ) : (
-        <div id="articles-container">
-          {this.state.events.map((event) => {
-            return (
-              <div key={event.id} className="article-container">
-                <a href={event.eventLink}>
-                  <img
-                    className="article-thumbnail"
-                    alt={event.title_nb}
-                    src={event.imageURL}
-                  />
-                </a>
-                <div className="article-info-container">
-                  <h2>
-                    <a href={event.eventLink}>{event.title_nb}</a>
-                  </h2>
-                  <div className="event-info-container">
-                    <Location event={event} />
-                    <Categories event={event} />
-                    <Time event={event} />
+          <div id="articles-container">
+            {this.state.events.map((event) => {
+              return (
+                <div key={i++} className="article-container">
+                  <a href={event.eventLink}>
+                    <img
+                      className="article-thumbnail"
+                      alt={event.title_nb}
+                      src={event.imageURL}
+                    />
+                  </a>
+                  <div className="article-info-container">
+                    <h2>
+                      <a href={event.eventLink}>{event.title_nb}</a>
+                    </h2>
+                    <div className="event-info-container">
+                      <Location event={event} />
+                      <Categories event={event} />
+                      <Time event={event} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          })}
-        </div>
-      )
+              )
+            })}
+          </div>
+        )
     }
 
     return (
@@ -240,6 +252,9 @@ class EventsView extends React.Component {
 // Rendered server side
 
 export default ({ data }) => {
+
+  const trdEventsUrl = process.env.GATSBY_TRD_EVENTS_URL
+
   return (
     <Layout
       locale={data.node.flamelink_locale}
@@ -271,6 +286,7 @@ export default ({ data }) => {
               path="/"
               localization={data.localization.translations}
               locale={data.node.flamelink_locale}
+              trdEventsUrl={trdEventsUrl}
             />
           </Router>
         </div>
