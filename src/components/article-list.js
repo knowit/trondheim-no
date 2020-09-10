@@ -93,7 +93,7 @@ export default ({
     const articleViews = []
 
     const listingPageDefaultThumbnail = defaultThumbnails.find(
-      (node) => node.title === "ListingPage Thumbnail"
+      (node) => node.title === "ListingPage Thumbnails"
     )
     subListingPages.forEach((slp) => {
       slp.tags = []
