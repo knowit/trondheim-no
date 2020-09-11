@@ -47,7 +47,7 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
-    
+
     `gatsby-transformer-sharp`,
     {
       resolve: `gatsby-plugin-sharp`,
@@ -124,12 +124,18 @@ module.exports = {
       resolve: `gatsby-plugin-offline`,
       options: {
         precachePages: [
-          "/", "/en",
-          "/hoteller/**/*", "/en/hotels/**/*", 
-          "/shopping/**/*", "/en/shopping-areas/**/*",
-          "/severdig/**/*", "/en/attractions/**/*",
-          "/spisesteder/**/*", "/en/restaurants/**/*",
-          "/ut-pa-tur/**/*", "/en/hiking-and-walks/**/*"
+          "/",
+          "/en",
+          "/hoteller/**/*",
+          "/en/hotels/**/*",
+          "/shopping/**/*",
+          "/en/shopping-areas/**/*",
+          "/severdig/**/*",
+          "/en/attractions/**/*",
+          "/spisesteder/**/*",
+          "/en/restaurants/**/*",
+          "/ut-pa-tur/**/*",
+          "/en/hiking-and-walks/**/*",
         ],
       },
     },

@@ -78,10 +78,7 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query ListingPageQuery(
-    $nodeId: String
-    $nodeFlamelinkId: String
-  ) {
+  query ListingPageQuery($nodeId: String, $nodeFlamelinkId: String) {
     flamelinkListingPageLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
       translations {

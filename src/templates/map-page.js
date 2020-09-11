@@ -46,7 +46,6 @@ export default ({ data }) => {
             defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck}
             mapPage={true}
           />
-          
         </div>
       </div>
     </Layout>
@@ -54,10 +53,7 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query MapPageQuery(
-    $nodeId: String
-    $locale: String
-  ) {
+  query MapPageQuery($nodeId: String, $locale: String) {
     flamelinkListingPageLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
       translations {
@@ -70,20 +66,25 @@ export const query = graphql`
     }
 
     flamelinkListingPageContent(id: { eq: $nodeId }) {
-        id
-        flamelink_id
-        flamelink_locale
+      id
+      flamelink_id
+      flamelink_locale
+      path
+      slug
+      localTitle
+      textOnPage
+      localizedPaths {
+        locale
         path
-        slug
-        localTitle
-        textOnPage
-        localizedPaths {
-          locale
-          path
-        }
+      }
     }
 
-    allFlamelinkListingPageContent(filter: {showOnMapListingPage: {eq: true}, flamelink_locale: {eq: $locale}}) {  
+    allFlamelinkListingPageContent(
+      filter: {
+        showOnMapListingPage: { eq: true }
+        flamelink_locale: { eq: $locale }
+      }
+    ) {
       edges {
         node {
           id

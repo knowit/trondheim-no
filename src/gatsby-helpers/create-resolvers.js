@@ -33,11 +33,18 @@ exports.createResolvers = ({ createResolvers }) => {
   const resolveMapPath = (source) => {
     if (source.hasMapPage) {
       const locale = source.flamelink_locale
-      var path = encodeURI(source.mapPageTitle.toLowerCase()
-      .split(" ").join("-")
-      .split('å').join('a')
-      .split('ø').join('o')
-      .split('æ').join('ae'))
+      var path = encodeURI(
+        source.mapPageTitle
+          .toLowerCase()
+          .split(" ")
+          .join("-")
+          .split("å")
+          .join("a")
+          .split("ø")
+          .join("o")
+          .split("æ")
+          .join("ae")
+      )
       var parent = source.parentListingPage
 
       while (parent != null) {
@@ -83,15 +90,15 @@ exports.createResolvers = ({ createResolvers }) => {
           _fl_meta_:
             nodeSchemaType === "single"
               ? {
-                schema: {
-                  eq: nodeSchema,
-                },
-              }
+                  schema: {
+                    eq: nodeSchema,
+                  },
+                }
               : {
-                fl_id: {
-                  eq: nodeId,
+                  fl_id: {
+                    eq: nodeId,
+                  },
                 },
-              },
         },
       },
       type: nodeType,
@@ -255,16 +262,16 @@ exports.createResolvers = ({ createResolvers }) => {
           if (source.page != null) {
             return source.page._fl_meta_ != null
               ? findSource(
-                context,
-                source.page,
-                "FlamelinkPageContent",
-                source.flamelink_locale
-              ).then((node) => {
-                return {
-                  ...node,
-                  path: resolvePath(node),
-                }
-              })
+                  context,
+                  source.page,
+                  "FlamelinkPageContent",
+                  source.flamelink_locale
+                ).then((node) => {
+                  return {
+                    ...node,
+                    path: resolvePath(node),
+                  }
+                })
               : null
           } else return null
         },

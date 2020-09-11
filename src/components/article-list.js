@@ -17,7 +17,7 @@ export default ({
   localization,
   locale,
   defaultThumbnails,
-  mapPage
+  mapPage,
 }) => {
   const [filterTags, setFilterTags] = useState([])
   const [sortBy, setSortBy] = useState("standard")
@@ -63,11 +63,8 @@ export default ({
         </div>
       )
     })
-    
-    return tags.length 
-    ? <div id="all-tags-container">{allTags} </div>
-    : null
 
+    return tags.length ? <div id="all-tags-container">{allTags} </div> : null
   }
 
   const Sorter = () => {
@@ -91,9 +88,7 @@ export default ({
       )
     })
 
-    return tags.length  
-    ? <div id="sort-container"> {sortTags} </div>
-    : null
+    return tags.length ? <div id="sort-container"> {sortTags} </div> : null
   }
 
   const ArticleList = () => {
@@ -157,14 +152,13 @@ export default ({
         ? ""
         : ReactDOMHelper.getTextContentFromHtml(article.content.content)
     var thumbnail = defaultThumbnail
-    if(mapPage){
+    if (mapPage) {
       if (article.mapThumbnail != null) {
         if (article.mapThumbnail.length > 0) {
           thumbnail = article.mapThumbnail[0]?.localFile.childImageSharp.fluid
         }
       }
-    }
-    else{
+    } else {
       if (article.thumbnail != null) {
         if (article.thumbnail.length > 0) {
           thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
@@ -176,10 +170,12 @@ export default ({
         <Img className="article-thumbnail" fluid={thumbnail} />
         <div className="article-info-container">
           <h2>
-            <Link to={mapPage? article.mapPath : article.path}>
+            <Link to={mapPage ? article.mapPath : article.path}>
               {mapPage
-              ? article.mapPageTitle 
-              : subList ? article.navigationTitle : article.title}
+                ? article.mapPageTitle
+                : subList
+                ? article.navigationTitle
+                : article.title}
             </Link>
           </h2>
 
