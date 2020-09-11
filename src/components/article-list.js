@@ -169,7 +169,9 @@ export default ({
         <div className="article-info-container">
           <h2>
             <Link to={mapPage? article.mapPath : article.path}>
-              {subList ? article.navigationTitle : article.title}
+              {mapPage
+              ? article.mapPageTitle 
+              : subList ? article.navigationTitle : article.title}
             </Link>
           </h2>
 
