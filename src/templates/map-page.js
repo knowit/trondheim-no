@@ -9,7 +9,7 @@ export default ({ data }) => {
   const locale = data.flamelinkListingPageContent.flamelink_locale
   const localization = data.flamelinkListingPageLocalizationContent.translations
 
-
+  console.log(data)
   return (
     <Layout
       locale={locale}
@@ -57,6 +57,7 @@ export default ({ data }) => {
 export const query = graphql`
   query MapPageQuery(
     $nodeId: String
+    $locale: String
   ) {
     flamelinkListingPageLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
@@ -83,7 +84,7 @@ export const query = graphql`
         }
     }
 
-    allFlamelinkListingPageContent(filter: {showOnMapListingPage: {eq: true}}) {
+    allFlamelinkListingPageContent(filter: {showOnMapListingPage: {eq: true}, flamelink_locale: {eq: $locale}}) {  
       edges {
         node {
           id
@@ -93,6 +94,7 @@ export const query = graphql`
           localTitle
           navigationTitle
           mapPath
+          mapPageTitle
           thumbnail {
             localFile {
               name
