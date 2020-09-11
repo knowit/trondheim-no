@@ -9,7 +9,6 @@ export default ({ data }) => {
   const locale = data.flamelinkListingPageContent.flamelink_locale
   const localization = data.flamelinkListingPageLocalizationContent.translations
 
-  console.log(data)
   return (
     <Layout
       locale={locale}
@@ -95,7 +94,7 @@ export const query = graphql`
           navigationTitle
           mapPath
           mapPageTitle
-          thumbnail {
+          mapThumbnail {
             localFile {
               name
               childImageSharp {

@@ -157,10 +157,18 @@ export default ({
         ? ""
         : ReactDOMHelper.getTextContentFromHtml(article.content.content)
     var thumbnail = defaultThumbnail
-
-    if (article.thumbnail != null) {
-      if (article.thumbnail.length > 0) {
-        thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
+    if(mapPage){
+      if (article.mapThumbnail != null) {
+        if (article.mapThumbnail.length > 0) {
+          thumbnail = article.mapThumbnail[0]?.localFile.childImageSharp.fluid
+        }
+      }
+    }
+    else{
+      if (article.thumbnail != null) {
+        if (article.thumbnail.length > 0) {
+          thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
+        }
       }
     }
     return (
