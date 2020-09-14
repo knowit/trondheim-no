@@ -9,28 +9,6 @@ export default ({ data }) => {
   const locale = data.flamelinkListingPageContent.flamelink_locale
   const localization = data.flamelinkListingPageLocalizationContent.translations
 
-  var tags = []
-  data.allFlamelinkArticleContent.edges
-    .map((node) => node.node)
-    .forEach((node) => {
-      if (node.tags) {
-        node.tags.forEach((tag) => {
-          if (!tags.includes(tag)) {
-            tags.push(tag)
-          }
-        })
-      }
-    })
-
-  const MapButton = () => {
-    if (data.flamelinkListingPageContent.hasMapPage) {
-      return (
-        <Link id="map-button" to={data.flamelinkListingPageContent.mapPath}>
-          {LocalizationHelper.getLocalWord(localization, "showOnMap", locale)}
-        </Link>
-      )
-    } else return null
-  }
   return (
     <Layout
       locale={locale}
@@ -41,7 +19,6 @@ export default ({ data }) => {
           <div id="articles-header">
             <h2>{data.flamelinkListingPageContent.localTitle}</h2>
             <p>{data.flamelinkListingPageContent.textOnPage}</p>
-            <MapButton />
             <Link
               id="english-button"
               to={
@@ -57,19 +34,17 @@ export default ({ data }) => {
               )}
             </Link>
           </div>
-
           <SortableArticleView
             data={data}
-            tags={tags}
+            tags={[]}
             localization={localization}
-            articles={data.allFlamelinkArticleContent.edges.map(
-              (node) => node.node
-            )}
+            articles={[]}
             subListingPages={data.allFlamelinkListingPageContent.edges.map(
               (node) => node.node
             )}
             locale={locale}
             defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck}
+            mapPage={true}
           />
         </div>
       </div>
@@ -78,7 +53,7 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query ListingPageQuery($nodeId: String, $nodeFlamelinkId: String) {
+  query MapPageQuery($nodeId: String, $locale: String) {
     flamelinkListingPageLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
       translations {
@@ -95,9 +70,7 @@ export const query = graphql`
       flamelink_id
       flamelink_locale
       path
-      mapPath
       slug
-      hasMapPage
       localTitle
       textOnPage
       localizedPaths {
@@ -107,7 +80,10 @@ export const query = graphql`
     }
 
     allFlamelinkListingPageContent(
-      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+      filter: {
+        showOnMapListingPage: { eq: true }
+        flamelink_locale: { eq: $locale }
+      }
     ) {
       edges {
         node {
@@ -115,50 +91,13 @@ export const query = graphql`
           flamelink_id
           flamelink_locale
           path
-
           localTitle
           navigationTitle
-
-          thumbnail {
+          mapPath
+          mapPageTitle
+          mapThumbnail {
             localFile {
               name
-              childImageSharp {
-                fluid(maxWidth: 340, quality: 70) {
-                  base64
-                  aspectRatio
-                  src
-                  srcSet
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    allFlamelinkArticleContent(
-      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
-    ) {
-      edges {
-        node {
-          id
-          flamelink_locale
-          slug
-          tags
-          title
-          path
-
-          parentListingPage {
-            id
-            localTitle
-          }
-
-          thumbnail {
-            localFile {
               childImageSharp {
                 fluid(maxWidth: 340, quality: 70) {
                   base64

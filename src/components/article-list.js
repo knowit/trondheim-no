@@ -17,6 +17,7 @@ export default ({
   localization,
   locale,
   defaultThumbnails,
+  mapPage,
 }) => {
   const [filterTags, setFilterTags] = useState([])
   const [sortBy, setSortBy] = useState("standard")
@@ -62,7 +63,8 @@ export default ({
         </div>
       )
     })
-    return <div id="all-tags-container">{allTags} </div>
+
+    return tags.length ? <div id="all-tags-container">{allTags} </div> : null
   }
 
   const Sorter = () => {
@@ -86,14 +88,14 @@ export default ({
       )
     })
 
-    return <div id="sort-container"> {sortTags} </div>
+    return tags.length ? <div id="sort-container"> {sortTags} </div> : null
   }
 
   const ArticleList = () => {
     const articleViews = []
 
     const listingPageDefaultThumbnail = defaultThumbnails.find(
-      (node) => node.title === "ListingPage Thumbnail"
+      (node) => node.title === "ListingPage Thumbnails"
     )
     subListingPages.forEach((slp) => {
       slp.tags = []
@@ -150,20 +152,30 @@ export default ({
         ? ""
         : ReactDOMHelper.getTextContentFromHtml(article.content.content)
     var thumbnail = defaultThumbnail
-
-    if (article.thumbnail != null) {
-      if (article.thumbnail.length > 0) {
-        thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
+    if (mapPage) {
+      if (article.mapThumbnail != null) {
+        if (article.mapThumbnail.length > 0) {
+          thumbnail = article.mapThumbnail[0]?.localFile.childImageSharp.fluid
+        }
+      }
+    } else {
+      if (article.thumbnail != null) {
+        if (article.thumbnail.length > 0) {
+          thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
+        }
       }
     }
-
     return (
       <div className="article-container">
         <Img className="article-thumbnail" fluid={thumbnail} />
         <div className="article-info-container">
           <h2>
-            <Link to={article.path}>
-              {subList ? article.navigationTitle : article.title}
+            <Link to={mapPage ? article.mapPath : article.path}>
+              {mapPage
+                ? article.mapPageTitle
+                : subList
+                ? article.navigationTitle
+                : article.title}
             </Link>
           </h2>
 
