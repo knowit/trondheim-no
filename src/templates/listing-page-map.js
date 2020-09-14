@@ -158,6 +158,10 @@ export const query = graphql`
       mapPageDescription
       path
       mapPath
+      localizedPaths {
+        locale
+        path
+      }
     }
 
     localization: flamelinkListingPageLocalizationContent(
