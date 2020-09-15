@@ -190,7 +190,7 @@ export default ({ data }) => {
                           {node.navigationTitle}
                         </Link>
                       </h2>
-                      <h4>{node.navigationSubtitle}</h4>
+                      <h3>{node.navigationSubtitle}</h3>
                     </div>
                   )
                 } else {
