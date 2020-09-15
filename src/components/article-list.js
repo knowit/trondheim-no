@@ -35,9 +35,12 @@ export default ({
 
   const TagFilter = () => {
     const allTags = []
+    const reset_label = LocalizationHelper.getLocalWord(localization, "resetTags", locale)
     allTags.push(
       <div
         role="button"
+        aria-checked={filterTags.length === 0 ? "true" : "false"}
+        aria-label={reset_label}
         tabIndex={0}
         onKeyPress={(e) => handleTagToggle("all")}
         key={allTags.length}
@@ -51,7 +54,9 @@ export default ({
     tags.forEach((tag) => {
       allTags.push(
         <div
-          role="button"
+          role="checkbox"
+          aria-checked={filterTags.includes(tag) ? "true" : "false"}
+          aria-label={tag}
           tabIndex={0}
           onKeyPress={(e) => handleTagToggle(tag)}
           key={allTags.length}
@@ -66,14 +71,17 @@ export default ({
 
     return tags.length ? <div id="all-tags-container">{allTags} </div> : null
   }
-
+  console.log(localization, locale)
   const Sorter = () => {
     const sortTags = []
+    const sorting_label = LocalizationHelper.getLocalWord(localization, "sorting", locale)
     SORT_TYPES.forEach((s) => {
       var tagName = LocalizationHelper.getLocalWord(localization, s, locale)
       sortTags.push(
         <div
-          role="button"
+          role="radio"
+          aria-checked={sortBy === s ? "true" : "false"}
+          aria-label={sorting_label+" "+tagName}
           tabIndex={0}
           onKeyPress={(e) => {
             setSortBy(s)
