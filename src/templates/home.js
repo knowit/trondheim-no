@@ -54,11 +54,11 @@ export default ({ data }) => {
             <h2>
               <Ref>{node.title}</Ref>
             </h2>
-            <h4>
+            <h3>
               <Ref>
                 <Content />
               </Ref>
-            </h4>
+            </h3>
           </div>
         </div>
       )
