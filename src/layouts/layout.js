@@ -58,7 +58,7 @@ export default ({ children, locale, localizedPaths }) => {
     .find((node) => node.flamelink_locale === locale)
 
   const search = LocalizationHelper.getLocalWord(localization, "search", locale)
-
+  const searchInput = LocalizationHelper.getLocalWord(localization, "searchInput", locale)
   const Navigation = () => {
     return (
       <div className="navigation-container">
@@ -103,14 +103,15 @@ export default ({ children, locale, localizedPaths }) => {
             locale === "no" ? "/" : `/${locale.split("-")[0]}/`
           }search`}
         >
-          <input
-            type="text"
-            id="search-input"
-            name="query"
-            value={query}
-            placeholder={`${search}...`}
-            onChange={(e) => setQuery(e.target.value)}
-          ></input>
+            <input
+              type="text"
+              id="search-input"
+              name="query"
+              aria-label={searchInput}
+              value={query}
+              placeholder={`${search}...`}
+              onChange={(e) => setQuery(e.target.value)}
+            />
 
           <Link
             id="search-button"
