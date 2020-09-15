@@ -61,7 +61,7 @@ export default ({ children, locale, localizedPaths }) => {
   const searchInput = LocalizationHelper.getLocalWord(localization, "searchInput", locale)
   const Navigation = () => {
     return (
-      <div className="navigation-container">
+      <header className="navigation-container">
         <div className="navigation-content-container">
           <BurgerMenu locale={locale} localizedPaths={localizedPaths} />
 
@@ -81,7 +81,7 @@ export default ({ children, locale, localizedPaths }) => {
             </Link>
           </div>
         </div>
-      </div>
+      </header>
     )
   }
 
@@ -95,7 +95,7 @@ export default ({ children, locale, localizedPaths }) => {
         />
       </Helmet>
       <Navigation id="navbar" />
-      <div id="children-container">{children}</div>
+      <main id="children-container">{children}</main>
       <footer id="footer-container">
         <form
           id="search-container"
