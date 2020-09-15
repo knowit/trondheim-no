@@ -71,7 +71,6 @@ export default ({
 
     return tags.length ? <div id="all-tags-container">{allTags} </div> : null
   }
-  console.log(localization, locale)
   const Sorter = () => {
     const sortTags = []
     const sorting_label = LocalizationHelper.getLocalWord(localization, "sorting", locale)
