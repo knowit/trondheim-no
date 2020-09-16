@@ -32,9 +32,17 @@ export default ({
     }
     setFilterTags(filterTagsTemp.slice())
   }
-  
-  const reset_label = LocalizationHelper.getLocalWord(localization, "resetTags", locale)
-  const sorting_label = LocalizationHelper.getLocalWord(localization, "sorting", locale)
+
+  const reset_label = LocalizationHelper.getLocalWord(
+    localization,
+    "resetTags",
+    locale
+  )
+  const sorting_label = LocalizationHelper.getLocalWord(
+    localization,
+    "sorting",
+    locale
+  )
 
   const ArticleList = () => {
     const articleViews = []
@@ -145,9 +153,9 @@ export default ({
   }
 
   var i = 0
-  return ( 
+  return tags.length ? (
     <div className="article-list-container">
-       <div id="all-tags-container">
+      <div id="all-tags-container">
         <div
           role="button"
           aria-label={reset_label}
@@ -158,9 +166,10 @@ export default ({
           style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
           onClick={(e) => handleTagToggle("all")}
         >
-        {LocalizationHelper.getLocalWord(localization, "all", locale)}
-      </div>
-      {tags.length ? tags.map((tag) => (
+          {LocalizationHelper.getLocalWord(localization, "all", locale)}
+        </div>
+
+        {tags.map((tag) => (
           <div
             role="checkbox"
             aria-checked={filterTags.includes(tag) ? "true" : "false"}
@@ -174,31 +183,35 @@ export default ({
           >
             {tag}
           </div>
-        )
-      ) : null}     
-        </div>
-        <div id="sort-container">
+        ))}
+      </div>
+      <div id="sort-container">
         {SORT_TYPES.map((s) => {
-            var tagName = LocalizationHelper.getLocalWord(localization, s, locale)
-            return (
-              <div
-                role="radio"
-                aria-checked={sortBy === s ? "true" : "false"}
-                aria-label={sorting_label+" "+tagName}
-                tabIndex={0}
-                onKeyPress={(e) => {
-                  setSortBy(s)
-                }}
-                className="distinct-tag"
-                key={i++}
-                style={sortBy === s ? selectedStyle : unSelectedStyle}
-                onClick={(e) => setSortBy(s)}
-              >
-                {tagName}
-              </div>
-            )
-          })}
-        </div>
+          var tagName = LocalizationHelper.getLocalWord(localization, s, locale)
+          return (
+            <div
+              role="radio"
+              aria-checked={sortBy === s ? "true" : "false"}
+              aria-label={sorting_label + " " + tagName}
+              tabIndex={0}
+              onKeyPress={(e) => {
+                setSortBy(s)
+              }}
+              className="distinct-tag"
+              key={i++}
+              style={sortBy === s ? selectedStyle : unSelectedStyle}
+              onClick={(e) => setSortBy(s)}
+            >
+              {tagName}
+            </div>
+          )
+        })}
+      </div>
+
+      <ArticleList />
+    </div>
+  ) : (
+    <div className="article-list-container">
       <ArticleList />
     </div>
   )
