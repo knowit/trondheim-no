@@ -44,7 +44,7 @@ module.exports = {
     title: `Trondheim.no`,
     description: `Offisielt nettsted for Trondheim`,
     author: `@trondheim`,
-    keywords: [],
+    keywords: ["Trondheim"],
     siteUrl: "https://trondheim.no/"
   },
   plugins: [
