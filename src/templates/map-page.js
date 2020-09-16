@@ -15,11 +15,11 @@ export default ({ data }) => {
       locale={locale}
       localizedPaths={data.flamelinkListingPageContent.localizedPaths}
     >
-
-      <SEO 
-      title={locale === "no" ? "Kart" : "Maps"}
-      locale={locale}
-      keywords={[locale === "no" ? "Kart" : "Maps"]} />
+      <SEO
+        title={locale === "no" ? "Kart" : "Maps"}
+        locale={locale}
+        keywords={[locale === "no" ? "Kart" : "Maps"]}
+      />
 
       <div id="outer-container">
         <div id="inner-container">

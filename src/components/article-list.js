@@ -35,7 +35,11 @@ export default ({
 
   const TagFilter = () => {
     const allTags = []
-    const reset_label = LocalizationHelper.getLocalWord(localization, "resetTags", locale)
+    const reset_label = LocalizationHelper.getLocalWord(
+      localization,
+      "resetTags",
+      locale
+    )
     allTags.push(
       <div
         role="button"
@@ -73,14 +77,18 @@ export default ({
   }
   const Sorter = () => {
     const sortTags = []
-    const sorting_label = LocalizationHelper.getLocalWord(localization, "sorting", locale)
+    const sorting_label = LocalizationHelper.getLocalWord(
+      localization,
+      "sorting",
+      locale
+    )
     SORT_TYPES.forEach((s) => {
       var tagName = LocalizationHelper.getLocalWord(localization, s, locale)
       sortTags.push(
         <div
           role="radio"
           aria-checked={sortBy === s ? "true" : "false"}
-          aria-label={sorting_label+" "+tagName}
+          aria-label={sorting_label + " " + tagName}
           tabIndex={0}
           onKeyPress={(e) => {
             setSortBy(s)

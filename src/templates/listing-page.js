@@ -37,11 +37,11 @@ export default ({ data }) => {
       locale={locale}
       localizedPaths={data.flamelinkListingPageContent.localizedPaths}
     >
-
       <SEO
-      title={data.flamelinkListingPageContent.localTitle}
-      locale={data.flamelinkListingPageContent.flamelink_locale}
-      keywords={[data.flamelinkListingPageContent.navigationTitle]} />
+        title={data.flamelinkListingPageContent.localTitle}
+        locale={data.flamelinkListingPageContent.flamelink_locale}
+        keywords={[data.flamelinkListingPageContent.navigationTitle]}
+      />
 
       <div id="outer-container">
         <div id="inner-container">

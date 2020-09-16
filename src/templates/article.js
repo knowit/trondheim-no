@@ -237,11 +237,10 @@ export default ({ data }) => {
       locale={data.flamelinkArticleContent.flamelink_locale}
       localizedPaths={data.flamelinkArticleContent.localizedPaths}
     >
-
-      <SEO 
-      title={data.flamelinkArticleContent.title} 
-      locale={data.flamelinkArticleContent.flamelink_locale}
-      keywords={[]}
+      <SEO
+        title={data.flamelinkArticleContent.title}
+        locale={data.flamelinkArticleContent.flamelink_locale}
+        keywords={[]}
       />
 
       <div id="outer-container">

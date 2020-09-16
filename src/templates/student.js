@@ -194,10 +194,10 @@ export default ({ data }) => {
 
   return (
     <div>
-      <SEO 
-      title="Student"
-      locale={data.studentPageNode.flamelink_locale}
-      keywords={["Student"]}
+      <SEO
+        title="Student"
+        locale={data.studentPageNode.flamelink_locale}
+        keywords={["Student"]}
       />
       <Navigation />
       <HeaderImage />

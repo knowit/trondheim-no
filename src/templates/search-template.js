@@ -281,10 +281,11 @@ export default ({ pageContext, location }) => {
       locale={pageContext.locale}
       localizedPaths={pageContext.localizedPaths}
     >
-
-      <SEO title={pageContext.locale === "no" ? "Søk" : "Search"}
-      locale={pageContext.locale}
-      keywords={[pageContext.locale === "no" ? "Søk" : "Search"]} />
+      <SEO
+        title={pageContext.locale === "no" ? "Søk" : "Search"}
+        locale={pageContext.locale}
+        keywords={[pageContext.locale === "no" ? "Søk" : "Search"]}
+      />
 
       <div id="outer-container">
         <div id="inner-container">

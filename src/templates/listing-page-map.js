@@ -115,11 +115,11 @@ export default ({ data }) => {
       locale={data.node.flamelink_locale}
       localizedPaths={data.node.localizedPaths}
     >
-
       <SEO
-      title={data.node.mapPageTitle}
-      locale={data.node.flamelink_locale}
-      keywords={[data.node.flamelink_locale === "no" ? "Kart" : "Map"]} />
+        title={data.node.mapPageTitle}
+        locale={data.node.flamelink_locale}
+        keywords={[data.node.flamelink_locale === "no" ? "Kart" : "Map"]}
+      />
 
       <div id="outer-container">
         <div id="inner-container">

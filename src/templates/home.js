@@ -144,18 +144,25 @@ export default ({ data }) => {
     )
   }
 
-
-
   return (
     <Layout
       locale={data.flamelinkFrontPageContent.flamelink_locale}
       localizedPaths={data.flamelinkFrontPageContent.localizedPaths}
     >
-      <SEO 
-      title={data.flamelinkFrontPageContent.flamelink_locale === "no" ? "Hjem" : "Home"}
-      locale={data.flamelinkFrontPageContent.flamelink_locale}
-      keywords={[data.flamelinkFrontPageContent.flamelink_locale === "no" ? "Hjem" : "Home"]} />
-      
+      <SEO
+        title={
+          data.flamelinkFrontPageContent.flamelink_locale === "no"
+            ? "Hjem"
+            : "Home"
+        }
+        locale={data.flamelinkFrontPageContent.flamelink_locale}
+        keywords={[
+          data.flamelinkFrontPageContent.flamelink_locale === "no"
+            ? "Hjem"
+            : "Home",
+        ]}
+      />
+
       <div id="outer-container">
         <div id="header-container">
           <BackgroundImage
