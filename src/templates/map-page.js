@@ -4,6 +4,7 @@ import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
 import { Link, graphql } from "gatsby"
 import SortableArticleView from "../components/article-list"
+import SEO from "../components/seo"
 
 export default ({ data }) => {
   const locale = data.flamelinkListingPageContent.flamelink_locale
@@ -14,6 +15,12 @@ export default ({ data }) => {
       locale={locale}
       localizedPaths={data.flamelinkListingPageContent.localizedPaths}
     >
+
+      <SEO 
+      title={locale === "no" ? "Kart" : "Maps"}
+      locale={locale}
+      keywords={[locale === "no" ? "Kart" : "Maps"]} />
+
       <div id="outer-container">
         <div id="inner-container">
           <div id="articles-header">

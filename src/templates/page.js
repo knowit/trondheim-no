@@ -3,6 +3,7 @@ import HTMLContent from "../components/html-content"
 import Layout from "../layouts/layout"
 import "../style/page.css"
 import { graphql } from "gatsby"
+import SEO from "../components/seo"
 
 export default ({ data }) => {
   const ParsedHTML = () => {
@@ -24,6 +25,12 @@ export default ({ data }) => {
       locale={data.node.flamelink_locale}
       localizedPaths={data.node.localizedPaths}
     >
+
+      <SEO 
+      title={data.node.title}
+      locale={data.node.flamelink_locale}
+      />
+
       <div id="outer-container">
         <div id="inner-container">
           <h1 id="page-title">{data.node.title}</h1>

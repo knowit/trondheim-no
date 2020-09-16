@@ -6,6 +6,7 @@ import { Link, graphql } from "gatsby"
 import GoogleMap, { LoadScript } from "../components/map"
 import { Online, Offline } from "react-detect-offline"
 import { Router } from "@reach/router"
+import SEO from "../components/seo"
 
 const defaultLocation = {
   lat: 63.4305149,
@@ -114,6 +115,12 @@ export default ({ data }) => {
       locale={data.node.flamelink_locale}
       localizedPaths={data.node.localizedPaths}
     >
+
+      <SEO
+      title={data.node.mapPageTitle}
+      locale={data.node.flamelink_locale}
+      keywords={[data.node.flamelink_locale === "no" ? "Kart" : "Map"]} />
+
       <div id="outer-container">
         <div id="inner-container">
           <Online>

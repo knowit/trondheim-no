@@ -8,6 +8,8 @@ import HTMLContent from "../components/html-content"
 import Map, { LoadScript } from "../components/map"
 import { Router } from "@reach/router"
 import { graphql } from "gatsby"
+import SEO from "../components/seo"
+import { Data } from "@react-google-maps/api"
 
 function ContactInfo(props) {
   if (!props.node.contactInfo && !props.node.address.address) return ""
@@ -235,6 +237,13 @@ export default ({ data }) => {
       locale={data.flamelinkArticleContent.flamelink_locale}
       localizedPaths={data.flamelinkArticleContent.localizedPaths}
     >
+
+      <SEO 
+      title={data.flamelinkArticleContent.title} 
+      locale={data.flamelinkArticleContent.flamelink_locale}
+      keywords={[]}
+      />
+
       <div id="outer-container">
         <div id="inner-container">
           <h2 id="article-title">{data.flamelinkArticleContent.title}</h2>
