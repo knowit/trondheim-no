@@ -44,6 +44,8 @@ module.exports = {
     title: `Trondheim.no`,
     description: `Offisielt nettsted for Trondheim`,
     author: `@trondheim`,
+    keywords: [],
+    siteUrl: "https://trondheim.no/"
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
