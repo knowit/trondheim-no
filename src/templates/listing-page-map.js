@@ -79,23 +79,22 @@ export default ({ data }) => {
     })
     return (
       <span>
-        <GoogleMap
-          locationMarker={defaultLocation}
-          address={defaultAddress}
-          markers={markers.filter((marker) =>
-            subListingPages.get(marker.parent)
-          )}
-          zoom={13}
-          persistentDisabled={false}
-          width="100%"
-          height="500px"
-        />
-
+        <div id="content-container">
+          <h2>{data.node.mapPageTitle}</h2>
+          <GoogleMap
+            locationMarker={defaultLocation}
+            address={defaultAddress}
+            markers={markers.filter((marker) =>
+              subListingPages.get(marker.parent)
+            )}
+            zoom={13}
+            persistentDisabled={false}
+            width="100%"
+            height="500px"
+          />
         <div>
           <form className="map-checkbox-form">{items}</form>
         </div>
-        <div id="content-container">
-          <h2>{data.node.mapPageTitle}</h2>
           <p>{data.node.mapPageDescription}</p>
           <Link to={data.node.path}>
             {LocalizationHelper.getLocalWord(
