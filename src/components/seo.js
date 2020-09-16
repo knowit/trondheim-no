@@ -2,7 +2,7 @@ import React from "react"
 import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
 
-export default ({ title, keywords, locale }) => {
+export default ({ title = null, keywords = [], locale = "no" }) => {
     const { site } = useStaticQuery(
         graphql`
             query {
