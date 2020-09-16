@@ -32,71 +32,9 @@ export default ({
     }
     setFilterTags(filterTagsTemp.slice())
   }
-
-  const TagFilter = () => {
-    const allTags = []
-    const reset_label = LocalizationHelper.getLocalWord(localization, "resetTags", locale)
-    allTags.push(
-      <div
-        role="button"
-        aria-checked={filterTags.length === 0 ? "true" : "false"}
-        aria-label={reset_label}
-        tabIndex={0}
-        onKeyPress={(e) => handleTagToggle("all")}
-        key={allTags.length}
-        className="distinct-tag"
-        style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
-        onClick={(e) => handleTagToggle("all")}
-      >
-        {LocalizationHelper.getLocalWord(localization, "all", locale)}
-      </div>
-    )
-    tags.forEach((tag) => {
-      allTags.push(
-        <div
-          role="checkbox"
-          aria-checked={filterTags.includes(tag) ? "true" : "false"}
-          aria-label={tag}
-          tabIndex={0}
-          onKeyPress={(e) => handleTagToggle(tag)}
-          key={allTags.length}
-          className="distinct-tag"
-          style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}
-          onClick={(e) => handleTagToggle(tag)}
-        >
-          {tag}
-        </div>
-      )
-    })
-
-    return tags.length ? <div id="all-tags-container">{allTags} </div> : null
-  }
-  const Sorter = () => {
-    const sortTags = []
-    const sorting_label = LocalizationHelper.getLocalWord(localization, "sorting", locale)
-    SORT_TYPES.forEach((s) => {
-      var tagName = LocalizationHelper.getLocalWord(localization, s, locale)
-      sortTags.push(
-        <div
-          role="radio"
-          aria-checked={sortBy === s ? "true" : "false"}
-          aria-label={sorting_label+" "+tagName}
-          tabIndex={0}
-          onKeyPress={(e) => {
-            setSortBy(s)
-          }}
-          className="distinct-tag"
-          key={sortTags.length}
-          style={sortBy === s ? selectedStyle : unSelectedStyle}
-          onClick={(e) => setSortBy(s)}
-        >
-          {tagName}
-        </div>
-      )
-    })
-
-    return tags.length ? <div id="sort-container"> {sortTags} </div> : null
-  }
+  
+  const reset_label = LocalizationHelper.getLocalWord(localization, "resetTags", locale)
+  const sorting_label = LocalizationHelper.getLocalWord(localization, "sorting", locale)
 
   const ArticleList = () => {
     const articleViews = []
@@ -206,10 +144,61 @@ export default ({
     )
   }
 
-  return (
+  var i = 0
+  return ( 
     <div className="article-list-container">
-      <TagFilter />
-      <Sorter />
+       <div id="all-tags-container">
+        <div
+          role="button"
+          aria-label={reset_label}
+          tabIndex={0}
+          onKeyPress={(e) => handleTagToggle("all")}
+          key={i++}
+          className="distinct-tag"
+          style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
+          onClick={(e) => handleTagToggle("all")}
+        >
+        {LocalizationHelper.getLocalWord(localization, "all", locale)}
+      </div>
+      {tags.length ? tags.map((tag) => (
+          <div
+            role="checkbox"
+            aria-checked={filterTags.includes(tag) ? "true" : "false"}
+            aria-label={tag}
+            tabIndex={0}
+            onKeyPress={(e) => handleTagToggle(tag)}
+            key={i++}
+            className="distinct-tag"
+            style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}
+            onClick={(e) => handleTagToggle(tag)}
+          >
+            {tag}
+          </div>
+        )
+      ) : null}     
+        </div>
+        <div id="sort-container">
+        {SORT_TYPES.map((s) => {
+            var tagName = LocalizationHelper.getLocalWord(localization, s, locale)
+            return (
+              <div
+                role="radio"
+                aria-checked={sortBy === s ? "true" : "false"}
+                aria-label={sorting_label+" "+tagName}
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  setSortBy(s)
+                }}
+                className="distinct-tag"
+                key={i++}
+                style={sortBy === s ? selectedStyle : unSelectedStyle}
+                onClick={(e) => setSortBy(s)}
+              >
+                {tagName}
+              </div>
+            )
+          })}
+        </div>
       <ArticleList />
     </div>
   )
