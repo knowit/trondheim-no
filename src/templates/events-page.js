@@ -53,10 +53,9 @@ class EventsView extends React.Component {
     console.log("Fetching events from trdevents.no...")
 
     fetch(this.props.trdEventsUrl)
-
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error("HTTP status " + response.status);
+          throw new Error("HTTP status " + response.status)
         }
         return response.json()
       })
@@ -108,28 +107,27 @@ class EventsView extends React.Component {
 
   timeString(event) {
     const date = new Date(event.startDate)
-      const dateString = `${date.getDate()}. ${this.monthName(date.getMonth())}`
+    const dateString = `${date.getDate()}. ${this.monthName(date.getMonth())}`
 
-      const ticketString = `CC: ${event.regularPrice},- ${
-        event.reducedPrice && event.reducedPrice.length !== 0
-          ? `/ ${event.reducedPrice},-`
-          : ""
-        }`
-      const freeString = LocalizationHelper.getLocalWord(
-        this.props.localization,
-        "free",
-        this.props.locale
-      )
+    const ticketString = `CC: ${event.regularPrice},- ${
+      event.reducedPrice && event.reducedPrice.length !== 0
+        ? `/ ${event.reducedPrice},-`
+        : ""
+    }`
+    const freeString = LocalizationHelper.getLocalWord(
+      this.props.localization,
+      "free",
+      this.props.locale
+    )
 
-      const priceString = `${
-        event.priceOption === "non-gratis" ? ticketString : freeString
-        }`
+    const priceString = `${
+      event.priceOption === "non-gratis" ? ticketString : freeString
+    }`
 
-      return `${dateString} @ ${event.startTime} | ${priceString}`
+    return `${dateString} @ ${event.startTime} | ${priceString}`
   }
 
   render() {
-
     const EventInfoRow = (props) => (
       <div className="event-info-row">
         <div className="event-icon">
@@ -180,49 +178,48 @@ class EventsView extends React.Component {
         {this.state.loadError ? (
           <ErrorMessage />
         ) : (
-            <p>
-              {LocalizationHelper.getLocalWord(
-                this.props.localization,
-                "loading",
-                this.props.locale
-              )}
-            </p>
-          )}
+          <p>
+            {LocalizationHelper.getLocalWord(
+              this.props.localization,
+              "loading",
+              this.props.locale
+            )}
+          </p>
+        )}
       </div>
     )
 
-
     const Content = () => {
-      var i = 0;
+      var i = 0
       return this.state.loading ? (
         <Loading />
       ) : (
-          <div id="articles-container">
-            {this.state.events.map((event) => {
-              return (
-                <div key={i++} className="article-container">
-                  <a href={event.eventLink}>
-                    <img
-                      className="article-thumbnail"
-                      alt={event.title_nb}
-                      src={event.imageURL}
-                    />
-                  </a>
-                  <div className="article-info-container">
-                    <h2>
-                      <a href={event.eventLink}>{event.title_nb}</a>
-                    </h2>
-                    <div className="event-info-container">
-                      <Location event={event} />
-                      <Categories event={event} />
-                      <Time event={event} />
-                    </div>
+        <div id="articles-container">
+          {this.state.events.map((event) => {
+            return (
+              <a href={event.eventLink} key={i++} className="article-container" aria-label={event.title_nb}>
+                <div>
+                  <img
+                    className="article-thumbnail"
+                    alt={event.title_nb}
+                    src={event.imageURL}
+                  />
+                </div>
+                <div className="article-info-container">
+                  <h2>
+                    <div>{event.title_nb}</div>
+                  </h2>
+                  <div className="event-info-container">
+                    <Location event={event} />
+                    <Categories event={event} />
+                    <Time event={event} />
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        )
+              </a>
+            )
+          })}
+        </div>
+      )
     }
 
     return (
@@ -252,7 +249,6 @@ class EventsView extends React.Component {
 // Rendered server side
 
 export default ({ data }) => {
-
   const trdEventsUrl = process.env.GATSBY_TRD_EVENTS_URL
 
   return (

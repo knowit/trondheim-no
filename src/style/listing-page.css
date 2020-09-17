@@ -106,6 +106,7 @@
   height: auto;
   overflow: visible;
   padding: 10px;
+  text-decoration: none;
 }
 
 .article-thumbnail{
@@ -175,10 +176,7 @@
   color: rgb(61, 61, 61);
   font-size: 11pt;
   letter-spacing: 0;
-  text-decoration: underline;
-
 }
-
 
 .map-checkbox-container {
   display: inline-block;
@@ -227,12 +225,14 @@
 }
 
 .event-icon {
+  color: black;
   margin-right: 8px;
 }
 
 .event-info-text {
   display: flex;
   flex-direction: row;
+  color: black;
 }
 
 #events-more-container {

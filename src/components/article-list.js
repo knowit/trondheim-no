@@ -35,7 +35,11 @@ export default ({
 
   const TagFilter = () => {
     const allTags = []
-    const reset_label = LocalizationHelper.getLocalWord(localization, "resetTags", locale)
+    const reset_label = LocalizationHelper.getLocalWord(
+      localization,
+      "resetTags",
+      locale
+    )
     allTags.push(
       <div
         role="button"
@@ -73,14 +77,18 @@ export default ({
   }
   const Sorter = () => {
     const sortTags = []
-    const sorting_label = LocalizationHelper.getLocalWord(localization, "sorting", locale)
+    const sorting_label = LocalizationHelper.getLocalWord(
+      localization,
+      "sorting",
+      locale
+    )
     SORT_TYPES.forEach((s) => {
       var tagName = LocalizationHelper.getLocalWord(localization, s, locale)
       sortTags.push(
         <div
           role="radio"
           aria-checked={sortBy === s ? "true" : "false"}
-          aria-label={sorting_label+" "+tagName}
+          aria-label={sorting_label + " " + tagName}
           tabIndex={0}
           onKeyPress={(e) => {
             setSortBy(s)
@@ -172,19 +180,20 @@ export default ({
         }
       }
     }
+    const articleHeader = mapPage
+      ? article.mapPageTitle
+      : subList
+      ? article.navigationTitle
+      : article.title
     return (
-      <div className="article-container">
+      <Link
+        to={mapPage ? article.mapPath : article.path}
+        className="article-container"
+        aria-label={articleHeader}
+      >
         <Img className="article-thumbnail" fluid={thumbnail} />
         <div className="article-info-container">
-          <h2>
-            <Link to={mapPage ? article.mapPath : article.path}>
-              {mapPage
-                ? article.mapPageTitle
-                : subList
-                ? article.navigationTitle
-                : article.title}
-            </Link>
-          </h2>
+          <h2 className="article-into-header">{articleHeader}</h2>
 
           <EllipsisText
             className="article-info-text"
@@ -202,7 +211,7 @@ export default ({
             })}
           </div>
         </div>
-      </div>
+      </Link>
     )
   }
 
