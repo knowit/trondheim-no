@@ -118,19 +118,20 @@ export default ({
         }
       }
     }
+    const articleHeader = mapPage
+      ? article.mapPageTitle
+      : subList
+      ? article.navigationTitle
+      : article.title
     return (
-      <div className="article-container">
+      <Link
+        to={mapPage ? article.mapPath : article.path}
+        className="article-container"
+        aria-label={articleHeader}
+      >
         <Img className="article-thumbnail" fluid={thumbnail} />
         <div className="article-info-container">
-          <h2>
-            <Link to={mapPage ? article.mapPath : article.path}>
-              {mapPage
-                ? article.mapPageTitle
-                : subList
-                ? article.navigationTitle
-                : article.title}
-            </Link>
-          </h2>
+          <h2 className="article-into-header">{articleHeader}</h2>
 
           <EllipsisText
             className="article-info-text"
@@ -148,7 +149,7 @@ export default ({
             })}
           </div>
         </div>
-      </div>
+      </Link>
     )
   }
 

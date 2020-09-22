@@ -99,6 +99,8 @@
   height: 380px;
   border: 1px solid grey;
   margin: 10px;
+  text-decoration: none;
+  color: #005aa7 !important;
 }
 
 .student-listing-page-card-thumbnail{
