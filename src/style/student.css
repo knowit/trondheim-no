@@ -143,6 +143,7 @@
 }
 
 #student-custom-content-container #html-content-container {
+  align-items: center;
   min-height: 300px;
   height: 500px;
 }

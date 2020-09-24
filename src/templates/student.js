@@ -321,7 +321,7 @@ export const query = graphql`
       frontImage {
         localFile {
           childImageSharp {
-            fluid(maxWidth: 2400, quality: 90) {
+            fluid(maxWidth: 1800, quality: 90) {
               base64
               aspectRatio
               src
@@ -338,7 +338,7 @@ export const query = graphql`
       columnsBackgroundImage {
         localFile {
           childImageSharp {
-            fluid(maxWidth: 2400, quality: 90) {
+            fluid(maxWidth: 1400, quality: 90) {
               base64
               aspectRatio
               src
