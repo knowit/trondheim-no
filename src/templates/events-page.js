@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { fas } from "@fortawesome/free-solid-svg-icons"
 import { Online, Offline } from "react-detect-offline"
+import SEO from "../components/seo"
 
 library.add(fas)
 
@@ -256,6 +257,14 @@ export default ({ data }) => {
       locale={data.node.flamelink_locale}
       localizedPaths={data.node.localizedPaths}
     >
+      <SEO
+        title={data.node.localTitle}
+        locale={data.node.flamelink_locale}
+        keywords={[
+          data.node.flamelink_locale === "no" ? "Arrangementer" : "Events",
+        ]}
+      />
+
       <div id="outer-container">
         <div id="inner-container">
           <div id="articles-header">

@@ -4,6 +4,7 @@ import Layout from "../layouts/layout"
 import "../style/search.css"
 import EllipsisText from "react-ellipsis-text"
 import { Router } from "@reach/router"
+import SEO from "../components/seo"
 
 const Search = ({ location, locale }) => {
   const [query, setQuery] = useState("")
@@ -280,6 +281,12 @@ export default ({ pageContext, location }) => {
       locale={pageContext.locale}
       localizedPaths={pageContext.localizedPaths}
     >
+      <SEO
+        title={pageContext.locale === "no" ? "Søk" : "Search"}
+        locale={pageContext.locale}
+        keywords={[pageContext.locale === "no" ? "Søk" : "Search"]}
+      />
+
       <div id="outer-container">
         <div id="inner-container">
           <Router basepath={path(pageContext.locale)}>

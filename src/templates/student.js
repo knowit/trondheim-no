@@ -5,6 +5,7 @@ import Img from "gatsby-image/withIEPolyfill"
 import "../style/student.css"
 import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
+import SEO from "../components/seo"
 
 export default ({ data }) => {
   const Navigation = () => {
@@ -205,6 +206,11 @@ export default ({ data }) => {
 
   return (
     <div>
+      <SEO
+        title="Student"
+        locale={data.studentPageNode.flamelink_locale}
+        keywords={["Student"]}
+      />
       <Navigation />
       <HeaderImage />
       <SubListingPages />

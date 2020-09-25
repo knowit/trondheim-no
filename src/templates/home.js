@@ -9,6 +9,7 @@ import { library } from "@fortawesome/fontawesome-svg-core"
 import { fas } from "@fortawesome/free-solid-svg-icons"
 import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
+import SEO from "../components/seo"
 
 library.add(fas)
 
@@ -156,6 +157,20 @@ export default ({ data }) => {
       locale={data.flamelinkFrontPageContent.flamelink_locale}
       localizedPaths={data.flamelinkFrontPageContent.localizedPaths}
     >
+      <SEO
+        title={
+          data.flamelinkFrontPageContent.flamelink_locale === "no"
+            ? "Hjem"
+            : "Home"
+        }
+        locale={data.flamelinkFrontPageContent.flamelink_locale}
+        keywords={[
+          data.flamelinkFrontPageContent.flamelink_locale === "no"
+            ? "Hjem"
+            : "Home",
+        ]}
+      />
+
       <div id="outer-container">
         <div id="header-container">
           <BackgroundImage
