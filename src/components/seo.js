@@ -3,22 +3,29 @@ import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
 
 export default ({ title = null, keywords = [], locale = "no" }) => {
-  const { site } = useStaticQuery(
+  const data = useStaticQuery(
     graphql`
-      query {
-        site {
-          siteMetadata {
+    query {
+      allFlamelinkSeoContent {
+        edges {
+          node {
+            id
+            flamelink_locale
             title
             description
             author
-            keywords
+            keywords {
+              keyword
+            }
             siteUrl
           }
         }
       }
+    }
     `
   )
 
+  const seo = data.allFlamelinkSeoContent.edges.map(node => node.node).find(node => node.flamelink_locale === locale)
   const lang = locale.split("-")[0]
 
   return (
@@ -26,16 +33,16 @@ export default ({ title = null, keywords = [], locale = "no" }) => {
       htmlAttributes={{
         lang: lang,
       }}
-      title={title ? title : site.siteMetadata.title}
-      titleTemplate={title ? `%s | ${site.siteMetadata.title}` : "%s"}
+      title={title ? title :seo.title}
+      titleTemplate={title ? `%s | ${seo.title}` : "%s"}
       meta={[
         {
           name: "description",
-          content: site.siteMetadata.description,
+          content:seo.description,
         },
         {
           name: "keywords",
-          content: site.siteMetadata.keywords.concat(keywords).join(","),
+          content:seo.keywords.map(keyword => keyword.keyword).concat(keywords).join(",")
         },
       ]}
     />
