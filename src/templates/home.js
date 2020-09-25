@@ -18,20 +18,28 @@ export default ({ data }) => {
     const Column = ({ node }) => {
       const Content = () => ReactDOMHelper.parseToReact(node.content.content)
 
-      const Ref = ({ children }) => {
+      const Ref = ({ children, tabable }) => {
         if (node.linkType === "listingPage" || node.linkType === "page") {
           const path =
             node.linkType === "listingPage"
               ? node.listingPage.path
               : node.page.path
           return (
-            <Link className="frontpage-column-link" to={path}>
+            <Link
+              tabIndex={tabable ? "0" : "-1"}
+              className="frontpage-column-link"
+              to={path}
+            >
               {children}
             </Link>
           )
         } else if (node.linkType === "url") {
           return (
-            <a className="frontpage-column-link" href={node.url}>
+            <a
+              tabIndex={tabable ? "0" : "-1"}
+              className="frontpage-column-link"
+              href={node.url}
+            >
               {children}
             </a>
           )
@@ -53,7 +61,7 @@ export default ({ data }) => {
           </div>
           <div className="frontpage-column-info-container">
             <h2>
-              <Ref>{node.title}</Ref>
+              <Ref tabable="true">{node.title}</Ref>
             </h2>
             <h3>
               <Ref>
@@ -192,7 +200,12 @@ export default ({ data }) => {
               .map(function (node, key) {
                 if (node.thumbnail) {
                   return (
-                    <div key={key} className="navigation-box-container">
+                    <Link
+                      to={node.path}
+                      key={key}
+                      className="navigation-box-container"
+                      aria-label={node.navigationTitle}
+                    >
                       <Img
                         className="navigation-box-thumbnail"
                         fluid={
@@ -201,12 +214,12 @@ export default ({ data }) => {
                         alt="thumbnail"
                       />
                       <h2>
-                        <Link className="navigation-box-title" to={node.path}>
+                        <div className="navigation-box-title">
                           {node.navigationTitle}
-                        </Link>
+                        </div>
                       </h2>
                       <h3>{node.navigationSubtitle}</h3>
-                    </div>
+                    </Link>
                   )
                 } else {
                   return null
@@ -381,7 +394,7 @@ export const query = graphql`
       columnsBackgroundImage {
         localFile {
           childImageSharp {
-            fluid(maxWidth: 2400, quality: 70) {
+            fluid(maxWidth: 600, quality: 70) {
               base64
               aspectRatio
               src

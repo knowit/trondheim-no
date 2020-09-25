@@ -198,17 +198,17 @@ class EventsView extends React.Component {
         <div id="articles-container">
           {this.state.events.map((event) => {
             return (
-              <div key={i++} className="article-container">
-                <a href={event.eventLink}>
+              <a href={event.eventLink} key={i++} className="article-container" aria-label={event.title_nb}>
+                <div>
                   <img
                     className="article-thumbnail"
                     alt={event.title_nb}
                     src={event.imageURL}
                   />
-                </a>
+                </div>
                 <div className="article-info-container">
                   <h2>
-                    <a href={event.eventLink}>{event.title_nb}</a>
+                    <div>{event.title_nb}</div>
                   </h2>
                   <div className="event-info-container">
                     <Location event={event} />
@@ -216,7 +216,7 @@ class EventsView extends React.Component {
                     <Time event={event} />
                   </div>
                 </div>
-              </div>
+              </a>
             )
           })}
         </div>

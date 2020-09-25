@@ -197,5 +197,24 @@ module.exports = {
         },
       },
     },
+    {
+      resolve: `gatsby-plugin-sitemap`,
+      options: {
+        //exclude url from appearing in search results
+        exclude: [
+          '/search',
+          '/en/search',
+          '/en/404'
+        ]
+      }
+    },
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: 'https://www.trondheim.no/',
+        sitemap: 'https://www.trondheim.no/sitemap.xml',
+        policy: [{ userAgent: '*', allow: '/' }]
+      }
+    },
   ],
 }
