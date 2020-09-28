@@ -85,7 +85,7 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query ListingPageQuery($nodeId: String, $nodeFlamelinkId: String) {
+  query ListingPageQuery($nodeId: String, $nodeFlamelinkId: String, $locale: String) {
     flamelinkListingPageLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
       translations {
@@ -184,7 +184,7 @@ export const query = graphql`
       }
     }
 
-    flamelinkDefaultThumbnailsContent(flamelink_locale: { eq: "no" }) {
+    flamelinkDefaultThumbnailsContent(flamelink_locale: { eq: $locale }) {
       id
       flamelink_locale
       imageDeck {
