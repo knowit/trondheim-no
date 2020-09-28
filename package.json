@@ -28,6 +28,7 @@
     "gatsby-source-filesystem": "^2.3.20",
     "gatsby-source-flamelink": "^3.0.1",
     "gatsby-transformer-sharp": "^2.5.11",
+    "graphql-request": "^3.1.0",
     "html-to-react": "^1.4.3",
     "lunr-languages": "^1.4.0",
     "node-fetch": "^2.6.0",
