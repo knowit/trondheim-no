@@ -98,6 +98,10 @@ class GoogleMapsUrlHelper {
 
 class UrlHelper {
   static getDomain (url) {
+    url = url.trim()
+    if (!(/^https?:\/\/.*$/i).test(url)) {
+      url = "http://" + url
+    }
     url = new URL(url)
     return url.hostname.split('.')[1]
   }
