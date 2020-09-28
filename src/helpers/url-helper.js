@@ -96,4 +96,11 @@ class GoogleMapsUrlHelper {
   }
 }
 
-module.exports = { GoogleMapsUrlHelper }
+class UrlHelper {
+  static getDomain (url) {
+    url = new URL(url)
+    return url.hostname.split('.')[1]
+  }
+}
+
+module.exports = { GoogleMapsUrlHelper, UrlHelper }

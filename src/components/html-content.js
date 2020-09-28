@@ -4,6 +4,7 @@ import "../style/html-content.css"
 import Img from "gatsby-image"
 import Iframe from "react-iframe"
 import { Online } from "react-detect-offline"
+import { UrlHelper } from "../helpers/url-helper";
 
 const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
   const reactComponent = ReactDOMHelper.buildReactComponent(
@@ -60,9 +61,7 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
         <div
           key={index}
           //classname from widget link to style each widget individually
-          className={props.src
-            .replace(/\?.*$/g, "")
-            .match(/(?<=\w+\.+).*?(?=\.+\w+)/g)}
+          className={UrlHelper.getDomain(props.src)}
         >
           <Online>
             <Iframe
