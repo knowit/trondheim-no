@@ -213,7 +213,7 @@ module.exports = {
       options: {
         host: 'https://www.trondheim.no/',
         sitemap: 'https://www.trondheim.no/sitemap.xml',
-        policy: [{ userAgent: '*', allow: '/' }]
+        policy: [{ userAgent: '*', allow: '/*' }]
       }
     },
   ],
