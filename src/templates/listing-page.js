@@ -4,6 +4,7 @@ import LocalizationHelper from "../helpers/helpers"
 import Layout from "../layouts/layout"
 import { Link, graphql } from "gatsby"
 import SortableArticleView from "../components/article-list"
+import SEO from "../components/seo"
 
 export default ({ data }) => {
   const locale = data.flamelinkListingPageContent.flamelink_locale
@@ -36,6 +37,12 @@ export default ({ data }) => {
       locale={locale}
       localizedPaths={data.flamelinkListingPageContent.localizedPaths}
     >
+      <SEO
+        title={data.flamelinkListingPageContent.localTitle}
+        locale={data.flamelinkListingPageContent.flamelink_locale}
+        keywords={[data.flamelinkListingPageContent.navigationTitle]}
+      />
+
       <div id="outer-container">
         <div id="inner-container">
           <div id="articles-header">
@@ -78,7 +85,7 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query ListingPageQuery($nodeId: String, $nodeFlamelinkId: String) {
+  query ListingPageQuery($nodeId: String, $nodeFlamelinkId: String, $locale: String) {
     flamelinkListingPageLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
       translations {
@@ -177,7 +184,7 @@ export const query = graphql`
       }
     }
 
-    flamelinkDefaultThumbnailsContent(flamelink_locale: { eq: "no" }) {
+    flamelinkDefaultThumbnailsContent(flamelink_locale: { eq: $locale }) {
       id
       flamelink_locale
       imageDeck {

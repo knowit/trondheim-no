@@ -6,6 +6,7 @@ import { Link, graphql } from "gatsby"
 import GoogleMap, { LoadScript } from "../components/map"
 import { Online, Offline } from "react-detect-offline"
 import { Router } from "@reach/router"
+import SEO from "../components/seo"
 
 const defaultLocation = {
   lat: 63.4305149,
@@ -89,21 +90,21 @@ export default ({ data }) => {
           height="500px"
         />
 
-        <div>
-          <form className="map-checkbox-form">{items}</form>
-        </div>
-        <div id="content-container">
-          <h2>{data.node.mapPageTitle}</h2>
-          <p>{data.node.mapPageDescription}</p>
-          <Link to={data.node.path}>
-            {LocalizationHelper.getLocalWord(
-              data.localization.translations,
-              "viewListingPageList",
-              data.node.flamelink_locale
-            )}
-          </Link>
-        </div>
-      </span>
+      <div>
+        <form className="map-checkbox-form">{items}</form>
+      </div>
+      <div id="content-container">
+        <h2>{data.node.mapPageTitle}</h2>
+        <p>{data.node.mapPageDescription}</p>
+        <Link to={data.node.path}>
+          {LocalizationHelper.getLocalWord(
+            data.localization.translations,
+            "viewListingPageList",
+            data.node.flamelink_locale
+          )}
+        </Link>
+      </div>
+    </span>
     )
   }
 
@@ -112,6 +113,12 @@ export default ({ data }) => {
       locale={data.node.flamelink_locale}
       localizedPaths={data.node.localizedPaths}
     >
+      <SEO
+        title={data.node.mapPageTitle}
+        locale={data.node.flamelink_locale}
+        keywords={[data.node.flamelink_locale === "no" ? "Kart" : "Map"]}
+      />
+
       <div id="outer-container">
         <div id="inner-container">
           <Online>

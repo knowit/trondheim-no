@@ -44,6 +44,8 @@ module.exports = {
     title: `Trondheim.no`,
     description: `Offisielt nettsted for Trondheim`,
     author: `@trondheim`,
+    keywords: ["Trondheim"],
+    siteUrl: "https://trondheim.no/",
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -194,6 +196,25 @@ module.exports = {
           credentials: "same-origin",
         },
       },
+    },
+    {
+      resolve: `gatsby-plugin-sitemap`,
+      options: {
+        //exclude url from appearing in search results
+        exclude: [
+          '/search',
+          '/en/search',
+          '/en/404'
+        ]
+      }
+    },
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: 'https://www.trondheim.no/',
+        sitemap: 'https://www.trondheim.no/sitemap.xml',
+        policy: [{ userAgent: '*', allow: '/' }]
+      }
     },
   ],
 }

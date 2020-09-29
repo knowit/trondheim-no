@@ -5,6 +5,7 @@ import Img from "gatsby-image/withIEPolyfill"
 import "../style/student.css"
 import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
+import SEO from "../components/seo"
 
 export default ({ data }) => {
   const Navigation = () => {
@@ -69,18 +70,22 @@ export default ({ data }) => {
 
   const ListingPage = ({ node }) => {
     return (
-      <div className="student-listing-page-card">
+      <Link
+        to={node.path}
+        className="student-listing-page-card"
+        aria-label={node.navigationTitle}
+      >
         <Img
           className="student-listing-page-card-thumbnail"
           fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
         ></Img>
         <div className="student-listing-page-info-container">
           <h3>
-            <Link to={node.path}>{node.navigationTitle}</Link>
+            <div>{node.navigationTitle}</div>
           </h3>
           <p>{node.navigationSubtitle}</p>
         </div>
-      </div>
+      </Link>
     )
   }
 
@@ -116,20 +121,28 @@ export default ({ data }) => {
     const Column = ({ node }) => {
       const Content = () => ReactDOMHelper.parseToReact(node.content.content)
 
-      const Ref = ({ children }) => {
+      const Ref = ({ children, tabable }) => {
         if (node.linkType === "listingPage" || node.linkType === "page") {
           const path =
             node.linkType === "listingPage"
               ? node.listingPage.path
               : node.page.path
           return (
-            <Link className="student-column-link" to={path}>
+            <Link
+              tabIndex={tabable ? "0" : "-1"}
+              className="student-column-link"
+              to={path}
+            >
               {children}
             </Link>
           )
         } else if (node.linkType === "url") {
           return (
-            <a className="student-column-link" href={node.url}>
+            <a
+              tabIndex={tabable ? "0" : "-1"}
+              className="student-column-link"
+              href={node.url}
+            >
               {children}
             </a>
           )
@@ -162,10 +175,10 @@ export default ({ data }) => {
           </div>
           <div className="student-column-info-container">
             <h3>
-              <Ref>{node.title}</Ref>
+              <Ref tabable="true">{node.title}</Ref>
             </h3>
             <h4>
-              <Ref>
+              <Ref tabable="true">
                 <Content />
               </Ref>
             </h4>
@@ -193,6 +206,11 @@ export default ({ data }) => {
 
   return (
     <div>
+      <SEO
+        title="Student"
+        locale={data.studentPageNode.flamelink_locale}
+        keywords={["Student"]}
+      />
       <Navigation />
       <HeaderImage />
       <SubListingPages />
@@ -309,7 +327,7 @@ export const query = graphql`
       frontImage {
         localFile {
           childImageSharp {
-            fluid(maxWidth: 2400, quality: 90) {
+            fluid(maxWidth: 1800, quality: 90) {
               base64
               aspectRatio
               src
@@ -326,7 +344,7 @@ export const query = graphql`
       columnsBackgroundImage {
         localFile {
           childImageSharp {
-            fluid(maxWidth: 2400, quality: 90) {
+            fluid(maxWidth: 1400, quality: 90) {
               base64
               aspectRatio
               src

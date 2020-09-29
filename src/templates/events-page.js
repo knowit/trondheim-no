@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { fas } from "@fortawesome/free-solid-svg-icons"
 import { Online, Offline } from "react-detect-offline"
+import SEO from "../components/seo"
 
 library.add(fas)
 
@@ -197,17 +198,17 @@ class EventsView extends React.Component {
         <div id="articles-container">
           {this.state.events.map((event) => {
             return (
-              <div key={i++} className="article-container">
-                <a href={event.eventLink}>
+              <a href={event.eventLink} key={i++} className="article-container" aria-label={event.title_nb}>
+                <div>
                   <img
                     className="article-thumbnail"
                     alt={event.title_nb}
                     src={event.imageURL}
                   />
-                </a>
+                </div>
                 <div className="article-info-container">
                   <h2>
-                    <a href={event.eventLink}>{event.title_nb}</a>
+                    <div>{event.title_nb}</div>
                   </h2>
                   <div className="event-info-container">
                     <Location event={event} />
@@ -215,7 +216,7 @@ class EventsView extends React.Component {
                     <Time event={event} />
                   </div>
                 </div>
-              </div>
+              </a>
             )
           })}
         </div>
@@ -256,6 +257,14 @@ export default ({ data }) => {
       locale={data.node.flamelink_locale}
       localizedPaths={data.node.localizedPaths}
     >
+      <SEO
+        title={data.node.localTitle}
+        locale={data.node.flamelink_locale}
+        keywords={[
+          data.node.flamelink_locale === "no" ? "Arrangementer" : "Events",
+        ]}
+      />
+
       <div id="outer-container">
         <div id="inner-container">
           <div id="articles-header">

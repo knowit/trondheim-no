@@ -8,6 +8,8 @@ import HTMLContent from "../components/html-content"
 import Map, { LoadScript } from "../components/map"
 import { Router } from "@reach/router"
 import { graphql } from "gatsby"
+import SEO from "../components/seo"
+import { Data } from "@react-google-maps/api"
 
 function ContactInfo(props) {
   if (!props.node.contactInfo && !props.node.address.address) return ""
@@ -195,14 +197,14 @@ export default ({ data }) => {
 
     if (imageNode != null) {
       const styles = {
-        width: imageNode.childImageSharp.fluid.presentationWidth,
-        height: imageNode.childImageSharp.fluid.presentationHeight,
+        width: imageNode.childImageSharp.fixed.width,
+        height: imageNode.childImageSharp.fixed.height,
       }
       return (
         <div className="offline-map-container" style={styles}>
           <Img
             className="offline-map-image"
-            fluid={imageNode.childImageSharp.fluid}
+            fixed={imageNode.childImageSharp.fixed}
             alt={"Map of location"}
             loading="eager"
           ></Img>
@@ -235,6 +237,12 @@ export default ({ data }) => {
       locale={data.flamelinkArticleContent.flamelink_locale}
       localizedPaths={data.flamelinkArticleContent.localizedPaths}
     >
+      <SEO
+        title={data.flamelinkArticleContent.title}
+        locale={data.flamelinkArticleContent.flamelink_locale}
+        keywords={[]}
+      />
+
       <div id="outer-container">
         <div id="inner-container">
           <h2 id="article-title">{data.flamelinkArticleContent.title}</h2>
@@ -328,15 +336,8 @@ export const query = graphql`
         googleMapsStaticImage {
           url
           childImageSharp {
-            fluid(maxWidth: 600, quality: 70) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+            fixed(width: 320) {
+              ...GatsbyImageSharpFixed_noBase64
             }
           }
         }

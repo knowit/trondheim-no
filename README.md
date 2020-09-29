@@ -67,10 +67,7 @@ If you are a developer who wish to make changes to the code, start with the foll
    - GATSBY_GOOGLE_API
    - GATSBY_CONCURRENT_DOWNLOAD
    - GOOGLE_APPLICATION_CREDENTIALS
-   - WORKER_TOPIC
-   - TOPIC
-   - TEST
-   - TEST_IMAGE_URL
+
 
 #### Running locally
 
