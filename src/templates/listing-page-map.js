@@ -81,12 +81,10 @@ export default ({ data }) => {
       <span>
         <GoogleMap
           locationMarker={defaultLocation}
-          address={defaultAddress}
           markers={markers.filter((marker) =>
             subListingPages.get(marker.parent)
           )}
           zoom={13}
-          persistentDisabled={false}
           width="100%"
           height="500px"
         />
