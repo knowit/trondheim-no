@@ -11,9 +11,9 @@ const defaultHtmlContent = {
   content: ""
 }
 
-const HTMLContent = ({ htmlContent=defaultHtmlContent, resizeImg, dropShadow }) => {
+const HTMLContent = ({ resizeImg, dropShadow, htmlContent = defaultHtmlContent }) => {
   const reactComponent = ReactDOMHelper.buildReactComponent(
-    htmlContent ? (htmlContent.content ?  htmlContent.content : "") : "",
+    htmlContent && htmlContent.content ?  htmlContent.content : "",
     (props, index) => {
       const imageNode = htmlContent.remoteImages
         ? htmlContent.remoteImages.find((n) => {
