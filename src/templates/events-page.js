@@ -121,7 +121,9 @@ class EventsView extends React.Component {
   }
 
   loadData() {
-    console.log("Fetching events")
+    this.setState({
+      isLoadingMore: true,
+    })
     request(
       EVENTS_URL,
       `
@@ -163,9 +165,9 @@ class EventsView extends React.Component {
       { page: this.state.page }
     )
       .then((data) => {
-        console.log(data)
         this.setState({
           loading: false,
+          isLoadingMore: false,
           hasMore: data.events.hasMore,
           page: this.state.page + 1,
           events: [...this.state.events, ...data.events.data],
@@ -284,7 +286,13 @@ class EventsView extends React.Component {
         <Content />
         {this.state.loading ? null : (
           <div id="events-more-container">
-            <a id="events-more-button" onClick={this.loadData.bind(this)}>
+            <button
+              id="events-more-button"
+              onClick={this.loadData.bind(this)}
+              onKeyDown={(event) =>
+                event.key === "Enter" ? this.loadData() : console.log(event)
+              }
+            >
               {this.state.isLoadingMore ? (
                 <Loader />
               ) : (
@@ -294,7 +302,7 @@ class EventsView extends React.Component {
                   this.props.locale
                 )
               )}
-            </a>
+            </button>
           </div>
         )}
       </div>
