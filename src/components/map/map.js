@@ -4,47 +4,12 @@ import styles from "../../style/map.module.css"
 import MapMarker from "./map-marker.js"
 
 export default ({
-  address,
   markers,
   locationMarker,
-  persistentDisabled,
   zoom,
   height,
   width,
 }) => {
-  const getGoogleLink = () => {
-    const baseURL = "https://www.google.com/maps/search/?api=1"
-    if (address) {
-      return baseURL + "&query=" + encodeURI(address)
-    } else {
-      return baseURL + "&query=" + locationMarker.lat + "," + locationMarker.lng
-    }
-  }
-
-  const createPersistentGoogleLink = () => {
-    if (persistentDisabled) return ""
-    else {
-      return (
-        <a
-          href={getGoogleLink()}
-          style={{
-            width: "68px",
-            height: "26px",
-            cursor: "pointer",
-            marginLeft: "5px",
-            marginRight: "5px",
-            position: "absolute",
-            left: "0",
-            bottom: "0",
-            zIndex: "1000001",
-          }}
-        >
-          {" "}
-        </a>
-      )
-    }
-  }
-
   if (!locationMarker) return ""
 
   const Cluster = () => {
@@ -74,7 +39,6 @@ export default ({
 
   return (
     <div className={styles.mapContainer}>
-      <div style={{ position: "relative" }}>{createPersistentGoogleLink()}</div>
       <GoogleMap
         id="article-map"
         center={locationMarker}

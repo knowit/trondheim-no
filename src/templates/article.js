@@ -263,10 +263,8 @@ export default ({ data }) => {
                 <Map
                   path="/"
                   locationMarker={location}
-                  address={address}
                   markers={markers}
                   zoom={15}
-                  persistentDisabled={false}
                   width="100%"
                   height="400px"
                 />
