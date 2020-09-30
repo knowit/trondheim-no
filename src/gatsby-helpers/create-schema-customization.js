@@ -6,6 +6,11 @@ exports.createSchemaCustomization = ({ actions }) => {
     content: String
     remoteImages: [File] @link
   }
+  type FlamelinkAddress {
+    address
+    lat
+    lng
+  }
   type FlamelinkArticleContent implements Node {
     tags: [String]
     path: String
@@ -14,6 +19,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     content: FlamelinkTextHtmlContentNode
     copyright: Copyright
     parentListingPage: FlamelinkListingPageContent
+    address: FlamelinkAddress
   }
   type Copyright {
     title: String
