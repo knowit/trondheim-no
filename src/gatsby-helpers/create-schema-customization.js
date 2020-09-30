@@ -7,9 +7,9 @@ exports.createSchemaCustomization = ({ actions }) => {
     remoteImages: [File] @link
   }
   type FlamelinkAddress {
-    address
-    lat
-    lng
+    address: String
+    lat: Float
+    lng: Float
   }
   type FlamelinkArticleContent implements Node {
     tags: [String]
