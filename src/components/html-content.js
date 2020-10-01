@@ -6,9 +6,14 @@ import Iframe from "react-iframe"
 import { Online } from "react-detect-offline"
 import { UrlHelper } from "../helpers/url-helper";
 
-const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
+const defaultHtmlContent = {
+  remoteImages: [],
+  content: ""
+}
+
+const HTMLContent = ({ resizeImg, dropShadow, htmlContent = defaultHtmlContent }) => {
   const reactComponent = ReactDOMHelper.buildReactComponent(
-    htmlContent.content,
+    htmlContent && htmlContent.content ?  htmlContent.content : "",
     (props, index) => {
       const imageNode = htmlContent.remoteImages
         ? htmlContent.remoteImages.find((n) => {
