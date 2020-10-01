@@ -10,6 +10,7 @@ import { library } from "@fortawesome/fontawesome-svg-core"
 import { fas } from "@fortawesome/free-solid-svg-icons"
 import { Online, Offline } from "react-detect-offline"
 import SEO from "../components/seo"
+import { request } from "graphql-request"
 
 library.add(fas)
 
@@ -44,32 +45,23 @@ export const query = graphql`
 
 // Rendered at client
 
+const EVENTS_URL = "https://trdevents.no/graphQL"
+
 class EventsView extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { loading: true, loadError: false, events: [] }
+    this.state = {
+      loading: true,
+      isLoadingMore: false,
+      loadError: false,
+      page: 1,
+      events: [],
+    }
   }
 
   componentDidMount() {
-    console.log("Fetching events from trdevents.no...")
-
-    fetch(this.props.trdEventsUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("HTTP status " + response.status)
-        }
-        return response.json()
-      })
-
-      .then((data) => {
-        console.log("Fetch complete!")
-        this.setState({ loading: false, events: data.body })
-      })
-
-      .catch((error) => {
-        console.log(error)
-        this.setState({ loadError: true })
-      })
+    console.log("Component did Mount")
+    this.loadData()
   }
 
   categoriesString(event) {
@@ -128,6 +120,65 @@ class EventsView extends React.Component {
     return `${dateString} @ ${event.startTime} | ${priceString}`
   }
 
+  loadData() {
+    this.setState({
+      isLoadingMore: true,
+    })
+    request(
+      EVENTS_URL,
+      `
+      query EventsQuery($page: Int) {
+        events(page: $page) {
+          totalCount
+          hasMore
+          data {
+            id
+            mode
+            venue {
+              id
+              name
+              location {
+                longitude
+                latitude
+              }
+              address
+            }
+            title_nb
+            title_en
+            eventLink
+            startDate
+            startTime
+            endDate
+            regularPrice
+            reducedPrice
+            priceOption
+            categories
+            images {
+              urlSmall
+              caption
+              alt
+            }
+          }
+        }
+      }
+    `,
+      { page: this.state.page }
+    )
+      .then((data) => {
+        this.setState({
+          loading: false,
+          isLoadingMore: false,
+          hasMore: data.events.hasMore,
+          page: this.state.page + 1,
+          events: [...this.state.events, ...data.events.data],
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+        this.setState({ loading: false, loadError: true })
+      })
+  }
+
   render() {
     const EventInfoRow = (props) => (
       <div className="event-info-row">
@@ -141,7 +192,7 @@ class EventsView extends React.Component {
     const Location = ({ event }) => (
       <EventInfoRow
         icon="location-arrow"
-        text={event.venueObj ? event.venueObj.name : ""}
+        text={event.venue ? event.venue.name : ""}
       />
     )
 
@@ -172,7 +223,7 @@ class EventsView extends React.Component {
       <div id="events-loading-container">
         {this.state.loadError ? null : (
           <div id="events-loading-spinner">
-            <Loader loading={this.state.loading} />
+            <Loader />
           </div>
         )}
 
@@ -198,12 +249,19 @@ class EventsView extends React.Component {
         <div id="articles-container">
           {this.state.events.map((event) => {
             return (
-              <a href={event.eventLink} key={i++} className="article-container" aria-label={event.title_nb}>
+              <a
+                href={event.eventLink}
+                key={i++}
+                className="article-container"
+                aria-label={event.title_nb}
+              >
                 <div>
                   <img
                     className="article-thumbnail"
-                    alt={event.title_nb}
-                    src={event.imageURL}
+                    alt={
+                      event.images[0].alt ? event.images[0].alt : event.title_nb
+                    }
+                    src={event.images[0].urlSmall}
                   />
                 </div>
                 <div className="article-info-container">
@@ -228,18 +286,23 @@ class EventsView extends React.Component {
         <Content />
         {this.state.loading ? null : (
           <div id="events-more-container">
-            <a
+            <button
               id="events-more-button"
-              href="https://trdevents.no"
-              target="_blank"
-              rel="noreferrer"
+              onClick={this.loadData.bind(this)}
+              onKeyDown={(event) =>
+                event.key === "Enter" ? this.loadData() : console.log(event)
+              }
             >
-              {LocalizationHelper.getLocalWord(
-                this.props.localization,
-                "more-events",
-                this.props.locale
+              {this.state.isLoadingMore ? (
+                <Loader />
+              ) : (
+                LocalizationHelper.getLocalWord(
+                  this.props.localization,
+                  "more-events",
+                  this.props.locale
+                )
               )}
-            </a>
+            </button>
           </div>
         )}
       </div>
