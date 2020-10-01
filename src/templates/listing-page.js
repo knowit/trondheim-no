@@ -32,6 +32,27 @@ export default ({ data }) => {
       )
     } else return null
   }
+
+  const LanguageButton = () => {
+    const otherLang = data.flamelinkListingPageContent.localizedPaths.find(
+      (item) => item.locale !== locale
+    )
+    return otherLang ? (
+      <Link
+        id="english-button"
+        to={
+          otherLang.path
+        }
+      >
+        {LocalizationHelper.getLocalWord(
+          localization,
+          "changeLanguage",
+          locale
+        )}
+    </Link>
+    ) : null
+  }
+
   return (
     <Layout
       locale={locale}
@@ -49,20 +70,7 @@ export default ({ data }) => {
             <h2>{data.flamelinkListingPageContent.localTitle}</h2>
             <p>{data.flamelinkListingPageContent.textOnPage}</p>
             <MapButton />
-            <Link
-              id="english-button"
-              to={
-                data.flamelinkListingPageContent.localizedPaths.find(
-                  (item) => item.locale !== locale
-                ).path
-              }
-            >
-              {LocalizationHelper.getLocalWord(
-                localization,
-                "changeLanguage",
-                locale
-              )}
-            </Link>
+            <LanguageButton />
           </div>
 
           <SortableArticleView
