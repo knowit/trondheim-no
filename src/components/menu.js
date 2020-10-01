@@ -58,6 +58,9 @@ const Menu = ({ locale, localizedPaths }) => {
     return showMenu ? <div id="menu-background-overlay" /> : null
   }
 
+  const lang = localizedPaths.find(item => item.locale !== locale)
+  const langPath = lang ? lang.path : (locale === "no" ? "/" : "/en")
+
   const MenuItems = ({ items, externalItems }) => {
     return showMenu ? (
       <div className="drop-menu-container" role="menu">
@@ -88,7 +91,7 @@ const Menu = ({ locale, localizedPaths }) => {
         <Link
           className="drop-menu-item-container"
           role="menuitem"
-          to={localizedPaths.find((item) => item.locale !== locale).path}
+          to={langPath}
         >
           <ReactCountryFlag
             className="drop-menu-item-flag"
