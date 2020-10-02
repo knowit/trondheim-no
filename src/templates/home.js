@@ -13,6 +13,26 @@ import SEO from "../components/seo"
 
 library.add(fas)
 
+const HeaderBanner = ({ headerText, headerFocusWord, bannerImage }) => {
+  return (
+    <div id="header-container">
+      <BackgroundImage
+        id="header-image"
+        Tag="section"
+        fluid={bannerImage.frontImage[0].localFile.childImageSharp.fluid}
+        alt={bannerImage.alt}
+      >
+        <h3>{headerText}</h3>
+        <h1>{headerFocusWord}</h1>
+      </BackgroundImage>
+
+      <div id="header-subtext">
+        <span>{bannerImage.caption}</span>
+      </div>
+    </div>
+  )
+}
+
 export default ({ data }) => {
   const FrontpageColumns = () => {
     const Column = ({ node }) => {
@@ -172,24 +192,11 @@ export default ({ data }) => {
       />
 
       <div id="outer-container">
-        <div id="header-container">
-          <BackgroundImage
-            id="header-image"
-            Tag="section"
-            fluid={
-              data.flamelinkFrontPageContent.frontImage[0].localFile
-                .childImageSharp.fluid
-            }
-            alt={data.flamelinkFrontPageContent.frontImageAlt}
-          >
-            <h3>{data.flamelinkFrontPageContent.headerText}</h3>
-            <h1>{data.flamelinkFrontPageContent.headerFocusWord}</h1>
-          </BackgroundImage>
-
-          <div id="header-subtext">
-            <span>{data.flamelinkFrontPageContent.frontImageAlt}</span>
-          </div>
-        </div>
+        <HeaderBanner
+          headerText={data.flamelinkFrontPageContent.headerText}
+          headerFocusWord={data.flamelinkFrontPageContent.headerFocusWord}
+          bannerImage={data.flamelinkFrontPageContent.bannerImage}
+        />
 
         <div id="content-container">
           <h2>{data.flamelinkFrontPageContent.navigationText}</h2>
@@ -289,6 +296,20 @@ export const query = graphql`
       headerFocusWord
       headerText
       navigationText
+
+      bannerImage {
+        caption
+        alt
+        frontImage {
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 2400, quality: 90) {
+                ...GatsbyImageSharpFluid
+              }
+            }
+          }
+        }
+      }
 
       customContent {
         content
