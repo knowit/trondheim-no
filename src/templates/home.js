@@ -330,18 +330,6 @@ export const query = graphql`
         }
       }
 
-      bottomCards {
-        title
-        textColor
-        backgroundColor
-        iconName
-        iconColor
-        links {
-          text
-          url
-        }
-      }
-
       linkColumns {
         title
         subTitle
@@ -394,24 +382,6 @@ export const query = graphql`
         }
       }
 
-      frontImageAlt
-      frontImage {
-        localFile {
-          childImageSharp {
-            fluid(maxWidth: 2400, quality: 90) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
-            }
-          }
-        }
-      }
-
       columnsBackgroundImage {
         localFile {
           childImageSharp {
@@ -426,6 +396,18 @@ export const query = graphql`
               originalImg
             }
           }
+        }
+      }
+      
+      bottomCards {
+        title
+        textColor
+        backgroundColor
+        iconName
+        iconColor
+        links {
+          text
+          url
         }
       }
     }
