@@ -86,6 +86,7 @@ export default ({ data }) => {
   const SubListingPages = () => {
     return (
       <div id="student-listing-pages-container">
+        <h1>{data.studentPageNode.navigationText}</h1>
         <div id="student-listing-pages">
           <h1>{data.node.localTitle}</h1>
           <div id="student-listing-pages-grid-container">
@@ -263,6 +264,7 @@ export const query = graphql`
       flamelink_locale
       headerText
       headerFocusWord
+      navigationText
 
       additionalListingPages {
         id
