@@ -262,8 +262,6 @@ export const query = graphql`
     ) {
       id
       flamelink_locale
-      headerText
-      headerFocusWord
       navigationText
 
       additionalListingPages {
