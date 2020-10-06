@@ -36,19 +36,13 @@ export default ({ data }) => {
           </div>
 
           <div id="student-logo-container">
-            <h2>
-              {data.studentPageNode.headerText}{" "}
-              <b>{data.studentPageNode.headerFocusWord}</b>
-            </h2>
-            <div id="student-logo-image">
               <Img
                 id="student-logo-image"
-                fluid={
+                fixed={
                   data.studentPageNode.logoImage[0].localFile.childImageSharp
-                    .fluid
+                    .fixed
                 }
-              ></Img>
-            </div>
+              />
           </div>
         </div>
       </div>
@@ -296,15 +290,8 @@ export const query = graphql`
       logoImage {
         localFile {
           childImageSharp {
-            fluid(maxWidth: 120, quality: 90) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+            fixed(height: 40, quality: 90) {
+              ...GatsbyImageSharpFixed_noBase64
             }
           }
         }
