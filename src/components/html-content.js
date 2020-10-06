@@ -71,8 +71,8 @@ const HTMLContent = ({ resizeImg, dropShadow, htmlContent = defaultHtmlContent }
           <Online>
             <Iframe
               url={props.src}
-              height={props.height ? props.height : "100%"}
-              width={props.width ? props.width : "100%"}
+              height="100%"
+              width="100%"
               className="react-iframe"
               display={props.display ? props.display : "initial"}
               position={props.position ? props.position : "relative"}
