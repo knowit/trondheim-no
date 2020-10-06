@@ -9,25 +9,29 @@ import Map, { LoadScript } from "../components/map"
 import { Router } from "@reach/router"
 import { graphql } from "gatsby"
 import SEO from "../components/seo"
-import { Data } from "@react-google-maps/api"
 
-function ContactInfo(props) {
+const ContactInfoSpan = ({ localization, locale, wordKey }) => {
+  return (
+    <span className={styles.contactInfoHeader}>
+      {LocalizationHelper.getLocalWord(localization, wordKey, locale) + ": "}
+    </span>
+  )
+}
+
+const ContactInfo = (props) => {
   if (!props.node.contactInfo && !props.node.address.address) return ""
 
   const elements = []
-  var locale = props.locale
   var index = 0
   if (props.node.address) {
     if (props.node.address.address) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span
-            className={styles.contactInfoHeader}
-          >{`${LocalizationHelper.getLocalWord(
-            props.localization,
-            "address",
-            locale
-          )}:\t`}</span>
+          <ContactInfoSpan
+            localization={props.localization}
+            locale={props.locale}
+            wordKey={"address"}
+          />
           <span>{props.node.address.address}</span>
         </div>
       )
@@ -37,13 +41,11 @@ function ContactInfo(props) {
     if (props.node.contactInfo.emailAddress) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>
-            {LocalizationHelper.getLocalWord(
-              props.localization,
-              "email",
-              locale
-            ) + ": "}
-          </span>
+          <ContactInfoSpan
+            localization={props.localization}
+            locale={props.locale}
+            wordKey={"email"}
+          />
           <a href={"mailto: " + props.node.contactInfo.emailAddress}>
             {props.node.contactInfo.emailAddress}
           </a>
@@ -53,13 +55,11 @@ function ContactInfo(props) {
     if (props.node.contactInfo.telephoneNumber) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>
-            {LocalizationHelper.getLocalWord(
-              props.localization,
-              "telephone",
-              locale
-            ) + ": "}
-          </span>
+          <ContactInfoSpan
+            localization={props.localization}
+            locale={props.locale}
+            wordKey={"telephone"}
+          />
           <a href={"tel: " + props.node.contactInfo.telephoneNumber}>
             {props.node.contactInfo.telephoneNumber}
           </a>
@@ -69,13 +69,11 @@ function ContactInfo(props) {
     if (props.node.contactInfo.linkToWebsite) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>
-            {LocalizationHelper.getLocalWord(
-              props.localization,
-              "website",
-              locale
-            ) + ": "}
-          </span>
+          <ContactInfoSpan
+            localization={props.localization}
+            locale={props.locale}
+            wordKey={"website"}
+          />
           <a href={props.node.contactInfo.linkToWebsite}>
             {props.node.contactInfo.textToShow
               ? props.node.contactInfo.textToShow
@@ -93,7 +91,7 @@ function ContactInfo(props) {
           {LocalizationHelper.getLocalWord(
             props.localization,
             "contactInfo",
-            locale
+            props.locale
           )}
         </h3>
         <div>{elements}</div>
@@ -102,17 +100,16 @@ function ContactInfo(props) {
   else return ""
 }
 
-function OpeningHours(props) {
+const OpeningHours = (props) => {
   const elements = []
   var index = 0
-  var locale = props.locale
   if (props.node.openingHours && props.node.openingHours.content) {
     elements.push(
       <h3 key={index++} className={styles.subheading}>
         {LocalizationHelper.getLocalWord(
           props.localization,
           "openingHours",
-          locale
+          props.locale
         )}
       </h3>
     )
@@ -127,46 +124,34 @@ function OpeningHours(props) {
   else return ""
 }
 
-export default ({ data }) => {
-  let address =
-    data.flamelinkArticleContent.address &&
-    data.flamelinkArticleContent.address.address
-      ? data.flamelinkArticleContent.address.address
-      : null
+const getLocation = (obj, latKey, lngKey) => {
+  if (obj && obj[latKey] && obj[lngKey]) {
+    return {
+      lat: Number(obj[latKey]),
+      lng: Number(obj[lngKey]),
+    }
+  }
+}
 
-  let location = {
+export default ({ data }) => {
+  // prettier-ignore
+  const location = getLocation(
+    data.flamelinkArticleContent,
+    "latitude",
+    "longitude"
+  ) || getLocation(
+    data.flamelinkArticleContent.address, 
+    "lat", 
+    "lng"
+  ) || getLocation(
+    data.flamelinkArticleContent.latLong,
+    "latitude",
+    "longitude"
+  )
+
+  const defaultLocation = {
     lat: 63.4305149,
     lng: 10.3950528,
-  }
-
-  if (
-    data.flamelinkArticleContent.latLong &&
-    data.flamelinkArticleContent.latLong.latitude &&
-    data.flamelinkArticleContent.latLong.longitude
-  ) {
-    location = {
-      lat: Number(data.flamelinkArticleContent.latLong.latitude),
-      lng: Number(data.flamelinkArticleContent.latLong.longitude),
-    }
-  }
-  if (
-    data.flamelinkArticleContent.address &&
-    data.flamelinkArticleContent.address.lat &&
-    data.flamelinkArticleContent.address.lng
-  ) {
-    location = {
-      lat: data.flamelinkArticleContent.address.lat,
-      lng: data.flamelinkArticleContent.address.lng,
-    }
-  }
-  if (
-    data.flamelinkArticleContent.latitude &&
-    data.flamelinkArticleContent.longitude
-  ) {
-    location = {
-      lat: data.flamelinkArticleContent.latitude,
-      lng: data.flamelinkArticleContent.longitude,
-    }
   }
 
   const markers = [
@@ -262,8 +247,8 @@ export default ({ data }) => {
               <Router basepath={data.flamelinkArticleContent.path}>
                 <Map
                   path="/"
-                  locationMarker={location}
-                  markers={markers}
+                  locationMarker={location ? location : defaultLocation}
+                  markers={location ? markers : null}
                   zoom={15}
                   width="100%"
                   height="400px"
@@ -273,7 +258,7 @@ export default ({ data }) => {
           </Online>
 
           <Offline>
-            <OfflineMap></OfflineMap>
+            <OfflineMap />
           </Offline>
           <Copyright />
         </div>
