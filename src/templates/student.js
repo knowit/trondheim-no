@@ -36,19 +36,13 @@ export default ({ data }) => {
           </div>
 
           <div id="student-logo-container">
-            <h2>
-              {data.studentPageNode.headerText}{" "}
-              <b>{data.studentPageNode.headerFocusWord}</b>
-            </h2>
-            <div id="student-logo-image">
               <Img
                 id="student-logo-image"
-                fluid={
+                fixed={
                   data.studentPageNode.logoImage[0].localFile.childImageSharp
-                    .fluid
+                    .fixed
                 }
-              ></Img>
-            </div>
+              />
           </div>
         </div>
       </div>
@@ -92,6 +86,7 @@ export default ({ data }) => {
   const SubListingPages = () => {
     return (
       <div id="student-listing-pages-container">
+        <h1>{data.studentPageNode.navigationText}</h1>
         <div id="student-listing-pages">
           <h1>{data.node.localTitle}</h1>
           <div id="student-listing-pages-grid-container">
@@ -253,14 +248,7 @@ export const query = graphql`
               name
               childImageSharp {
                 fluid(maxWidth: 340, quality: 70) {
-                  base64
-                  aspectRatio
-                  src
-                  srcSet
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
+                  ...GatsbyImageSharpFluid
                 }
               }
             }
@@ -274,8 +262,7 @@ export const query = graphql`
     ) {
       id
       flamelink_locale
-      headerText
-      headerFocusWord
+      navigationText
 
       additionalListingPages {
         id
@@ -293,14 +280,7 @@ export const query = graphql`
             name
             childImageSharp {
               fluid(maxWidth: 340, quality: 90) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
+                ...GatsbyImageSharpFluid
               }
             }
           }
@@ -310,15 +290,8 @@ export const query = graphql`
       logoImage {
         localFile {
           childImageSharp {
-            fluid(maxWidth: 120, quality: 90) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+            fixed(height: 40, quality: 90) {
+              ...GatsbyImageSharpFixed_noBase64
             }
           }
         }
@@ -328,14 +301,7 @@ export const query = graphql`
         localFile {
           childImageSharp {
             fluid(maxWidth: 1800, quality: 90) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+              ...GatsbyImageSharpFluid
             }
           }
         }
@@ -345,14 +311,7 @@ export const query = graphql`
         localFile {
           childImageSharp {
             fluid(maxWidth: 1400, quality: 90) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+              ...GatsbyImageSharpFluid
             }
           }
         }
@@ -364,14 +323,7 @@ export const query = graphql`
           url
           childImageSharp {
             fluid(quality: 90) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+              ...GatsbyImageSharpFluid
             }
           }
         }
@@ -398,14 +350,7 @@ export const query = graphql`
             url
             childImageSharp {
               fluid(maxWidth: 1200, quality: 70) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
+                ...GatsbyImageSharpFluid
               }
             }
           }
@@ -415,14 +360,7 @@ export const query = graphql`
             name
             childImageSharp {
               fluid(maxWidth: 240, quality: 70) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
+                ...GatsbyImageSharpFluid
               }
             }
           }
