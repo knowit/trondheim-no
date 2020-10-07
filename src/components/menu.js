@@ -54,6 +54,12 @@ const Menu = ({ locale, localizedPaths }) => {
     setShowMenu(!showMenu)
   }
 
+  const closeOnEscape = (event) => {
+    if(event.key == "Escape"){
+      setShowMenu(false)
+    }
+  } 
+
   const Overlay = () => {
     return showMenu ? <div id="menu-background-overlay" /> : null
   }
@@ -126,6 +132,7 @@ const Menu = ({ locale, localizedPaths }) => {
             role="button"
             tabIndex={0}
             onKeyPress={toggleMenu}
+            onKeyDown={closeOnEscape}
             className="menu-container"
             onClick={toggleMenu}
           >
