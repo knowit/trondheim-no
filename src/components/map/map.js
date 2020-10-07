@@ -48,7 +48,7 @@ export default ({
           width,
         }}
       >
-        <Cluster />
+        {markers && <Cluster />}
       </GoogleMap>
     </div>
   )
