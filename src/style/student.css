@@ -84,7 +84,7 @@
 #student-listing-pages-grid-container{
   display: flex;
   flex-flow: row wrap;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   max-width: 966px;
   margin: auto;
