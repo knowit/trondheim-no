@@ -117,11 +117,14 @@ export default ({ data }) => {
       const Content = () => ReactDOMHelper.parseToReact(node.content.content)
 
       const Ref = ({ children, tabable }) => {
-        if (node.linkType === "listingPage" || node.linkType === "page") {
+        if (node.linkType === "listingPage" || node.linkType === "page" || node.linkType === "aboutStudyTrondheim") {
           const path =
             node.linkType === "listingPage"
               ? node.listingPage.path
-              : node.page.path
+              : node.linkType === "page" 
+                ? node.page.path
+                : node.aboutStudyTrondheim.path
+
           return (
             <Link
               tabIndex={tabable ? "0" : "-1"}
@@ -342,6 +345,9 @@ export const query = graphql`
         page {
           title
           subTitle
+          path
+        }
+        aboutStudyTrondheim {
           path
         }
         content {

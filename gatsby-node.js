@@ -80,6 +80,19 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
 
+  result.data.allFlamelinkAboutStudyTrondheimContent.edges
+    .map((node) => node.node)
+    .map((node) => {
+      createPage({
+        path: node.path,
+        component: path.resolve(`./src/templates/about-study-trondheim.js`),
+        context: {
+          nodeId: node.id,
+          locale: node.flamelink_locale,
+        },
+      })
+    })
+
   result.data.allFlamelinkPageContent.edges
     .map((node) => node.node)
     .map((node) => {

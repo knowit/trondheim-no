@@ -23,7 +23,7 @@ exports.createResolvers = ({ createResolvers }) => {
       path = `${locale === "no" ? "" : "/en"}/${path}`
 
       return path
-    } else if (source._fl_meta_.schema === "page") {
+    } else if (source._fl_meta_.schema === "page" || source._fl_meta_.schema === "aboutStudyTrondheim") {
       return `${source.flamelink_locale === "no" ? "" : "/en"}/${source.slug}`
     } else if (source._fl_meta_.schema === "frontPage") {
       return source.flamelink_locale === "no" ? "/" : "/en"
@@ -185,6 +185,18 @@ exports.createResolvers = ({ createResolvers }) => {
         },
       },
     },
+    FlamelinkAboutStudyTrondheimContent: {
+      path: {
+        resolve(source, args, context, info) {
+          return resolvePath(source)
+        },
+      },
+      localizedPaths: {
+        resolve(source, args, context, info) {
+          return resolveLocalizedPaths(source, context)
+        },
+      },
+    },
     FlamelinkStudentPageContent: {
       path: {
         resolve(source, args, context, info) {
@@ -273,6 +285,23 @@ exports.createResolvers = ({ createResolvers }) => {
                   }
                 })
               : null
+          } else return null
+        },
+      },
+      aboutStudyTrondheim: {
+        resolve(source, args, context, info) {
+          if (source.aboutStudyTrondheim._fl_meta_) {
+            return findSource(
+              context,
+              source.aboutStudyTrondheim,
+              "FlamelinkAboutStudyTrondheimContent",
+              source.flamelink_locale
+            ).then((node) => {
+              return {
+                ...node,
+                path: resolvePath(node),
+              }
+            })
           } else return null
         },
       },
