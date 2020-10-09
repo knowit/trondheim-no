@@ -1,6 +1,5 @@
 exports.createResolvers = ({ createResolvers }) => {
   const striptags = require("striptags")
-
   const resolvePath = (source) => {
     if (!source._fl_meta_) {
       return ""
@@ -24,6 +23,7 @@ exports.createResolvers = ({ createResolvers }) => {
 
       return path
     } else if (source._fl_meta_.schema === "page" || source._fl_meta_.schema === "aboutStudyTrondheim") {
+      console.log(source._fl_meta_.schema, source.slug)
       return `${source.flamelink_locale === "no" ? "" : "/en"}/${source.slug}`
     } else if (source._fl_meta_.schema === "frontPage") {
       return source.flamelink_locale === "no" ? "/" : "/en"
@@ -290,6 +290,7 @@ exports.createResolvers = ({ createResolvers }) => {
       },
       aboutStudyTrondheim: {
         resolve(source, args, context, info) {
+          console.log("\n", source)
           if (source.aboutStudyTrondheim._fl_meta_) {
             return findSource(
               context,

@@ -1,7 +1,7 @@
 import React from "react"
 import HTMLContent from "../components/html-content"
 import Layout from "../layouts/layout"
-import "../style/page.css"
+import "../style/about-study-trondheim.css"
 import { graphql } from "gatsby"
 import SEO from "../components/seo"
 
@@ -21,6 +21,10 @@ export default ({ data }) => {
   }
   return (
       <div id="outer-container">
+        <div className="header">
+
+        </div>
+        <SEO title={data.node.title} locale={data.node.flamelink_locale} />
         test
       </div>
   )
