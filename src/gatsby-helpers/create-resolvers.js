@@ -293,19 +293,22 @@ exports.createResolvers = ({ createResolvers }) => {
       },
       aboutStudyTrondheim: {
         resolve(source, args, context, info) {
-          source.aboutStudyTrondheim && source.aboutStudyTrondheim._fl_meta_
-            ? findSource(
-                context,
-                source.aboutStudyTrondheim,
-                "FlamelinkAboutStudyTrondheimContent",
-                source.flamelink_locale
-              ).then((node) => {
-                return {
-                  ...node,
-                  path: resolvePath(node),
-                }
-              })
-            : null
+          if(source.aboutStudyTrondheim){
+            return source.aboutStudyTrondheim._fl_meta_
+              ? findSource(
+                  context,
+                  source.aboutStudyTrondheim,
+                  "FlamelinkAboutStudyTrondheimContent",
+                  source.flamelink_locale
+                ).then((node) => {
+                  return {
+                    ...node,
+                    path: resolvePath(node),
+                  }
+                })
+              : null
+            }
+          else return null
         },
       },
     },
