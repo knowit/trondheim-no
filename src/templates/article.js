@@ -235,7 +235,7 @@ export default ({ data }) => {
           <OpeningHours
             node={data.flamelinkArticleContent}
             localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={data.flamelinkArticleContent.flamelinklocale}
+            locale={data.flamelinkArticleContent.flamelink_locale}
           />
           <ContactInfo
             node={data.flamelinkArticleContent}
@@ -307,6 +307,10 @@ export const query = graphql`
         telephoneNumber
         linkToWebsite
         emailAddress
+      }
+
+      openingHours {
+        content
       }
 
       address {
