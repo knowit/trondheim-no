@@ -46,12 +46,10 @@ query {
   }
 
   allFlamelinkArticleContent {
-    edges {
-      node {
-        id
-        flamelink_locale
-        path
-      }
+    nodes {
+      id
+      flamelink_locale
+      path
     }
   }
 }

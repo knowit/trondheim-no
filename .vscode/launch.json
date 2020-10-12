@@ -2,29 +2,22 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Develop",
-      "type": "node",
+      "name": "Gatsby develop",
+      "type": "pwa-node",
       "request": "launch",
-      "protocol": "inspector",
-      "program": "${workspaceRoot}/node_modules/gatsby/dist/bin/gatsby",
-      "autoAttachChildProcesses": true,
+      "program": "${workspaceRoot}/node_modules/.bin/gatsby",
       "args": ["develop"],
-      "stopOnEntry": false,
       "runtimeArgs": ["--nolazy"],
-      "sourceMaps": true,
-      "skipFiles": ["<node_internals>/**"]
+      "console": "integratedTerminal"
     },
     {
       "name": "Gatsby build",
-      "type": "node",
+      "type": "pwa-node",
       "request": "launch",
-      "protocol": "inspector",
       "program": "${workspaceRoot}/node_modules/.bin/gatsby",
-      "autoAttachChildProcesses": true,
       "args": ["build"],
-      "stopOnEntry": false,
       "runtimeArgs": ["--nolazy"],
-      "sourceMaps": false
+      "console": "integratedTerminal"
     }
   ]
 }

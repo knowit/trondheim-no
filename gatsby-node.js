@@ -164,8 +164,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       }
     })
 
-  result.data.allFlamelinkArticleContent.edges
-    .map((node) => node.node)
+  result.data.allFlamelinkArticleContent.nodes
     .map((node) => {
       createPage({
         path: node.path,
