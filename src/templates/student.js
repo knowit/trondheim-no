@@ -117,7 +117,6 @@ export default ({ data }) => {
       const Content = () => ReactDOMHelper.parseToReact(node.content.content)
       const Ref = ({ children, tabable }) => {
         if (node.linkType === "listingPage" || node.linkType === "page" || node.linkType === "aboutStudyTrondheim") {
-          console.log(node)
           const path =
             node.linkType === "listingPage"
               ? node.listingPage.path

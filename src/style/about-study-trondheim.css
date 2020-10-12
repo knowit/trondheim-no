@@ -1,3 +1,12 @@
-.header{
-    background-image: url(https://www.trondheim.no/images/nicepage-images/OmStudy_mLogo.jpg);
+#outer-container{
+    background-color: white;
+    height: 100%
+}
+
+#header-container{
+    background-color: black;
+  }
+  
+#header-image{
+    height:150px;
 }

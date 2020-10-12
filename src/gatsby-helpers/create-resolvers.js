@@ -26,7 +26,6 @@ exports.createResolvers = ({ createResolvers }) => {
       source._fl_meta_.schema === "page" ||
       source._fl_meta_.schema === "aboutStudyTrondheim"
     ) {
-      console.log(source._fl_meta_.schema, source.slug)
       return `${source.flamelink_locale === "no" ? "" : "/en"}/${source.slug}`
     } else if (source._fl_meta_.schema === "frontPage") {
       return source.flamelink_locale === "no" ? "/" : "/en"
@@ -293,7 +292,7 @@ exports.createResolvers = ({ createResolvers }) => {
       },
       aboutStudyTrondheim: {
         resolve(source, args, context, info) {
-          if(source.aboutStudyTrondheim){
+          if(source.aboutStudyTrondheim != null){
             return source.aboutStudyTrondheim._fl_meta_
               ? findSource(
                   context,
