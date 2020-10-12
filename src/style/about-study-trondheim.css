@@ -1,6 +1,5 @@
 #outer-container{
     background-color: white;
-    height: 100%
 }
 
 #header-container{
@@ -9,4 +8,73 @@
   
 #header-image{
     height:150px;
+}
+
+#content-outer-container{
+    text-align: center;
+    margin: 70px 0 70px 0;
+}
+
+#content-text-container{
+    text-align: left;
+    display: inline-block;
+    max-width: 850px;
+    padding: auto;
+    column-count: 2;
+    column-width: 350px;
+    column-gap: 3.5em;
+    vertical-align: top;
+    font-size: 16.5px;
+    padding: 20px;
+}
+
+#contact-persons-container{
+    display: flex;
+    flex-flow: wrap;
+    flex-direction: row;
+    max-width: 1200px;
+    height: auto;
+    margin: 10px auto;
+}
+
+.contact-person-container{
+    max-width: 150px;
+    display: inline-flex;
+    flex-direction: column;
+    overflow: visible;
+    margin: 10px auto;
+    overflow-wrap: break-word;
+}
+
+.profile-picture{
+    height: 170px;
+    width: 170px;
+    object-fit: cover;
+    object-position: 40% 13.49%;
+    display: block;
+}
+
+.contact-persons-container .img{
+    object-fit: cover;
+    object-position: 40% 13.49%;
+}
+
+.person-title{
+    font-size: 18px;
+}
+
+.person-name{
+
+}
+
+.person-tlf{
+
+}
+
+.person-email{
+
+}
+
+.person-description{
+
 }

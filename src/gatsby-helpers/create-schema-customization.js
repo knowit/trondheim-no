@@ -58,6 +58,7 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkAboutStudyTrondheimContent implements Node {
     path: String
     localizedPaths : [LocalizedPath]
+    content: FlamelinkTextHtmlContentNode
   }
   type FlamelinkStudentPageContent implements Node {
     path: String

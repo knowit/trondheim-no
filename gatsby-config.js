@@ -93,6 +93,7 @@ module.exports = {
           { schemaKey: "page", populate: true },
           { schemaKey: "seo", populate: true },
           { schemaKey: "studentPage", populate: true },
+          { schemaKey: "aboutStudyTrondheim", populate: true },
         ],
         dbType: "cf",
         environment: "production",
