@@ -73,10 +73,29 @@ module.exports = {
           databaseURL: process.env.GATSBY_FLAMELINK_DATABASE_URL,
           storageBucket: process.env.GATSBY_FLAMELINK_STORAGE_BUCKET,
         },
+        content: [
+          {
+            schemaKey: "article",
+            populate: true,
+            filters: [
+              ["_fl_meta_.status", "==", process.env.GATSBY_FLAMELINK_STATUS],
+            ],
+          },
+          { schemaKey: "articleLocalization", populate: true },
+          { schemaKey: "copyright", populate: true },
+          { schemaKey: "defaultThumbnails", populate: true },
+          { schemaKey: "frontPage", populate: true },
+          { schemaKey: "layoutLocalization", populate: true },
+          { schemaKey: "linkItem", populate: true },
+          { schemaKey: "listingPage", populate: true },
+          { schemaKey: "listingPageLocalization", populate: true },
+          { schemaKey: "navbar", populate: true },
+          { schemaKey: "page", populate: true },
+          { schemaKey: "seo", populate: true },
+          { schemaKey: "studentPage", populate: true },
+        ],
         dbType: "cf",
         environment: "production",
-        content: true,
-        populate: true,
         navigation: true,
         globals: true,
       },
@@ -201,20 +220,16 @@ module.exports = {
       resolve: `gatsby-plugin-sitemap`,
       options: {
         //exclude url from appearing in search results
-        exclude: [
-          '/search',
-          '/en/search',
-          '/en/404'
-        ]
-      }
+        exclude: ["/search", "/en/search", "/en/404"],
+      },
     },
     {
-      resolve: 'gatsby-plugin-robots-txt',
+      resolve: "gatsby-plugin-robots-txt",
       options: {
-        host: 'https://www.trondheim.no/',
-        sitemap: 'https://www.trondheim.no/sitemap.xml',
-        policy: [{ userAgent: '*', allow: '/*' }]
-      }
+        host: "https://www.trondheim.no/",
+        sitemap: "https://www.trondheim.no/sitemap.xml",
+        policy: [{ userAgent: "*", allow: "/*" }],
+      },
     },
   ],
 }
