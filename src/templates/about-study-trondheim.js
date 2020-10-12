@@ -20,14 +20,14 @@ export default ({ data }) => {
       )
     }
   }
-  const HeaderImage = ({ bannerImage }) => {
+  const HeaderImage = ({ headerImage }) => {
     return (
       <div id="header-container">
         <BackgroundImage
           id="header-image"
           Tag="section"
-          fluid={bannerImage.frontImage[0].localFile.childImageSharp.fluid}
-          alt={bannerImage.alt}
+          fluid={headerImage.frontImage[0].localFile.childImageSharp.fluid}
+          alt={headerImage.alt}
         >
         </BackgroundImage>
       </div>
@@ -64,7 +64,7 @@ export default ({ data }) => {
         ]}
       />
       <HeaderImage
-        bannerImage={data.flamelinkAboutStudyTrondheimContent.children[2]}
+        headerImage={data.flamelinkAboutStudyTrondheimContent.children[2]}
       />
       {data.flamelinkAboutStudyTrondheimContent.children[1].internal.content}
       <ContentText
