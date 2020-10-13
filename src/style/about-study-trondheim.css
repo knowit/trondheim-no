@@ -1,4 +1,4 @@
-#outer-container{
+#about-study-outer-container{
     background-color: white;
 }
 
@@ -50,33 +50,121 @@
 .profile-picture{
     height: 230px;
     width: 240px;
-    margin-top: 20px;
     object-fit: cover;
     object-position: 40% 13.49%;
     display: block;
 }
 
-.contact-persons-container .img{
+.person-title{
+    font-size: 20px;
+    margin: 20px 0 20px 0;
+}
+
+.person-contact-info{
+    margin: 0;
+}
+
+#links-container{
+    display: flex;
+    flex-flow: wrap;
+    flex-direction: row;
+    height: auto;
+    max-width: 1500px;
+    margin: 10px auto;
+}
+
+.link-container {
+    margin: 100px auto;
+    text-decoration: none;
+    color: black;
+}
+
+.link-icon{
+    display: block;
+    background-color: white;
+    width: 55px;
+    margin: 0;
+}
+
+.link-text {
+    font-size: 20px
+}
+
+#student-articles-container{
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    margin: 10px auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.student-article-container{
+    display: inline-flex;
+    flex-direction: row;
+    overflow: visible;
+    margin: 70px auto;
+    overflow-wrap: break-word;
+}
+
+.student-article-reverse{
+    display: inline-flex;
+    flex-direction: row-reverse;
+    overflow: visible;
+    margin: 70px auto;
+    overflow-wrap: break-word;
+}
+
+.student-article-content{
+    width: 500px;
+    margin: 70px
+}
+
+.article-border-box{
+    height: 323px;
+    width: 480px;
+    border: 5px solid #b3b3b3;
+    margin-top: 100px
+}
+
+.student-article-thumbnail{
+    height: 323px;
+    width: 480px;
     object-fit: cover;
     object-position: 40% 13.49%;
+    display: block;
 }
 
-.person-title{
-    font-size: 18px;
+#other-activities-header{
+    text-align: center;
 }
 
-.person-name{
-
+#other-activities-container{
+    display: flex;
+    flex-flow: wrap;
+    flex-direction: row;
+    height: auto;
+    margin: 10px auto;
+    justify-content: center;
+    align-items: center;
 }
 
-.person-tlf{
-
+.other-acitivity-container{
+    margin: 50px;
 }
 
-.person-email{
-
+.other-actitivity-thumbnail{
+    height: 323px;
+    object-fit: cover;
+    object-position: 40% 13.49%;
+    display: block;
 }
 
-.person-description{
+.other-acitivity-content{
+    width: 480px;
+}
 
+.other-activity-header{
+    font-size: 20px;
+    margin: 10px 0 20px 0;
 }

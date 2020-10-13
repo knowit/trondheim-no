@@ -1,12 +1,10 @@
 import React from "react"
 import HTMLContent from "../components/html-content"
-import Layout from "../layouts/layout"
 import "../style/about-study-trondheim.css"
 import { graphql } from "gatsby"
 import SEO from "../components/seo"
 import BackgroundImage from "gatsby-background-image"
 import Img from "gatsby-image"
-import articleList from "../components/article-list"
 
 export default ({ data }) => {
   const HeaderImage = ({ headerImage }) => {
@@ -43,21 +41,19 @@ export default ({ data }) => {
           }
           alt="Profile picture"
         />
-        <h3>
-          <div className="person-title">
+        <h3 className="person-title">
             {person.title}
-          </div>
         </h3>
-        <p className="person-name">
+        <p className="person-contact-info">
           {person.name}
         </p>
-        <p className="person-tlf">
+        <p className="person-contact-info">
           {person.phoneNumber}
         </p>
-        <p className="person-email">
+        <p className="person-contact-info">
           {person.email}
         </p>
-        <p className="person-description">
+        <p className="person-contact-info">
           {person.de}  
         </p> 
       </div>
@@ -79,14 +75,14 @@ export default ({ data }) => {
   const InternalLink = ({article}) => {
     return(
       <a className="link-container" href={"#"+article.title}>
-        {article.articleLink.linkIcon ? (
+        {article.articleLink.linkIcon && article.articleLink.linkIcon.localFile ? (
           <Img
-            className="student-column-image"
+            className="link-icon"
             fluid={article.articleLink.linkIcon.localFile.childImageSharp.fluid}
             alt="LinkIcon"
           />
         ) : null}
-        <p className="internal-link-text">{article.articleLink.linkText}</p>
+        <h3 className="link-text">{article.articleLink.linkText}</h3>
       </a>
     )
   }
@@ -102,21 +98,27 @@ export default ({ data }) => {
       </div>
     )
   }
-  const Article = ({article}) => {
+  const Article = ({article, reverse}) => {
     return (
-      <div id={article.title} className="student-article-container">
-        <div class="student-article-content">
+      <div id={article.title} className="student-article-container" style={reverse ? {flexDirection: "row-reverse"} : {}}>
+        <div className="student-article-content">
+          <h3 className="student-article-header">
+            {article.title}
+          </h3>
           <HTMLContent
               htmlContent={{content: article.content, remoteImages: [] }}
             />
         </div>
-        <Img
-          className="student-article-thumbnail"
-          fluid={
-            article.thumbnail[0].localFile.childImageSharp.fluid
-          }
-          alt="Article thumbnail"
-        />
+        <div className="article-border-box">
+          <Img
+            className="student-article-thumbnail"
+            style={reverse ? {margin: "-40px auto -1px 40px"} : {margin: "-40px auto -1px -40px"}}
+            fluid={
+              article.thumbnail[0].localFile.childImageSharp.fluid
+            }
+            alt="Article thumbnail"
+          />
+        </div>
       </div>
     )
   }
@@ -125,7 +127,7 @@ export default ({ data }) => {
       <div id="student-articles-container">
         {articles.map(function (node, iteration) {
               return (
-                <Article article={node} key={iteration}/>
+                <Article article={node} key={iteration} reverse={iteration%2===1}/>
               )
             }
           )}
@@ -135,18 +137,21 @@ export default ({ data }) => {
   const OtherActivity = ({article}) => {
     return (
       <div id={article.title} className="other-acitivity-container">
-        <div class="other-acitivity-content">
-          <HTMLContent
-              htmlContent={{content: article.content, remoteImages: [] }}
-            />
-        </div>
         <Img
-          className="other-acitivity-thumbnail"
+          className="other-actitivity-thumbnail"
           fluid={
             article.thumbnail[0].localFile.childImageSharp.fluid
           }
           alt="Other Activity thumbnail"
         />
+        <div className="other-acitivity-content">
+          <h3 className="other-activity-header">
+            {article.title}
+          </h3>
+          <HTMLContent
+              htmlContent={{content: article.content, remoteImages: [] }}
+            />
+        </div>
       </div>
     )
   }
@@ -165,7 +170,7 @@ export default ({ data }) => {
   const articles = data.flamelinkAboutStudyTrondheimContent.articles.filter(o => !o.otherActivities)
   const otherActivities = data.flamelinkAboutStudyTrondheimContent.articles.filter(o => o.otherActivities)
   return (
-    <div id="outer-container">
+    <div id="about-study-outer-container">
       <SEO
         title={
           data.flamelinkAboutStudyTrondheimContent.flamelink_locale === "no"
@@ -186,7 +191,9 @@ export default ({ data }) => {
       <ContactPersons/>
       <InternalLinks articles={articles}/>
       <Articles articles={articles}/>
-      <h3>Other Activities</h3>
+      <h2 id="other-activities-header">
+        Other Activities
+      </h2>
       <OtherActivities articles={otherActivities}/>
     </div>
   )
@@ -207,7 +214,7 @@ export const query = graphql`
         frontImage {
           localFile {
             childImageSharp {
-              fluid(maxWidth: 2400, quality: 90) {
+              fluid(maxWidth: 1800, quality: 90) {
                 ...GatsbyImageSharpFluid
               }
             }
@@ -225,7 +232,7 @@ export const query = graphql`
         profilePicture {
           localFile {
             childImageSharp {
-              fluid(maxWidth: 1200, quality: 90) {
+              fluid(maxWidth: 600, quality: 80) {
                 ...GatsbyImageSharpFluid
               }
             }
@@ -242,7 +249,7 @@ export const query = graphql`
         thumbnail{
           localFile {
             childImageSharp {
-              fluid(maxWidth: 1200, quality: 90) {
+              fluid(maxWidth: 400, quality: 80) {
                 ...GatsbyImageSharpFluid
               }
             }
