@@ -60,7 +60,6 @@ class EventsView extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Component did Mount")
     this.loadData()
   }
 
@@ -290,7 +289,7 @@ class EventsView extends React.Component {
               id="events-more-button"
               onClick={this.loadData.bind(this)}
               onKeyDown={(event) =>
-                event.key === "Enter" ? this.loadData() : console.log(event)
+                event.key === "Enter" ? this.loadData() : null
               }
             >
               {this.state.isLoadingMore ? (

@@ -90,21 +90,21 @@ export default ({ data }) => {
           height="500px"
         />
 
-      <div>
-        <form className="map-checkbox-form">{items}</form>
-      </div>
-      <div id="content-container">
-        <h2>{data.node.mapPageTitle}</h2>
-        <p>{data.node.mapPageDescription}</p>
-        <Link to={data.node.path}>
-          {LocalizationHelper.getLocalWord(
-            data.localization.translations,
-            "viewListingPageList",
-            data.node.flamelink_locale
-          )}
-        </Link>
-      </div>
-    </span>
+        <div>
+          <form className="map-checkbox-form">{items}</form>
+        </div>
+        <div id="content-container">
+          <h2>{data.node.mapPageTitle}</h2>
+          <p>{data.node.mapPageDescription}</p>
+          <Link to={data.node.path}>
+            {getLocalWord(
+              data.localization.translations,
+              "viewListingPageList",
+              data.node.flamelink_locale
+            )}
+          </Link>
+        </div>
+      </span>
     )
   }
 
