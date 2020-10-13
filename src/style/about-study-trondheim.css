@@ -38,7 +38,8 @@
 }
 
 .contact-person-container{
-    max-width: 150px;
+    text-align: center;
+    max-width: 240px;
     display: inline-flex;
     flex-direction: column;
     overflow: visible;
@@ -47,8 +48,9 @@
 }
 
 .profile-picture{
-    height: 170px;
-    width: 170px;
+    height: 230px;
+    width: 240px;
+    margin-top: 20px;
     object-fit: cover;
     object-position: 40% 13.49%;
     display: block;

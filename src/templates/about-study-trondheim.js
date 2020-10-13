@@ -6,21 +6,9 @@ import { graphql } from "gatsby"
 import SEO from "../components/seo"
 import BackgroundImage from "gatsby-background-image"
 import Img from "gatsby-image"
+import articleList from "../components/article-list"
 
 export default ({ data }) => {
-  const ParsedHTML = () => {
-    if (!data.node.content) {
-      return null
-    } else {
-      return (
-        <HTMLContent
-          htmlContent={data.node.content}
-          resizeImg={true}
-          dropShadow={true}
-        />
-      )
-    }
-  }
   const HeaderImage = ({ headerImage }) => {
     return (
       <div id="header-container">
@@ -79,40 +67,103 @@ export default ({ data }) => {
     return (
       <div id="contact-persons-container">
         {data.flamelinkAboutStudyTrondheimContent.contactPersons
-          .map(function (node, key) {
-            if (node.profilePicture) {
+          .map(function (node, iteration) {
               return (
-                <ContactPerson person={node}/>
+                <ContactPerson person={node} key={iteration}/>
               )
-            } else {
-              return null
             }
-          })}
+          )}
       </div>
     )
   }
-  const InternalLinks = () => {
+  const InternalLink = ({article}) => {
+    return(
+      <a className="link-container" href={"#"+article.title}>
+        {article.articleLink.linkIcon ? (
+          <Img
+            className="student-column-image"
+            fluid={article.articleLink.linkIcon.localFile.childImageSharp.fluid}
+            alt="LinkIcon"
+          />
+        ) : null}
+        <p className="internal-link-text">{article.articleLink.linkText}</p>
+      </a>
+    )
+  }
+  const InternalLinks = ({articles}) => {
+    return(
+      <div id="links-container">
+        {articles.map(function (node, iteration) {
+              return (
+                <InternalLink article={node} key={iteration}/>
+              )
+            }
+          )}
+      </div>
+    )
+  }
+  const Article = ({article}) => {
     return (
-      <div id="profiles-container">
-        linker her
+      <div id={article.title} className="student-article-container">
+        <div class="student-article-content">
+          <HTMLContent
+              htmlContent={{content: article.content, remoteImages: [] }}
+            />
+        </div>
+        <Img
+          className="student-article-thumbnail"
+          fluid={
+            article.thumbnail[0].localFile.childImageSharp.fluid
+          }
+          alt="Article thumbnail"
+        />
       </div>
     )
   }
-  const Articles = () => {
+  const Articles = ({articles}) => {
     return (
-      <div id="profiles-container">
-        artikler her
+      <div id="student-articles-container">
+        {articles.map(function (node, iteration) {
+              return (
+                <Article article={node} key={iteration}/>
+              )
+            }
+          )}
       </div>
     )
   }
-  const OtherActivities = () => {
+  const OtherActivity = ({article}) => {
     return (
-      <div id="profiles-container">
-        Andre aktiviteter her
+      <div id={article.title} className="other-acitivity-container">
+        <div class="other-acitivity-content">
+          <HTMLContent
+              htmlContent={{content: article.content, remoteImages: [] }}
+            />
+        </div>
+        <Img
+          className="other-acitivity-thumbnail"
+          fluid={
+            article.thumbnail[0].localFile.childImageSharp.fluid
+          }
+          alt="Other Activity thumbnail"
+        />
       </div>
     )
   }
-  console.log(data)
+  const OtherActivities = ({articles}) => {
+    return (
+      <div id="other-activities-container">
+        {articles.map(function (node, iteration) {
+              return (
+                <OtherActivity article={node} key={iteration}/>
+              )
+            }
+          )}
+      </div>
+    )
+  }
+  const articles = data.flamelinkAboutStudyTrondheimContent.articles.filter(o => !o.otherActivities)
+  const otherActivities = data.flamelinkAboutStudyTrondheimContent.articles.filter(o => o.otherActivities)
   return (
     <div id="outer-container">
       <SEO
@@ -133,9 +184,10 @@ export default ({ data }) => {
       />
       <ContentText/>
       <ContactPersons/>
-      <InternalLinks/>
-      <Articles/>
-      <OtherActivities/>
+      <InternalLinks articles={articles}/>
+      <Articles articles={articles}/>
+      <h3>Other Activities</h3>
+      <OtherActivities articles={otherActivities}/>
     </div>
   )
 }
@@ -171,6 +223,23 @@ export const query = graphql`
         email
         phoneNumber
         profilePicture {
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 1200, quality: 90) {
+                ...GatsbyImageSharpFluid
+              }
+            }
+          }
+        }
+      }
+      articles {
+        title
+        otherActivities
+        content
+        articleLink {
+          linkText
+        }
+        thumbnail{
           localFile {
             childImageSharp {
               fluid(maxWidth: 1200, quality: 90) {
