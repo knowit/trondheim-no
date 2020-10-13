@@ -75,6 +75,33 @@ exports.createSchemaCustomization = ({ actions }) => {
     page: FlamelinkPageContent
     content: FlamelinkTextHtmlContentNode
   }
+
+  interface LocalizationContent {
+    translations: [KeyValueTranslation]
+  }
+
+  type KeyValueTranslation {
+    key: String
+    translations: [Translation]
+  }
+
+  type Translation {
+    language: String
+    word: String
+  }
+
+  type FlamelinkArticleLocalizationContent implements Node & LocalizationContent {
+    translations: [KeyValueTranslation]
+  }
+
+  type FlamelinkLayoutLocalizationContent implements Node & LocalizationContent {
+    translations: [KeyValueTranslation]
+  }
+
+  type FlamelinkListingPageLocalizationContent implements Node & LocalizationContent {
+    translations: [KeyValueTranslation]
+  }
+
   `
   createTypes(typeDefs)
 }

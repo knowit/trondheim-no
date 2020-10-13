@@ -118,6 +118,14 @@ exports.createResolvers = ({ createResolvers }) => {
     return result
   }
 
+  const resolveTranslation = (source, context) => {
+    const nodes = context.nodeModel
+      .getAllNodes()
+      .filter((node) => source.translations___NODE.includes(node.id))
+
+    return nodes
+  }
+
   const resolvers = {
     FlamelinkListingPageContent: {
       path: {
@@ -274,6 +282,34 @@ exports.createResolvers = ({ createResolvers }) => {
                 })
               : null
           } else return null
+        },
+      },
+    },
+    FlamelinkArticleLocalizationContent: {
+      translations: {
+        async resolve(source, args, context, info) {
+          return resolveTranslation(source, context)
+        },
+      },
+    },
+    FlamelinkListingPageLocalizationContent: {
+      translations: {
+        async resolve(source, args, context, info) {
+          return resolveTranslation(source, context)
+        },
+      },
+    },
+    FlamelinkLayoutLocalizationContent: {
+      translations: {
+        async resolve(source, args, context, info) {
+          return resolveTranslation(source, context)
+        },
+      },
+    },
+    KeyValueTranslation: {
+      translations: {
+        async resolve(source, args, context, info) {
+          return resolveTranslation(source, context)
         },
       },
     },

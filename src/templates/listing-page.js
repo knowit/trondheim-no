@@ -1,6 +1,6 @@
 import React from "react"
 import "../style/listing-page.css"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 import Layout from "../layouts/layout"
 import { Link, graphql } from "gatsby"
 import SortableArticleView from "../components/article-list"
@@ -27,7 +27,7 @@ export default ({ data }) => {
     if (data.flamelinkListingPageContent.hasMapPage) {
       return (
         <Link id="map-button" to={data.flamelinkListingPageContent.mapPath}>
-          {LocalizationHelper.getLocalWord(localization, "showOnMap", locale)}
+          {getLocalWord(localization, "showOnMap", locale)}
         </Link>
       )
     } else return null
@@ -38,18 +38,9 @@ export default ({ data }) => {
       (item) => item.locale !== locale
     )
     return otherLang ? (
-      <Link
-        id="english-button"
-        to={
-          otherLang.path
-        }
-      >
-        {LocalizationHelper.getLocalWord(
-          localization,
-          "changeLanguage",
-          locale
-        )}
-    </Link>
+      <Link id="english-button" to={otherLang.path}>
+        {getLocalWord(localization, "changeLanguage", locale)}
+      </Link>
     ) : null
   }
 
@@ -95,14 +86,7 @@ export default ({ data }) => {
 export const query = graphql`
   query ListingPageQuery($nodeId: String, $nodeFlamelinkId: String, $locale: String) {
     flamelinkListingPageLocalizationContent(flamelink_locale: { eq: "no" }) {
-      id
-      translations {
-        key
-        translations {
-          language
-          word
-        }
-      }
+      ...LocalizationFragment
     }
 
     flamelinkListingPageContent(id: { eq: $nodeId }) {
