@@ -11,10 +11,34 @@ export default ({ data, pageContext }) => {
 
     const h1Text = locale === "no" ? "Forhåndsvisning" : "Preview"
 
+    let localizedPaths = [
+        {
+            locale: "no",
+            path: "/"
+        },
+        {
+            locale: "en-US",
+            path: "/en"
+        }
+    ]
+
+    if (pageContext.layout === "student-page") {
+        localizedPaths = [
+            {
+                locale: "no",
+                path: "/student"
+            },
+            {
+                locale: "en-US",
+                path: "/en/student"
+            }
+        ]
+    }
+
     return (
         <Layout
-        locale={data.flamelinkFrontPageContent.flamelink_locale}
-        localizedPaths={data.flamelinkFrontPageContent.localizedPaths} 
+        locale={locale}
+        localizedPaths={localizedPaths} 
         >
 
             <div id="outer-container">
@@ -22,9 +46,13 @@ export default ({ data, pageContext }) => {
 
                     <h1>{h1Text}</h1>
                     <p>
+                        <br />
                         <b>Status:</b> {pageContext.status}
                         <br />
                         <b>Locale:</b> {pageContext.locale} 
+                        <br />
+                        <br />
+                        <b>This page is a placeholder for: </b> {pageContext.layout}
                     </p>
 
                     <div className="links-container">

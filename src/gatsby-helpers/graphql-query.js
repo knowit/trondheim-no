@@ -25,6 +25,18 @@ query {
     }
   }
 
+  allFlamelinkStudentPageContent {
+    edges {
+      node {
+        id
+        flamelink_locale
+        _fl_meta_ {
+          status
+        }
+      }
+    }
+  }
+
   allFlamelinkFrontPageContent {
     edges {
       node {

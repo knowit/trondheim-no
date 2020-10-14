@@ -82,7 +82,8 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         context: {
           nodeId: node.id,
           locale: node.flamelink_locale,
-          status: status
+          status: status,
+          layout: "front-page",
         },
       })
     })
@@ -100,17 +101,29 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
 
+    const studentPageComponents = result.data.allFlamelinkStudentPageContent.edges.map(node => node.node)
+    .map(node => {
+      return {
+        locale: node.flamelink_locale,
+        component: (process.env.GATSBY_FLAMELINK_STATUS != "publish" && node._fl_meta_.status != process.env.GATSBY_FLAMELINK_STATUS)
+          ? path.resolve("./src/templates/empty-front-page.js")
+          : path.resolve("./src/templates/student.js")
+      }
+    })
+
   result.data.allFlamelinkListingPageContent.edges
     .map((node) => node.node)
     .map((node) => {
       if (node.slug === "student") {
         createPage({
           path: node.path,
-          component: path.resolve(`./src/templates/student.js`),
+          component: studentPageComponents.find(n => n.locale === node.flamelink_locale).component,
           context: {
             nodeId: node.id,
             nodeFlamelinkId: node.flamelink_id,
             locale: node.flamelink_locale,
+            layout: "student-page",
+            status: process.env.GATSBY_FLAMELINK_STATUS
           },
         })
       } else if (node.slug === "hva-skjer" || node.slug === "whats-on") {
