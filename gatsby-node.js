@@ -2,6 +2,9 @@
 const path = require(`path`)
 const { query } = require("./src/gatsby-helpers/graphql-query")
 
+require("dotenv")
+const status = process.env.GATSBY_FLAMELINK_STATUS
+
 const { sourceNodes } = require("./src/gatsby-helpers/source-nodes")
 exports.sourceNodes = sourceNodes
 
@@ -49,7 +52,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       matchPath: locale === "no" ? "/*" : "/en/*",
       context: {
         locale: locale,
-        localizedPaths: localizedPaths,
+        localizedPaths: localizedPaths
       },
     })
   })
@@ -72,10 +75,14 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     .map((node) => {
       createPage({
         path: node.path,
-        component: path.resolve(`./src/templates/home.js`),
+        component: path.resolve(`./src/templates/${
+          (status != "publish" && process.env.status != node._fl_meta_.status)
+          ? "empty-front-page" : "home"
+        }.js`),
         context: {
           nodeId: node.id,
           locale: node.flamelink_locale,
+          status: status
         },
       })
     })

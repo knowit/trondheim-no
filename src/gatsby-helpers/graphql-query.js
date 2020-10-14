@@ -31,6 +31,9 @@ query {
         id
         flamelink_locale
         path
+        _fl_meta_ {
+          status
+        }
       }
     }
   }
