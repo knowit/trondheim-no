@@ -9,14 +9,14 @@ import Img from "gatsby-image"
 export default ({ data }) => {
   const HeaderImage = ({ headerImage }) => {
     return (
-      <div id="header-container">
-        <BackgroundImage
+      <div id="about-study-header-container">
+        <Img
           id="header-image"
           Tag="section"
           fluid={headerImage.frontImage[0].localFile.childImageSharp.fluid}
           alt={headerImage.alt}
         >
-        </BackgroundImage>
+        </Img>
       </div>
     )
   }
@@ -37,8 +37,9 @@ export default ({ data }) => {
         <Img
           className="profile-picture"
           fluid={
-            person.profilePicture[0].localFile.childImageSharp.fluid
+            person.picture[0].localFile.childImageSharp.fluid
           }
+          imgStyle={{"object-position":"50% 12%"}}
           alt="Profile picture"
         />
         <h3 className="person-title">
@@ -55,14 +56,17 @@ export default ({ data }) => {
         </p>
         <p className="person-contact-info">
           {person.de}  
-        </p> 
+        </p>
+        <div>
+
+        </div>
       </div>
     )
   }
   const ContactPersons = () => {
     return (
       <div id="contact-persons-container">
-        {data.flamelinkAboutStudyTrondheimContent.contactPersons
+        {data.flamelinkAboutStudyTrondheimContent.contactPerson
           .map(function (node, iteration) {
               return (
                 <ContactPerson person={node} key={iteration}/>
@@ -75,14 +79,14 @@ export default ({ data }) => {
   const InternalLink = ({article}) => {
     return(
       <a className="link-container" href={"#"+article.title}>
-        {article.articleLink.linkIcon && article.articleLink.linkIcon.localFile ? (
-          <Img
+        <h3 className="link-text">{article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink.linkText}</h3>
+        {article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink.linkIcon ? (
+          <img
             className="link-icon"
-            fluid={article.articleLink.linkIcon.localFile.childImageSharp.fluid}
+            src={article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink.linkIcon[0].url}
             alt="LinkIcon"
           />
         ) : null}
-        <h3 className="link-text">{article.articleLink.linkText}</h3>
       </a>
     )
   }
@@ -106,10 +110,10 @@ export default ({ data }) => {
             {article.title}
           </h3>
           <HTMLContent
-              htmlContent={{content: article.content, remoteImages: [] }}
+              htmlContent={{content: article.childFlamelinkTextHtmlContentNode.content, remoteImages: [] }}
             />
         </div>
-        <div className="article-border-box">
+        <div className={reverse ? "article-border-box-reverse" : "article-border-box"}>
           <Img
             className="student-article-thumbnail"
             style={reverse ? {margin: "-40px auto -1px 40px"} : {margin: "-40px auto -1px -40px"}}
@@ -143,13 +147,14 @@ export default ({ data }) => {
             article.thumbnail[0].localFile.childImageSharp.fluid
           }
           alt="Other Activity thumbnail"
+          imgStyle={{"object-position":"40% 13.49%"}}
         />
         <div className="other-acitivity-content">
           <h3 className="other-activity-header">
             {article.title}
           </h3>
           <HTMLContent
-              htmlContent={{content: article.content, remoteImages: [] }}
+              htmlContent={{content: article.childFlamelinkTextHtmlContentNode.content, remoteImages: [] }}
             />
         </div>
       </div>
@@ -167,8 +172,6 @@ export default ({ data }) => {
       </div>
     )
   }
-  const articles = data.flamelinkAboutStudyTrondheimContent.articles.filter(o => !o.otherActivities)
-  const otherActivities = data.flamelinkAboutStudyTrondheimContent.articles.filter(o => o.otherActivities)
   return (
     <div id="about-study-outer-container">
       <SEO
@@ -180,8 +183,8 @@ export default ({ data }) => {
         locale={data.flamelinkAboutStudyTrondheimContent.flamelink_locale}
         keywords={[
           data.flamelinkAboutStudyTrondheimContent.flamelink_locale === "no"
-            ? "Hjem"
-            : "Home",
+            ? "Om study tronheim"
+            : "About study study trondheim",
         ]}
       />
       <HeaderImage
@@ -189,12 +192,15 @@ export default ({ data }) => {
       />
       <ContentText/>
       <ContactPersons/>
-      <InternalLinks articles={articles}/>
-      <Articles articles={articles}/>
+      <div className="u-line"></div>
+      <InternalLinks articles={data.flamelinkAboutStudyTrondheimContent.article}/>
+      <Articles articles={data.flamelinkAboutStudyTrondheimContent.article}/>
       <h2 id="other-activities-header">
-        Other Activities
+        {data.flamelinkAboutStudyTrondheimContent.flamelink_locale === "no"
+            ? "Andre aktiviteter i StudyTronheim"
+            : "Other activities"}
       </h2>
-      <OtherActivities articles={otherActivities}/>
+      <OtherActivities articles={data.flamelinkAboutStudyTrondheimContent.otherActivity}/>
     </div>
   )
 }
@@ -204,7 +210,6 @@ export const query = graphql`
     flamelinkAboutStudyTrondheimContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
-      path
       
       localizedPaths {
         locale
@@ -224,32 +229,53 @@ export const query = graphql`
       content{
         content
       }
-      contactPersons {
+      contactPerson {
         title
         name
-        email
         phoneNumber
-        profilePicture {
+        email
+        roleDescription
+        picture {
           localFile {
             childImageSharp {
-              fluid(maxWidth: 600, quality: 80) {
+              fluid(maxWidth: 600, quality: 90) {
                 ...GatsbyImageSharpFluid
               }
             }
           }
         }
       }
-      articles {
+      article {
+        id
         title
-        otherActivities
-        content
-        articleLink {
-          linkText
-        }
-        thumbnail{
+        thumbnail {
           localFile {
             childImageSharp {
-              fluid(maxWidth: 400, quality: 80) {
+              fluid(maxWidth: 600, quality: 90) {
+                ...GatsbyImageSharpFluid
+              }
+            }
+          }
+        }
+        childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink {
+          linkText
+          linkIcon {
+            url
+          }
+        }
+        childFlamelinkTextHtmlContentNode {
+          content
+        }
+      }
+      otherActivity {
+        title
+        childFlamelinkTextHtmlContentNode {
+          content
+        }
+        thumbnail {
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 600, quality: 90) {
                 ...GatsbyImageSharpFluid
               }
             }

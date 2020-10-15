@@ -63,7 +63,7 @@ exports.createResolvers = ({ createResolvers }) => {
     return ""
   }
 
-  const findSource = (context, node, type, locale) =>
+  const findSource = async (context, node, type, locale) =>
     context.nodeModel.runQuery({
       query: {
         filter: {
