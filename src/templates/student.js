@@ -69,7 +69,7 @@ export default ({ data }) => {
       >
         <Img
           className="student-listing-page-card-thumbnail"
-          fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
+          fixed={node.thumbnail[0].localFile.childImageSharp.fixed}
         ></Img>
         <div className="student-listing-page-info-container">
           <h3>
@@ -245,8 +245,8 @@ export const query = graphql`
             localFile {
               name
               childImageSharp {
-                fluid(maxWidth: 340, quality: 70) {
-                  ...GatsbyImageSharpFluid
+                fixed(width: 300, height: 260, quality: 70) {
+                  ...GatsbyImageSharpFixed
                 }
               }
             }
@@ -277,8 +277,8 @@ export const query = graphql`
           localFile {
             name
             childImageSharp {
-              fluid(maxWidth: 340, quality: 90) {
-                ...GatsbyImageSharpFluid
+              fixed(width: 300, height:260, quality: 90) {
+                ...GatsbyImageSharpFixed
               }
             }
           }
