@@ -7,6 +7,17 @@ import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 import SEO from "../components/seo"
 
+const HeaderImage = ({ bannerImage }) => {
+  return (
+    <BackgroundImage
+      id="student-header-image"
+      Tag="section"
+      fluid={bannerImage.image[0].localFile.childImageSharp.fluid}
+      alt={bannerImage.alt}
+    />
+  )
+}
+
 export default ({ data }) => {
   const Navigation = () => {
     return (
@@ -36,29 +47,16 @@ export default ({ data }) => {
           </div>
 
           <div id="student-logo-container">
-              <Img
-                id="student-logo-image"
-                fixed={
-                  data.studentPageNode.logoImage[0].localFile.childImageSharp
-                    .fixed
-                }
-              />
+            <Img
+              id="student-logo-image"
+              fixed={
+                data.studentPageNode.logoImage[0].localFile.childImageSharp
+                  .fixed
+              }
+            />
           </div>
         </div>
       </div>
-    )
-  }
-
-  const HeaderImage = () => {
-    return (
-      <BackgroundImage
-        id="student-header-image"
-        Tag="section"
-        fluid={
-          data.studentPageNode.frontImage[0].localFile.childImageSharp.fluid
-        }
-        alt={data.studentPageNode.frontImageAlt}
-      ></BackgroundImage>
     )
   }
 
@@ -207,7 +205,7 @@ export default ({ data }) => {
         keywords={["Student"]}
       />
       <Navigation />
-      <HeaderImage />
+      <HeaderImage bannerImage={data.studentPageNode.bannerImage} />
       <SubListingPages />
       <CustomContent />
       <LinkColumns />
@@ -297,11 +295,14 @@ export const query = graphql`
         }
       }
 
-      frontImage {
-        localFile {
-          childImageSharp {
-            fluid(maxWidth: 1800, quality: 90) {
-              ...GatsbyImageSharpFluid
+      bannerImage {
+        alt
+        image {
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 1800, quality: 90) {
+                ...GatsbyImageSharpFluid
+              }
             }
           }
         }
