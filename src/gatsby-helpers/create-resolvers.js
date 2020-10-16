@@ -63,7 +63,7 @@ exports.createResolvers = ({ createResolvers }) => {
     return ""
   }
 
-  const findSource = async (context, node, type, locale) =>
+  const findSource = (context, node, type, locale) =>
     context.nodeModel.runQuery({
       query: {
         filter: {
@@ -137,7 +137,7 @@ exports.createResolvers = ({ createResolvers }) => {
           return resolveLocalizedPaths(source, context)
         },
       },
-      parentListingPage: {
+      parentListingPage: {  
         async resolve(source, args, context, info) {
           // Check if parentListingPage is not null
           // And if it is an Array, that it contains at least one element
@@ -292,7 +292,7 @@ exports.createResolvers = ({ createResolvers }) => {
       },
       aboutStudyTrondheim: {
         resolve(source, args, context, info) {
-          if(source.aboutStudyTrondheim != null){
+          if (source.aboutStudyTrondheim != null) {
             return source.aboutStudyTrondheim._fl_meta_
               ? findSource(
                   context,
@@ -306,8 +306,7 @@ exports.createResolvers = ({ createResolvers }) => {
                   }
                 })
               : null
-            }
-          else return null
+          } else return null
         },
       },
     },

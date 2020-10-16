@@ -36,13 +36,13 @@ export default ({ data }) => {
           </div>
 
           <div id="student-logo-container">
-              <Img
-                id="student-logo-image"
-                fixed={
-                  data.studentPageNode.logoImage[0].localFile.childImageSharp
-                    .fixed
-                }
-              />
+            <Img
+              id="student-logo-image"
+              fixed={
+                data.studentPageNode.logoImage[0].localFile.childImageSharp
+                  .fixed
+              }
+            />
           </div>
         </div>
       </div>
@@ -116,13 +116,17 @@ export default ({ data }) => {
     const Column = ({ node }) => {
       const Content = () => ReactDOMHelper.parseToReact(node.content.content)
       const Ref = ({ children, tabable }) => {
-        if (node.linkType === "listingPage" || node.linkType === "page" || node.linkType === "aboutStudyTrondheim") {
+        if (
+          node.linkType === "listingPage" ||
+          node.linkType === "page" ||
+          node.linkType === "aboutStudyTrondheim"
+        ) {
           const path =
             node.linkType === "listingPage"
               ? node.listingPage.path
-              : node.linkType === "page" 
-                ? node.page.path
-                : node.aboutStudyTrondheim.path
+              : node.linkType === "page"
+              ? node.page.path
+              : node.aboutStudyTrondheim.path
 
           return (
             <Link

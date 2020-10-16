@@ -5,27 +5,29 @@ import { useStaticQuery, graphql } from "gatsby"
 export default ({ title = null, keywords = [], locale = "no" }) => {
   const data = useStaticQuery(
     graphql`
-    query {
-      allFlamelinkSeoContent {
-        edges {
-          node {
-            id
-            flamelink_locale
-            title
-            description
-            author
-            keywords {
-              keyword
+      query {
+        allFlamelinkSeoContent {
+          edges {
+            node {
+              id
+              flamelink_locale
+              title
+              description
+              author
+              keywords {
+                keyword
+              }
+              siteUrl
             }
-            siteUrl
           }
         }
       }
-    }
     `
   )
 
-  const seo = data.allFlamelinkSeoContent.edges.map(node => node.node).find(node => node.flamelink_locale === locale)
+  const seo = data.allFlamelinkSeoContent.edges
+    .map((node) => node.node)
+    .find((node) => node.flamelink_locale === locale)
   const lang = locale.split("-")[0]
 
   return (
@@ -33,16 +35,19 @@ export default ({ title = null, keywords = [], locale = "no" }) => {
       htmlAttributes={{
         lang: lang,
       }}
-      title={title ? title :seo.title}
+      title={title ? title : seo.title}
       titleTemplate={title ? `%s | ${seo.title}` : "%s"}
       meta={[
         {
           name: "description",
-          content:seo.description,
+          content: seo.description,
         },
         {
           name: "keywords",
-          content:seo.keywords.map(keyword => keyword.keyword).concat(keywords).join(",")
+          content: seo.keywords
+            .map((keyword) => keyword.keyword)
+            .concat(keywords)
+            .join(","),
         },
       ]}
     />

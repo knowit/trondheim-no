@@ -164,14 +164,13 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       }
     })
 
-  result.data.allFlamelinkArticleContent.nodes
-    .map((node) => {
-      createPage({
-        path: node.path,
-        component: path.resolve("./src/templates/article.js"),
-        context: {
-          nodeId: node.id,
-        },
-      })
+  result.data.allFlamelinkArticleContent.nodes.map((node) => {
+    createPage({
+      path: node.path,
+      component: path.resolve("./src/templates/article.js"),
+      context: {
+        nodeId: node.id,
+      },
     })
+  })
 }

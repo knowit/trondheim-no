@@ -97,13 +97,13 @@ class GoogleMapsUrlHelper {
 }
 
 class UrlHelper {
-  static getDomain (url) {
+  static getDomain(url) {
     url = url.trim()
-    if (!(/^https?:\/\/.*$/i).test(url)) {
+    if (!/^https?:\/\/.*$/i.test(url)) {
       url = "http://" + url
     }
     url = new URL(url)
-    return url.hostname.split('.')[1]
+    return url.hostname.split(".")[1]
   }
 }
 

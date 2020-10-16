@@ -86,7 +86,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     aboutStudyTrondheim: FlamelinkAboutStudyTrondheimContent
   }
   type FlamelinkArticle {
-    title: String
+    title: String 
     content: FlamelinkTextHtmlContentNode
   }
   `

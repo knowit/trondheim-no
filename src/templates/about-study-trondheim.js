@@ -10,13 +10,12 @@ export default ({ data }) => {
   const HeaderImage = ({ headerImage }) => {
     return (
       <div id="about-study-header-container">
-        <Img
+        <BackgroundImage
           id="header-image"
           Tag="section"
           fluid={headerImage.frontImage[0].localFile.childImageSharp.fluid}
           alt={headerImage.alt}
-        >
-        </Img>
+        ></BackgroundImage>
       </div>
     )
   }
@@ -25,150 +24,156 @@ export default ({ data }) => {
       <div id="content-outer-container">
         <div id="content-text-container">
           <HTMLContent
-            htmlContent={{ content: data.flamelinkAboutStudyTrondheimContent.content.content, remoteImages: [] }}
+            htmlContent={{
+              content: data.flamelinkAboutStudyTrondheimContent.content.content,
+              remoteImages: [],
+            }}
           />
         </div>
       </div>
     )
   }
-  const ContactPerson = ({person}) => {
+  const ContactPerson = ({ person }) => {
     return (
       <div className="contact-person-container">
         <Img
           className="profile-picture"
-          fluid={
-            person.picture[0].localFile.childImageSharp.fluid
-          }
-          imgStyle={{"object-position":"50% 12%"}}
+          fluid={person.picture[0].localFile.childImageSharp.fluid}
+          imgStyle={{ "object-position": "50% 12%" }}
           alt="Profile picture"
         />
-        <h3 className="person-title">
-            {person.title}
-        </h3>
-        <p className="person-contact-info">
-          {person.name}
-        </p>
-        <p className="person-contact-info">
-          {person.phoneNumber}
-        </p>
-        <p className="person-contact-info">
-          {person.email}
-        </p>
-        <p className="person-contact-info">
-          {person.de}  
-        </p>
-        <div>
-
-        </div>
+        <h3 className="person-title">{person.title}</h3>
+        <p className="person-contact-info">{person.name}</p>
+        <p className="person-contact-info">{person.phoneNumber}</p>
+        <p className="person-contact-info">{person.email}</p>
+        <p className="person-contact-info">{person.de}</p>
+        <div></div>
       </div>
     )
   }
   const ContactPersons = () => {
     return (
       <div id="contact-persons-container">
-        {data.flamelinkAboutStudyTrondheimContent.contactPerson
-          .map(function (node, iteration) {
-              return (
-                <ContactPerson person={node} key={iteration}/>
-              )
-            }
-          )}
+        {data.flamelinkAboutStudyTrondheimContent.contactPerson.map(function (
+          node,
+          iteration
+        ) {
+          return <ContactPerson person={node} key={iteration} />
+        })}
       </div>
     )
   }
-  const InternalLink = ({article}) => {
-    return(
-      <a className="link-container" href={"#"+article.title}>
-        <h3 className="link-text">{article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink.linkText}</h3>
-        {article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink.linkIcon ? (
+  const InternalLink = ({ article }) => {
+    return (
+      <a className="link-container" href={"#" + article.title}>
+        <h3 className="link-text">
+          {
+            article
+              .childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
+              .linkText
+          }
+        </h3>
+        {article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
+          .linkIcon ? (
           <img
             className="link-icon"
-            src={article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink.linkIcon[0].url}
+            src={
+              article
+                .childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
+                .linkIcon[0].url
+            }
             alt="LinkIcon"
           />
         ) : null}
       </a>
     )
   }
-  const InternalLinks = ({articles}) => {
-    return(
+  const InternalLinks = ({ articles }) => {
+    return (
       <div id="links-container">
         {articles.map(function (node, iteration) {
-              return (
-                <InternalLink article={node} key={iteration}/>
-              )
-            }
-          )}
+          return <InternalLink article={node} key={iteration} />
+        })}
       </div>
     )
   }
-  const Article = ({article, reverse}) => {
+  const Article = ({ article, reverse }) => {
     return (
-      <div id={article.title} className="student-article-container" style={reverse ? {flexDirection: "row-reverse"} : {}}>
+      <div
+        id={article.title}
+        className="student-article-container"
+        style={reverse ? { flexDirection: "row-reverse" } : {}}
+      >
         <div className="student-article-content">
-          <h3 className="student-article-header">
-            {article.title}
-          </h3>
+          <h3 className="student-article-header">{article.title}</h3>
           <HTMLContent
-              htmlContent={{content: article.childFlamelinkTextHtmlContentNode.content, remoteImages: [] }}
-            />
+            htmlContent={{
+              content: article.childFlamelinkTextHtmlContentNode.content,
+              remoteImages: [],
+            }}
+          />
         </div>
-        <div className={reverse ? "article-border-box-reverse" : "article-border-box"}>
+        <div
+          className={
+            reverse ? "article-border-box-reverse" : "article-border-box"
+          }
+        >
           <Img
             className="student-article-thumbnail"
-            style={reverse ? {margin: "-40px auto -1px 40px"} : {margin: "-40px auto -1px -40px"}}
-            fluid={
-              article.thumbnail[0].localFile.childImageSharp.fluid
+            style={
+              reverse
+                ? { margin: "-40px auto -1px 40px" }
+                : { margin: "-40px auto -1px -40px" }
             }
+            fluid={article.thumbnail[0].localFile.childImageSharp.fluid}
             alt="Article thumbnail"
           />
         </div>
       </div>
     )
   }
-  const Articles = ({articles}) => {
+  const Articles = ({ articles }) => {
     return (
       <div id="student-articles-container">
         {articles.map(function (node, iteration) {
-              return (
-                <Article article={node} key={iteration} reverse={iteration%2===1}/>
-              )
-            }
-          )}
+          return (
+            <Article
+              article={node}
+              key={iteration}
+              reverse={iteration % 2 === 1}
+            />
+          )
+        })}
       </div>
     )
   }
-  const OtherActivity = ({article}) => {
+  const OtherActivity = ({ article }) => {
     return (
       <div id={article.title} className="other-acitivity-container">
         <Img
           className="other-actitivity-thumbnail"
-          fluid={
-            article.thumbnail[0].localFile.childImageSharp.fluid
-          }
+          fluid={article.thumbnail[0].localFile.childImageSharp.fluid}
           alt="Other Activity thumbnail"
-          imgStyle={{"object-position":"40% 13.49%"}}
+          imgStyle={{ "object-position": "40% 13.49%" }}
         />
         <div className="other-acitivity-content">
-          <h3 className="other-activity-header">
-            {article.title}
-          </h3>
+          <h3 className="other-activity-header">{article.title}</h3>
           <HTMLContent
-              htmlContent={{content: article.childFlamelinkTextHtmlContentNode.content, remoteImages: [] }}
-            />
+            htmlContent={{
+              content: article.childFlamelinkTextHtmlContentNode.content,
+              remoteImages: [],
+            }}
+          />
         </div>
       </div>
     )
   }
-  const OtherActivities = ({articles}) => {
+  const OtherActivities = ({ articles }) => {
     return (
       <div id="other-activities-container">
         {articles.map(function (node, iteration) {
-              return (
-                <OtherActivity article={node} key={iteration}/>
-              )
-            }
-          )}
+          return <OtherActivity article={node} key={iteration} />
+        })}
       </div>
     )
   }
@@ -190,17 +195,21 @@ export default ({ data }) => {
       <HeaderImage
         headerImage={data.flamelinkAboutStudyTrondheimContent.bannerImage}
       />
-      <ContentText/>
-      <ContactPersons/>
+      <ContentText />
+      <ContactPersons />
       <div className="u-line"></div>
-      <InternalLinks articles={data.flamelinkAboutStudyTrondheimContent.article}/>
-      <Articles articles={data.flamelinkAboutStudyTrondheimContent.article}/>
+      <InternalLinks
+        articles={data.flamelinkAboutStudyTrondheimContent.article}
+      />
+      <Articles articles={data.flamelinkAboutStudyTrondheimContent.article} />
       <h2 id="other-activities-header">
         {data.flamelinkAboutStudyTrondheimContent.flamelink_locale === "no"
-            ? "Andre aktiviteter i StudyTronheim"
-            : "Other activities"}
+          ? "Andre aktiviteter i StudyTronheim"
+          : "Other activities"}
       </h2>
-      <OtherActivities articles={data.flamelinkAboutStudyTrondheimContent.otherActivity}/>
+      <OtherActivities
+        articles={data.flamelinkAboutStudyTrondheimContent.otherActivity}
+      />
     </div>
   )
 }
@@ -210,7 +219,7 @@ export const query = graphql`
     flamelinkAboutStudyTrondheimContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
-      
+
       localizedPaths {
         locale
         path
@@ -226,7 +235,7 @@ export const query = graphql`
           }
         }
       }
-      content{
+      content {
         content
       }
       contactPerson {

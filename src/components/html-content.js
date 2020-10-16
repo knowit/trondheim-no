@@ -4,16 +4,20 @@ import "../style/html-content.css"
 import Img from "gatsby-image"
 import Iframe from "react-iframe"
 import { Online } from "react-detect-offline"
-import { UrlHelper } from "../helpers/url-helper";
+import { UrlHelper } from "../helpers/url-helper"
 
 const defaultHtmlContent = {
   remoteImages: [],
-  content: ""
+  content: "",
 }
 
-const HTMLContent = ({ resizeImg, dropShadow, htmlContent = defaultHtmlContent }) => {
+const HTMLContent = ({
+  resizeImg,
+  dropShadow,
+  htmlContent = defaultHtmlContent,
+}) => {
   const reactComponent = ReactDOMHelper.buildReactComponent(
-    htmlContent && htmlContent.content ?  htmlContent.content : "",
+    htmlContent && htmlContent.content ? htmlContent.content : "",
     (props, index) => {
       const imageNode = htmlContent.remoteImages
         ? htmlContent.remoteImages.find((n) => {

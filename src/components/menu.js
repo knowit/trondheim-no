@@ -55,17 +55,17 @@ const Menu = ({ locale, localizedPaths }) => {
   }
 
   const closeOnEscape = (event) => {
-    if(event.key == "Escape"){
+    if (event.key === "Escape") {
       setShowMenu(false)
     }
-  } 
+  }
 
   const Overlay = () => {
     return showMenu ? <div id="menu-background-overlay" /> : null
   }
 
-  const lang = localizedPaths.find(item => item.locale !== locale)
-  const langPath = lang ? lang.path : (locale === "no" ? "/" : "/en")
+  const lang = localizedPaths.find((item) => item.locale !== locale)
+  const langPath = lang ? lang.path : locale === "no" ? "/" : "/en"
 
   const MenuItems = ({ items, externalItems }) => {
     return showMenu ? (

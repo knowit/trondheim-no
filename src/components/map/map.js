@@ -3,13 +3,7 @@ import { GoogleMap, MarkerClusterer } from "@react-google-maps/api"
 import styles from "../../style/map.module.css"
 import MapMarker from "./map-marker.js"
 
-export default ({
-  markers,
-  locationMarker,
-  zoom,
-  height,
-  width,
-}) => {
+export default ({ markers, locationMarker, zoom, height, width }) => {
   if (!locationMarker) return ""
 
   const Cluster = () => {
