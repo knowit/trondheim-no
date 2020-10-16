@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import "../style/layout.css"
 import { Link, graphql, StaticQuery } from "gatsby"
 import ReactCountryFlag from "react-country-flag"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 
 const Menu = ({ locale, localizedPaths }) => {
   const query = graphql`
@@ -36,15 +36,7 @@ const Menu = ({ locale, localizedPaths }) => {
       }
       flamelinkLayoutLocalizationContent(flamelink_locale: { eq: "no" }) {
         id
-        translations {
-          id
-          key
-          translations {
-            id
-            language
-            word
-          }
-        }
+        ...LocalizationFragment
       }
     }
   `
@@ -55,17 +47,17 @@ const Menu = ({ locale, localizedPaths }) => {
   }
 
   const closeOnEscape = (event) => {
-    if(event.key == "Escape"){
+    if (event.key == "Escape") {
       setShowMenu(false)
     }
-  } 
+  }
 
   const Overlay = () => {
     return showMenu ? <div id="menu-background-overlay" /> : null
   }
 
-  const lang = localizedPaths.find(item => item.locale !== locale)
-  const langPath = lang ? lang.path : (locale === "no" ? "/" : "/en")
+  const lang = localizedPaths.find((item) => item.locale !== locale)
+  const langPath = lang ? lang.path : locale === "no" ? "/" : "/en"
 
   const MenuItems = ({ items, externalItems }) => {
     return showMenu ? (
@@ -142,7 +134,7 @@ const Menu = ({ locale, localizedPaths }) => {
               <div className="burger-bar"></div>
             </div>
             <div className="menu-text-container">
-              {LocalizationHelper.getLocalWord(localization, "menu", locale)}
+              {getLocalWord(localization, "menu", locale)}
             </div>
             <MenuItems
               items={menuData ? menuData.menuItems : []}

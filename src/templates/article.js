@@ -1,7 +1,7 @@
 import React from "react"
 import styles from "../style/article.module.css"
 import Layout from "../layouts/layout"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 import Img from "gatsby-image"
 import { Online, Offline } from "react-detect-offline"
 import HTMLContent from "../components/html-content"
@@ -13,7 +13,7 @@ import SEO from "../components/seo"
 const ContactInfoSpan = ({ localization, locale, wordKey }) => {
   return (
     <span className={styles.contactInfoHeader}>
-      {LocalizationHelper.getLocalWord(localization, wordKey, locale) + ": "}
+      {getLocalWord(localization, wordKey, locale) + ": "}
     </span>
   )
 }
@@ -88,11 +88,7 @@ const ContactInfo = (props) => {
     return (
       <div>
         <h3 className={styles.subheading}>
-          {LocalizationHelper.getLocalWord(
-            props.localization,
-            "contactInfo",
-            props.locale
-          )}
+          {getLocalWord(props.localization, "contactInfo", props.locale)}
         </h3>
         <div>{elements}</div>
       </div>
@@ -106,7 +102,7 @@ const OpeningHours = ({ node, localization, locale }) => {
   if (node.openingHours && node.openingHours.content) {
     elements.push(
       <h3 key={index++} className={styles.subheading}>
-        {LocalizationHelper.getLocalWord(localization, "openingHours", locale)}
+        {getLocalWord(localization, "openingHours", locale)}
       </h3>
     )
     elements.push(
@@ -270,14 +266,7 @@ export default ({ data }) => {
 export const query = graphql`
   query ArticleQuery($nodeId: String) {
     flamelinkArticleLocalizationContent(flamelink_locale: { eq: "no" }) {
-      id
-      translations {
-        key
-        translations {
-          language
-          word
-        }
-      }
+      ...LocalizationFragment
     }
 
     flamelinkArticleContent(id: { eq: $nodeId }) {

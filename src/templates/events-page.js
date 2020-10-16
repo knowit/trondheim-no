@@ -1,7 +1,7 @@
 import React from "react"
 import { Router } from "@reach/router"
 import "../style/listing-page.css"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 import Layout from "../layouts/layout"
 import { Link, graphql } from "gatsby"
 import Loader from "react-spinners/ClipLoader"
@@ -60,7 +60,6 @@ class EventsView extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Component did Mount")
     this.loadData()
   }
 
@@ -107,7 +106,7 @@ class EventsView extends React.Component {
         ? `/ ${event.reducedPrice},-`
         : ""
     }`
-    const freeString = LocalizationHelper.getLocalWord(
+    const freeString = getLocalWord(
       this.props.localization,
       "free",
       this.props.locale
@@ -231,7 +230,7 @@ class EventsView extends React.Component {
           <ErrorMessage />
         ) : (
           <p>
-            {LocalizationHelper.getLocalWord(
+            {getLocalWord(
               this.props.localization,
               "loading",
               this.props.locale
@@ -290,13 +289,13 @@ class EventsView extends React.Component {
               id="events-more-button"
               onClick={this.loadData.bind(this)}
               onKeyDown={(event) =>
-                event.key === "Enter" ? this.loadData() : console.log(event)
+                event.key === "Enter" ? this.loadData() : null
               }
             >
               {this.state.isLoadingMore ? (
                 <Loader />
               ) : (
-                LocalizationHelper.getLocalWord(
+                getLocalWord(
                   this.props.localization,
                   "more-events",
                   this.props.locale
@@ -341,7 +340,7 @@ export default ({ data }) => {
                 ).path
               }
             >
-              {LocalizationHelper.getLocalWord(
+              {getLocalWord(
                 data.localization.translations,
                 "changeLanguage",
                 data.node.flamelink_locale

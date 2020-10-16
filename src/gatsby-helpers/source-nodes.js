@@ -84,8 +84,6 @@ exports.sourceNodes = async ({
 }) => {
   const { createNode } = actions
 
-  console.log("Sourcing nodes...\n")
-
   async function createSourceNode(
     type,
     data,

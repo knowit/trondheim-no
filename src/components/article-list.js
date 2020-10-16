@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 import { Link } from "gatsby"
 import Img from "gatsby-image"
 import "../style/listing-page.css"
@@ -33,16 +33,8 @@ export default ({
     setFilterTags(filterTagsTemp.slice())
   }
 
-  const reset_label = LocalizationHelper.getLocalWord(
-    localization,
-    "resetTags",
-    locale
-  )
-  const sorting_label = LocalizationHelper.getLocalWord(
-    localization,
-    "sorting",
-    locale
-  )
+  const reset_label = getLocalWord(localization, "resetTags", locale)
+  const sorting_label = getLocalWord(localization, "sorting", locale)
 
   const ArticleList = () => {
     const articleViews = []
@@ -167,7 +159,7 @@ export default ({
           style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
           onClick={(e) => handleTagToggle("all")}
         >
-          {LocalizationHelper.getLocalWord(localization, "all", locale)}
+          {getLocalWord(localization, "all", locale)}
         </div>
 
         {tags.map((tag) => (
@@ -188,7 +180,7 @@ export default ({
       </div>
       <div id="sort-container">
         {SORT_TYPES.map((s) => {
-          var tagName = LocalizationHelper.getLocalWord(localization, s, locale)
+          var tagName = getLocalWord(localization, s, locale)
           return (
             <div
               role="radio"
