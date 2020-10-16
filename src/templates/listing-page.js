@@ -38,18 +38,13 @@ export default ({ data }) => {
       (item) => item.locale !== locale
     )
     return otherLang ? (
-      <Link
-        id="english-button"
-        to={
-          otherLang.path
-        }
-      >
+      <Link id="english-button" to={otherLang.path}>
         {LocalizationHelper.getLocalWord(
           localization,
           "changeLanguage",
           locale
         )}
-    </Link>
+      </Link>
     ) : null
   }
 
@@ -93,7 +88,11 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query ListingPageQuery($nodeId: String, $nodeFlamelinkId: String, $locale: String) {
+  query ListingPageQuery(
+    $nodeId: String
+    $nodeFlamelinkId: String
+    $locale: String
+  ) {
     flamelinkListingPageLocalizationContent(flamelink_locale: { eq: "no" }) {
       id
       translations {

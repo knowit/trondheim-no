@@ -36,13 +36,13 @@ export default ({ data }) => {
           </div>
 
           <div id="student-logo-container">
-              <Img
-                id="student-logo-image"
-                fixed={
-                  data.studentPageNode.logoImage[0].localFile.childImageSharp
-                    .fixed
-                }
-              />
+            <Img
+              id="student-logo-image"
+              fixed={
+                data.studentPageNode.logoImage[0].localFile.childImageSharp
+                  .fixed
+              }
+            />
           </div>
         </div>
       </div>

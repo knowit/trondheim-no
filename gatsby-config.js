@@ -81,8 +81,8 @@ module.exports = {
               ["_fl_meta_.status", "==", process.env.GATSBY_FLAMELINK_STATUS],
             ],
           },
-          { 
-            schemaKey: "page", 
+          {
+            schemaKey: "page",
             populate: true,
             filters: [
               ["_fl_meta_.status", "==", process.env.GATSBY_FLAMELINK_STATUS],

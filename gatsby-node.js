@@ -52,7 +52,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       matchPath: locale === "no" ? "/*" : "/en/*",
       context: {
         locale: locale,
-        localizedPaths: localizedPaths
+        localizedPaths: localizedPaths,
       },
     })
   })
@@ -75,10 +75,13 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     .map((node) => {
       createPage({
         path: node.path,
-        component: path.resolve(`./src/templates/${
-          (status != "publish" && process.env.status != node._fl_meta_.status)
-          ? "empty-front-page" : "home"
-        }.js`),
+        component: path.resolve(
+          `./src/templates/${
+            status != "publish" && process.env.status != node._fl_meta_.status
+              ? "empty-front-page"
+              : "home"
+          }.js`
+        ),
         context: {
           nodeId: node.id,
           locale: node.flamelink_locale,
@@ -101,13 +104,16 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
 
-    const studentPageComponents = result.data.allFlamelinkStudentPageContent.edges.map(node => node.node)
-    .map(node => {
+  const studentPageComponents = result.data.allFlamelinkStudentPageContent.edges
+    .map((node) => node.node)
+    .map((node) => {
       return {
         locale: node.flamelink_locale,
-        component: (process.env.GATSBY_FLAMELINK_STATUS != "publish" && node._fl_meta_.status != process.env.GATSBY_FLAMELINK_STATUS)
-          ? path.resolve("./src/templates/empty-front-page.js")
-          : path.resolve("./src/templates/student.js")
+        component:
+          process.env.GATSBY_FLAMELINK_STATUS != "publish" &&
+          node._fl_meta_.status != process.env.GATSBY_FLAMELINK_STATUS
+            ? path.resolve("./src/templates/empty-front-page.js")
+            : path.resolve("./src/templates/student.js"),
       }
     })
 
@@ -117,13 +123,15 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       if (node.slug === "student") {
         createPage({
           path: node.path,
-          component: studentPageComponents.find(n => n.locale === node.flamelink_locale).component,
+          component: studentPageComponents.find(
+            (n) => n.locale === node.flamelink_locale
+          ).component,
           context: {
             nodeId: node.id,
             nodeFlamelinkId: node.flamelink_id,
             locale: node.flamelink_locale,
             layout: "student-page",
-            status: process.env.GATSBY_FLAMELINK_STATUS
+            status: process.env.GATSBY_FLAMELINK_STATUS,
           },
         })
       } else if (node.slug === "hva-skjer" || node.slug === "whats-on") {
@@ -171,14 +179,13 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       }
     })
 
-  result.data.allFlamelinkArticleContent.nodes
-    .map((node) => {
-      createPage({
-        path: node.path,
-        component: path.resolve("./src/templates/article.js"),
-        context: {
-          nodeId: node.id,
-        },
-      })
+  result.data.allFlamelinkArticleContent.nodes.map((node) => {
+    createPage({
+      path: node.path,
+      component: path.resolve("./src/templates/article.js"),
+      context: {
+        nodeId: node.id,
+      },
     })
+  })
 }
