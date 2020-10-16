@@ -1,7 +1,7 @@
 import React from "react"
 import styles from "../style/article.module.css"
 import Layout from "../layouts/layout"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 import Img from "gatsby-image"
 import { Online, Offline } from "react-detect-offline"
 import HTMLContent from "../components/html-content"
@@ -13,7 +13,7 @@ import SEO from "../components/seo"
 const ContactInfoSpan = ({ localization, locale, wordKey }) => {
   return (
     <span className={styles.contactInfoHeader}>
-      {LocalizationHelper.getLocalWord(localization, wordKey, locale) + ": "}
+      {getLocalWord(localization, wordKey, locale) + ": "}
     </span>
   )
 }
@@ -88,11 +88,7 @@ const ContactInfo = (props) => {
     return (
       <div>
         <h3 className={styles.subheading}>
-          {LocalizationHelper.getLocalWord(
-            props.localization,
-            "contactInfo",
-            props.locale
-          )}
+          {getLocalWord(props.localization, "contactInfo", props.locale)}
         </h3>
         <div>{elements}</div>
       </div>
@@ -100,24 +96,24 @@ const ContactInfo = (props) => {
   else return ""
 }
 
-const OpeningHours = (props) => {
+const OpeningHours = ({ node, localization, locale }) => {
   const elements = []
   var index = 0
-  if (props.node.openingHours && props.node.openingHours.content) {
+  if (node.openingHours && node.openingHours.content) {
     elements.push(
       <h3 key={index++} className={styles.subheading}>
-        {LocalizationHelper.getLocalWord(
-          props.localization,
-          "openingHours",
-          props.locale
-        )}
+        {getLocalWord(localization, "openingHours", locale)}
       </h3>
     )
     elements.push(
-      <div
+      <HTMLContent
+        htmlContent={{
+          content: node.openingHours.content,
+          remoteImages: [],
+        }}
+        resizeImg={false}
         key={index++}
-        dangerouslySetInnerHTML={{ __html: props.node.openingHours.content }}
-      ></div>
+      />
     )
   }
   if (elements.length > 0) return <div key={index++}>{elements}</div>
@@ -235,7 +231,7 @@ export default ({ data }) => {
           <OpeningHours
             node={data.flamelinkArticleContent}
             localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={data.flamelinkArticleContent.flamelinklocale}
+            locale={data.flamelinkArticleContent.flamelink_locale}
           />
           <ContactInfo
             node={data.flamelinkArticleContent}
@@ -270,14 +266,7 @@ export default ({ data }) => {
 export const query = graphql`
   query ArticleQuery($nodeId: String) {
     flamelinkArticleLocalizationContent(flamelink_locale: { eq: "no" }) {
-      id
-      translations {
-        key
-        translations {
-          language
-          word
-        }
-      }
+      ...LocalizationFragment
     }
 
     flamelinkArticleContent(id: { eq: $nodeId }) {
@@ -307,6 +296,10 @@ export const query = graphql`
         telephoneNumber
         linkToWebsite
         emailAddress
+      }
+
+      openingHours {
+        content
       }
 
       address {
