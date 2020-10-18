@@ -7,6 +7,17 @@ import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 import SEO from "../components/seo"
 
+const HeaderImage = ({ bannerImage }) => {
+  return (
+    <BackgroundImage
+      id="student-header-image"
+      Tag="section"
+      fluid={bannerImage.image[0].localFile.childImageSharp.fluid}
+      alt={bannerImage.alt}
+    />
+  )
+}
+
 export default ({ data }) => {
   const Navigation = () => {
     return (
@@ -49,19 +60,6 @@ export default ({ data }) => {
     )
   }
 
-  const HeaderImage = () => {
-    return (
-      <BackgroundImage
-        id="student-header-image"
-        Tag="section"
-        fluid={
-          data.studentPageNode.frontImage[0].localFile.childImageSharp.fluid
-        }
-        alt={data.studentPageNode.frontImageAlt}
-      ></BackgroundImage>
-    )
-  }
-
   const ListingPage = ({ node }) => {
     return (
       <Link
@@ -71,7 +69,7 @@ export default ({ data }) => {
       >
         <Img
           className="student-listing-page-card-thumbnail"
-          fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
+          fixed={node.thumbnail[0].localFile.childImageSharp.fixed}
         ></Img>
         <div className="student-listing-page-info-container">
           <h3>
@@ -207,7 +205,7 @@ export default ({ data }) => {
         keywords={["Student"]}
       />
       <Navigation />
-      <HeaderImage />
+      <HeaderImage bannerImage={data.studentPageNode.bannerImage} />
       <SubListingPages />
       <CustomContent />
       <LinkColumns />
@@ -247,8 +245,8 @@ export const query = graphql`
             localFile {
               name
               childImageSharp {
-                fluid(maxWidth: 340, quality: 70) {
-                  ...GatsbyImageSharpFluid
+                fixed(width: 300, height: 260, quality: 70) {
+                  ...GatsbyImageSharpFixed
                 }
               }
             }
@@ -279,8 +277,8 @@ export const query = graphql`
           localFile {
             name
             childImageSharp {
-              fluid(maxWidth: 340, quality: 90) {
-                ...GatsbyImageSharpFluid
+              fixed(width: 300, height:260, quality: 90) {
+                ...GatsbyImageSharpFixed
               }
             }
           }
@@ -297,11 +295,14 @@ export const query = graphql`
         }
       }
 
-      frontImage {
-        localFile {
-          childImageSharp {
-            fluid(maxWidth: 1800, quality: 90) {
-              ...GatsbyImageSharpFluid
+      bannerImage {
+        alt
+        image {
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 1800, quality: 90) {
+                ...GatsbyImageSharpFluid
+              }
             }
           }
         }
@@ -311,7 +312,7 @@ export const query = graphql`
         localFile {
           childImageSharp {
             fluid(maxWidth: 1400, quality: 90) {
-              ...GatsbyImageSharpFluid
+              ...GatsbyImageSharpFluid_noBase64
             }
           }
         }
