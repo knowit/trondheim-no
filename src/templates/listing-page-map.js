@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import "../style/listing-page.css"
 import Layout from "../layouts/layout"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 import { Link, graphql } from "gatsby"
 import GoogleMap, { LoadScript } from "../components/map"
 import { Online, Offline } from "react-detect-offline"
@@ -97,7 +97,7 @@ export default ({ data }) => {
           <h2>{data.node.mapPageTitle}</h2>
           <p>{data.node.mapPageDescription}</p>
           <Link to={data.node.path}>
-            {LocalizationHelper.getLocalWord(
+            {getLocalWord(
               data.localization.translations,
               "viewListingPageList",
               data.node.flamelink_locale
@@ -133,14 +133,14 @@ export default ({ data }) => {
             <div id="content-container">
               <h2>{data.node.mapPageTitle}</h2>
               <p>
-                {LocalizationHelper.getLocalWord(
+                {getLocalWord(
                   data.localization.translations,
                   "not-available-offline",
                   data.node.flamelink_locale
                 )}
               </p>
               <Link to={data.node.path}>
-                {LocalizationHelper.getLocalWord(
+                {getLocalWord(
                   data.localization.translations,
                   "go-back",
                   data.node.flamelink_locale
@@ -172,14 +172,7 @@ export const query = graphql`
     localization: flamelinkListingPageLocalizationContent(
       flamelink_locale: { eq: "no" }
     ) {
-      id
-      translations {
-        key
-        translations {
-          language
-          word
-        }
-      }
+      ...LocalizationFragment
     }
 
     articlesLevel0: allFlamelinkArticleContent(
