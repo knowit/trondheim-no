@@ -398,7 +398,7 @@ export const query = graphql`
           }
         }
       }
-      
+
       bottomCards {
         title
         textColor
