@@ -100,24 +100,24 @@ const ContactInfo = (props) => {
   else return ""
 }
 
-const OpeningHours = (props) => {
+const OpeningHours = ({ node, localization, locale }) => {
   const elements = []
   var index = 0
-  if (props.node.openingHours && props.node.openingHours.content) {
+  if (node.openingHours && node.openingHours.content) {
     elements.push(
       <h3 key={index++} className={styles.subheading}>
-        {LocalizationHelper.getLocalWord(
-          props.localization,
-          "openingHours",
-          props.locale
-        )}
+        {LocalizationHelper.getLocalWord(localization, "openingHours", locale)}
       </h3>
     )
     elements.push(
-      <div
+      <HTMLContent
+        htmlContent={{
+          content: node.openingHours.content,
+          remoteImages: [],
+        }}
+        resizeImg={false}
         key={index++}
-        dangerouslySetInnerHTML={{ __html: props.node.openingHours.content }}
-      ></div>
+      />
     )
   }
   if (elements.length > 0) return <div key={index++}>{elements}</div>
@@ -235,7 +235,7 @@ export default ({ data }) => {
           <OpeningHours
             node={data.flamelinkArticleContent}
             localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={data.flamelinkArticleContent.flamelinklocale}
+            locale={data.flamelinkArticleContent.flamelink_locale}
           />
           <ContactInfo
             node={data.flamelinkArticleContent}
@@ -307,6 +307,10 @@ export const query = graphql`
         telephoneNumber
         linkToWebsite
         emailAddress
+      }
+
+      openingHours {
+        content
       }
 
       address {
