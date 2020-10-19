@@ -6,19 +6,123 @@ import SEO from "../components/seo"
 import BackgroundImage from "gatsby-background-image"
 import Img from "gatsby-image"
 
-export default ({ data }) => {
-  const HeaderImage = ({ headerImage }) => {
-    return (
-      <div id="about-study-header-container">
-        <BackgroundImage
-          id="header-image"
-          Tag="section"
-          fluid={headerImage.frontImage[0].localFile.childImageSharp.fluid}
-          alt={headerImage.alt}
-        ></BackgroundImage>
+const HeaderImage = ({ headerImage }) => {
+  return (
+    <div id="about-study-header-container">
+      <BackgroundImage
+        id="header-image"
+        Tag="section"
+        fluid={headerImage.frontImage[0].localFile.childImageSharp.fluid}
+        alt={headerImage.alt}
+      ></BackgroundImage>
+    </div>
+  )
+}
+
+const ContactPerson = ({ person }) => {
+  return (
+    <div className="contact-person-container">
+      <Img
+        className="profile-picture"
+        fluid={person.picture[0].localFile.childImageSharp.fluid}
+        imgStyle={{ "object-position": "50% 12%" }}
+        alt="Profile picture"
+      />
+      <h3 className="person-title">{person.title}</h3>
+      <p className="person-contact-info">{person.name}</p>
+      <p className="person-contact-info">{person.phoneNumber}</p>
+      <p className="person-contact-info">{person.email}</p>
+      <p className="person-contact-info">{person.de}</p>
+      <div></div>
+    </div>
+  )
+}
+
+const InternalLink = ({ article }) => {
+  return (
+    <a className="link-container" href={"#" + article.title}>
+      <h3 className="link-text">
+        {
+          article
+            .childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
+            .linkText
+        }
+      </h3>
+      {article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
+        .linkIcon ? (
+        <img
+          className="link-icon"
+          src={
+            article
+              .childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
+              .linkIcon[0].url
+          }
+          alt="LinkIcon"
+        />
+      ) : null}
+    </a>
+  )
+}
+
+const Article = ({ article, reverse }) => {
+  return (
+    <div
+      id={article.title}
+      className="student-article-container"
+      style={reverse ? { flexDirection: "row-reverse" } : {}}
+    >
+      <div className="student-article-content">
+        <h3 className="student-article-header">{article.title}</h3>
+        <HTMLContent
+          htmlContent={{
+            content: article.childFlamelinkTextHtmlContentNode.content,
+            remoteImages: [],
+          }}
+        />
       </div>
-    )
-  }
+      <div
+        className={
+          reverse ? "article-border-box-reverse" : "article-border-box"
+        }
+      >
+        <Img
+          className="student-article-thumbnail"
+          style={
+            reverse
+              ? { margin: "-40px auto -1px 40px" }
+              : { margin: "-40px auto -1px -40px" }
+          }
+          fluid={article.thumbnail[0].localFile.childImageSharp.fluid}
+          alt="Article thumbnail"
+        />
+      </div>
+    </div>
+  )
+}
+
+const OtherActivity = ({ article }) => {
+  return (
+    <div id={article.title} className="other-acitivity-container">
+      <Img
+        className="other-actitivity-thumbnail"
+        fluid={article.thumbnail[0].localFile.childImageSharp.fluid}
+        alt="Other Activity thumbnail"
+        imgStyle={{ "object-position": "40% 13.49%" }}
+      />
+      <div className="other-acitivity-content">
+        <h3 className="other-activity-header">{article.title}</h3>
+        <HTMLContent
+          htmlContent={{
+            content: article.childFlamelinkTextHtmlContentNode.content,
+            remoteImages: [],
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
+export default ({ data }) => {
   const ContentText = () => {
     return (
       <div id="content-outer-container">
@@ -33,24 +137,7 @@ export default ({ data }) => {
       </div>
     )
   }
-  const ContactPerson = ({ person }) => {
-    return (
-      <div className="contact-person-container">
-        <Img
-          className="profile-picture"
-          fluid={person.picture[0].localFile.childImageSharp.fluid}
-          imgStyle={{ "object-position": "50% 12%" }}
-          alt="Profile picture"
-        />
-        <h3 className="person-title">{person.title}</h3>
-        <p className="person-contact-info">{person.name}</p>
-        <p className="person-contact-info">{person.phoneNumber}</p>
-        <p className="person-contact-info">{person.email}</p>
-        <p className="person-contact-info">{person.de}</p>
-        <div></div>
-      </div>
-    )
-  }
+  
   const ContactPersons = () => {
     return (
       <div id="contact-persons-container">
@@ -63,79 +150,21 @@ export default ({ data }) => {
       </div>
     )
   }
-  const InternalLink = ({ article }) => {
-    return (
-      <a className="link-container" href={"#" + article.title}>
-        <h3 className="link-text">
-          {
-            article
-              .childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
-              .linkText
-          }
-        </h3>
-        {article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
-          .linkIcon ? (
-          <img
-            className="link-icon"
-            src={
-              article
-                .childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
-                .linkIcon[0].url
-            }
-            alt="LinkIcon"
-          />
-        ) : null}
-      </a>
-    )
-  }
-  const InternalLinks = ({ articles }) => {
+  
+  const InternalLinks = () => {
     return (
       <div id="links-container">
-        {articles.map(function (node, iteration) {
+        {data.flamelinkAboutStudyTrondheimContent.article.map(function (node, iteration) {
           return <InternalLink article={node} key={iteration} />
         })}
       </div>
     )
   }
-  const Article = ({ article, reverse }) => {
-    return (
-      <div
-        id={article.title}
-        className="student-article-container"
-        style={reverse ? { flexDirection: "row-reverse" } : {}}
-      >
-        <div className="student-article-content">
-          <h3 className="student-article-header">{article.title}</h3>
-          <HTMLContent
-            htmlContent={{
-              content: article.childFlamelinkTextHtmlContentNode.content,
-              remoteImages: [],
-            }}
-          />
-        </div>
-        <div
-          className={
-            reverse ? "article-border-box-reverse" : "article-border-box"
-          }
-        >
-          <Img
-            className="student-article-thumbnail"
-            style={
-              reverse
-                ? { margin: "-40px auto -1px 40px" }
-                : { margin: "-40px auto -1px -40px" }
-            }
-            fluid={article.thumbnail[0].localFile.childImageSharp.fluid}
-            alt="Article thumbnail"
-          />
-        </div>
-      </div>
-    )
-  }
-  const Articles = ({ articles }) => {
+  
+  const Articles = () => {
     return (
       <div id="student-articles-container">
-        {articles.map(function (node, iteration) {
+        {data.flamelinkAboutStudyTrondheimContent.article.map(function (node, iteration) {
           return (
             <Article
               article={node}
@@ -147,31 +176,11 @@ export default ({ data }) => {
       </div>
     )
   }
-  const OtherActivity = ({ article }) => {
-    return (
-      <div id={article.title} className="other-acitivity-container">
-        <Img
-          className="other-actitivity-thumbnail"
-          fluid={article.thumbnail[0].localFile.childImageSharp.fluid}
-          alt="Other Activity thumbnail"
-          imgStyle={{ "object-position": "40% 13.49%" }}
-        />
-        <div className="other-acitivity-content">
-          <h3 className="other-activity-header">{article.title}</h3>
-          <HTMLContent
-            htmlContent={{
-              content: article.childFlamelinkTextHtmlContentNode.content,
-              remoteImages: [],
-            }}
-          />
-        </div>
-      </div>
-    )
-  }
-  const OtherActivities = ({ articles }) => {
+  
+  const OtherActivities = () => {
     return (
       <div id="other-activities-container">
-        {articles.map(function (node, iteration) {
+        {data.flamelinkAboutStudyTrondheimContent.otherActivity.map(function (node, iteration) {
           return <OtherActivity article={node} key={iteration} />
         })}
       </div>
@@ -198,18 +207,14 @@ export default ({ data }) => {
       <ContentText />
       <ContactPersons />
       <div className="u-line"></div>
-      <InternalLinks
-        articles={data.flamelinkAboutStudyTrondheimContent.article}
-      />
-      <Articles articles={data.flamelinkAboutStudyTrondheimContent.article} />
+      <InternalLinks />
+      <Articles />
       <h2 id="other-activities-header">
         {data.flamelinkAboutStudyTrondheimContent.flamelink_locale === "no"
           ? "Andre aktiviteter i StudyTronheim"
           : "Other activities"}
       </h2>
-      <OtherActivities
-        articles={data.flamelinkAboutStudyTrondheimContent.otherActivity}
-      />
+      <OtherActivities />
     </div>
   )
 }

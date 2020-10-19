@@ -55,7 +55,7 @@ export default ({ data }) => {
         id="student-header-image"
         Tag="section"
         fluid={
-          data.studentPageNode.frontImage[0].localFile.childImageSharp.fluid
+          data.studentPageNode.bannerImage.image[0].localFile.childImageSharp.fluid
         }
         alt={data.studentPageNode.frontImageAlt}
       ></BackgroundImage>
@@ -204,7 +204,7 @@ export default ({ data }) => {
       </div>
     )
   }
-
+  console.log(data)
   return (
     <div>
       <SEO
@@ -302,12 +302,13 @@ export const query = graphql`
           }
         }
       }
-
-      frontImage {
-        localFile {
-          childImageSharp {
-            fluid(maxWidth: 1800, quality: 90) {
-              ...GatsbyImageSharpFluid
+      bannerImage {
+        image {
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 1800, quality: 90) {
+                ...GatsbyImageSharpFluid
+              }
             }
           }
         }
