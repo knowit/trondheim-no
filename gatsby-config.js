@@ -31,14 +31,6 @@ const resolvePath = (node) => {
   }
 }
 
-const striptags = require("striptags")
-const resolveContent = (node) => {
-  if (node.internal.type === "FlamelinkTextHtmlContentNode") {
-    console.log(node)
-  }
-  return ""
-}
-
 module.exports = {
   siteMetadata: {
     title: `Trondheim.no`,
@@ -198,7 +190,7 @@ module.exports = {
         resolvers: {
           FlamelinkPageContent: {
             title: (node) => node.title,
-            content: (node) => resolveContent(node),
+            content: (node) => node.fields.textContent,
             url: (node) => resolvePath(node),
           },
 
