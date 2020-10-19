@@ -202,7 +202,6 @@ export default ({ data }) => {
       </div>
     )
   }
-  console.log(data)
   return (
     <div>
       <SEO
