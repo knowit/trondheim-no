@@ -15,7 +15,6 @@ exports.createSchemaCustomization = ({ actions }) => {
     tags: [String]
     path: String
     localizedPaths : [LocalizedPath]
-    textContent: String
     content: FlamelinkTextHtmlContentNode
     copyright: Copyright
     parentListingPage: FlamelinkListingPageContent
