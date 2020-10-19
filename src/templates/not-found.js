@@ -1,6 +1,6 @@
 import React from "react"
 import Layout from "../layouts/layout"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 import { Link, graphql } from "gatsby"
 import "../style/404.css"
 import ReactCountryFlag from "react-country-flag"
@@ -10,14 +10,7 @@ export const query = graphql`
     localization: flamelinkLayoutLocalizationContent(
       flamelink_locale: { eq: "no" }
     ) {
-      id
-      translations {
-        key
-        translations {
-          language
-          word
-        }
-      }
+      ...LocalizationFragment
     }
   }
 `
@@ -44,7 +37,7 @@ export default ({ pageContext, location, data }) => {
 
   const NotFoundText = () => {
     const url = location.href ? location.href : ""
-    const array = LocalizationHelper.getLocalWord(
+    const array = getLocalWord(
       data.localization.translations,
       "notFoundText",
       locale
@@ -69,7 +62,7 @@ export default ({ pageContext, location, data }) => {
   }
 
   const GoHome = () => {
-    const text = LocalizationHelper.getLocalWord(
+    const text = getLocalWord(
       data.localization.translations,
       "navigateHome",
       locale
@@ -79,12 +72,12 @@ export default ({ pageContext, location, data }) => {
   }
 
   const LookingFor = () => {
-    const headerText = LocalizationHelper.getLocalWord(
+    const headerText = getLocalWord(
       data.localization.translations,
       "lookingForLang",
       locale
     )
-    const subText = LocalizationHelper.getLocalWord(
+    const subText = getLocalWord(
       data.localization.translations,
       "navigateLang",
       locale
@@ -109,7 +102,7 @@ export default ({ pageContext, location, data }) => {
           <div id="not-found-content-container">
             <div className="not-found-container">
               <h1>
-                {LocalizationHelper.getLocalWord(
+                {getLocalWord(
                   data.localization.translations,
                   "notFoundHeader",
                   locale

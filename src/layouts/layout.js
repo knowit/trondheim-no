@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet"
 import { Link, graphql, useStaticQuery } from "gatsby"
 import Img from "gatsby-image"
 import BurgerMenu from "../components/menu.js"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 
 export default ({ children, locale, localizedPaths }) => {
   const data = useStaticQuery(graphql`
@@ -13,15 +13,7 @@ export default ({ children, locale, localizedPaths }) => {
         flamelink_locale: { eq: "no" }
       ) {
         id
-        translations {
-          id
-          key
-          translations {
-            id
-            language
-            word
-          }
-        }
+        ...LocalizationFragment
       }
       navbar: allFlamelinkNavbarContent {
         edges {
@@ -57,12 +49,8 @@ export default ({ children, locale, localizedPaths }) => {
     .map((node) => node.node)
     .find((node) => node.flamelink_locale === locale)
 
-  const search = LocalizationHelper.getLocalWord(localization, "search", locale)
-  const searchInput = LocalizationHelper.getLocalWord(
-    localization,
-    "searchInput",
-    locale
-  )
+  const search = getLocalWord(localization, "search", locale)
+  const searchInput = getLocalWord(localization, "searchInput", locale)
   const Navigation = () => {
     return (
       <header className="navigation-container">
