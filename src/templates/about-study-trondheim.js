@@ -14,7 +14,7 @@ const HeaderImage = ({ headerImage }) => {
         Tag="section"
         fluid={headerImage.frontImage[0].localFile.childImageSharp.fluid}
         alt={headerImage.alt}
-      ></BackgroundImage>
+      />
     </div>
   )
 }
