@@ -81,6 +81,13 @@ module.exports = {
               ["_fl_meta_.status", "==", process.env.GATSBY_FLAMELINK_STATUS],
             ],
           },
+          {
+            schemaKey: "page",
+            populate: true,
+            filters: [
+              ["_fl_meta_.status", "==", process.env.GATSBY_FLAMELINK_STATUS],
+            ],
+          },
           { schemaKey: "articleLocalization", populate: true },
           { schemaKey: "copyright", populate: true },
           { schemaKey: "defaultThumbnails", populate: true },
@@ -90,7 +97,6 @@ module.exports = {
           { schemaKey: "listingPage", populate: true },
           { schemaKey: "listingPageLocalization", populate: true },
           { schemaKey: "navbar", populate: true },
-          { schemaKey: "page", populate: true },
           { schemaKey: "seo", populate: true },
           { schemaKey: "studentPage", populate: true },
           { schemaKey: "aboutStudyTrondheim", populate: true },

@@ -68,7 +68,6 @@ If you are a developer who wish to make changes to the code, start with the foll
    - GATSBY_CONCURRENT_DOWNLOAD
    - GOOGLE_APPLICATION_CREDENTIALS
 
-
 #### Running locally
 
 There are two main ways through which you can run the site locally on your computer.
