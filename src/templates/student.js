@@ -142,16 +142,6 @@ export default ({ data }) => {
         } else return children
       }
 
-      const size = 56
-
-      const imgSize = {
-        width:
-          (size *
-            node.icon[0].localFile.childImageSharp.fluid.presentationWidth) /
-          node.icon[0].localFile.childImageSharp.fluid.presentationHeight,
-        height: `${size}px`,
-      }
-
       return (
         <div className="student-column-item-container">
           <div className="student-column-image-container">
@@ -159,9 +149,8 @@ export default ({ data }) => {
               {node.icon ? (
                 <Img
                   className="student-column-image"
-                  fluid={node.icon[0].localFile.childImageSharp.fluid}
+                  fixed={node.icon[0].localFile.childImageSharp.fixed}
                   alt="thumbnail"
-                  style={imgSize}
                 />
               ) : null}
             </Ref>
@@ -360,8 +349,8 @@ export const query = graphql`
           localFile {
             name
             childImageSharp {
-              fluid(maxWidth: 240, quality: 70) {
-                ...GatsbyImageSharpFluid
+              fixed(height: 56, quality: 70) {
+                ...GatsbyImageSharpFixed_noBase64
               }
             }
           }
