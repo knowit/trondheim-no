@@ -57,7 +57,8 @@ const Menu = ({ locale, localizedPaths }) => {
   }
 
   const lang = localizedPaths.find((item) => item.locale !== locale)
-  const langPath = lang ? lang.path : locale === "no" ? "/" : "/en"
+  // If not found, redirect to front page of different locale than current
+  const langPath = lang ? lang.path : locale !== "no" ? "/" : "/en"
 
   const MenuItems = ({ items, externalItems }) => {
     return showMenu ? (
