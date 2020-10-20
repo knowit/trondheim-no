@@ -1,6 +1,5 @@
 exports.createResolvers = ({ createResolvers }) => {
   const striptags = require("striptags")
-
   const resolvePath = (source) => {
     if (!source._fl_meta_) {
       return ""
@@ -23,7 +22,10 @@ exports.createResolvers = ({ createResolvers }) => {
       path = `${locale === "no" ? "" : "/en"}/${path}`
 
       return path
-    } else if (source._fl_meta_.schema === "page") {
+    } else if (
+      source._fl_meta_.schema === "page" ||
+      source._fl_meta_.schema === "aboutStudyTrondheim"
+    ) {
       return `${source.flamelink_locale === "no" ? "" : "/en"}/${source.slug}`
     } else if (source._fl_meta_.schema === "frontPage") {
       return source.flamelink_locale === "no" ? "/" : "/en"
@@ -143,7 +145,7 @@ exports.createResolvers = ({ createResolvers }) => {
           return resolveLocalizedPaths(source, context)
         },
       },
-      parentListingPage: {
+      parentListingPage: {  
         async resolve(source, args, context, info) {
           // Check if parentListingPage is not null
           // And if it is an Array, that it contains at least one element
@@ -190,6 +192,18 @@ exports.createResolvers = ({ createResolvers }) => {
               ...node,
             }))
           )
+        },
+      },
+    },
+    FlamelinkAboutStudyTrondheimContent: {
+      path: {
+        resolve(source, args, context, info) {
+          return resolvePath(source)
+        },
+      },
+      localizedPaths: {
+        resolve(source, args, context, info) {
+          return resolveLocalizedPaths(source, context)
         },
       },
     },
@@ -273,6 +287,25 @@ exports.createResolvers = ({ createResolvers }) => {
                   context,
                   source.page,
                   "FlamelinkPageContent",
+                  source.flamelink_locale
+                ).then((node) => {
+                  return {
+                    ...node,
+                    path: resolvePath(node),
+                  }
+                })
+              : null
+          } else return null
+        },
+      },
+      aboutStudyTrondheim: {
+        resolve(source, args, context, info) {
+          if (source.aboutStudyTrondheim != null) {
+            return source.aboutStudyTrondheim._fl_meta_
+              ? findSource(
+                  context,
+                  source.aboutStudyTrondheim,
+                  "FlamelinkAboutStudyTrondheimContent",
                   source.flamelink_locale
                 ).then((node) => {
                   return {

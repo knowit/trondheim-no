@@ -54,6 +54,15 @@ exports.createSchemaCustomization = ({ actions }) => {
     localizedPaths : [LocalizedPath]
     linkColumns: [FlamelinkLinkItemContent]
   }
+  type FlamelinkAboutStudyTrondheimContent implements Node {
+    path: String
+    localizedPaths : [LocalizedPath]
+    content: FlamelinkTextHtmlContentNode
+    bannerImage: FlamelinkAboutStudyTrondheimContentFieldBannerImage
+    contactPerson: [FlamelinkAboutStudyTrondheimContentFieldContactPersonItem]
+    article: [FlamelinkAboutStudyTrondheimContentFieldArticleItem]
+    otherActivity: [FlamelinkAboutStudyTrondheimContentFieldOtherActivityItem]
+  }
   type FlamelinkStudentPageContent implements Node {
     path: String
     localizedPaths : [LocalizedPath]
@@ -72,6 +81,11 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkLinkItemContent implements Node {
     listingPage: FlamelinkListingPageContent
     page: FlamelinkPageContent
+    content: FlamelinkTextHtmlContentNode
+    aboutStudyTrondheim: FlamelinkAboutStudyTrondheimContent
+  }
+  type FlamelinkArticle {
+    title: String 
     content: FlamelinkTextHtmlContentNode
   }
 

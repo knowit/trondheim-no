@@ -47,7 +47,7 @@ const Menu = ({ locale, localizedPaths }) => {
   }
 
   const closeOnEscape = (event) => {
-    if (event.key == "Escape") {
+    if (event.key === "Escape") {
       setShowMenu(false)
     }
   }

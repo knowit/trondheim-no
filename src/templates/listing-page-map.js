@@ -13,8 +13,6 @@ const defaultLocation = {
   lng: 10.3950528,
 }
 
-const defaultAddress = "Trondheim, Norway"
-
 function getLocation(node) {
   if (node.latLong && node.latLong.latitude && node.latLong.longitude) {
     return {

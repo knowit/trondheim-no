@@ -50,6 +50,16 @@ query {
     }
   }
 
+  allFlamelinkAboutStudyTrondheimContent {
+    edges {
+      node {
+        id
+        flamelink_locale
+        path
+      }
+    }
+  }
+
   allFlamelinkArticleContent {
     nodes {
       id
