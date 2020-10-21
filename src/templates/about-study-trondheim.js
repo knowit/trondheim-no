@@ -1,6 +1,6 @@
 import React from "react"
 import HTMLContent from "../components/html-content"
-import "../style/about-study-trondheim.css"
+import styles from "../style/about-study-trondheim.module.css"
 import { graphql } from "gatsby"
 import SEO from "../components/seo"
 import BackgroundImage from "gatsby-background-image"
@@ -9,7 +9,7 @@ import Img from "gatsby-image"
 
 const HeaderImage = ({ headerImage }) => {
   return (
-    <div id="about-study-header-container" class="header-image">
+    <div id={styles.aboutStudyHeaderContainer} className={styles.headerImage}>
       <Image
         Tag="section"
         fluid={headerImage.frontImage[0].localFile.childImageSharp.fluid}
@@ -21,18 +21,18 @@ const HeaderImage = ({ headerImage }) => {
 
 const ContactPerson = ({ person }) => {
   return (
-    <div className="contact-person-container">
+    <div className={styles.contactPersonContainer}>
       <Img
-        className="profile-picture"
+        className={styles.profilePicture}
         fluid={person.picture[0].localFile.childImageSharp.fluid}
         imgStyle={{ "object-position": "50% 12%" }}
         alt="Profile picture"
       />
-      <h3 className="person-title">{person.title}</h3>
-      <p className="person-contact-info">{person.name}</p>
-      <p className="person-contact-info">{person.phoneNumber}</p>
-      <p className="person-contact-info">{person.email}</p>
-      <p className="person-contact-info">{person.de}</p>
+      <h3 className={styles.personTitle}>{person.title}</h3>
+      <p className={styles.personContactInfo}>{person.name}</p>
+      <p className={styles.personContactInfo}>{person.phoneNumber}</p>
+      <p className={styles.personContactInfo}>{person.email}</p>
+      <p className={styles.personContactInfo}>{person.de}</p>
       <div></div>
     </div>
   )
@@ -40,8 +40,8 @@ const ContactPerson = ({ person }) => {
 
 const InternalLink = ({ article }) => {
   return (
-    <a className="link-container" href={"#" + article.title}>
-      <h3 className="link-text">
+    <a className={styles.linkContainer} href={"#" + article.title}>
+      <h3 className={styles.linkText}>
         {
           article
             .childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
@@ -51,7 +51,7 @@ const InternalLink = ({ article }) => {
       {article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
         .linkIcon ? (
         <img
-          className="link-icon"
+          className={styles.linkIcon}
           src={
             article
               .childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
@@ -68,11 +68,11 @@ const Article = ({ article, reverse }) => {
   return (
     <div
       id={article.title}
-      className="student-article-container"
+      className={styles.studentArticleContainer}
       style={reverse ? { flexDirection: "row-reverse" } : {}}
     >
-      <div className="student-article-content">
-        <h3 className="student-article-header">{article.title}</h3>
+      <div className={styles.studentArticleContent}>
+        <h3 className={styles.studentArticleHeader}>{article.title}</h3>
         <HTMLContent
           htmlContent={{
             content: article.childFlamelinkTextHtmlContentNode.content,
@@ -82,11 +82,11 @@ const Article = ({ article, reverse }) => {
       </div>
       <div
         className={
-          reverse ? "article-border-box-reverse" : "article-border-box"
+          reverse ? styles.articleBorderBoxReverse : styles.articleBorderBox
         }
       >
         <Img
-          className="student-article-thumbnail"
+          className={styles.studentArticleThumbnail}
           style={
             reverse
               ? { margin: "-40px auto -1px 40px" }
@@ -102,15 +102,15 @@ const Article = ({ article, reverse }) => {
 
 const OtherActivity = ({ article }) => {
   return (
-    <div id={article.title} className="other-acitivity-container">
+    <div id={article.title} className={styles.otherAcitivityContainer}>
       <Img
-        className="other-actitivity-thumbnail"
+        className={styles.otherActitivityThumbnail}
         fluid={article.thumbnail[0].localFile.childImageSharp.fluid}
         alt="Other Activity thumbnail"
         imgStyle={{ "object-position": "40% 13.49%" }}
       />
-      <div className="other-acitivity-content">
-        <h3 className="other-activity-header">{article.title}</h3>
+      <div className={styles.otherAcitivityContent}>
+        <h3 className={styles.otherActivityHeader}>{article.title}</h3>
         <HTMLContent
           htmlContent={{
             content: article.childFlamelinkTextHtmlContentNode.content,
@@ -125,8 +125,8 @@ const OtherActivity = ({ article }) => {
 export default ({ data }) => {
   const ContentText = () => {
     return (
-      <div id="content-outer-container">
-        <div id="content-text-container">
+      <div id={styles.contentOuterContainer}>
+        <div id={styles.contentTextContainer}>
           <HTMLContent
             htmlContent={{
               content: data.flamelinkAboutStudyTrondheimContent.content.content,
@@ -140,7 +140,7 @@ export default ({ data }) => {
   
   const ContactPersons = () => {
     return (
-      <div id="contact-persons-container">
+      <div id={styles.contactPersonsContainer}>
         {data.flamelinkAboutStudyTrondheimContent.contactPerson.map(function (
           node,
           iteration
@@ -153,7 +153,7 @@ export default ({ data }) => {
   
   const InternalLinks = () => {
     return (
-      <div id="links-container">
+      <div id={styles.linksContainer}>
         {data.flamelinkAboutStudyTrondheimContent.article.map(function (node, iteration) {
           return <InternalLink article={node} key={iteration} />
         })}
@@ -163,7 +163,7 @@ export default ({ data }) => {
   
   const Articles = () => {
     return (
-      <div id="student-articles-container">
+      <div id={styles.studentArticlesContainer}>
         {data.flamelinkAboutStudyTrondheimContent.article.map(function (node, iteration) {
           return (
             <Article
@@ -179,7 +179,7 @@ export default ({ data }) => {
   
   const OtherActivities = () => {
     return (
-      <div id="other-activities-container">
+      <div id={styles.otherActivitiesContainer}>
         {data.flamelinkAboutStudyTrondheimContent.otherActivity.map(function (node, iteration) {
           return <OtherActivity article={node} key={iteration} />
         })}
@@ -187,7 +187,7 @@ export default ({ data }) => {
     )
   }
   return (
-    <div id="about-study-outer-container">
+    <div id={styles.aboutStudyOuterContainer}>
       <SEO
         title={
           data.flamelinkAboutStudyTrondheimContent.flamelink_locale === "no"
@@ -206,10 +206,10 @@ export default ({ data }) => {
       />
       <ContentText />
       <ContactPersons />
-      <div className="u-line"></div>
+      <div className={styles.uLine}></div>
       <InternalLinks />
       <Articles />
-      <h2 id="other-activities-header">
+      <h2 id={styles.otherActivitiesHeader}>
         {data.flamelinkAboutStudyTrondheimContent.flamelink_locale === "no"
           ? "Andre aktiviteter i StudyTronheim"
           : "Other activities"}
