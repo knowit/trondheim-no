@@ -4,13 +4,13 @@ import "../style/about-study-trondheim.css"
 import { graphql } from "gatsby"
 import SEO from "../components/seo"
 import BackgroundImage from "gatsby-background-image"
+import Image from "gatsby-image"
 import Img from "gatsby-image"
 
 const HeaderImage = ({ headerImage }) => {
   return (
-    <div id="about-study-header-container">
-      <BackgroundImage
-        id="header-image"
+    <div id="about-study-header-container" class="header-image">
+      <Image
         Tag="section"
         fluid={headerImage.frontImage[0].localFile.childImageSharp.fluid}
         alt={headerImage.alt}

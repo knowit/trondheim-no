@@ -7,7 +7,7 @@
     margin: auto;
   }
   
-#header-image{
+.header-image{
     height:150px;
 }
 
@@ -205,7 +205,7 @@
         height: 450px;
       }
       
-    #header-image{
+    .header-image{
         height:150px;
     }
     #contact-persons-container{
@@ -264,7 +264,7 @@
         height: 500px;
       }
       
-    #header-image{
+    .header-image{
         height:150px;
     }
 }
