@@ -134,52 +134,57 @@ export default ({ data }) => {
       </div>
     )
   }
-  
+
   const ContactPersons = () => {
     return (
       <div id={styles.contactPersonsContainer}>
-        {data.flamelinkAboutStudyTrondheimContent.contactPerson.map(function (
-          node,
-          iteration
-        ) {
-          return <ContactPerson person={node} key={iteration} />
-        })}
+        {data.flamelinkAboutStudyTrondheimContent.contactPerson.map(
+          (node, iteration) => {
+            return <ContactPerson person={node} key={iteration} />
+          }
+        )}
       </div>
     )
   }
-  
+
   const InternalLinks = () => {
     return (
       <div id={styles.linksContainer}>
-        {data.flamelinkAboutStudyTrondheimContent.article.map(function (node, iteration) {
-          return <InternalLink article={node} key={iteration} />
-        })}
+        {data.flamelinkAboutStudyTrondheimContent.article.map(
+          (node, iteration) => {
+            return <InternalLink article={node} key={iteration} />
+          }
+        )}
       </div>
     )
   }
-  
+
   const Articles = () => {
     return (
       <div id={styles.studentArticlesContainer}>
-        {data.flamelinkAboutStudyTrondheimContent.article.map(function (node, iteration) {
-          return (
-            <Article
-              article={node}
-              key={iteration}
-              reverse={iteration % 2 === 1}
-            />
-          )
-        })}
+        {data.flamelinkAboutStudyTrondheimContent.article.map(
+          (node, iteration) => {
+            return (
+              <Article
+                article={node}
+                key={iteration}
+                reverse={iteration % 2 === 1}
+              />
+            )
+          }
+        )}
       </div>
     )
   }
-  
+
   const OtherActivities = () => {
     return (
       <div id={styles.otherActivitiesContainer}>
-        {data.flamelinkAboutStudyTrondheimContent.otherActivity.map(function (node, iteration) {
-          return <OtherActivity article={node} key={iteration} />
-        })}
+        {data.flamelinkAboutStudyTrondheimContent.otherActivity.map(
+          (node, iteration) => {
+            return <OtherActivity article={node} key={iteration} />
+          }
+        )}
       </div>
     )
   }

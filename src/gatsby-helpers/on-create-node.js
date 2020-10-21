@@ -101,7 +101,8 @@ exports.onCreateNode = async ({
     {
       predicate: (node) =>
         node.internal
-          ? node.internal.type === "FlamelinkArticleContent" || "FlamelinkPageContent"
+          ? node.internal.type === "FlamelinkArticleContent" ||
+            "FlamelinkPageContent"
           : false,
       fields: [
         {
