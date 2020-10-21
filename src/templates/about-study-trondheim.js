@@ -3,7 +3,6 @@ import HTMLContent from "../components/html-content"
 import styles from "../style/about-study-trondheim.module.css"
 import { graphql } from "gatsby"
 import SEO from "../components/seo"
-import BackgroundImage from "gatsby-background-image"
 import Image from "gatsby-image"
 import Img from "gatsby-image"
 
@@ -25,7 +24,6 @@ const ContactPerson = ({ person }) => {
       <Img
         className={styles.profilePicture}
         fluid={person.picture[0].localFile.childImageSharp.fluid}
-        imgStyle={{ "object-position": "50% 12%" }}
         alt="Profile picture"
       />
       <h3 className={styles.personTitle}>{person.title}</h3>
@@ -107,7 +105,6 @@ const OtherActivity = ({ article }) => {
         className={styles.otherActitivityThumbnail}
         fluid={article.thumbnail[0].localFile.childImageSharp.fluid}
         alt="Other Activity thumbnail"
-        imgStyle={{ "object-position": "40% 13.49%" }}
       />
       <div className={styles.otherAcitivityContent}>
         <h3 className={styles.otherActivityHeader}>{article.title}</h3>
