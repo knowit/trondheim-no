@@ -145,11 +145,6 @@ export default ({ data }) => {
     "longitude"
   )
 
-  const defaultLocation = {
-    lat: 63.4305149,
-    lng: 10.3950528,
-  }
-
   const markers = [
     {
       id: data.flamelinkArticleContent._fl_meta_.fl_id,
@@ -239,18 +234,18 @@ export default ({ data }) => {
             locale={data.flamelinkArticleContent.flamelink_locale}
           />
           <Online>
-            <LoadScript>
+            {!!location && <LoadScript>
               <Router basepath={data.flamelinkArticleContent.path}>
                 <Map
                   path="/"
-                  locationMarker={location ? location : defaultLocation}
+                  locationMarker={location}
                   markers={location ? markers : null}
                   zoom={15}
                   width="100%"
                   height="400px"
                 />
               </Router>
-            </LoadScript>
+            </LoadScript>}
           </Online>
 
           <Offline>
