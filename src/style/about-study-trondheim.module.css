@@ -7,7 +7,7 @@
     margin: auto;
   }
   
-#header-image{
+.header-image{
     height:150px;
 }
 
@@ -205,7 +205,7 @@
         height: 450px;
       }
       
-    #header-image{
+    .header-image{
         height:150px;
     }
     #contact-persons-container{
@@ -225,7 +225,7 @@
     .article-border-box-reverse{
         height: 364px;
         width: 380px;
-        margin-right: -30px;
+        margin-left: -30px;
     }
     .student-article-content{
         min-height: 100px;
@@ -264,7 +264,7 @@
         height: 500px;
       }
       
-    #header-image{
+    .header-image{
         height:150px;
     }
 }
