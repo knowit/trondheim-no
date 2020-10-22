@@ -8,7 +8,7 @@ import Img from "gatsby-image"
 
 const HeaderImage = ({ headerImage }) => {
   return (
-    <div id={styles.aboutStudyHeaderContainer} className={styles.headerImage}>
+    <div id={styles.aboutStudyHeaderContainer}>
       <Image
         Tag="section"
         fluid={headerImage.frontImage[0].localFile.childImageSharp.fluid}

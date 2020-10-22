@@ -6,10 +6,6 @@
     max-width: 2000px;
     margin: auto;
   }
-  
-.header-image{
-    height:150px;
-}
 
 #content-outer-container{
     text-align: center;
@@ -204,10 +200,7 @@
     #header-container{
         height: 450px;
       }
-      
-    .header-image{
-        height:150px;
-    }
+
     #contact-persons-container{
         max-width: 550px;
     }
@@ -262,11 +255,8 @@
     }
     #header-container{
         height: 500px;
-      }
-      
-    .header-image{
-        height:150px;
     }
+
 }
 
 @media only screen and (max-width: 880px){
