@@ -4,11 +4,11 @@ import Layout from "../layouts/layout"
 import { Link, graphql } from "gatsby"
 import BackgroundImage from "gatsby-background-image"
 import Img from "gatsby-image"
+import LinkColumns from "../components/link-columns"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { fas } from "@fortawesome/free-solid-svg-icons"
 import HTMLContent from "../components/html-content"
-import ReactDOMHelper from "../helpers/react-dom-helper"
 import SEO from "../components/seo"
 
 library.add(fas)
@@ -34,82 +34,6 @@ const HeaderBanner = ({ headerText, headerFocusWord, bannerImage }) => {
 }
 
 export default ({ data }) => {
-  const FrontpageColumns = () => {
-    const Column = ({ node }) => {
-      const Content = () => ReactDOMHelper.parseToReact(node.content.content)
-
-      const Ref = ({ children, tabable }) => {
-        if (node.linkType === "listingPage" || node.linkType === "page") {
-          const path =
-            node.linkType === "listingPage"
-              ? node.listingPage.path
-              : node.page.path
-          return (
-            <Link
-              tabIndex={tabable ? "0" : "-1"}
-              className="frontpage-column-link"
-              to={path}
-            >
-              {children}
-            </Link>
-          )
-        } else if (node.linkType === "url") {
-          return (
-            <a
-              tabIndex={tabable ? "0" : "-1"}
-              className="frontpage-column-link"
-              href={node.url}
-            >
-              {children}
-            </a>
-          )
-        } else return children
-      }
-
-      return (
-        <div className="frontpage-column-item-container">
-          <div className="frontpage-column-image-container">
-            <Ref>
-              {node.icon ? (
-                <Img
-                  className="frontpage-column-image"
-                  fluid={node.icon[0].localFile.childImageSharp.fluid}
-                  alt="thumbnail"
-                />
-              ) : null}
-            </Ref>
-          </div>
-          <div className="frontpage-column-info-container">
-            <h2>
-              <Ref tabable="true">{node.title}</Ref>
-            </h2>
-            <h3>
-              <Ref>
-                <Content />
-              </Ref>
-            </h3>
-          </div>
-        </div>
-      )
-    }
-
-    const backgroundStyle = {
-      backgroundImage: `url(${data.flamelinkFrontPageContent.columnsBackgroundImage[0].localFile.childImageSharp.fluid.src})`,
-    }
-
-    var index = 0
-
-    return (
-      <div id="frontpage-columns-container" style={backgroundStyle}>
-        <div id="frontpage-columns-overlay">
-          {data.flamelinkFrontPageContent.linkColumns.map((node) => {
-            return <Column key={index++} node={node} />
-          })}
-        </div>
-      </div>
-    )
-  }
-
   const FrontpageCards = () => {
     const Card = (props) => {
       return (
@@ -233,7 +157,13 @@ export default ({ data }) => {
                 }
               })}
           </div>
-          <FrontpageColumns />
+          <LinkColumns
+            linkColumns={data.flamelinkFrontPageContent.linkColumns}
+            columnsBackgroundImage={
+              data.flamelinkFrontPageContent.columnsBackgroundImage
+            }
+            type="frontpage"
+          />
           <div id="custom-content-container">
             <HTMLContent
               htmlContent={data.flamelinkFrontPageContent.customContent}
@@ -331,55 +261,7 @@ export const query = graphql`
       }
 
       linkColumns {
-        title
-        subTitle
-        linkType
-        url
-        listingPage {
-          navigationTitle
-          navigationSubtitle
-          path
-        }
-        page {
-          title
-          subTitle
-          path
-        }
-        content {
-          content
-          remoteImages {
-            url
-            childImageSharp {
-              fluid(maxWidth: 1200, quality: 80) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
-              }
-            }
-          }
-        }
-        icon {
-          localFile {
-            name
-            childImageSharp {
-              fluid(maxWidth: 240, quality: 70) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
-              }
-            }
-          }
-        }
+        ...LinkColumnFragment
       }
 
       columnsBackgroundImage {

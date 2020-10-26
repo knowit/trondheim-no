@@ -85,7 +85,7 @@ module.exports = {
           { schemaKey: "defaultThumbnails", populate: true },
           { schemaKey: "frontPage", populate: true },
           { schemaKey: "layoutLocalization", populate: true },
-          { schemaKey: "linkItem", populate: true },
+
           { schemaKey: "listingPage", populate: true },
           { schemaKey: "listingPageLocalization", populate: true },
           { schemaKey: "navbar", populate: true },
