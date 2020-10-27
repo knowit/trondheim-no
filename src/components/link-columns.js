@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOMHelper from "../helpers/react-dom-helper"
-import { Link } from "gatsby"
+import { Link, graphql } from "gatsby"
 import Img from "gatsby-image"
 
 const LinkColumns = ({ linkColumns, columnsBackgroundImage, type }) => {
@@ -30,8 +30,6 @@ const LinkColumns = ({ linkColumns, columnsBackgroundImage, type }) => {
         )
       } else return children
     }
-
-    console.log(node.icon)
 
     return (
       <div className={`${type}-column-item-container`}>
