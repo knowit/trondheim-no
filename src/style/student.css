@@ -68,6 +68,7 @@
   width: 80%;
   margin: auto;
   padding: 10px 0;
+  text-align: center;
 }
 
 #student-listing-pages{
@@ -84,7 +85,7 @@
 #student-listing-pages-grid-container{
   display: flex;
   flex-flow: row wrap;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   max-width: 966px;
   margin: auto;
@@ -99,6 +100,8 @@
   height: 380px;
   border: 1px solid grey;
   margin: 10px;
+  text-decoration: none;
+  color: #005aa7 !important;
 }
 
 .student-listing-page-card-thumbnail{
@@ -141,6 +144,7 @@
 }
 
 #student-custom-content-container #html-content-container {
+  align-items: center;
   min-height: 300px;
   height: 500px;
 }

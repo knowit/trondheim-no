@@ -1,97 +1,105 @@
-<!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
-<p align="center">
-  <a href="https://www.gatsbyjs.org">
-    <img alt="Gatsby" src="https://www.gatsbyjs.org/monogram.svg" width="60" />
-  </a>
-</p>
-<h1 align="center">
-  Gatsby's default starter
-</h1>
+# Documentation
 
-Kick off your project with this default boilerplate. This starter ships with the main Gatsby configuration files you might need to get up and running blazing fast with the blazing fast app generator for React.
+## Architecture
 
-_Have another more specific idea? You may want to check out our vibrant collection of [official and community-created starters](https://www.gatsbyjs.org/docs/gatsby-starters/)._
+This site uses four technologies: Flamelink, Gatsby Cloud and Netlify in addition to the front-end, which is build using React.js and Gatsby.js. In this section we will provide a brief overview of the role of each module, and in the subsequent sections we will describe each one in more detail.
 
-## 🚀 Quick start
+[Flamelink](https://flamelink.io) is the content management system (CMS), and it is the most important module to the editors of the site's content. Flamelink provides a user interface through which the editor may add or update the site's content without needing any knowledge of programming or the rest of the site's architecture.
 
-1.  **Create a Gatsby site.**
+The frontend is the codebase stored in this Guthub repo, and it contains the code determining how the site will appear to the end users. The codebase is written in React.js using a framework called Gatsby.js. Developers who are maintaining this site should read through the "Frontend" section of this README.
 
-    Use the Gatsby CLI to create a new site, specifying the default starter.
+The [Gatsby Cloud](https://gatsbyjs.com) platform pulls the codebase from this Github repo, and builds the site. These builds are triggered whenever there is a change in the codebase, or when there is a change in Flamelink content.
 
-    ```shell
-    # create a new Gatsby site using the default starter
-    gatsby new my-default-starter https://github.com/gatsbyjs/gatsby-starter-default
-    ```
+Whenever Gatsby Cloud successfully builds the site, it is deployed to [Netlify](https://netlify.com). Netlify deploys the site so that it is accessible through the web.
 
-1.  **Start developing.**
+![Architecture Diagram](/static/images/trondheim-no-architecture.png)
 
-    Navigate into your new site’s directory and start it up.
+## Flamelink (Headless CMS)
 
-    ```shell
-    cd my-default-starter/
-    gatsby develop
-    ```
+If you are a content editor of this site, then your first step should be to familiarize yourself with [Flamelink](https://flamelink.io). This site pulls data from a Flamelink project named **TRONDHEIM.NO** with project-id **byportal-218506**. The site's administrators should provide you with the required login credentials to access the project. Once you have logged in and accessed the project, then you should see an overview of all the content grouped by schema.
 
-1.  **Open the source code and start editing!**
+As an editor, you should become familiar with the "content" section of Flamelink (accessible through the sidebar menu). This is where you add, update, and delete the content that should be shown on the page. Below is a reference guide for the different schema types and their functions.
 
-    Your site is now running at `http://localhost:8000`!
+#### Article
 
-    _Note: You'll also see a second link: _`http://localhost:8000/___graphql`_. This is a tool you can use to experiment with querying your data. Learn more about using this tool in the [Gatsby tutorial](https://www.gatsbyjs.org/tutorial/part-five/#introducing-graphiql)._
+Describes the majority of content on the site. One article object contains information to be shown on a single subpage of the site, for example a single restaurant. All articles must have a title, a slug, and a parent **Listing page**. The article content may be edited through a what-you-see-is-what-you-get (WYSIWYG) editor, and it will be rendered on the built site looking very similar to how it looks in the Flamelink editor. Furthermore the **Article** schema has optional fields which may be provided only if they apply, such as tags, copyright disclaimers, opening hours, contact info, and a location. Hovever, these can be left blank when not used.
 
-    Open the `my-default-starter` directory in your code editor of choice and edit `src/pages/index.js`. Save your changes and the browser will update in real time!
+#### Listing Page
 
-## 🧐 What's inside?
+A grouping of related **Article** objects. For example, if you have several articles which all represent different restaurants, you would provide them all with a parent listing page named "Restaurants". In many ways, the **Listing Page** may be thought of as a _category_ of **Article**. A single listing page will show a list of all its child articles, with the ability to filter the list view by the article's tags.
 
-A quick look at the top-level files and directories you'll see in a Gatsby project.
+#### Page
 
-    .
-    ├── node_modules
-    ├── src
-    ├── .gitignore
-    ├── .prettierrc
-    ├── gatsby-browser.js
-    ├── gatsby-config.js
-    ├── gatsby-node.js
-    ├── gatsby-ssr.js
-    ├── LICENSE
-    ├── package-lock.json
-    ├── package.json
-    └── README.md
+A single, standalone page displaying content that does not conform to the other schema types. The content is customizable through Flamelink's WYSIWYG editor, and will be rendered on the site very similar to how it looks in the editor. An example use case is the site's "About us" page, which contains some rich text and a few images, which are entered to the page's **Content** field. If we were to write "about-us" in the page's **Slug** field, then the content will be rendered on a standalone page located at `trondheim.no/about-us`.
 
-1.  **`/node_modules`**: This directory contains all of the modules of code that your project depends on (npm packages) are automatically installed.
+#### Copyright
 
-2.  **`/src`**: This directory will contain all of the code related to what you will see on the front-end of your site (what you see in the browser) such as your site header or a page template. `src` is a convention for “source code”.
+If you need to add a copyright disclaimer at the bottom of an **Article**, then you may create one using the **Copyright** schema. When you have created your copyright disclaimer, navigate to the **Article** in which you want it shown, find the article's **Copyright** field and select the one you created.
 
-3.  **`.gitignore`**: This file tells git which files it should not track / not maintain a version history for.
+#### Layout
 
-4.  **`.prettierrc`**: This is a configuration file for [Prettier](https://prettier.io/). Prettier is a tool to help keep the formatting of your code consistent.
+A grouping of different schemas representing the layout of different pages, such as the **Front Page** and the **Student Page**. Any information related to the pages that are not auto-generated will be stored in a schema within the **Layout** group.
 
-5.  **`gatsby-browser.js`**: This file is where Gatsby expects to find any usage of the [Gatsby browser APIs](https://www.gatsbyjs.org/docs/browser-apis/) (if any). These allow customization/extension of default Gatsby settings affecting the browser.
+#### Navbar
 
-6.  **`gatsby-config.js`**: This is the main configuration file for a Gatsby site. This is where you can specify information about your site (metadata) like the site title and description, which Gatsby plugins you’d like to include, etc. (Check out the [config docs](https://www.gatsbyjs.org/docs/gatsby-config/) for more detail).
+Contains information about the site's menu bar.
 
-7.  **`gatsby-node.js`**: This file is where Gatsby expects to find any usage of the [Gatsby Node APIs](https://www.gatsbyjs.org/docs/node-apis/) (if any). These allow customization/extension of default Gatsby settings affecting pieces of the site build process.
+#### Default thumbnails
 
-8.  **`gatsby-ssr.js`**: This file is where Gatsby expects to find any usage of the [Gatsby server-side rendering APIs](https://www.gatsbyjs.org/docs/ssr-apis/) (if any). These allow customization of default Gatsby settings affecting server-side rendering.
+For each schema to which it applies, select a default thumbnail to be shown for objects which does not have a specified thumbnail.
 
-9.  **`LICENSE`**: Gatsby is licensed under the MIT license.
+## Frontend (React.js + Gatsby.js)
 
-10. **`package-lock.json`** (See `package.json` below, first). This is an automatically generated file based on the exact versions of your npm dependencies that were installed for your project. **(You won’t change this file directly).**
+If you are a developer who wish to make changes to the code, start with the following steps
 
-11. **`package.json`**: A manifest file for Node.js projects, which includes things like metadata (the project’s name, author, etc). This manifest is how npm knows which packages to install for your project.
+#### Set up environment
 
-12. **`README.md`**: A text file containing useful reference information about your project.
+1. Clone this repository by running `git clone https://github.com/leevi978/trondheim-demo.git`
+2. Navigate to the cloned repo's folder by running `cd trondheim-demo`
+3. Install all of the required node modules by running `npm install`
+4. Acquire the following environment variables, and add them to files for the development and production environments, named `.env.development` and `.env.production`, respectfully, both located in the root folder of the project. They may be obtained from the Gatsby Cloud project's environment variables.
 
-## 🎓 Learning Gatsby
+   - GATSBY_FLAMELINK_CLIENT_EMAIL
+   - GATSBY_FLAMELINK_DATABASE_URL
+   - GATSBY_FLAMELINK_PRIVATE_KEY
+   - GATSBY_FLAMELINK_PROJECT_ID
+   - GATSBY_FLAMELINK_STORAGE_BUCKET
+   - GATSBY_GOOGLE_API
+   - GATSBY_CONCURRENT_DOWNLOAD
+   - GOOGLE_APPLICATION_CREDENTIALS
 
-Looking for more guidance? Full documentation for Gatsby lives [on the website](https://www.gatsbyjs.org/). Here are some places to start:
+#### Running locally
 
-- **For most developers, we recommend starting with our [in-depth tutorial for creating a site with Gatsby](https://www.gatsbyjs.org/tutorial/).** It starts with zero assumptions about your level of ability and walks through every step of the process.
+There are two main ways through which you can run the site locally on your computer.
 
-- **To dive straight into code samples, head [to our documentation](https://www.gatsbyjs.org/docs/).** In particular, check out the _Guides_, _API Reference_, and _Advanced Tutorials_ sections in the sidebar.
+- **Develop** mode is run by executing `gatsby develop`. This mode pulls data from Flamelink and builds the site once, then re-renders the site using the same data each time code changes are detected. This is the best way when you are developing new features, or troubleshooting and/or fixing bugs, because it allows you to see code changes in real time. If you need to re-build often, it is recommended to set the environment variable `TEST` to true and `TEST_IMAGE_URL` to an url linking to a very small image in the `.env.development` file, in order to reduce build time. The site will be hosted on `localhost:8000`.
 
-## 💫 Deploy
+- If you want to **Build** the site to see how it will function in production, run `gatsby build` in order to build the static site files, and then run `gatsby serve` in order to serve the built site on `localhost:9000`. This mode does not provide live update as code is changed, but provides a view of how the site will appear in production.
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/gatsbyjs/gatsby-starter-default)
+## Gatsby Cloud
 
-<!-- AUTO-GENERATED-CONTENT:END -->
+[Gatsby Cloud](https://gatsbyjs.com) pulls the code from a specified branch of this Github repository. Log in to the platform using credentials provided by your administrator, or have the administrator invite you to the Gatsby Cloud project as a collaborator. Enter the Gatsby Cloud project dashboard named `trondheim-demo` and you will get an overview of all previous an ongoing builds of the site. For each build, you may access a build log, so that if something goes wrong, you should be able to access the specific error message if there is one.
+
+#### Choosing repository
+
+You may choose which repository the Gatsby Cloud project should pull code from by accessing `site-settings -> general` and then edit `site details`. By default, the project will usually point to the `master` branch, which contains production-ready code.
+
+#### Inviting contributors
+
+To provide another user with access to the Gatsby Cloud project, go to `site-settings -> general` and then click `invite contributor`.
+
+#### Edit environment variables
+
+To edit the environment variables used in production, go to `site-settings -> general` and scroll down to see the `environment variables` field. Change these variables only if necessary!
+
+#### Enable / Disable builds
+
+If you for some reason need to enable or disable builds, go to `site-settings -> builds` and select or deselect `builds`. The previously built sites will still be available and deployed to Netlify, but future builds will only trigger if the `builds` field is selected.
+
+## Netlify
+
+[Netlify](https://netlify.com) simply deploys the site after it has been built by Gatsby Cloud. Netlify will have a log of previous successful and attempted builds, but will only deploy the ones that were successful. Access the Netlify project named `trondheim-no` using credentials provided by your administrator.
+
+#### Deploy a previous build
+
+If you for some reason need to roll back to deploy a previous deploy, enter the project and navigate to the `deploys` tab where you will see a list of previous deploys. Click on the deploy you wish to publish and select `publish deploy`. You may also lock publishing to a single deploy, so that new deploys aren't published automatically.

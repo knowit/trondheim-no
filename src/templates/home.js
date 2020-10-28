@@ -9,28 +9,57 @@ import { library } from "@fortawesome/fontawesome-svg-core"
 import { fas } from "@fortawesome/free-solid-svg-icons"
 import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
+import SEO from "../components/seo"
 
 library.add(fas)
+
+const HeaderBanner = ({ headerText, headerFocusWord, bannerImage }) => {
+  return (
+    <div id="header-container">
+      <BackgroundImage
+        id="header-image"
+        Tag="section"
+        fluid={bannerImage.frontImage[0].localFile.childImageSharp.fluid}
+        alt={bannerImage.alt}
+      >
+        <h3>{headerText}</h3>
+        <h1>{headerFocusWord}</h1>
+      </BackgroundImage>
+
+      <div id="header-subtext">
+        <span>{bannerImage.caption}</span>
+      </div>
+    </div>
+  )
+}
 
 export default ({ data }) => {
   const FrontpageColumns = () => {
     const Column = ({ node }) => {
       const Content = () => ReactDOMHelper.parseToReact(node.content.content)
 
-      const Ref = ({ children }) => {
+      const Ref = ({ children, tabable }) => {
         if (node.linkType === "listingPage" || node.linkType === "page") {
           const path =
             node.linkType === "listingPage"
               ? node.listingPage.path
               : node.page.path
           return (
-            <Link className="frontpage-column-link" to={path}>
+            <Link
+              tabIndex={tabable ? "0" : "-1"}
+              className="frontpage-column-link"
+              to={path}
+            >
               {children}
             </Link>
           )
         } else if (node.linkType === "url") {
           return (
-            <a className="frontpage-column-link" href={node.url}>
+            <a
+              tabIndex={tabable ? "0" : "-1"}
+              className="frontpage-column-link"
+              href={node.url}
+            >
               {children}
             </a>
           )
@@ -52,13 +81,13 @@ export default ({ data }) => {
           </div>
           <div className="frontpage-column-info-container">
             <h2>
-              <Ref>{node.title}</Ref>
+              <Ref tabable="true">{node.title}</Ref>
             </h2>
-            <h4>
+            <h3>
               <Ref>
                 <Content />
               </Ref>
-            </h4>
+            </h3>
           </div>
         </div>
       )
@@ -148,25 +177,26 @@ export default ({ data }) => {
       locale={data.flamelinkFrontPageContent.flamelink_locale}
       localizedPaths={data.flamelinkFrontPageContent.localizedPaths}
     >
-      <div id="outer-container">
-        <div id="header-container">
-          <BackgroundImage
-            id="header-image"
-            Tag="section"
-            fluid={
-              data.flamelinkFrontPageContent.frontImage[0].localFile
-                .childImageSharp.fluid
-            }
-            alt={data.flamelinkFrontPageContent.frontImageAlt}
-          >
-            <h3>{data.flamelinkFrontPageContent.headerText}</h3>
-            <h1>{data.flamelinkFrontPageContent.headerFocusWord}</h1>
-          </BackgroundImage>
+      <SEO
+        title={
+          data.flamelinkFrontPageContent.flamelink_locale === "no"
+            ? "Hjem"
+            : "Home"
+        }
+        locale={data.flamelinkFrontPageContent.flamelink_locale}
+        keywords={[
+          data.flamelinkFrontPageContent.flamelink_locale === "no"
+            ? "Hjem"
+            : "Home",
+        ]}
+      />
 
-          <div id="header-subtext">
-            <span>{data.flamelinkFrontPageContent.frontImageAlt}</span>
-          </div>
-        </div>
+      <div id="outer-container">
+        <HeaderBanner
+          headerText={data.flamelinkFrontPageContent.headerText}
+          headerFocusWord={data.flamelinkFrontPageContent.headerFocusWord}
+          bannerImage={data.flamelinkFrontPageContent.bannerImage}
+        />
 
         <div id="content-container">
           <h2>{data.flamelinkFrontPageContent.navigationText}</h2>
@@ -177,7 +207,12 @@ export default ({ data }) => {
               .map(function (node, key) {
                 if (node.thumbnail) {
                   return (
-                    <div key={key} className="navigation-box-container">
+                    <Link
+                      to={node.path}
+                      key={key}
+                      className="navigation-box-container"
+                      aria-label={node.navigationTitle}
+                    >
                       <Img
                         className="navigation-box-thumbnail"
                         fluid={
@@ -186,12 +221,12 @@ export default ({ data }) => {
                         alt="thumbnail"
                       />
                       <h2>
-                        <Link className="navigation-box-title" to={node.path}>
+                        <div className="navigation-box-title">
                           {node.navigationTitle}
-                        </Link>
+                        </div>
                       </h2>
-                      <h4>{node.navigationSubtitle}</h4>
-                    </div>
+                      <h3>{node.navigationSubtitle}</h3>
+                    </Link>
                   )
                 } else {
                   return null
@@ -262,6 +297,20 @@ export const query = graphql`
       headerText
       navigationText
 
+      bannerImage {
+        caption
+        alt
+        frontImage {
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 2400, quality: 90) {
+                ...GatsbyImageSharpFluid
+              }
+            }
+          }
+        }
+      }
+
       customContent {
         content
         remoteImages {
@@ -278,18 +327,6 @@ export const query = graphql`
               originalImg
             }
           }
-        }
-      }
-
-      bottomCards {
-        title
-        textColor
-        backgroundColor
-        iconName
-        iconColor
-        links {
-          text
-          url
         }
       }
 
@@ -345,11 +382,10 @@ export const query = graphql`
         }
       }
 
-      frontImageAlt
-      frontImage {
+      columnsBackgroundImage {
         localFile {
           childImageSharp {
-            fluid(maxWidth: 2400, quality: 90) {
+            fluid(maxWidth: 600, quality: 70) {
               base64
               aspectRatio
               src
@@ -363,20 +399,15 @@ export const query = graphql`
         }
       }
 
-      columnsBackgroundImage {
-        localFile {
-          childImageSharp {
-            fluid(maxWidth: 2400, quality: 70) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
-            }
-          }
+      bottomCards {
+        title
+        textColor
+        backgroundColor
+        iconName
+        iconColor
+        links {
+          text
+          url
         }
       }
     }

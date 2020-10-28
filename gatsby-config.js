@@ -31,39 +31,17 @@ const resolvePath = (node) => {
   }
 }
 
-const striptags = require("striptags")
-const resolveContent = (node) => {
-  if (node.internal.type === "FlamelinkTextHtmlContentNode") {
-    console.log(node)
-  }
-  return ""
-}
-
 module.exports = {
   siteMetadata: {
     title: `Trondheim.no`,
     description: `Offisielt nettsted for Trondheim`,
     author: `@trondheim`,
+    keywords: ["Trondheim"],
+    siteUrl: "https://trondheim.no/",
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
-    {
-      resolve: `gatsby-transformer-remark`,
-      options: {
-        plugins: [
-          `gatsby-remark-relative-images`,
-          {
-            resolve: `gatsby-remark-images`,
-            options: {
-              maxWidth: 800,
-              linkImagesToOriginal: false,
-              sizeByPixelDensity: true,
-              showCaptions: true,
-            },
-          },
-        ],
-      },
-    },
+
     `gatsby-transformer-sharp`,
     {
       resolve: `gatsby-plugin-sharp`,
@@ -71,22 +49,6 @@ module.exports = {
         useMozJpeg: false,
         stripMetadata: false,
         defaultQuality: 90,
-      },
-    },
-    {
-      resolve: `gatsby-mdx-fix`,
-      options: {
-        extensions: [".mdx", ".md"],
-        gatsbyRemarkPlugins: [
-          `gatsby-remark-relative-images`,
-          {
-            resolve: `gatsby-remark-images`,
-            options: {
-              maxWidth: 860,
-              backgroundColor: "none",
-            },
-          },
-        ],
       },
     },
 
@@ -103,10 +65,36 @@ module.exports = {
           databaseURL: process.env.GATSBY_FLAMELINK_DATABASE_URL,
           storageBucket: process.env.GATSBY_FLAMELINK_STORAGE_BUCKET,
         },
+        content: [
+          {
+            schemaKey: "article",
+            populate: true,
+            filters: [
+              ["_fl_meta_.status", "==", process.env.GATSBY_FLAMELINK_STATUS],
+            ],
+          },
+          {
+            schemaKey: "page",
+            populate: true,
+            filters: [
+              ["_fl_meta_.status", "==", process.env.GATSBY_FLAMELINK_STATUS],
+            ],
+          },
+          { schemaKey: "articleLocalization", populate: true },
+          { schemaKey: "copyright", populate: true },
+          { schemaKey: "defaultThumbnails", populate: true },
+          { schemaKey: "frontPage", populate: true },
+          { schemaKey: "layoutLocalization", populate: true },
+          { schemaKey: "linkItem", populate: true },
+          { schemaKey: "listingPage", populate: true },
+          { schemaKey: "listingPageLocalization", populate: true },
+          { schemaKey: "navbar", populate: true },
+          { schemaKey: "seo", populate: true },
+          { schemaKey: "studentPage", populate: true },
+          { schemaKey: "aboutStudyTrondheim", populate: true },
+        ],
         dbType: "cf",
         environment: "production",
-        content: true,
-        populate: true,
         navigation: true,
         globals: true,
       },
@@ -155,12 +143,20 @@ module.exports = {
     {
       resolve: `gatsby-plugin-offline`,
       options: {
-        cacheId: `gatsby-plugin-offline`,
-        precachePages: [],
-        workboxConfig: {
-          maximumFileSizeToCacheInBytes: 100000000,
-        },
-        appendScript: require.resolve(`./src/sw.js`),
+        precachePages: [
+          "/",
+          "/en",
+          "/hoteller/**/*",
+          "/en/hotels/**/*",
+          "/shopping/**/*",
+          "/en/shopping-areas/**/*",
+          "/severdig/**/*",
+          "/en/attractions/**/*",
+          "/spisesteder/**/*",
+          "/en/restaurants/**/*",
+          "/ut-pa-tur/**/*",
+          "/en/hiking-and-walks/**/*",
+        ],
       },
     },
     {
@@ -195,7 +191,7 @@ module.exports = {
         resolvers: {
           FlamelinkPageContent: {
             title: (node) => node.title,
-            content: (node) => resolveContent(node),
+            content: (node) => node.fields.textContent,
             url: (node) => resolvePath(node),
           },
 
@@ -217,6 +213,21 @@ module.exports = {
         fetchOptions: {
           credentials: "same-origin",
         },
+      },
+    },
+    {
+      resolve: `gatsby-plugin-sitemap`,
+      options: {
+        //exclude url from appearing in search results
+        exclude: ["/search", "/en/search", "/en/404"],
+      },
+    },
+    {
+      resolve: "gatsby-plugin-robots-txt",
+      options: {
+        host: "https://www.trondheim.no/",
+        sitemap: "https://www.trondheim.no/sitemap.xml",
+        policy: [{ userAgent: "*", allow: "/*" }],
       },
     },
   ],

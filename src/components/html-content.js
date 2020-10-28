@@ -1,12 +1,23 @@
 import React from "react"
 import ReactDOMHelper from "../helpers/react-dom-helper"
+import "../style/html-content.css"
 import Img from "gatsby-image"
 import Iframe from "react-iframe"
 import { Online } from "react-detect-offline"
+import { UrlHelper } from "../helpers/url-helper"
 
-const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
+const defaultHtmlContent = {
+  remoteImages: [],
+  content: "",
+}
+
+const HTMLContent = ({
+  resizeImg,
+  dropShadow,
+  htmlContent = defaultHtmlContent,
+}) => {
   const reactComponent = ReactDOMHelper.buildReactComponent(
-    htmlContent.content,
+    htmlContent && htmlContent.content ? htmlContent.content : "",
     (props, index) => {
       const imageNode = htmlContent.remoteImages
         ? htmlContent.remoteImages.find((n) => {
@@ -55,14 +66,11 @@ const HTMLContent = ({ htmlContent, resizeImg, dropShadow }) => {
     },
     (htmlNode, index) => {
       const props = htmlNode.props
-
       return (
         <div
           key={index}
-          style={{
-            width: props.width ? props.width : "100%",
-            height: props.height ? props.height : "100%",
-          }}
+          //classname from widget link to style each widget individually
+          className={UrlHelper.getDomain(props.src)}
         >
           <Online>
             <Iframe

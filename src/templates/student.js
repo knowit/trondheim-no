@@ -5,6 +5,18 @@ import Img from "gatsby-image/withIEPolyfill"
 import "../style/student.css"
 import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
+import SEO from "../components/seo"
+
+const HeaderImage = ({ bannerImage }) => {
+  return (
+    <BackgroundImage
+      id="student-header-image"
+      Tag="section"
+      fluid={bannerImage.image[0].localFile.childImageSharp.fluid}
+      alt={bannerImage.alt}
+    />
+  )
+}
 
 export default ({ data }) => {
   const Navigation = () => {
@@ -35,58 +47,44 @@ export default ({ data }) => {
           </div>
 
           <div id="student-logo-container">
-            <h2>
-              {data.studentPageNode.headerText}{" "}
-              <b>{data.studentPageNode.headerFocusWord}</b>
-            </h2>
-            <div id="student-logo-image">
-              <Img
-                id="student-logo-image"
-                fluid={
-                  data.studentPageNode.logoImage[0].localFile.childImageSharp
-                    .fluid
-                }
-              ></Img>
-            </div>
+            <Img
+              id="student-logo-image"
+              fixed={
+                data.studentPageNode.logoImage[0].localFile.childImageSharp
+                  .fixed
+              }
+            />
           </div>
         </div>
       </div>
     )
   }
 
-  const HeaderImage = () => {
-    return (
-      <BackgroundImage
-        id="student-header-image"
-        Tag="section"
-        fluid={
-          data.studentPageNode.frontImage[0].localFile.childImageSharp.fluid
-        }
-        alt={data.studentPageNode.frontImageAlt}
-      ></BackgroundImage>
-    )
-  }
-
   const ListingPage = ({ node }) => {
     return (
-      <div className="student-listing-page-card">
+      <Link
+        to={node.path}
+        className="student-listing-page-card"
+        aria-label={node.navigationTitle}
+      >
         <Img
           className="student-listing-page-card-thumbnail"
-          fluid={node.thumbnail[0].localFile.childImageSharp.fluid}
+          fixed={node.thumbnail[0].localFile.childImageSharp.fixed}
         ></Img>
         <div className="student-listing-page-info-container">
           <h3>
-            <Link to={node.path}>{node.navigationTitle}</Link>
+            <div>{node.navigationTitle}</div>
           </h3>
           <p>{node.navigationSubtitle}</p>
         </div>
-      </div>
+      </Link>
     )
   }
 
   const SubListingPages = () => {
     return (
       <div id="student-listing-pages-container">
+        <h1>{data.studentPageNode.navigationText}</h1>
         <div id="student-listing-pages">
           <h1>{data.node.localTitle}</h1>
           <div id="student-listing-pages-grid-container">
@@ -115,35 +113,39 @@ export default ({ data }) => {
   const LinkColumns = () => {
     const Column = ({ node }) => {
       const Content = () => ReactDOMHelper.parseToReact(node.content.content)
-
-      const Ref = ({ children }) => {
-        if (node.linkType === "listingPage" || node.linkType === "page") {
+      const Ref = ({ children, tabable }) => {
+        if (
+          node.linkType === "listingPage" ||
+          node.linkType === "page" ||
+          node.linkType === "aboutStudyTrondheim"
+        ) {
           const path =
             node.linkType === "listingPage"
               ? node.listingPage.path
-              : node.page.path
+              : node.linkType === "page"
+              ? node.page.path
+              : node.aboutStudyTrondheim.path
+
           return (
-            <Link className="student-column-link" to={path}>
+            <Link
+              tabIndex={tabable ? "0" : "-1"}
+              className="student-column-link"
+              to={path}
+            >
               {children}
             </Link>
           )
         } else if (node.linkType === "url") {
           return (
-            <a className="student-column-link" href={node.url}>
+            <a
+              tabIndex={tabable ? "0" : "-1"}
+              className="student-column-link"
+              href={node.url}
+            >
               {children}
             </a>
           )
         } else return children
-      }
-
-      const size = 56
-
-      const imgSize = {
-        width:
-          (size *
-            node.icon[0].localFile.childImageSharp.fluid.presentationWidth) /
-          node.icon[0].localFile.childImageSharp.fluid.presentationHeight,
-        height: `${size}px`,
       }
 
       return (
@@ -153,19 +155,18 @@ export default ({ data }) => {
               {node.icon ? (
                 <Img
                   className="student-column-image"
-                  fluid={node.icon[0].localFile.childImageSharp.fluid}
+                  fixed={node.icon[0].localFile.childImageSharp.fixed}
                   alt="thumbnail"
-                  style={imgSize}
                 />
               ) : null}
             </Ref>
           </div>
           <div className="student-column-info-container">
             <h3>
-              <Ref>{node.title}</Ref>
+              <Ref tabable="true">{node.title}</Ref>
             </h3>
             <h4>
-              <Ref>
+              <Ref tabable="true">
                 <Content />
               </Ref>
             </h4>
@@ -190,11 +191,15 @@ export default ({ data }) => {
       </div>
     )
   }
-
   return (
     <div>
+      <SEO
+        title="Student"
+        locale={data.studentPageNode.flamelink_locale}
+        keywords={["Student"]}
+      />
       <Navigation />
-      <HeaderImage />
+      <HeaderImage bannerImage={data.studentPageNode.bannerImage} />
       <SubListingPages />
       <CustomContent />
       <LinkColumns />
@@ -234,15 +239,8 @@ export const query = graphql`
             localFile {
               name
               childImageSharp {
-                fluid(maxWidth: 340, quality: 70) {
-                  base64
-                  aspectRatio
-                  src
-                  srcSet
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
+                fixed(width: 300, height: 260, quality: 70) {
+                  ...GatsbyImageSharpFixed
                 }
               }
             }
@@ -256,8 +254,7 @@ export const query = graphql`
     ) {
       id
       flamelink_locale
-      headerText
-      headerFocusWord
+      navigationText
 
       additionalListingPages {
         id
@@ -274,15 +271,8 @@ export const query = graphql`
           localFile {
             name
             childImageSharp {
-              fluid(maxWidth: 340, quality: 90) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
+              fixed(width: 300, height: 260, quality: 90) {
+                ...GatsbyImageSharpFixed
               }
             }
           }
@@ -292,32 +282,20 @@ export const query = graphql`
       logoImage {
         localFile {
           childImageSharp {
-            fluid(maxWidth: 120, quality: 90) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+            fixed(height: 40, quality: 90) {
+              ...GatsbyImageSharpFixed_noBase64
             }
           }
         }
       }
-
-      frontImage {
-        localFile {
-          childImageSharp {
-            fluid(maxWidth: 2400, quality: 90) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+      bannerImage {
+        alt
+        image {
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 1800, quality: 90) {
+                ...GatsbyImageSharpFluid
+              }
             }
           }
         }
@@ -326,15 +304,8 @@ export const query = graphql`
       columnsBackgroundImage {
         localFile {
           childImageSharp {
-            fluid(maxWidth: 2400, quality: 90) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+            fluid(maxWidth: 1400, quality: 90) {
+              ...GatsbyImageSharpFluid_noBase64
             }
           }
         }
@@ -346,14 +317,7 @@ export const query = graphql`
           url
           childImageSharp {
             fluid(quality: 90) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+              ...GatsbyImageSharpFluid
             }
           }
         }
@@ -374,20 +338,16 @@ export const query = graphql`
           subTitle
           path
         }
+        aboutStudyTrondheim {
+          path
+        }
         content {
           content
           remoteImages {
             url
             childImageSharp {
               fluid(maxWidth: 1200, quality: 70) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
+                ...GatsbyImageSharpFluid
               }
             }
           }
@@ -396,15 +356,8 @@ export const query = graphql`
           localFile {
             name
             childImageSharp {
-              fluid(maxWidth: 240, quality: 70) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
+              fixed(height: 56, quality: 70) {
+                ...GatsbyImageSharpFixed_noBase64
               }
             }
           }

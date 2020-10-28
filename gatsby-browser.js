@@ -17,9 +17,3 @@ export const onServiceWorkerUpdateReady = () => {
     window.location.reload()
   }
 }
-
-export const onClientEntry = () => {
-  window.onappinstalled = () => {
-    window.navigator.serviceWorker.controller.postMessage("onappinstalled")
-  }
-}

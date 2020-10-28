@@ -1,0 +1,86 @@
+.instagram{
+  background: white;
+  max-width: 540px;
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid rgb(219, 219, 219);
+  box-shadow: none;
+  display: block;
+  margin: 0px 0px 12px;
+  min-width: 315px;
+  padding: 0px;
+  height: 934px;
+}
+
+@media only screen and (max-width: 640px) {
+  .instagram{
+    height: 890px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .instagram{
+    height: 934px;
+  }
+}
+
+@media only screen and (max-width: 460px) {
+  .instagram{
+    height: 820px;
+  }
+}
+
+@media only screen and (max-width: 370px) {
+  .instagram{
+    height: 767px;
+  }
+}
+
+.youtube{
+  height: 480px;
+  width: 800px;
+}
+
+@media only screen and (max-width: 950px) {
+  .youtube{
+    height: 360px;
+    width: 600px;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .youtube{
+    height: 345px;
+    width: 575px;
+  }
+}
+
+@media only screen and (max-width: 740px) {
+  .youtube{
+    height: 300px;
+    width: 500px;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .youtube{
+    height: 264px;
+    width: 440px;
+  }
+}
+
+@media only screen and (max-width: 590px) {
+  .youtube{
+    height: 213px;
+    width: 355px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .youtube{
+    height: 198px;
+    width: 330px;
+  }
+}
+
+  

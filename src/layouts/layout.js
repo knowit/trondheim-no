@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet"
 import { Link, graphql, useStaticQuery } from "gatsby"
 import Img from "gatsby-image"
 import BurgerMenu from "../components/menu.js"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 
 export default ({ children, locale, localizedPaths }) => {
   const data = useStaticQuery(graphql`
@@ -13,15 +13,7 @@ export default ({ children, locale, localizedPaths }) => {
         flamelink_locale: { eq: "no" }
       ) {
         id
-        translations {
-          id
-          key
-          translations {
-            id
-            language
-            word
-          }
-        }
+        ...LocalizationFragment
       }
       navbar: allFlamelinkNavbarContent {
         edges {
@@ -57,11 +49,11 @@ export default ({ children, locale, localizedPaths }) => {
     .map((node) => node.node)
     .find((node) => node.flamelink_locale === locale)
 
-  const search = LocalizationHelper.getLocalWord(localization, "search", locale)
-
+  const search = getLocalWord(localization, "search", locale)
+  const searchInput = getLocalWord(localization, "searchInput", locale)
   const Navigation = () => {
     return (
-      <div className="navigation-container">
+      <header className="navigation-container">
         <div className="navigation-content-container">
           <BurgerMenu locale={locale} localizedPaths={localizedPaths} />
 
@@ -81,7 +73,7 @@ export default ({ children, locale, localizedPaths }) => {
             </Link>
           </div>
         </div>
-      </div>
+      </header>
     )
   }
 
@@ -95,7 +87,7 @@ export default ({ children, locale, localizedPaths }) => {
         />
       </Helmet>
       <Navigation id="navbar" />
-      <div id="children-container">{children}</div>
+      <main id="children-container">{children}</main>
       <footer id="footer-container">
         <form
           id="search-container"
@@ -107,10 +99,11 @@ export default ({ children, locale, localizedPaths }) => {
             type="text"
             id="search-input"
             name="query"
+            aria-label={searchInput}
             value={query}
             placeholder={`${search}...`}
             onChange={(e) => setQuery(e.target.value)}
-          ></input>
+          />
 
           <Link
             id="search-button"

@@ -1,31 +1,37 @@
 import React from "react"
 import styles from "../style/article.module.css"
 import Layout from "../layouts/layout"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 import Img from "gatsby-image"
 import { Online, Offline } from "react-detect-offline"
 import HTMLContent from "../components/html-content"
-import Map from "../components/map.js"
+import Map, { LoadScript } from "../components/map"
 import { Router } from "@reach/router"
 import { graphql } from "gatsby"
+import SEO from "../components/seo"
 
-function ContactInfo(props) {
+const ContactInfoSpan = ({ localization, locale, wordKey }) => {
+  return (
+    <span className={styles.contactInfoHeader}>
+      {getLocalWord(localization, wordKey, locale) + ": "}
+    </span>
+  )
+}
+
+const ContactInfo = (props) => {
   if (!props.node.contactInfo && !props.node.address.address) return ""
 
   const elements = []
-  var locale = props.locale
   var index = 0
   if (props.node.address) {
     if (props.node.address.address) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span
-            className={styles.contactInfoHeader}
-          >{`${LocalizationHelper.getLocalWord(
-            props.localization,
-            "address",
-            locale
-          )}:\t`}</span>
+          <ContactInfoSpan
+            localization={props.localization}
+            locale={props.locale}
+            wordKey={"address"}
+          />
           <span>{props.node.address.address}</span>
         </div>
       )
@@ -35,13 +41,11 @@ function ContactInfo(props) {
     if (props.node.contactInfo.emailAddress) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>
-            {LocalizationHelper.getLocalWord(
-              props.localization,
-              "email",
-              locale
-            ) + ": "}
-          </span>
+          <ContactInfoSpan
+            localization={props.localization}
+            locale={props.locale}
+            wordKey={"email"}
+          />
           <a href={"mailto: " + props.node.contactInfo.emailAddress}>
             {props.node.contactInfo.emailAddress}
           </a>
@@ -51,13 +55,11 @@ function ContactInfo(props) {
     if (props.node.contactInfo.telephoneNumber) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>
-            {LocalizationHelper.getLocalWord(
-              props.localization,
-              "telephone",
-              locale
-            ) + ": "}
-          </span>
+          <ContactInfoSpan
+            localization={props.localization}
+            locale={props.locale}
+            wordKey={"telephone"}
+          />
           <a href={"tel: " + props.node.contactInfo.telephoneNumber}>
             {props.node.contactInfo.telephoneNumber}
           </a>
@@ -67,13 +69,11 @@ function ContactInfo(props) {
     if (props.node.contactInfo.linkToWebsite) {
       elements.push(
         <div key={index++} className={styles.contactInfo}>
-          <span className={styles.contactInfoHeader}>
-            {LocalizationHelper.getLocalWord(
-              props.localization,
-              "website",
-              locale
-            ) + ": "}
-          </span>
+          <ContactInfoSpan
+            localization={props.localization}
+            locale={props.locale}
+            wordKey={"website"}
+          />
           <a href={props.node.contactInfo.linkToWebsite}>
             {props.node.contactInfo.textToShow
               ? props.node.contactInfo.textToShow
@@ -88,11 +88,7 @@ function ContactInfo(props) {
     return (
       <div>
         <h3 className={styles.subheading}>
-          {LocalizationHelper.getLocalWord(
-            props.localization,
-            "contactInfo",
-            locale
-          )}
+          {getLocalWord(props.localization, "contactInfo", props.locale)}
         </h3>
         <div>{elements}</div>
       </div>
@@ -100,77 +96,54 @@ function ContactInfo(props) {
   else return ""
 }
 
-function OpeningHours(props) {
+const OpeningHours = ({ node, localization, locale }) => {
   const elements = []
   var index = 0
-  var locale = props.locale
-  if (props.node.openingHours && props.node.openingHours.content) {
+  if (node.openingHours && node.openingHours.content) {
     elements.push(
       <h3 key={index++} className={styles.subheading}>
-        {LocalizationHelper.getLocalWord(
-          props.localization,
-          "openingHours",
-          locale
-        )}
+        {getLocalWord(localization, "openingHours", locale)}
       </h3>
     )
     elements.push(
-      <div
+      <HTMLContent
+        htmlContent={{
+          content: node.openingHours.content,
+          remoteImages: [],
+        }}
+        resizeImg={false}
         key={index++}
-        dangerouslySetInnerHTML={{ __html: props.node.openingHours.content }}
-      ></div>
+      />
     )
   }
   if (elements.length > 0) return <div key={index++}>{elements}</div>
   else return ""
 }
 
+const getLocation = (obj, latKey, lngKey) => {
+  if (obj && obj[latKey] && obj[lngKey]) {
+    return {
+      lat: Number(obj[latKey]),
+      lng: Number(obj[lngKey]),
+    }
+  }
+}
+
 export default ({ data }) => {
-  const layoutContext = {
-    locale: data.flamelinkArticleContent.flamelink_locale,
-    localizedPaths: data.flamelinkArticleContent.localizedPaths,
-  }
-
-  let address =
-    data.flamelinkArticleContent.address &&
-    data.flamelinkArticleContent.address.address
-      ? data.flamelinkArticleContent.address.address
-      : null
-
-  let location = {
-    lat: 63.4305149,
-    lng: 10.3950528,
-  }
-
-  if (
-    data.flamelinkArticleContent.latLong &&
-    data.flamelinkArticleContent.latLong.latitude &&
-    data.flamelinkArticleContent.latLong.longitude
-  ) {
-    location = {
-      lat: Number(data.flamelinkArticleContent.latLong.latitude),
-      lng: Number(data.flamelinkArticleContent.latLong.longitude),
-    }
-  }
-  if (
-    data.flamelinkArticleContent.address &&
-    data.flamelinkArticleContent.address.lat &&
-    data.flamelinkArticleContent.address.lng
-  ) {
-    location = {
-      lat: data.flamelinkArticleContent.address.lat,
-      lng: data.flamelinkArticleContent.address.lng,
-    }
-  }
-  if (
-    data.flamelinkArticleContent.latitude &&
-    data.flamelinkArticleContent.longitude
-  ) {
-    location = {
-      lat: data.flamelinkArticleContent.latitude,
-      lng: data.flamelinkArticleContent.longitude,
-    }
-  }
+  // prettier-ignore
+  const location = getLocation(
+    data.flamelinkArticleContent,
+    "latitude",
+    "longitude"
+  ) || getLocation(
+    data.flamelinkArticleContent.address, 
+    "lat", 
+    "lng"
+  ) || getLocation(
+    data.flamelinkArticleContent.latLong,
+    "latitude",
+    "longitude"
+  )
 
   const markers = [
     {
@@ -200,14 +173,14 @@ export default ({ data }) => {
 
     if (imageNode != null) {
       const styles = {
-        width: imageNode.childImageSharp.fluid.presentationWidth,
-        height: imageNode.childImageSharp.fluid.presentationHeight,
+        width: imageNode.childImageSharp.fixed.width,
+        height: imageNode.childImageSharp.fixed.height,
       }
       return (
         <div className="offline-map-container" style={styles}>
           <Img
             className="offline-map-image"
-            fluid={imageNode.childImageSharp.fluid}
+            fixed={imageNode.childImageSharp.fixed}
             alt={"Map of location"}
             loading="eager"
           ></Img>
@@ -218,11 +191,34 @@ export default ({ data }) => {
     }
   }
 
+  const Copyright = () => {
+    const copyright = data.flamelinkArticleContent.copyright
+    if (copyright) {
+      if (copyright.content) {
+        return (
+          <div id="copyright-container" style={{ marginTop: "30px" }}>
+            <HTMLContent
+              htmlContent={{ content: copyright.content, remoteImages: [] }}
+              resizeImg={false}
+            />
+          </div>
+        )
+      }
+    }
+    return null
+  }
+
   return (
     <Layout
       locale={data.flamelinkArticleContent.flamelink_locale}
       localizedPaths={data.flamelinkArticleContent.localizedPaths}
     >
+      <SEO
+        title={data.flamelinkArticleContent.title}
+        locale={data.flamelinkArticleContent.flamelink_locale}
+        keywords={[]}
+      />
+
       <div id="outer-container">
         <div id="inner-container">
           <h2 id="article-title">{data.flamelinkArticleContent.title}</h2>
@@ -230,7 +226,7 @@ export default ({ data }) => {
           <OpeningHours
             node={data.flamelinkArticleContent}
             localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={data.flamelinkArticleContent.flamelinklocale}
+            locale={data.flamelinkArticleContent.flamelink_locale}
           />
           <ContactInfo
             node={data.flamelinkArticleContent}
@@ -238,23 +234,24 @@ export default ({ data }) => {
             locale={data.flamelinkArticleContent.flamelink_locale}
           />
           <Online>
-            <Router basepath={data.flamelinkArticleContent.path}>
-              <Map
-                path="/"
-                locationMarker={location}
-                address={address}
-                markers={markers}
-                zoom={15}
-                persistentDisabled={false}
-                width="100%"
-                height="400px"
-              />
-            </Router>
+            {!!location && <LoadScript>
+              <Router basepath={data.flamelinkArticleContent.path}>
+                <Map
+                  path="/"
+                  locationMarker={location}
+                  markers={location ? markers : null}
+                  zoom={15}
+                  width="100%"
+                  height="400px"
+                />
+              </Router>
+            </LoadScript>}
           </Online>
 
           <Offline>
-            <OfflineMap></OfflineMap>
+            <OfflineMap />
           </Offline>
+          <Copyright />
         </div>
       </div>
     </Layout>
@@ -264,14 +261,7 @@ export default ({ data }) => {
 export const query = graphql`
   query ArticleQuery($nodeId: String) {
     flamelinkArticleLocalizationContent(flamelink_locale: { eq: "no" }) {
-      id
-      translations {
-        key
-        translations {
-          language
-          word
-        }
-      }
+      ...LocalizationFragment
     }
 
     flamelinkArticleContent(id: { eq: $nodeId }) {
@@ -286,11 +276,25 @@ export const query = graphql`
         fl_id
       }
 
+      localizedPaths {
+        locale
+        path
+      }
+
+      copyright {
+        title
+        content
+      }
+
       contactInfo {
         textToShow
         telephoneNumber
         linkToWebsite
         emailAddress
+      }
+
+      openingHours {
+        content
       }
 
       address {
@@ -305,15 +309,8 @@ export const query = graphql`
         googleMapsStaticImage {
           url
           childImageSharp {
-            fluid(maxWidth: 600, quality: 70) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+            fixed(width: 320) {
+              ...GatsbyImageSharpFixed_noBase64
             }
           }
         }

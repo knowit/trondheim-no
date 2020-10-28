@@ -6,12 +6,23 @@ exports.createSchemaCustomization = ({ actions }) => {
     content: String
     remoteImages: [File] @link
   }
+  type FlamelinkAddress {
+    address: String
+    lat: Float
+    lng: Float
+  }
   type FlamelinkArticleContent implements Node {
     tags: [String]
     path: String
     localizedPaths : [LocalizedPath]
-    textContent: String
     content: FlamelinkTextHtmlContentNode
+    copyright: Copyright
+    parentListingPage: FlamelinkListingPageContent
+    address: FlamelinkAddress
+  }
+  type Copyright {
+    title: String
+    content: String
   }
   type FlamelinkArticleContentFieldLatLong implements Node {
     googleMapsStaticImage: File @link
@@ -21,13 +32,14 @@ exports.createSchemaCustomization = ({ actions }) => {
   }
   type FlamelinkNavbarContent implements Node {
     childFlamelinkNavbarContentFieldExtraMenuOptionsItem: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
-    externalMenuItems: [ExtraMenuOption]
+    extraMenuOptions: [ExtraMenuOption]
   }
   type FlamelinkNavbarContentFieldExtraMenuOptionsItem implements Node {
     title: String!
     redirectUrl: String!
   }
   type ExtraMenuOption {
+    uniqueKey: String,
     title: String,
     redirectUrl: String
   }
@@ -41,6 +53,15 @@ exports.createSchemaCustomization = ({ actions }) => {
     path: String
     localizedPaths : [LocalizedPath]
     linkColumns: [FlamelinkLinkItemContent]
+  }
+  type FlamelinkAboutStudyTrondheimContent implements Node {
+    path: String
+    localizedPaths : [LocalizedPath]
+    content: FlamelinkTextHtmlContentNode
+    bannerImage: FlamelinkAboutStudyTrondheimContentFieldBannerImage
+    contactPerson: [FlamelinkAboutStudyTrondheimContentFieldContactPersonItem]
+    article: [FlamelinkAboutStudyTrondheimContentFieldArticleItem]
+    otherActivity: [FlamelinkAboutStudyTrondheimContentFieldOtherActivityItem]
   }
   type FlamelinkStudentPageContent implements Node {
     path: String
@@ -61,7 +82,39 @@ exports.createSchemaCustomization = ({ actions }) => {
     listingPage: FlamelinkListingPageContent
     page: FlamelinkPageContent
     content: FlamelinkTextHtmlContentNode
+    aboutStudyTrondheim: FlamelinkAboutStudyTrondheimContent
   }
+  type FlamelinkArticle {
+    title: String 
+    content: FlamelinkTextHtmlContentNode
+  }
+
+  interface LocalizationContent {
+    translations: [KeyValueTranslation]
+  }
+
+  type KeyValueTranslation {
+    key: String
+    translations: [Translation]
+  }
+
+  type Translation {
+    language: String
+    word: String
+  }
+
+  type FlamelinkArticleLocalizationContent implements Node & LocalizationContent {
+    translations: [KeyValueTranslation]
+  }
+
+  type FlamelinkLayoutLocalizationContent implements Node & LocalizationContent {
+    translations: [KeyValueTranslation]
+  }
+
+  type FlamelinkListingPageLocalizationContent implements Node & LocalizationContent {
+    translations: [KeyValueTranslation]
+  }
+
   `
   createTypes(typeDefs)
 }

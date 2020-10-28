@@ -2,6 +2,9 @@
 const path = require(`path`)
 const { query } = require("./src/gatsby-helpers/graphql-query")
 
+require("dotenv")
+const status = process.env.GATSBY_FLAMELINK_STATUS
+
 const { sourceNodes } = require("./src/gatsby-helpers/source-nodes")
 exports.sourceNodes = sourceNodes
 
@@ -72,7 +75,27 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     .map((node) => {
       createPage({
         path: node.path,
-        component: path.resolve(`./src/templates/home.js`),
+        component: path.resolve(
+          `./src/templates/${status == "publish" || status == node._fl_meta_.status
+            ? "home"
+            : "empty-front-page"
+          }.js`
+        ),
+        context: {
+          nodeId: node.id,
+          locale: node.flamelink_locale,
+          status: status,
+          layout: "front-page",
+        },
+      })
+    })
+
+  result.data.allFlamelinkAboutStudyTrondheimContent.edges
+    .map((node) => node.node)
+    .map((node) => {
+      createPage({
+        path: node.path,
+        component: path.resolve(`./src/templates/about-study-trondheim.js`),
         context: {
           nodeId: node.id,
           locale: node.flamelink_locale,
@@ -93,23 +116,49 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
 
+  const studentPageComponents = result.data.allFlamelinkStudentPageContent.edges
+    .map((node) => node.node)
+    .map((node) => {
+      return {
+        locale: node.flamelink_locale,
+        component:
+          process.env.GATSBY_FLAMELINK_STATUS != "publish" &&
+            node._fl_meta_.status != process.env.GATSBY_FLAMELINK_STATUS
+            ? path.resolve("./src/templates/empty-front-page.js")
+            : path.resolve("./src/templates/student.js"),
+      }
+    })
+
   result.data.allFlamelinkListingPageContent.edges
     .map((node) => node.node)
     .map((node) => {
       if (node.slug === "student") {
         createPage({
           path: node.path,
-          component: path.resolve(`./src/templates/student.js`),
+          component: studentPageComponents.find(
+            (n) => n.locale === node.flamelink_locale
+          ).component,
           context: {
             nodeId: node.id,
             nodeFlamelinkId: node.flamelink_id,
             locale: node.flamelink_locale,
+            layout: "student-page",
+            status: process.env.GATSBY_FLAMELINK_STATUS,
           },
         })
       } else if (node.slug === "hva-skjer" || node.slug === "whats-on") {
         createPage({
           path: node.path,
           component: path.resolve(`./src/templates/events-page.js`),
+          context: {
+            nodeId: node.id,
+            locale: node.flamelink_locale,
+          },
+        })
+      } else if (node.slug === "kart" || node.slug === "maps") {
+        createPage({
+          path: node.path,
+          component: path.resolve(`./src/templates/map-page.js`),
           context: {
             nodeId: node.id,
             locale: node.flamelink_locale,
@@ -142,64 +191,13 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       }
     })
 
-  result.data.allFlamelinkArticleContent.edges
-    .map((node) => node.node)
-    .map((node) => {
-      createPage({
-        path: node.path,
-        component: path.resolve("./src/templates/article.js"),
-        context: {
-          nodeId: node.id,
-        },
-      })
+  result.data.allFlamelinkArticleContent.nodes.map((node) => {
+    createPage({
+      path: node.path,
+      component: path.resolve("./src/templates/article.js"),
+      context: {
+        nodeId: node.id,
+      },
     })
-}
-
-exports.onPostBuild = async (args, _ref3) => {
-  const fs = require("fs")
-  const workboxBuild = require("workbox-build")
-
-  // NOTE: This should be run *AFTER* all your assets are built
-  // This will return a Promise
-  console.log("Building sw...")
-  await workboxBuild
-    .injectManifest({
-      swSrc: "./static/sw-temp.js",
-      swDest: "./public/sw-temp.js",
-      globDirectory: "public",
-      globPatterns: ["**/*"],
-    })
-    .then(({ count, size, warnings }) => {
-      console.log("Build sw complete.")
-      // Optionally, log any warnings and details.
-      warnings.forEach(console.warn)
-      console.log(`${count} files will be precached, totaling ${size} bytes.`)
-    })
-
-  const { PWAManifest } = await require("./public/sw-temp.js")
-  const sw = await fs.readFileSync("public/sw.js", "utf8")
-
-  var precacheFiles = []
-  var discardedFiles = []
-  PWAManifest.map((file) => {
-    if (!sw.includes(`"url": "${file.url}"`)) {
-      precacheFiles.push(file)
-    } else {
-      discardedFiles.push(file)
-    }
   })
-
-  await fs.writeFileSync(
-    "public/sw.js",
-    sw.replace(
-      "self.__WB_MANIFEST",
-      `[${precacheFiles.map((file) => `\n${JSON.stringify(file)}`)}]`
-    )
-  )
-
-  console.log(
-    `Ignored files for additional PWA-cache: \n${discardedFiles.map(
-      (file) => `\n${JSON.stringify(file)}`
-    )}`
-  )
 }

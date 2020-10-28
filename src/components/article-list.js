@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import LocalizationHelper from "../helpers/helpers"
+import { getLocalWord } from "../helpers/helpers"
 import { Link } from "gatsby"
 import Img from "gatsby-image"
 import "../style/listing-page.css"
@@ -17,6 +17,7 @@ export default ({
   localization,
   locale,
   defaultThumbnails,
+  mapPage,
 }) => {
   const [filterTags, setFilterTags] = useState([])
   const [sortBy, setSortBy] = useState("standard")
@@ -29,71 +30,17 @@ export default ({
       if (indexOf === -1) filterTagsTemp.push(tag)
       else filterTagsTemp.splice(indexOf, 1)
     }
-    setFilterTags(filterTagsTemp)
+    setFilterTags(filterTagsTemp.slice())
   }
 
-  const TagFilter = () => {
-    const allTags = []
-    allTags.push(
-      <div
-        role="button"
-        tabIndex={0}
-        onKeyPress={(e) => handleTagToggle("all")}
-        key={allTags.length}
-        className="distinct-tag"
-        style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
-        onClick={(e) => handleTagToggle("all")}
-      >
-        {LocalizationHelper.getLocalWord(localization, "all", locale)}
-      </div>
-    )
-    tags.forEach((tag) => {
-      allTags.push(
-        <div
-          role="button"
-          tabIndex={0}
-          onKeyPress={(e) => handleTagToggle(tag)}
-          key={allTags.length}
-          className="distinct-tag"
-          style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}
-          onClick={(e) => handleTagToggle(tag)}
-        >
-          {tag}
-        </div>
-      )
-    })
-    return <div id="all-tags-container">{allTags} </div>
-  }
-
-  const Sorter = () => {
-    const sortTags = []
-    SORT_TYPES.forEach((s) => {
-      var tagName = LocalizationHelper.getLocalWord(localization, s, locale)
-      sortTags.push(
-        <div
-          role="button"
-          tabIndex={0}
-          onKeyPress={(e) => {
-            setSortBy(s)
-          }}
-          className="distinct-tag"
-          key={sortTags.length}
-          style={sortBy === s ? selectedStyle : unSelectedStyle}
-          onClick={(e) => setSortBy(s)}
-        >
-          {tagName}
-        </div>
-      )
-    })
-
-    return <div id="sort-container"> {sortTags} </div>
-  }
+  const reset_label = getLocalWord(localization, "resetTags", locale)
+  const sorting_label = getLocalWord(localization, "sorting", locale)
 
   const ArticleList = () => {
     const articleViews = []
 
     const listingPageDefaultThumbnail = defaultThumbnails.find(
-      (node) => node.title === "ListingPage Thumbnail"
+      (node) => node.title === "ListingPage Thumbnails"
     )
     subListingPages.forEach((slp) => {
       slp.tags = []
@@ -150,22 +97,33 @@ export default ({
         ? ""
         : ReactDOMHelper.getTextContentFromHtml(article.content.content)
     var thumbnail = defaultThumbnail
-
-    if (article.thumbnail != null) {
-      if (article.thumbnail.length > 0) {
-        thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
+    if (mapPage) {
+      if (article.mapThumbnail != null) {
+        if (article.mapThumbnail.length > 0) {
+          thumbnail = article.mapThumbnail[0]?.localFile.childImageSharp.fluid
+        }
+      }
+    } else {
+      if (article.thumbnail != null) {
+        if (article.thumbnail.length > 0) {
+          thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
+        }
       }
     }
-
+    const articleHeader = mapPage
+      ? article.mapPageTitle
+      : subList
+      ? article.navigationTitle
+      : article.title
     return (
-      <div className="article-container">
+      <Link
+        to={mapPage ? article.mapPath : article.path}
+        className="article-container"
+        aria-label={articleHeader}
+      >
         <Img className="article-thumbnail" fluid={thumbnail} />
         <div className="article-info-container">
-          <h2>
-            <Link to={article.path}>
-              {subList ? article.navigationTitle : article.title}
-            </Link>
-          </h2>
+          <h2 className="article-into-header">{articleHeader}</h2>
 
           <EllipsisText
             className="article-info-text"
@@ -183,14 +141,70 @@ export default ({
             })}
           </div>
         </div>
-      </div>
+      </Link>
     )
   }
 
-  return (
+  var i = 0
+  return tags.length ? (
     <div className="article-list-container">
-      <TagFilter />
-      <Sorter />
+      <div id="all-tags-container">
+        <div
+          role="button"
+          aria-label={reset_label}
+          tabIndex={0}
+          onKeyPress={(e) => handleTagToggle("all")}
+          key={i++}
+          className="distinct-tag"
+          style={filterTags.length === 0 ? selectedStyle : unSelectedStyle}
+          onClick={(e) => handleTagToggle("all")}
+        >
+          {getLocalWord(localization, "all", locale)}
+        </div>
+
+        {tags.map((tag) => (
+          <div
+            role="checkbox"
+            aria-checked={filterTags.includes(tag) ? "true" : "false"}
+            aria-label={tag}
+            tabIndex={0}
+            onKeyPress={(e) => handleTagToggle(tag)}
+            key={i++}
+            className="distinct-tag"
+            style={filterTags.includes(tag) ? selectedStyle : unSelectedStyle}
+            onClick={(e) => handleTagToggle(tag)}
+          >
+            {tag}
+          </div>
+        ))}
+      </div>
+      <div id="sort-container">
+        {SORT_TYPES.map((s) => {
+          var tagName = getLocalWord(localization, s, locale)
+          return (
+            <div
+              role="radio"
+              aria-checked={sortBy === s ? "true" : "false"}
+              aria-label={sorting_label + " " + tagName}
+              tabIndex={0}
+              onKeyPress={(e) => {
+                setSortBy(s)
+              }}
+              className="distinct-tag"
+              key={i++}
+              style={sortBy === s ? selectedStyle : unSelectedStyle}
+              onClick={(e) => setSortBy(s)}
+            >
+              {tagName}
+            </div>
+          )
+        })}
+      </div>
+
+      <ArticleList />
+    </div>
+  ) : (
+    <div className="article-list-container">
       <ArticleList />
     </div>
   )

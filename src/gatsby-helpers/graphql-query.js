@@ -25,7 +25,32 @@ query {
     }
   }
 
+  allFlamelinkStudentPageContent {
+    edges {
+      node {
+        id
+        flamelink_locale
+        _fl_meta_ {
+          status
+        }
+      }
+    }
+  }
+
   allFlamelinkFrontPageContent {
+    edges {
+      node {
+        id
+        flamelink_locale
+        path
+        _fl_meta_ {
+          status
+        }
+      }
+    }
+  }
+
+  allFlamelinkAboutStudyTrondheimContent {
     edges {
       node {
         id
@@ -36,12 +61,10 @@ query {
   }
 
   allFlamelinkArticleContent {
-    edges {
-      node {
-        id
-        flamelink_locale
-        path
-      }
+    nodes {
+      id
+      flamelink_locale
+      path
     }
   }
 }
