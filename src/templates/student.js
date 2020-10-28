@@ -6,6 +6,7 @@ import "../style/student.css"
 import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 import SEO from "../components/seo"
+import LinkColumns from "../components/link-columns"
 
 const HeaderImage = ({ bannerImage }) => {
   return (
@@ -110,87 +111,6 @@ export default ({ data }) => {
     )
   }
 
-  const LinkColumns = () => {
-    const Column = ({ node }) => {
-      const Content = () => ReactDOMHelper.parseToReact(node.content.content)
-      const Ref = ({ children, tabable }) => {
-        if (
-          node.linkType === "listingPage" ||
-          node.linkType === "page" ||
-          node.linkType === "aboutStudyTrondheim"
-        ) {
-          const path =
-            node.linkType === "listingPage"
-              ? node.listingPage.path
-              : node.linkType === "page"
-              ? node.page.path
-              : node.aboutStudyTrondheim.path
-
-          return (
-            <Link
-              tabIndex={tabable ? "0" : "-1"}
-              className="student-column-link"
-              to={path}
-            >
-              {children}
-            </Link>
-          )
-        } else if (node.linkType === "url") {
-          return (
-            <a
-              tabIndex={tabable ? "0" : "-1"}
-              className="student-column-link"
-              href={node.url}
-            >
-              {children}
-            </a>
-          )
-        } else return children
-      }
-
-      return (
-        <div className="student-column-item-container">
-          <div className="student-column-image-container">
-            <Ref>
-              {node.icon ? (
-                <Img
-                  className="student-column-image"
-                  fixed={node.icon[0].localFile.childImageSharp.fixed}
-                  alt="thumbnail"
-                />
-              ) : null}
-            </Ref>
-          </div>
-          <div className="student-column-info-container">
-            <h3>
-              <Ref tabable="true">{node.title}</Ref>
-            </h3>
-            <h4>
-              <Ref tabable="true">
-                <Content />
-              </Ref>
-            </h4>
-          </div>
-        </div>
-      )
-    }
-
-    const backgroundStyle = {
-      backgroundImage: `url(${data.studentPageNode.columnsBackgroundImage[0].localFile.childImageSharp.fluid.src})`,
-    }
-
-    var index = 0
-
-    return (
-      <div id="student-columns-container" style={backgroundStyle}>
-        <div id="student-columns-overlay">
-          {data.studentPageNode.linkColumns.map((node) => {
-            return <Column key={index++} node={node} />
-          })}
-        </div>
-      </div>
-    )
-  }
   return (
     <div>
       <SEO
@@ -202,7 +122,11 @@ export default ({ data }) => {
       <HeaderImage bannerImage={data.studentPageNode.bannerImage} />
       <SubListingPages />
       <CustomContent />
-      <LinkColumns />
+      <LinkColumns
+        linkColumns={data.studentPageNode.linkColumns}
+        columnsBackgroundImage={data.studentPageNode.columnsBackgroundImage}
+        type="student"
+      />
     </div>
   )
 }
@@ -324,44 +248,7 @@ export const query = graphql`
       }
 
       linkColumns {
-        title
-        subTitle
-        linkType
-        url
-        listingPage {
-          navigationTitle
-          navigationSubtitle
-          path
-        }
-        page {
-          title
-          subTitle
-          path
-        }
-        aboutStudyTrondheim {
-          path
-        }
-        content {
-          content
-          remoteImages {
-            url
-            childImageSharp {
-              fluid(maxWidth: 1200, quality: 70) {
-                ...GatsbyImageSharpFluid
-              }
-            }
-          }
-        }
-        icon {
-          localFile {
-            name
-            childImageSharp {
-              fixed(height: 56, quality: 70) {
-                ...GatsbyImageSharpFixed_noBase64
-              }
-            }
-          }
-        }
+        ...LinkColumnFragment
       }
     }
   }
