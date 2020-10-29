@@ -148,6 +148,9 @@
   flex-flow: wrap;
   flex-grow: 1;
 }
+.article-info-header{
+  min-width: 100%;
+}
 .article-info-text{
     font-family: 'PT Sans',Arial,'Arial Unicode MS',Helvetica,sans-serif;
     color: #555;

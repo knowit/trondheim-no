@@ -43,7 +43,6 @@ export default ({ data }) => {
       </Link>
     ) : null
   }
-
   return (
     <Layout
       locale={locale}
@@ -154,7 +153,9 @@ export const query = graphql`
           tags
           title
           path
-
+          content{
+            content
+          }
           parentListingPage {
             id
             localTitle
