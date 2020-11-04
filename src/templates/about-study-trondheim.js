@@ -25,6 +25,7 @@ const ContactPerson = ({ person }) => {
         className={styles.profilePicture}
         fluid={person.picture[0].localFile.childImageSharp.fluid}
         alt="Profile picture"
+        imgStyle={{height: "auto"}}
       />
       <h3 className={styles.personTitle}>{person.title}</h3>
       <p className={styles.personContactInfo}>{person.name}</p>
