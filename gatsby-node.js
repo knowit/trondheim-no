@@ -70,6 +70,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     })
   })
 
+  // Create front page
   result.data.allFlamelinkFrontPageContent.edges
     .map((node) => node.node)
     .map((node) => {
@@ -91,6 +92,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
 
+  // Create about study trondheim
   result.data.allFlamelinkAboutStudyTrondheimContent.edges
     .map((node) => node.node)
     .map((node) => {
@@ -104,6 +106,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
 
+  // Create pages
   result.data.allFlamelinkPageContent.edges
     .map((node) => node.node)
     .map((node) => {
@@ -117,6 +120,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
 
+  // Create student page
   const studentPageComponents = result.data.allFlamelinkStudentPageContent.edges
     .map((node) => node.node)
     .map((node) => {
@@ -130,6 +134,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       }
     })
 
+  // Create listing pages
   result.data.allFlamelinkListingPageContent.edges
     .map((node) => node.node)
     .map((node) => {
@@ -192,6 +197,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       }
     })
 
+  // Create articles
   result.data.allFlamelinkArticleContent.nodes.map((node) => {
     createPage({
       path: node.path,
