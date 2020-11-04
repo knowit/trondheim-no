@@ -123,7 +123,7 @@ export default ({
       >
         <Img className="article-thumbnail" fluid={thumbnail} />
         <div className="article-info-container">
-          <h2 className="article-into-header">{articleHeader}</h2>
+          <h2 className="article-info-header">{articleHeader}</h2>
 
           <EllipsisText
             className="article-info-text"
