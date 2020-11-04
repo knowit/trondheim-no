@@ -142,6 +142,10 @@
   flex-grow: 1;
 }
 
+.article-info-header{
+  width: 100%;
+}
+
 .article-info-container{
   position: relative;
   display: flex;
