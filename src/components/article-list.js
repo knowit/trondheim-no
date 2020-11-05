@@ -6,8 +6,8 @@ import "../style/listing-page.css"
 import EllipsisText from "react-ellipsis-text"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 
-const selectedStyle = { backgroundColor: "grey", color: "white" }
-const unSelectedStyle = { backgroundColor: "darkgrey", color: "black" }
+const selectedStyle = { backgroundColor: "#4d4d4d", color: "white" }
+const unSelectedStyle = { backgroundColor: "#dbdbdb", color: "black" }
 const SORT_TYPES = ["standard", "date", "title", "random"]
 
 export default ({
