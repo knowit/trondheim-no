@@ -76,9 +76,10 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       createPage({
         path: node.path,
         component: path.resolve(
-          `./src/templates/${status == "publish" || status == node._fl_meta_.status
-            ? "home"
-            : "empty-front-page"
+          `./src/templates/${
+            status == "publish" || status == node._fl_meta_.status
+              ? "home"
+              : "empty-front-page"
           }.js`
         ),
         context: {
@@ -123,7 +124,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         locale: node.flamelink_locale,
         component:
           process.env.GATSBY_FLAMELINK_STATUS != "publish" &&
-            node._fl_meta_.status != process.env.GATSBY_FLAMELINK_STATUS
+          node._fl_meta_.status != process.env.GATSBY_FLAMELINK_STATUS
             ? path.resolve("./src/templates/empty-front-page.js")
             : path.resolve("./src/templates/student.js"),
       }

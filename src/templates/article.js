@@ -234,18 +234,20 @@ export default ({ data }) => {
             locale={data.flamelinkArticleContent.flamelink_locale}
           />
           <Online>
-            {!!location && <LoadScript>
-              <Router basepath={data.flamelinkArticleContent.path}>
-                <Map
-                  path="/"
-                  locationMarker={location}
-                  markers={location ? markers : null}
-                  zoom={15}
-                  width="100%"
-                  height="400px"
-                />
-              </Router>
-            </LoadScript>}
+            {!!location && (
+              <LoadScript>
+                <Router basepath={data.flamelinkArticleContent.path}>
+                  <Map
+                    path="/"
+                    locationMarker={location}
+                    markers={location ? markers : null}
+                    zoom={15}
+                    width="100%"
+                    height="400px"
+                  />
+                </Router>
+              </LoadScript>
+            )}
           </Online>
 
           <Offline>

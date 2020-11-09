@@ -180,8 +180,8 @@ class ReactDOMHelper {
       if (htmlNode.props.height) {
         attribs.width = htmlNode.props.height
       }
-      if (htmlNode.props.id) {
-        attribs.id = htmlNode.props.id
+      if (htmlNode.props.className) {
+        attribs.className = htmlNode.props.className
       }
 
       return React.createElement(
@@ -194,7 +194,7 @@ class ReactDOMHelper {
 
   static buildReactComponent(htmlInput, transformImg, transformIframe) {
     const root = new HtmlNode("div")
-    root.props = { id: "html-content-container" }
+    root.props = { className: "html-content-container" }
     const element = this.parseToReact(htmlInput)
 
     React.Children.map(element, (child) => {

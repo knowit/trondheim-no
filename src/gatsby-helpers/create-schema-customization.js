@@ -52,7 +52,7 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkFrontPageContent implements Node {
     path: String
     localizedPaths : [LocalizedPath]
-    linkColumns: [FlamelinkLinkItemContent]
+    linkColumns: [LinkColumn]
   }
   type FlamelinkAboutStudyTrondheimContent implements Node {
     path: String
@@ -67,7 +67,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     path: String
     localizedPaths : [LocalizedPath]
     additionalListingPages: [FlamelinkListingPageContent]
-    linkColumns: [FlamelinkLinkItemContent]
+    linkColumns: [LinkColumn]
   }
   type FlamelinkPageContent implements Node {
     path: String
@@ -78,12 +78,22 @@ exports.createSchemaCustomization = ({ actions }) => {
     locale: String,
     path: String
   }
-  type FlamelinkLinkItemContent implements Node {
-    listingPage: FlamelinkListingPageContent
-    page: FlamelinkPageContent
-    content: FlamelinkTextHtmlContentNode
-    aboutStudyTrondheim: FlamelinkAboutStudyTrondheimContent
+  type LinkColumn @dontInfer {
+    id: ID!
+    title: String
+    subtitle: String
+    linkType: String
+    link: LinkItem
+    content: String
+    icon: [File]
   }
+
+  type LinkItem {
+    title: String
+    subtitle: String
+    path: String
+  }
+
   type FlamelinkArticle {
     title: String 
     content: FlamelinkTextHtmlContentNode

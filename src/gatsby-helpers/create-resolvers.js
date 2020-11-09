@@ -157,6 +157,15 @@ exports.createResolvers = ({ createResolvers }) => {
         },
       },
     },
+    FlamelinkTextHtmlContentNode: {
+      content: {
+        async resolve(source) {
+          return source.content=="<p></p>" || source.content=="<p></p>\n"
+            ? null
+            : source.content
+        }
+      }
+    },
     FlamelinkArticleContent: {
       path: {
         resolve(source, args, context, info) {
@@ -178,20 +187,6 @@ exports.createResolvers = ({ createResolvers }) => {
       localizedPaths: {
         resolve(source, args, context, info) {
           return resolveLocalizedPaths(source, context)
-        },
-      },
-      linkColumns: {
-        resolve(source, args, context, info) {
-          return source.linkColumns.map((column) =>
-            findSource(
-              context,
-              column,
-              "FlamelinkLinkItemContent",
-              source.flamelink_locale
-            ).then((node) => ({
-              ...node,
-            }))
-          )
         },
       },
     },
@@ -234,20 +229,6 @@ exports.createResolvers = ({ createResolvers }) => {
           return result ? result : []
         },
       },
-      linkColumns: {
-        resolve(source, args, context, info) {
-          return source.linkColumns.map((column) =>
-            findSource(
-              context,
-              column,
-              "FlamelinkLinkItemContent",
-              source.flamelink_locale
-            ).then((node) => ({
-              ...node,
-            }))
-          )
-        },
-      },
     },
     FlamelinkPageContent: {
       path: {
@@ -261,36 +242,43 @@ exports.createResolvers = ({ createResolvers }) => {
         },
       },
     },
-    FlamelinkLinkItemContent: {
-      listingPage: {
-        resolve(source) {
-          return source.listingPage && source.listingPage._fl_meta_
-            ? {
-                ...source.listingPage,
+    LinkColumn: {
+      link: {
+        async resolve(source, args, context, info) {
+          switch (source.linkType) {
+            case "listingPage":
+              return {
+                title: source.listingPage.navigationTitle,
+                subtitle: source.listingPage.navigationSubtitle,
                 path: resolvePath(source.listingPage),
               }
-            : null
-        },
-      },
-      page: {
-        resolve(source) {
-          return source.page && source.page._fl_meta_
-            ? {
-                ...source.page,
+            case "page":
+              return {
+                title: source.page.title,
+                subtitle: source.page.subTitle,
                 path: resolvePath(source.page),
               }
-            : null
-        },
-      },
-      aboutStudyTrondheim: {
-        resolve(source) {
-          return source.aboutStudyTrondheim &&
-            source.aboutStudyTrondheim._fl_meta_
-            ? {
-                ...source.aboutStudyTrondheim,
+            case "aboutStudyTrondheim":
+              return {
+                title: null,
+                subtitle: null,
                 path: resolvePath(source.aboutStudyTrondheim),
               }
-            : null
+            case "url":
+              return {
+                title: null,
+                subtitle: null,
+                path: source.url,
+              }
+          }
+        },
+      },
+      icon: {
+        resolve(source, args, context, info) {
+          return context.nodeModel.getNodesByIds({
+            ids: source.icon.map((icon) => icon.localFile___NODE),
+            type: "File",
+          })
         },
       },
     },

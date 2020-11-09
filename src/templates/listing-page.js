@@ -16,8 +16,8 @@ export default ({ data }) => {
     .forEach((node) => {
       if (node.tags) {
         node.tags.forEach((tag) => {
-          if (!tags.includes(tag)) {
-            tags.push(tag)
+          if (!tags.includes(tag.toLowerCase())) {
+            tags.push(tag.toLowerCase())
           }
         })
       }
