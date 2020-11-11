@@ -68,7 +68,7 @@ export default ({
       //Add article to array only if it contains a tag chosen, or ALL is chosen (empty list).
       if (
         filterTags.length === 0 ||
-        article.tags.some((r) => filterTags.includes(r))
+        article.tags.some((r) => filterTags.includes(r.toLowerCase()))
       ) {
         articleViews.push(
           <ArticleView
