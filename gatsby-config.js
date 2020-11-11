@@ -74,6 +74,10 @@ module.exports = {
             ],
           },
           {
+            schemaKey: "studentArticle",
+            populate: true,
+          },
+          {
             schemaKey: "page",
             populate: true,
             filters: [
@@ -87,6 +91,7 @@ module.exports = {
           { schemaKey: "layoutLocalization", populate: true },
 
           { schemaKey: "listingPage", populate: true },
+          { schemaKey: "studentListingPage", populate: true },
           { schemaKey: "listingPageLocalization", populate: true },
           { schemaKey: "navbar", populate: true },
           { schemaKey: "seo", populate: true },

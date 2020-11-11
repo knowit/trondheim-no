@@ -92,6 +92,28 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
 
+  // Create student page
+  result.data.allFlamelinkStudentPageContent.edges
+    .map((node) => node.node)
+    .map((node) => {
+      createPage({
+        path: node.path,
+        component: path.resolve(
+          `./src/templates/${
+            status == "publish" || status == node._fl_meta_.status
+              ? "student"
+              : "empty-front-page"
+          }.js`
+        ),
+        context: {
+          nodeId: node.id,
+          locale: node.flamelink_locale,
+          status: status,
+          layout: "student-page",
+        },
+      })
+    })
+
   // Create about study trondheim
   result.data.allFlamelinkAboutStudyTrondheimContent.edges
     .map((node) => node.node)

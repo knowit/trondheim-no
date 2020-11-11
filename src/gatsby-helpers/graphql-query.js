@@ -25,11 +25,26 @@ query {
     }
   }
 
+  allFlamelinkStudentListingPageContent {
+    edges {
+      node {
+        id
+        path
+        mapPath
+        slug
+        flamelink_id
+        flamelink_locale
+      }
+    }
+  }
+
   allFlamelinkStudentPageContent {
     edges {
       node {
         id
+        slug
         flamelink_locale
+        path
         _fl_meta_ {
           status
         }
@@ -61,6 +76,14 @@ query {
   }
 
   allFlamelinkArticleContent {
+    nodes {
+      id
+      flamelink_locale
+      path
+    }
+  }
+
+  allFlamelinkStudentArticleContent {
     nodes {
       id
       flamelink_locale
