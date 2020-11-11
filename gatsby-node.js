@@ -86,6 +86,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         context: {
           nodeId: node.id,
           locale: node.flamelink_locale,
+          schema: node._fl_meta_.schema,
           status: status,
           layout: "front-page",
         },
@@ -108,6 +109,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         context: {
           nodeId: node.id,
           locale: node.flamelink_locale,
+          schema: node._fl_meta_.schema,
           status: status,
           layout: "student-page",
         },
@@ -138,27 +140,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         context: {
           nodeId: node.id,
           locale: node.flamelink_locale,
-        },
-      })
-    })
-
-    result.data.allFlamelinkFrontPageContent.edges
-    .map((node) => node.node)
-    .map((node) => {
-      createPage({
-        path: node.path,
-        component: path.resolve(
-          `./src/templates/${
-            status == "publish" || status == node._fl_meta_.status
-              ? "student"
-              : "empty-front-page"
-          }.js`
-        ),
-        context: {
-          nodeId: node.id,
-          locale: node.flamelink_locale,
-          status: status,
-          layout: "student-page",
         },
       })
     })

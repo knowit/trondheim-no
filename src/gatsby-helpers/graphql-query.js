@@ -53,6 +53,7 @@ query {
         path
         _fl_meta_ {
           status
+          schema
         }
       }
     }
@@ -66,6 +67,7 @@ query {
         path
         _fl_meta_ {
           status
+          schema
         }
       }
     }

@@ -76,6 +76,9 @@ module.exports = {
           {
             schemaKey: "studentArticle",
             populate: true,
+            filters: [
+              ["_fl_meta_.status", "==", process.env.GATSBY_FLAMELINK_STATUS],
+            ],
           },
           {
             schemaKey: "page",

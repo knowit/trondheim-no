@@ -43,6 +43,9 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkArticleContentFieldContactInfo implements Node {
     emailAddress: String
   }
+  type FlamelinkStudentArticleContentFieldContactInfo implements Node {
+    emailAddress: String
+  }
   type FlamelinkNavbarContent implements Node {
     childFlamelinkNavbarContentFieldExtraMenuOptionsItem: [FlamelinkNavbarContentFieldExtraMenuOptionsItem]
     extraMenuOptions: [ExtraMenuOption]
