@@ -37,6 +37,9 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkArticleContentFieldLatLong implements Node {
     googleMapsStaticImage: File @link
   }
+  type FlamelinkStudentArticleContentFieldLatLong implements Node {
+    googleMapsStaticImage: File @link
+  }
   type FlamelinkArticleContentFieldContactInfo implements Node {
     emailAddress: String
   }

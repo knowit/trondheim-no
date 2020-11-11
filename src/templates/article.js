@@ -387,6 +387,14 @@ export const query = graphql`
       latLong {
         latitude
         longitude
+        googleMapsStaticImage {
+          url
+          childImageSharp {
+            fixed(width: 320) {
+              ...GatsbyImageSharpFixed_noBase64
+            }
+          }
+        }
       }
 
       content {
