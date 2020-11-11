@@ -211,6 +211,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             nodeId: node.id,
             nodeFlamelinkId: node.flamelink_id,
             locale: node.flamelink_locale,
+            schema: node._fl_meta_.schema
           },
         })
       }
@@ -223,6 +224,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       component: path.resolve("./src/templates/article.js"),
       context: {
         nodeId: node.id,
+        schema: node._fl_meta_.schema
       },
     })
   })
@@ -239,6 +241,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           nodeId: node.id,
           nodeFlamelinkId: node.flamelink_id,
           locale: node.flamelink_locale,
+          schema: node._fl_meta_.schema
         },
       })
     })
@@ -250,6 +253,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       component: path.resolve("./src/templates/article.js"),
       context: {
         nodeId: node.id,
+        schema: node._fl_meta_.schema
       },
     })
   })

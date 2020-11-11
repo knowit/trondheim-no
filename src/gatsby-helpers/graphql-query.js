@@ -21,6 +21,9 @@ query {
         flamelink_id
         flamelink_locale
         hasMapPage
+        _fl_meta_ {
+          schema
+        }
       }
     }
   }
@@ -34,6 +37,9 @@ query {
         slug
         flamelink_id
         flamelink_locale
+        _fl_meta_ {
+          schema
+        }
       }
     }
   }
@@ -80,6 +86,9 @@ query {
       id
       flamelink_locale
       path
+      _fl_meta_ {
+        schema
+      }
     }
   }
 
@@ -88,6 +97,9 @@ query {
       id
       flamelink_locale
       path
+      _fl_meta_ {
+        schema
+      }
     }
   }
 }
