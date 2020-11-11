@@ -88,7 +88,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           locale: node.flamelink_locale,
           schema: node._fl_meta_.schema,
           status: status,
-          layout: "front-page",
         },
       })
     })
@@ -111,7 +110,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           locale: node.flamelink_locale,
           schema: node._fl_meta_.schema,
           status: status,
-          layout: "student-page",
         },
       })
     })
