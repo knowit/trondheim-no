@@ -143,7 +143,7 @@
   padding: 4em 0 8em 0;
 }
 
-#student-custom-content-container #html-content-container {
+#student-custom-content-container .html-content-container {
   align-items: center;
   min-height: 300px;
   height: 500px;

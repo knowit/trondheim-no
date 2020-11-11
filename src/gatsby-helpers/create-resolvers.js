@@ -168,6 +168,15 @@ exports.createResolvers = ({ createResolvers }) => {
         },
       },
     },
+    FlamelinkTextHtmlContentNode: {
+      content: {
+        async resolve(source) {
+          return source.content=="<p></p>" || source.content=="<p></p>\n"
+            ? null
+            : source.content
+        }
+      }
+    },
     FlamelinkArticleContent: {
       path: {
         resolve(source, args, context, info) {
