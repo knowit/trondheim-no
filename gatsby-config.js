@@ -108,13 +108,6 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-plugin-remote-images`,
-      options: {
-        nodeType: "file",
-        imagePath: "edges[].node.url",
-      },
-    },
-    {
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: `Offisielt nettsted for Trondheim`,
