@@ -148,11 +148,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   result.data.allFlamelinkListingPageContent.edges
     .map((node) => node.node)
     .map((node) => {
-      if (node.slug === "student") {
-
-        // Do nothing
-
-      } else if (node.slug === "hva-skjer" || node.slug === "whats-on") {
+      if (node.slug === "hva-skjer" || node.slug === "whats-on") {
         createPage({
           path: node.path,
           component: path.resolve(`./src/templates/events-page.js`),
