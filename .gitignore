@@ -5,7 +5,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Other 
 google-cloud-gatsby-runner.json
+student-data-population.js
 
 # Environment
 .env.*

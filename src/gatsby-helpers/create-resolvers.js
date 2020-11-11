@@ -4,6 +4,7 @@ exports.createResolvers = ({ createResolvers }) => {
     if (!source._fl_meta_) {
       return ""
     }
+
     if (
       source._fl_meta_.schema === "listingPage" ||
       source._fl_meta_.schema === "article"
@@ -22,14 +23,24 @@ exports.createResolvers = ({ createResolvers }) => {
       path = `${locale === "no" ? "" : "/en"}/${path}`
 
       return path
-    } else if (
+    } 
+
+    else if (
       source._fl_meta_.schema === "page" ||
       source._fl_meta_.schema === "aboutStudyTrondheim"
     ) {
       return `${source._fl_meta_.locale === "no" ? "" : "/en"}/${source.slug}`
-    } else if (source._fl_meta_.schema === "frontPage") {
+    } 
+    
+    else if (source._fl_meta_.schema === "frontPage") {
       return source._fl_meta_.locale === "no" ? "/" : "/en"
-    } else return ""
+    } 
+    
+    else if (source._fl_meta_.schema === "studentPage") {
+      return source._fl_meta_.locale === "no" ? "/student" : "/en/student"
+    } 
+    
+    else return ""
   }
 
   const resolveMapPath = (source) => {

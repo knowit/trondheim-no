@@ -120,18 +120,25 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
 
-  // Create student page
-  const studentPageComponents = result.data.allFlamelinkStudentPageContent.edges
+    result.data.allFlamelinkFrontPageContent.edges
     .map((node) => node.node)
     .map((node) => {
-      return {
-        locale: node.flamelink_locale,
-        component:
-          process.env.GATSBY_FLAMELINK_STATUS != "publish" &&
-          node._fl_meta_.status != process.env.GATSBY_FLAMELINK_STATUS
-            ? path.resolve("./src/templates/empty-front-page.js")
-            : path.resolve("./src/templates/student.js"),
-      }
+      createPage({
+        path: node.path,
+        component: path.resolve(
+          `./src/templates/${
+            status == "publish" || status == node._fl_meta_.status
+              ? "student"
+              : "empty-front-page"
+          }.js`
+        ),
+        context: {
+          nodeId: node.id,
+          locale: node.flamelink_locale,
+          status: status,
+          layout: "student-page",
+        },
+      })
     })
 
   // Create listing pages
@@ -139,19 +146,9 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     .map((node) => node.node)
     .map((node) => {
       if (node.slug === "student") {
-        createPage({
-          path: node.path,
-          component: studentPageComponents.find(
-            (n) => n.locale === node.flamelink_locale
-          ).component,
-          context: {
-            nodeId: node.id,
-            nodeFlamelinkId: node.flamelink_id,
-            locale: node.flamelink_locale,
-            layout: "student-page",
-            status: process.env.GATSBY_FLAMELINK_STATUS,
-          },
-        })
+
+        // Do nothing
+
       } else if (node.slug === "hva-skjer" || node.slug === "whats-on") {
         createPage({
           path: node.path,
@@ -199,6 +196,33 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
   // Create articles
   result.data.allFlamelinkArticleContent.nodes.map((node) => {
+    createPage({
+      path: node.path,
+      component: path.resolve("./src/templates/article.js"),
+      context: {
+        nodeId: node.id,
+      },
+    })
+  })
+
+  // Create student listing pages
+  result.data.allFlamelinkStudentListingPageContent.edges
+    .map((node) => node.node)
+    .map(node => {
+      // Create listing page
+      createPage({
+        path: node.path,
+        component: path.resolve(`./src/templates/listing-page.js`),
+        context: {
+          nodeId: node.id,
+          nodeFlamelinkId: node.flamelink_id,
+          locale: node.flamelink_locale,
+        },
+      })
+    })
+
+  // Create student articles
+  result.data.allFlamelinkStudentArticleContent.nodes.map((node) => {
     createPage({
       path: node.path,
       component: path.resolve("./src/templates/article.js"),
