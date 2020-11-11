@@ -145,7 +145,10 @@ export const query = graphql`
     }
 
     childListingPages: allFlamelinkListingPageContent(
-      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+      filter: { 
+        parentListingPage: { id: { eq: $nodeId } }
+        flamelink_locale: { eq: $locale } 
+        }
     ) {
       edges {
         node {
@@ -179,7 +182,10 @@ export const query = graphql`
     }
 
     childStudentListingPages: allFlamelinkStudentListingPageContent(
-      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+      filter: { 
+        parentListingPage: { id: { eq: $nodeFlamelinkId } } 
+        flamelink_locale: { eq: $locale } 
+        }
     ) {
       edges {
         node {
@@ -213,7 +219,10 @@ export const query = graphql`
     }
 
     childArticles: allFlamelinkArticleContent(
-      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+      filter: { 
+        parentListingPage: { id: { eq: $nodeFlamelinkId } } 
+        flamelink_locale: { eq: $locale } 
+        }
     ) {
       edges {
         node {
@@ -250,7 +259,10 @@ export const query = graphql`
     }
 
     childStudentArticles: allFlamelinkStudentArticleContent(
-      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+      filter: { 
+        parentListingPage: { id: { eq: $nodeFlamelinkId } } 
+        flamelink_locale: { eq: $locale } 
+        }
     ) {
       edges {
         node {
