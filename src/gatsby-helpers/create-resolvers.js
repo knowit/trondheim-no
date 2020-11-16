@@ -1,6 +1,6 @@
 exports.createResolvers = ({ createResolvers }) => {
   const striptags = require("striptags")
-  
+
   const resolvePath = (source, context) => {
     if (!source._fl_meta_) {
       return ""
@@ -24,9 +24,7 @@ exports.createResolvers = ({ createResolvers }) => {
       path = `${locale === "no" ? "" : "/en"}/${path}`
 
       return path
-    } 
-
-    else if (
+    } else if (
       source._fl_meta_.schema === "studentListingPage" ||
       source._fl_meta_.schema === "studentArticle"
     ) {
@@ -41,36 +39,32 @@ exports.createResolvers = ({ createResolvers }) => {
         parent = parent.parentListingPage
       }
 
-      return context.nodeModel.runQuery({
-        query: {
-          filter: {
-            flamelink_locale: {
-              eq: locale,
+      return context.nodeModel
+        .runQuery({
+          query: {
+            filter: {
+              flamelink_locale: {
+                eq: locale,
+              },
             },
           },
-        },
-        type: 'FlamelinkStudentPageContent',
-        firstOnly: true,
-      }).then(result => {
-        const slug = result.slug
-        path = `${locale === "no" ? `/${slug}` : `/en/${slug}`}/${path}`
-        return path
-      })
-    } 
-
-    else if (
+          type: "FlamelinkStudentPageContent",
+          firstOnly: true,
+        })
+        .then((result) => {
+          const slug = result.slug
+          path = `${locale === "no" ? `/${slug}` : `/en/${slug}`}/${path}`
+          return path
+        })
+    } else if (
       source._fl_meta_.schema === "page" ||
       source._fl_meta_.schema === "aboutStudyTrondheim" ||
       source._fl_meta_.schema === "studentPage"
     ) {
       return `${source._fl_meta_.locale === "no" ? "" : "/en"}/${source.slug}`
-    } 
-    
-    else if (source._fl_meta_.schema === "frontPage") {
+    } else if (source._fl_meta_.schema === "frontPage") {
       return source._fl_meta_.locale === "no" ? "/" : "/en"
-    } 
-    
-    else return ""
+    } else return ""
   }
 
   const resolveMapPath = (source) => {
@@ -103,7 +97,6 @@ exports.createResolvers = ({ createResolvers }) => {
     }
     return ""
   }
-
 
   const findSource = (context, node, type, locale) =>
     context.nodeModel.runQuery({
@@ -230,11 +223,11 @@ exports.createResolvers = ({ createResolvers }) => {
     FlamelinkTextHtmlContentNode: {
       content: {
         async resolve(source) {
-          return source.content=="<p></p>" || source.content=="<p></p>\n"
+          return source.content == "<p></p>" || source.content == "<p></p>\n"
             ? null
             : source.content
-        }
-      }
+        },
+      },
     },
     FlamelinkArticleContent: {
       path: {
