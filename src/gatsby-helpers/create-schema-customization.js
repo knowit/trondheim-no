@@ -28,7 +28,6 @@ exports.createSchemaCustomization = ({ actions }) => {
     copyright: Copyright
     parentListingPage: FlamelinkStudentListingPageContent
     address: FlamelinkAddress
-    flamelink_locale: String
   }
   type Copyright {
     title: String
