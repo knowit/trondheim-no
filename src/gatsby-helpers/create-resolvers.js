@@ -8,23 +8,7 @@ exports.createResolvers = ({ createResolvers }) => {
 
     if (
       source._fl_meta_.schema === "listingPage" ||
-      source._fl_meta_.schema === "article"
-    ) {
-      const locale = source._fl_meta_.locale
-      var path = source.slug
-      var parent = source.parentListingPage
-
-      while (parent != null) {
-        if (parent.slug != null) {
-          path = `${parent.slug}/${path}`
-        }
-        parent = parent.parentListingPage
-      }
-
-      path = `${locale === "no" ? "" : "/en"}/${path}`
-
-      return path
-    } else if (
+      source._fl_meta_.schema === "article" ||
       source._fl_meta_.schema === "studentListingPage" ||
       source._fl_meta_.schema === "studentArticle"
     ) {
@@ -39,23 +23,28 @@ exports.createResolvers = ({ createResolvers }) => {
         parent = parent.parentListingPage
       }
 
-      return context.nodeModel
-        .runQuery({
-          query: {
-            filter: {
-              flamelink_locale: {
-                eq: locale,
+      if (
+        source._fl_meta_.schema === "studentListingPage" ||
+        source._fl_meta_.schema === "studentArticle"
+      ) {
+        return context.nodeModel
+          .runQuery({
+            query: {
+              filter: {
+                flamelink_locale: {
+                  eq: locale,
+                },
               },
             },
-          },
-          type: "FlamelinkStudentPageContent",
-          firstOnly: true,
-        })
-        .then((result) => {
-          const slug = result.slug
-          path = `${locale === "no" ? `/${slug}` : `/en/${slug}`}/${path}`
-          return path
-        })
+            type: "FlamelinkStudentPageContent",
+            firstOnly: true,
+          })
+          .then((result) => {
+            const slug = result.slug
+            path = `${locale === "no" ? `/${slug}` : `/en/${slug}`}/${path}`
+            return path
+          })
+      } else return `${locale === "no" ? "" : "/en"}/${path}`
     } else if (
       source._fl_meta_.schema === "page" ||
       source._fl_meta_.schema === "aboutStudyTrondheim" ||
@@ -208,8 +197,6 @@ exports.createResolvers = ({ createResolvers }) => {
       },
       parentListingPage: {
         async resolve(source, args, context, info) {
-          // Check if parentListingPage is not null
-          // And if it is an Array, that it contains at least one element
           return !!source.parentListingPage &&
             (!Array.isArray(source.parentListingPage) ||
               !!source.parentListingPage.length)
