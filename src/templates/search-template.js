@@ -145,12 +145,15 @@ const Search = ({ location, locale }) => {
   )
 
   const SearchResultsPage = ({ page }) => {
+    const mpn = maxPageNumber()
+    const currentPageNumber = pageNumber + 1 > mpn ? mpn : pageNumber + 1
+
     return (
       <div>
         {quantity !== "all" ? (
           <div id="page-number-text">
             {locale === "no" ? "Side " : "Page "}
-            {pageNumber + 1}
+            {currentPageNumber}
             {locale === "no" ? " av " : " of "}
             {maxPageNumber()}
           </div>
