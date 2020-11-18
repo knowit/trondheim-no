@@ -19,6 +19,7 @@ export default ({ data }) => {
         title={locale === "no" ? "Kart" : "Maps"}
         locale={locale}
         keywords={[locale === "no" ? "Kart" : "Maps"]}
+        pageID={data.flamelinkListingPageContent.id}
       />
 
       <div id="outer-container">

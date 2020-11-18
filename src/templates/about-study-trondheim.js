@@ -203,6 +203,7 @@ export default ({ data }) => {
             ? "Om study tronheim"
             : "About study study trondheim",
         ]}
+        pageID={data.flamelinkAboutStudyTrondheimContent.id}
       />
       <HeaderImage
         headerImage={data.flamelinkAboutStudyTrondheimContent.bannerImage}

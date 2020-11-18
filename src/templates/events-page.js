@@ -325,6 +325,7 @@ export default ({ data }) => {
         keywords={[
           data.node.flamelink_locale === "no" ? "Arrangementer" : "Events",
         ]}
+        pageID={data.node.id}
       />
 
       <div id="outer-container">

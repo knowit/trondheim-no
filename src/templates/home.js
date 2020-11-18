@@ -113,6 +113,7 @@ export default ({ data }) => {
             ? "Hjem"
             : "Home",
         ]}
+        pageID={data.flamelinkFrontPageContent.id}
       />
 
       <div id="outer-container">

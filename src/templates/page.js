@@ -25,7 +25,11 @@ export default ({ data }) => {
       locale={data.node.flamelink_locale}
       localizedPaths={data.node.localizedPaths}
     >
-      <SEO title={data.node.title} locale={data.node.flamelink_locale} />
+      <SEO
+        title={data.node.title}
+        locale={data.node.flamelink_locale}
+        pageID={data.node.id}
+      />
 
       <div id="outer-container">
         <div id="inner-container">
