@@ -230,11 +230,6 @@ export default ({ data, pageContext }) => {
         <div id="inner-container">
           <h2 id="article-title">{node.title}</h2>
           <ParsedHTML />
-          <OpeningHours
-            node={node}
-            localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={node.flamelink_locale}
-          />
           <ContactInfo
             node={node}
             localization={data.flamelinkArticleLocalizationContent.translations}
@@ -300,10 +295,6 @@ export const query = graphql`
         telephoneNumber
         linkToWebsite
         emailAddress
-      }
-
-      openingHours {
-        content
       }
 
       address {
@@ -372,10 +363,6 @@ export const query = graphql`
         telephoneNumber
         linkToWebsite
         emailAddress
-      }
-
-      openingHours {
-        content
       }
 
       address {
