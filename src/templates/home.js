@@ -198,15 +198,8 @@ export const query = graphql`
             localFile {
               name
               childImageSharp {
-                fluid(maxWidth: 340, quality: 70) {
-                  base64
-                  aspectRatio
-                  src
-                  srcSet
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
+                fluid(maxWidth: 370, quality: 70) {
+                  ...GatsbyImageSharpFluid
                 }
               }
             }
@@ -235,7 +228,7 @@ export const query = graphql`
         frontImage {
           localFile {
             childImageSharp {
-              fluid(maxWidth: 2400, quality: 90) {
+              fluid(maxWidth: 1800, quality: 90) {
                 ...GatsbyImageSharpFluid
               }
             }
@@ -270,14 +263,7 @@ export const query = graphql`
         localFile {
           childImageSharp {
             fluid(maxWidth: 600, quality: 70) {
-              base64
-              aspectRatio
-              src
-              srcSet
-              sizes
-              presentationWidth
-              presentationHeight
-              originalImg
+              ...GatsbyImageSharpFluid_noBase64
             }
           }
         }

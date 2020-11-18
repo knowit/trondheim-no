@@ -53,7 +53,7 @@ export default ({
             defaultThumbnail={
               listingPageDefaultThumbnail
                 ? listingPageDefaultThumbnail.image[0].localFile.childImageSharp
-                    .fluid
+                    .fixed
                 : null
             }
           />
@@ -77,7 +77,7 @@ export default ({
             defaultThumbnail={
               articleDefaultThumbnail
                 ? articleDefaultThumbnail.image[0].localFile.childImageSharp
-                    .fluid
+                    .fixed
                 : null
             }
           />
@@ -100,13 +100,13 @@ export default ({
     if (mapPage) {
       if (article.mapThumbnail != null) {
         if (article.mapThumbnail.length > 0) {
-          thumbnail = article.mapThumbnail[0]?.localFile.childImageSharp.fluid
+          thumbnail = article.mapThumbnail[0]?.localFile.childImageSharp.fixed
         }
       }
     } else {
       if (article.thumbnail != null) {
         if (article.thumbnail.length > 0) {
-          thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fluid
+          thumbnail = article.thumbnail[0]?.localFile.childImageSharp.fixed
         }
       }
     }
@@ -121,7 +121,7 @@ export default ({
         className="article-container"
         aria-label={articleHeader}
       >
-        <Img className="article-thumbnail" fluid={thumbnail} />
+        <Img className="article-thumbnail" fixed={thumbnail} />
         <div className="article-info-container">
           <h2 className="article-info-header">{articleHeader}</h2>
 

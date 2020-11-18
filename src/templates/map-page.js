@@ -96,15 +96,8 @@ export const query = graphql`
             localFile {
               name
               childImageSharp {
-                fluid(maxWidth: 340, quality: 70) {
-                  base64
-                  aspectRatio
-                  src
-                  srcSet
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
+                fixed(width: 340, quality: 70) {
+                  ...GatsbyImageSharpFixed
                 }
               }
             }
@@ -121,15 +114,8 @@ export const query = graphql`
         image {
           localFile {
             childImageSharp {
-              fluid(quality: 90) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
+              fixed(width: 340, quality: 70) {
+                ...GatsbyImageSharpFixed
               }
             }
           }
