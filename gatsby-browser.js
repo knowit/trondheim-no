@@ -9,5 +9,5 @@
 import "./src/style/global.css"
 
 export const onServiceWorkerUpdateReady = () => {
-    window.location.reload()
+  window.location.reload()
 }
