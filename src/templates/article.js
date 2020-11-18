@@ -96,30 +96,6 @@ const ContactInfo = (props) => {
   else return ""
 }
 
-const OpeningHours = ({ node, localization, locale }) => {
-  const elements = []
-  var index = 0
-  if (node.openingHours && node.openingHours.content) {
-    elements.push(
-      <h3 key={index++} className={styles.subheading}>
-        {getLocalWord(localization, "openingHours", locale)}
-      </h3>
-    )
-    elements.push(
-      <HTMLContent
-        htmlContent={{
-          content: node.openingHours.content,
-          remoteImages: [],
-        }}
-        resizeImg={false}
-        key={index++}
-      />
-    )
-  }
-  if (elements.length > 0) return <div key={index++}>{elements}</div>
-  else return ""
-}
-
 const getLocation = (obj, latKey, lngKey) => {
   if (obj && obj[latKey] && obj[lngKey]) {
     return {
@@ -230,11 +206,6 @@ export default ({ data, pageContext }) => {
         <div id="inner-container">
           <h2 id="article-title">{node.title}</h2>
           <ParsedHTML />
-          <OpeningHours
-            node={node}
-            localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={node.flamelink_locale}
-          />
           <ContactInfo
             node={node}
             localization={data.flamelinkArticleLocalizationContent.translations}
@@ -300,10 +271,6 @@ export const query = graphql`
         telephoneNumber
         linkToWebsite
         emailAddress
-      }
-
-      openingHours {
-        content
       }
 
       address {
@@ -372,10 +339,6 @@ export const query = graphql`
         telephoneNumber
         linkToWebsite
         emailAddress
-      }
-
-      openingHours {
-        content
       }
 
       address {
