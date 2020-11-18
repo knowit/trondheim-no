@@ -94,7 +94,7 @@ export default ({ children, locale, localizedPaths }) => {
           action={`${
             locale === "no" ? "/" : `/${locale.split("-")[0]}/`
           }search`}
-          onSubmit={event => {
+          onSubmit={(event) => {
             event.preventDefault()
             navigate(
               `${
@@ -112,11 +112,7 @@ export default ({ children, locale, localizedPaths }) => {
             placeholder={`${search}...`}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <button 
-            type="submit"
-            id="search-button"
-            aria-label="search-button"
-          >
+          <button type="submit" id="search-button" aria-label="search-button">
             <span id="search-button-word">{search}</span>
           </button>
         </form>
