@@ -8,7 +8,9 @@ export default ({ data, pageContext }) => {
 
   const h1Text = locale === "no" ? "Forhåndsvisning" : "Preview"
 
-  let localizedPaths = [
+  let localizedPaths = (pageContext.schema === "studentPage")  ? (
+    localizedPaths = data.studentPage.localizedPaths
+    ) : [
     {
       locale: "no",
       path: "/",
@@ -18,19 +20,6 @@ export default ({ data, pageContext }) => {
       path: "/en",
     },
   ]
-
-  if (pageContext.layout === "student-page") {
-    localizedPaths = [
-      {
-        locale: "no",
-        path: "/student",
-      },
-      {
-        locale: "en-US",
-        path: "/en/student",
-      },
-    ]
-  }
 
   return (
     <Layout locale={locale} localizedPaths={localizedPaths}>
@@ -44,30 +33,15 @@ export default ({ data, pageContext }) => {
             <b>Locale:</b> {pageContext.locale}
             <br />
             <br />
-            <b>This page is a placeholder for: </b> {pageContext.layout}
+            <b>This page is a placeholder for: </b> {pageContext.schema}
           </p>
 
-          <div className="links-container">
-            <h2>Articles</h2>
-            <ul style={{ listStyle: "none" }}>
-              {data.allFlamelinkArticleContent.edges
-                .map((node) => node.node)
-                .map(function (node, key) {
-                  return (
-                    <li key={key}>
-                      <Link to={node.path} aria-label={node.title}>
-                        {node.title}
-                      </Link>
-                    </li>
-                  )
-                })}
-            </ul>
-          </div>
+          
 
           <div className="links-container">
             <h2>Custom Pages</h2>
             <ul style={{ listStyle: "none" }}>
-              {data.allFlamelinkPageContent.edges
+              {data.pages.edges
                 .map((node) => node.node)
                 .map(function (node, key) {
                   return (
@@ -84,7 +58,7 @@ export default ({ data, pageContext }) => {
           <div className="links-container">
             <h2>Listing Pages</h2>
             <ul style={{ listStyle: "none" }}>
-              {data.allFlamelinkListingPageContent.edges
+              {data.listingPages.edges
                 .map((node) => node.node)
                 .map(function (node, key) {
                   return (
@@ -97,6 +71,58 @@ export default ({ data, pageContext }) => {
                 })}
             </ul>
           </div>
+
+          <div className="links-container">
+            <h2>Articles</h2>
+            <ul style={{ listStyle: "none" }}>
+              {data.articles.edges
+                .map((node) => node.node)
+                .map(function (node, key) {
+                  return (
+                    <li key={key}>
+                      <Link to={node.path} aria-label={node.title}>
+                        {node.title}
+                      </Link>
+                    </li>
+                  )
+                })}
+            </ul>
+          </div>
+
+          <div className="links-container">
+            <h2>Student Listing Pages</h2>
+            <ul style={{ listStyle: "none" }}>
+              {data.studentListingPages.edges
+                .map((node) => node.node)
+                .map(function (node, key) {
+                  return (
+                    <li key={key}>
+                      <Link to={node.path} aria-label={node.navigationTitle}>
+                        {node.navigationTitle}
+                      </Link>
+                    </li>
+                  )
+                })}
+            </ul>
+          </div>
+
+          <div className="links-container">
+            <h2>Student Articles</h2>
+            <ul style={{ listStyle: "none" }}>
+              {data.studentArticles.edges
+                .map((node) => node.node)
+                .map(function (node, key) {
+                  return (
+                    <li key={key}>
+                      <Link to={node.path} aria-label={node.title}>
+                        {node.title}
+                      </Link>
+                    </li>
+                  )
+                })}
+            </ul>
+          </div>
+
         </div>
       </div>
     </Layout>
@@ -105,7 +131,7 @@ export default ({ data, pageContext }) => {
 
 export const query = graphql`
   query EmptyFrontPageQuery($nodeId: String, $locale: String) {
-    flamelinkFrontPageContent(id: { eq: $nodeId }) {
+    frontPage: flamelinkFrontPageContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
       path
@@ -115,7 +141,17 @@ export const query = graphql`
       }
     }
 
-    allFlamelinkListingPageContent(
+    studentPage: flamelinkStudentPageContent(id: { eq: $nodeId }) {
+      id
+      flamelink_locale
+      path
+      localizedPaths {
+        locale
+        path
+      }
+    }
+
+    listingPages: allFlamelinkListingPageContent(
       filter: { flamelink_locale: { eq: $locale } }
     ) {
       edges {
@@ -128,7 +164,20 @@ export const query = graphql`
       }
     }
 
-    allFlamelinkArticleContent(filter: { flamelink_locale: { eq: $locale } }) {
+    studentListingPages: allFlamelinkStudentListingPageContent(
+      filter: { flamelink_locale: { eq: $locale } }
+    ) {
+      edges {
+        node {
+          id
+          flamelink_locale
+          path
+          navigationTitle
+        }
+      }
+    }
+
+    articles: allFlamelinkArticleContent(filter: { flamelink_locale: { eq: $locale } }) {
       edges {
         node {
           id
@@ -139,7 +188,18 @@ export const query = graphql`
       }
     }
 
-    allFlamelinkPageContent(filter: { flamelink_locale: { eq: $locale } }) {
+    studentArticles: allFlamelinkStudentArticleContent(filter: { flamelink_locale: { eq: $locale } }) {
+      edges {
+        node {
+          id
+          flamelink_locale
+          title
+          path
+        }
+      }
+    }
+
+    pages: allFlamelinkPageContent(filter: { flamelink_locale: { eq: $locale } }) {
       edges {
         node {
           id

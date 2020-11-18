@@ -129,39 +129,46 @@ const getLocation = (obj, latKey, lngKey) => {
   }
 }
 
-export default ({ data }) => {
+export default ({ data, pageContext }) => {
+
+  const node = pageContext.schema === 'studentArticle' ? (
+    data.studentArticle
+  ) : (
+    data.article
+  )
+
   // prettier-ignore
   const location = getLocation(
-    data.flamelinkArticleContent,
+    node,
     "latitude",
     "longitude"
   ) || getLocation(
-    data.flamelinkArticleContent.address, 
+    node.address, 
     "lat", 
     "lng"
   ) || getLocation(
-    data.flamelinkArticleContent.latLong,
+    node.latLong,
     "latitude",
     "longitude"
   )
 
   const markers = [
     {
-      id: data.flamelinkArticleContent._fl_meta_.fl_id,
-      title: data.flamelinkArticleContent.title,
-      url: data.flamelinkArticleContent.path,
+      id: node._fl_meta_.fl_id,
+      title: node.title,
+      url: node.path,
       location: location,
       parent: null,
     },
   ]
 
   const ParsedHTML = () => {
-    if (!data.flamelinkArticleContent.content) {
+    if (!node.content) {
       return null
     } else {
       return (
         <HTMLContent
-          htmlContent={data.flamelinkArticleContent.content}
+          htmlContent={node.content}
           resizeImg={false}
         />
       )
@@ -169,7 +176,7 @@ export default ({ data }) => {
   }
 
   const OfflineMap = () => {
-    const imageNode = data.flamelinkArticleContent.latLong.googleMapsStaticImage
+    const imageNode = node.latLong.googleMapsStaticImage
 
     if (imageNode != null) {
       const styles = {
@@ -192,7 +199,7 @@ export default ({ data }) => {
   }
 
   const Copyright = () => {
-    const copyright = data.flamelinkArticleContent.copyright
+    const copyright = node.copyright
     if (copyright) {
       if (copyright.content) {
         return (
@@ -210,33 +217,33 @@ export default ({ data }) => {
 
   return (
     <Layout
-      locale={data.flamelinkArticleContent.flamelink_locale}
-      localizedPaths={data.flamelinkArticleContent.localizedPaths}
+      locale={node.flamelink_locale}
+      localizedPaths={node.localizedPaths}
     >
       <SEO
-        title={data.flamelinkArticleContent.title}
-        locale={data.flamelinkArticleContent.flamelink_locale}
+        title={node.title}
+        locale={node.flamelink_locale}
         keywords={[]}
       />
 
       <div id="outer-container">
         <div id="inner-container">
-          <h2 id="article-title">{data.flamelinkArticleContent.title}</h2>
+          <h2 id="article-title">{node.title}</h2>
           <ParsedHTML />
           <OpeningHours
-            node={data.flamelinkArticleContent}
+            node={node}
             localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={data.flamelinkArticleContent.flamelink_locale}
+            locale={node.flamelink_locale}
           />
           <ContactInfo
-            node={data.flamelinkArticleContent}
+            node={node}
             localization={data.flamelinkArticleLocalizationContent.translations}
-            locale={data.flamelinkArticleContent.flamelink_locale}
+            locale={node.flamelink_locale}
           />
           <Online>
             {!!location && (
               <LoadScript>
-                <Router basepath={data.flamelinkArticleContent.path}>
+                <Router basepath={node.path}>
                   <Map
                     path="/"
                     locationMarker={location}
@@ -266,7 +273,79 @@ export const query = graphql`
       ...LocalizationFragment
     }
 
-    flamelinkArticleContent(id: { eq: $nodeId }) {
+    article: flamelinkArticleContent(id: { eq: $nodeId }) {
+      id
+      flamelink_locale
+      slug
+      path
+      title
+      tags
+
+      _fl_meta_ {
+        fl_id
+      }
+
+      localizedPaths {
+        locale
+        path
+      }
+
+      copyright {
+        title
+        content
+      }
+
+      contactInfo {
+        textToShow
+        telephoneNumber
+        linkToWebsite
+        emailAddress
+      }
+
+      openingHours {
+        content
+      }
+
+      address {
+        address
+        lat
+        lng
+      }
+
+      latLong {
+        latitude
+        longitude
+        googleMapsStaticImage {
+          url
+          childImageSharp {
+            fixed(width: 320) {
+              ...GatsbyImageSharpFixed_noBase64
+            }
+          }
+        }
+      }
+
+      content {
+        content
+        remoteImages {
+          url
+          childImageSharp {
+            fluid(maxWidth: 1200, quality: 75) {
+              base64
+              aspectRatio
+              src
+              srcSet
+              sizes
+              presentationWidth
+              presentationHeight
+              originalImg
+            }
+          }
+        }
+      }
+    }
+
+    studentArticle: flamelinkStudentArticleContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
       slug

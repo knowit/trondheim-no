@@ -21,6 +21,25 @@ query {
         flamelink_id
         flamelink_locale
         hasMapPage
+        _fl_meta_ {
+          schema
+        }
+      }
+    }
+  }
+
+  allFlamelinkStudentListingPageContent {
+    edges {
+      node {
+        id
+        path
+        mapPath
+        slug
+        flamelink_id
+        flamelink_locale
+        _fl_meta_ {
+          schema
+        }
       }
     }
   }
@@ -29,9 +48,12 @@ query {
     edges {
       node {
         id
+        slug
         flamelink_locale
+        path
         _fl_meta_ {
           status
+          schema
         }
       }
     }
@@ -45,6 +67,7 @@ query {
         path
         _fl_meta_ {
           status
+          schema
         }
       }
     }
@@ -65,6 +88,20 @@ query {
       id
       flamelink_locale
       path
+      _fl_meta_ {
+        schema
+      }
+    }
+  }
+
+  allFlamelinkStudentArticleContent {
+    nodes {
+      id
+      flamelink_locale
+      path
+      _fl_meta_ {
+        schema
+      }
     }
   }
 }
