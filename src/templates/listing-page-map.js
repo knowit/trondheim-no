@@ -202,21 +202,6 @@ export const query = graphql`
         latLong {
           latitude
           longitude
-          googleMapsStaticImage {
-            url
-            childImageSharp {
-              fluid(maxWidth: 600, quality: 80) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
-              }
-            }
-          }
         }
       }
     }
@@ -252,21 +237,6 @@ export const query = graphql`
         latLong {
           latitude
           longitude
-          googleMapsStaticImage {
-            url
-            childImageSharp {
-              fluid(maxWidth: 600, quality: 80) {
-                base64
-                aspectRatio
-                src
-                srcSet
-                sizes
-                presentationWidth
-                presentationHeight
-                originalImg
-              }
-            }
-          }
         }
       }
     }
