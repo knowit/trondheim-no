@@ -7,31 +7,25 @@ import SortableArticleView from "../components/article-list"
 import SEO from "../components/seo"
 
 export default ({ data, pageContext }) => {
-  
+  const childListingPages =
+    pageContext.schema === "studentListingPage"
+      ? data.childStudentListingPages.edges
+      : data.childListingPages.edges
 
-  const childListingPages = pageContext.schema === 'studentListingPage' ? (
-    data.childStudentListingPages.edges
-  ) : (
-    data.childListingPages.edges
-  )
+  const childArticles =
+    pageContext.schema === "studentListingPage"
+      ? data.childStudentArticles.edges
+      : data.childArticles.edges
 
-  const childArticles = pageContext.schema === 'studentListingPage' ? (
-    data.childStudentArticles.edges
-  ) : (
-    data.childArticles.edges
-  ) 
-
-  const node = pageContext.schema === 'studentListingPage' ? (
-    data.studentNode
-  ) : (
-    data.node
-  ) 
+  const node =
+    pageContext.schema === "studentListingPage" ? data.studentNode : data.node
 
   const locale = node.flamelink_locale
   const localization = data.flamelinkListingPageLocalizationContent.translations
 
   var tags = []
-  childArticles.map((node) => node.node)
+  childArticles
+    .map((node) => node.node)
     .forEach((node) => {
       if (node.tags) {
         node.tags.forEach((tag) => {
@@ -53,9 +47,7 @@ export default ({ data, pageContext }) => {
   }
 
   const LanguageButton = () => {
-    const otherLang = node.localizedPaths.find(
-      (item) => item.locale !== locale
-    )
+    const otherLang = node.localizedPaths.find((item) => item.locale !== locale)
     return otherLang ? (
       <Link id="english-button" to={otherLang.path}>
         {getLocalWord(localization, "changeLanguage", locale)}
@@ -64,14 +56,12 @@ export default ({ data, pageContext }) => {
   }
 
   return (
-    <Layout
-      locale={locale}
-      localizedPaths={node.localizedPaths}
-    >
+    <Layout locale={locale} localizedPaths={node.localizedPaths}>
       <SEO
         title={node.localTitle}
         locale={node.flamelink_locale}
         keywords={[node.navigationTitle]}
+        pageID={node.flamelink_id}
       />
 
       <div id="outer-container">
@@ -87,12 +77,8 @@ export default ({ data, pageContext }) => {
             data={data}
             tags={tags}
             localization={localization}
-            articles={childArticles.map(
-              (node) => node.node
-            )}
-            subListingPages={childListingPages.map(
-              (node) => node.node
-            )}
+            articles={childArticles.map((node) => node.node)}
+            subListingPages={childListingPages.map((node) => node.node)}
             locale={locale}
             defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck}
           />
@@ -145,10 +131,10 @@ export const query = graphql`
     }
 
     childListingPages: allFlamelinkListingPageContent(
-      filter: { 
+      filter: {
         parentListingPage: { id: { eq: $nodeId } }
-        flamelink_locale: { eq: $locale } 
-        }
+        flamelink_locale: { eq: $locale }
+      }
     ) {
       edges {
         node {
@@ -182,10 +168,10 @@ export const query = graphql`
     }
 
     childStudentListingPages: allFlamelinkStudentListingPageContent(
-      filter: { 
-        parentListingPage: { id: { eq: $nodeFlamelinkId } } 
-        flamelink_locale: { eq: $locale } 
-        }
+      filter: {
+        parentListingPage: { id: { eq: $nodeFlamelinkId } }
+        flamelink_locale: { eq: $locale }
+      }
     ) {
       edges {
         node {
@@ -219,10 +205,10 @@ export const query = graphql`
     }
 
     childArticles: allFlamelinkArticleContent(
-      filter: { 
-        parentListingPage: { id: { eq: $nodeFlamelinkId } } 
-        flamelink_locale: { eq: $locale } 
-        }
+      filter: {
+        parentListingPage: { id: { eq: $nodeFlamelinkId } }
+        flamelink_locale: { eq: $locale }
+      }
     ) {
       edges {
         node {
@@ -259,10 +245,10 @@ export const query = graphql`
     }
 
     childStudentArticles: allFlamelinkStudentArticleContent(
-      filter: { 
-        parentListingPage: { id: { eq: $nodeFlamelinkId } } 
-        flamelink_locale: { eq: $locale } 
-        }
+      filter: {
+        parentListingPage: { id: { eq: $nodeFlamelinkId } }
+        flamelink_locale: { eq: $locale }
+      }
     ) {
       edges {
         node {

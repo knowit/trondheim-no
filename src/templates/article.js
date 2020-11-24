@@ -106,12 +106,8 @@ const getLocation = (obj, latKey, lngKey) => {
 }
 
 export default ({ data, pageContext }) => {
-
-  const node = pageContext.schema === 'studentArticle' ? (
-    data.studentArticle
-  ) : (
-    data.article
-  )
+  const node =
+    pageContext.schema === "studentArticle" ? data.studentArticle : data.article
 
   // prettier-ignore
   const location = getLocation(
@@ -142,12 +138,7 @@ export default ({ data, pageContext }) => {
     if (!node.content) {
       return null
     } else {
-      return (
-        <HTMLContent
-          htmlContent={node.content}
-          resizeImg={false}
-        />
-      )
+      return <HTMLContent htmlContent={node.content} resizeImg={false} />
     }
   }
 
@@ -192,14 +183,12 @@ export default ({ data, pageContext }) => {
   }
 
   return (
-    <Layout
-      locale={node.flamelink_locale}
-      localizedPaths={node.localizedPaths}
-    >
+    <Layout locale={node.flamelink_locale} localizedPaths={node.localizedPaths}>
       <SEO
         title={node.title}
         locale={node.flamelink_locale}
         keywords={[]}
+        pageID={node.flamelink_id}
       />
 
       <div id="outer-container">
@@ -247,6 +236,7 @@ export const query = graphql`
     article: flamelinkArticleContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
+      flamelink_id
       slug
       path
       title

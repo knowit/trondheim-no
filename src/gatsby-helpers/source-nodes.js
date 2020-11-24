@@ -121,7 +121,13 @@ exports.sourceNodes = async ({
   }
 
   var menuDataMap = new Map()
-  let [frontPage, studentPage, pages, listingPages, navbar] = await Promise.all([
+  let [
+    frontPage,
+    studentPage,
+    pages,
+    listingPages,
+    navbar,
+  ] = await Promise.all([
     getNodesByType("FlamelinkFrontPageContent"),
     getNodesByType("FlamelinkStudentPageContent"),
     getNodesByType("FlamelinkPageContent"),
@@ -129,7 +135,10 @@ exports.sourceNodes = async ({
     getNodesByType("FlamelinkNavbarContent"),
   ])
 
-  const result = frontPage.concat(studentPage).concat(pages).concat(listingPages)
+  const result = frontPage
+    .concat(studentPage)
+    .concat(pages)
+    .concat(listingPages)
 
   result.map((node) => {
     const locale = node.flamelink_locale

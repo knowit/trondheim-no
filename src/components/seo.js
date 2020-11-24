@@ -2,7 +2,12 @@ import React from "react"
 import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
 
-export default ({ title = null, keywords = [], locale = "no" }) => {
+export default ({
+  pageID = null,
+  title = null,
+  keywords = [],
+  locale = "no",
+}) => {
   const data = useStaticQuery(
     graphql`
       query {
@@ -48,6 +53,10 @@ export default ({ title = null, keywords = [], locale = "no" }) => {
             .map((keyword) => keyword.keyword)
             .concat(keywords)
             .join(","),
+        },
+        {
+          name: "pageID",
+          content: pageID,
         },
       ]}
     />

@@ -50,10 +50,7 @@ export default ({ data }) => {
           <div id="student-logo-container">
             <Img
               id="student-logo-image"
-              fixed={
-                data.node.logoImage[0].localFile.childImageSharp
-                  .fixed
-              }
+              fixed={data.node.logoImage[0].localFile.childImageSharp.fixed}
             />
           </div>
         </div>
@@ -117,6 +114,7 @@ export default ({ data }) => {
         title="Student"
         locale={data.node.flamelink_locale}
         keywords={["Student"]}
+        pageID={data.node.flamelink_id}
       />
       <Navigation />
       <HeaderImage bannerImage={data.node.bannerImage} />
@@ -132,15 +130,9 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query StudentPageQuery(
-    $nodeId: String
-    $locale: String
-  ) {
-
-    listingPages: allFlamelinkStudentListingPageContent (
-      filter: {
-        flamelink_locale: { eq: $locale }
-      }
+  query StudentPageQuery($nodeId: String, $locale: String) {
+    listingPages: allFlamelinkStudentListingPageContent(
+      filter: { flamelink_locale: { eq: $locale } }
     ) {
       edges {
         node {
@@ -166,11 +158,10 @@ export const query = graphql`
       }
     }
 
-    node: flamelinkStudentPageContent(
-      id: { eq: $nodeId }
-    ) {
+    node: flamelinkStudentPageContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
+      flamelink_id
       navigationText
 
       localizedPaths {

@@ -203,6 +203,7 @@ export default ({ data }) => {
             ? "Om study tronheim"
             : "About study study trondheim",
         ]}
+        pageID={data.flamelinkAboutStudyTrondheimContent.flamelink_id}
       />
       <HeaderImage
         headerImage={data.flamelinkAboutStudyTrondheimContent.bannerImage}
@@ -227,6 +228,7 @@ export const query = graphql`
     flamelinkAboutStudyTrondheimContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
+      flamelink_id
 
       localizedPaths {
         locale

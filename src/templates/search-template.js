@@ -288,6 +288,7 @@ export default ({ pageContext, location }) => {
         title={pageContext.locale === "no" ? "Søk" : "Search"}
         locale={pageContext.locale}
         keywords={[pageContext.locale === "no" ? "Søk" : "Search"]}
+        pageID={pageContext.locale === "no" ? "sok" : "search"}
       />
 
       <div id="outer-container">
