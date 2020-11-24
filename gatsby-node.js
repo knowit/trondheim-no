@@ -186,7 +186,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             nodeId: node.id,
             nodeFlamelinkId: node.flamelink_id,
             locale: node.flamelink_locale,
-            schema: node._fl_meta_.schema
+            schema: node._fl_meta_.schema,
           },
         })
       }
@@ -199,7 +199,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       component: path.resolve("./src/templates/article.js"),
       context: {
         nodeId: node.id,
-        schema: node._fl_meta_.schema
+        schema: node._fl_meta_.schema,
       },
     })
   })
@@ -207,7 +207,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   // Create student listing pages
   result.data.allFlamelinkStudentListingPageContent.edges
     .map((node) => node.node)
-    .map(node => {
+    .map((node) => {
       // Create listing page
       createPage({
         path: node.path,
@@ -216,7 +216,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           nodeId: node.id,
           nodeFlamelinkId: node.flamelink_id,
           locale: node.flamelink_locale,
-          schema: node._fl_meta_.schema
+          schema: node._fl_meta_.schema,
         },
       })
     })
@@ -228,7 +228,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       component: path.resolve("./src/templates/article.js"),
       context: {
         nodeId: node.id,
-        schema: node._fl_meta_.schema
+        schema: node._fl_meta_.schema,
       },
     })
   })

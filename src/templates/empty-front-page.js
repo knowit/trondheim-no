@@ -8,18 +8,19 @@ export default ({ data, pageContext }) => {
 
   const h1Text = locale === "no" ? "Forhåndsvisning" : "Preview"
 
-  let localizedPaths = (pageContext.schema === "studentPage")  ? (
-    localizedPaths = data.studentPage.localizedPaths
-    ) : [
-    {
-      locale: "no",
-      path: "/",
-    },
-    {
-      locale: "en-US",
-      path: "/en",
-    },
-  ]
+  let localizedPaths =
+    pageContext.schema === "studentPage"
+      ? (localizedPaths = data.studentPage.localizedPaths)
+      : [
+          {
+            locale: "no",
+            path: "/",
+          },
+          {
+            locale: "en-US",
+            path: "/en",
+          },
+        ]
 
   return (
     <Layout locale={locale} localizedPaths={localizedPaths}>
@@ -35,8 +36,6 @@ export default ({ data, pageContext }) => {
             <br />
             <b>This page is a placeholder for: </b> {pageContext.schema}
           </p>
-
-          
 
           <div className="links-container">
             <h2>Custom Pages</h2>
@@ -122,7 +121,6 @@ export default ({ data, pageContext }) => {
                 })}
             </ul>
           </div>
-
         </div>
       </div>
     </Layout>
@@ -177,7 +175,9 @@ export const query = graphql`
       }
     }
 
-    articles: allFlamelinkArticleContent(filter: { flamelink_locale: { eq: $locale } }) {
+    articles: allFlamelinkArticleContent(
+      filter: { flamelink_locale: { eq: $locale } }
+    ) {
       edges {
         node {
           id
@@ -188,7 +188,9 @@ export const query = graphql`
       }
     }
 
-    studentArticles: allFlamelinkStudentArticleContent(filter: { flamelink_locale: { eq: $locale } }) {
+    studentArticles: allFlamelinkStudentArticleContent(
+      filter: { flamelink_locale: { eq: $locale } }
+    ) {
       edges {
         node {
           id
@@ -199,7 +201,9 @@ export const query = graphql`
       }
     }
 
-    pages: allFlamelinkPageContent(filter: { flamelink_locale: { eq: $locale } }) {
+    pages: allFlamelinkPageContent(
+      filter: { flamelink_locale: { eq: $locale } }
+    ) {
       edges {
         node {
           id
