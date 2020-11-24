@@ -188,7 +188,7 @@ export default ({ data, pageContext }) => {
         title={node.title}
         locale={node.flamelink_locale}
         keywords={[]}
-        pageID={node.id}
+        pageID={node.flamelink_id}
       />
 
       <div id="outer-container">
@@ -236,6 +236,7 @@ export const query = graphql`
     article: flamelinkArticleContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
+      flamelink_id
       slug
       path
       title

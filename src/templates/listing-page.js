@@ -61,7 +61,7 @@ export default ({ data, pageContext }) => {
         title={node.localTitle}
         locale={node.flamelink_locale}
         keywords={[node.navigationTitle]}
-        pageID={node.id}
+        pageID={node.flamelink_id}
       />
 
       <div id="outer-container">
