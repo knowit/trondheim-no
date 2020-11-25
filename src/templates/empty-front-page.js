@@ -10,7 +10,7 @@ export default ({ data, pageContext }) => {
 
   let localizedPaths =
     pageContext.schema === "studentPage"
-      ? (localizedPaths = data.studentPage.localizedPaths)
+      ? data.studentPage.localizedPaths
       : [
           {
             locale: "no",
