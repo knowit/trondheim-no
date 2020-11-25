@@ -50,10 +50,7 @@ export default ({ data }) => {
           <div id="student-logo-container">
             <Img
               id="student-logo-image"
-              fixed={
-                data.studentPageNode.logoImage[0].localFile.childImageSharp
-                  .fixed
-              }
+              fixed={data.node.logoImage[0].localFile.childImageSharp.fixed}
             />
           </div>
         </div>
@@ -82,19 +79,19 @@ export default ({ data }) => {
     )
   }
 
-  const SubListingPages = () => {
+  const ListingPages = () => {
     return (
       <div id="student-listing-pages-container">
-        <h1>{data.studentPageNode.navigationText}</h1>
+        <h1>{data.node.navigationText}</h1>
         <div id="student-listing-pages">
           <h1>{data.node.localTitle}</h1>
           <div id="student-listing-pages-grid-container">
-            {data.subListingPages.edges
+            {data.listingPages.edges
               .map((node) => node.node)
               .map((n) => (
                 <ListingPage key={n.id} node={n} />
               ))}
-            {data.studentPageNode.additionalListingPages.map((n) => (
+            {data.node.additionalListingPages.map((n) => (
               <ListingPage key={n.id} node={n} />
             ))}
           </div>
@@ -106,7 +103,7 @@ export default ({ data }) => {
   const CustomContent = () => {
     return (
       <div id="student-custom-content-container">
-        <HTMLContent htmlContent={data.studentPageNode.customContent} />
+        <HTMLContent htmlContent={data.node.customContent} />
       </div>
     )
   }
@@ -115,16 +112,17 @@ export default ({ data }) => {
     <div>
       <SEO
         title="Student"
-        locale={data.studentPageNode.flamelink_locale}
+        locale={data.node.flamelink_locale}
         keywords={["Student"]}
+        pageID={data.node.flamelink_id}
       />
       <Navigation />
-      <HeaderImage bannerImage={data.studentPageNode.bannerImage} />
-      <SubListingPages />
+      <HeaderImage bannerImage={data.node.bannerImage} />
+      <ListingPages />
       <CustomContent />
       <LinkColumns
-        linkColumns={data.studentPageNode.linkColumns}
-        columnsBackgroundImage={data.studentPageNode.columnsBackgroundImage}
+        linkColumns={data.node.linkColumns}
+        columnsBackgroundImage={data.node.columnsBackgroundImage}
         type="student"
       />
     </div>
@@ -132,22 +130,9 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query StudentPageQuery(
-    $nodeId: String
-    $nodeFlamelinkId: String
-    $locale: String
-  ) {
-    node: flamelinkListingPageContent(id: { eq: $nodeId }) {
-      id
-      flamelink_locale
-      localizedPaths {
-        locale
-        path
-      }
-    }
-
-    subListingPages: allFlamelinkListingPageContent(
-      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+  query StudentPageQuery($nodeId: String, $locale: String) {
+    listingPages: allFlamelinkStudentListingPageContent(
+      filter: { flamelink_locale: { eq: $locale } }
     ) {
       edges {
         node {
@@ -173,12 +158,16 @@ export const query = graphql`
       }
     }
 
-    studentPageNode: flamelinkStudentPageContent(
-      flamelink_locale: { eq: $locale }
-    ) {
+    node: flamelinkStudentPageContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
+      flamelink_id
       navigationText
+
+      localizedPaths {
+        locale
+        path
+      }
 
       additionalListingPages {
         id

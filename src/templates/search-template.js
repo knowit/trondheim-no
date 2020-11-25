@@ -145,12 +145,15 @@ const Search = ({ location, locale }) => {
   )
 
   const SearchResultsPage = ({ page }) => {
+    const mpn = maxPageNumber()
+    const currentPageNumber = pageNumber + 1 > mpn ? mpn : pageNumber + 1
+
     return (
       <div>
         {quantity !== "all" ? (
           <div id="page-number-text">
             {locale === "no" ? "Side " : "Page "}
-            {pageNumber + 1}
+            {currentPageNumber}
             {locale === "no" ? " av " : " of "}
             {maxPageNumber()}
           </div>
@@ -285,6 +288,7 @@ export default ({ pageContext, location }) => {
         title={pageContext.locale === "no" ? "Søk" : "Search"}
         locale={pageContext.locale}
         keywords={[pageContext.locale === "no" ? "Søk" : "Search"]}
+        pageID={pageContext.locale === "no" ? "sok" : "search"}
       />
 
       <div id="outer-container">

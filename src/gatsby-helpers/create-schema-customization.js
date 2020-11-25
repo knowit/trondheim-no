@@ -20,6 +20,15 @@ exports.createSchemaCustomization = ({ actions }) => {
     parentListingPage: FlamelinkListingPageContent
     address: FlamelinkAddress
   }
+  type FlamelinkStudentArticleContent implements Node {
+    tags: [String]
+    path: String
+    localizedPaths : [LocalizedPath]
+    content: FlamelinkTextHtmlContentNode
+    copyright: Copyright
+    parentListingPage: FlamelinkStudentListingPageContent
+    address: FlamelinkAddress
+  }
   type Copyright {
     title: String
     content: String
@@ -27,7 +36,13 @@ exports.createSchemaCustomization = ({ actions }) => {
   type FlamelinkArticleContentFieldLatLong implements Node {
     googleMapsStaticImage: File @link
   }
+  type FlamelinkStudentArticleContentFieldLatLong implements Node {
+    googleMapsStaticImage: File @link
+  }
   type FlamelinkArticleContentFieldContactInfo implements Node {
+    emailAddress: String
+  }
+  type FlamelinkStudentArticleContentFieldContactInfo implements Node {
     emailAddress: String
   }
   type FlamelinkNavbarContent implements Node {
@@ -45,6 +60,12 @@ exports.createSchemaCustomization = ({ actions }) => {
   }
   type FlamelinkListingPageContent implements Node {
     parentListingPage: FlamelinkListingPageContent
+    path: String
+    mapPath: String
+    localizedPaths : [LocalizedPath]
+  }
+  type FlamelinkStudentListingPageContent implements Node {
+    parentListingPage: FlamelinkStudentListingPageContent
     path: String
     mapPath: String
     localizedPaths : [LocalizedPath]

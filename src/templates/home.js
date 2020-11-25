@@ -113,6 +113,7 @@ export default ({ data }) => {
             ? "Hjem"
             : "Home",
         ]}
+        pageID={data.flamelinkFrontPageContent.flamelink_id}
       />
 
       <div id="outer-container">
@@ -217,6 +218,7 @@ export const query = graphql`
     flamelinkFrontPageContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
+      flamelink_id
       path
       localizedPaths {
         locale

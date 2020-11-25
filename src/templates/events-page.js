@@ -19,6 +19,7 @@ export const query = graphql`
     node: flamelinkListingPageContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
+      flamelink_id
       localTitle
       textOnPage
       path
@@ -325,6 +326,7 @@ export default ({ data }) => {
         keywords={[
           data.node.flamelink_locale === "no" ? "Arrangementer" : "Events",
         ]}
+        pageID={data.node.flamelink_id}
       />
 
       <div id="outer-container">

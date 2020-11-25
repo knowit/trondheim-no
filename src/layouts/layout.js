@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import "../style/layout.css"
 import { Helmet } from "react-helmet"
-import { Link, graphql, useStaticQuery } from "gatsby"
+import { Link, graphql, useStaticQuery, navigate } from "gatsby"
 import Img from "gatsby-image"
 import BurgerMenu from "../components/menu.js"
 import { getLocalWord } from "../helpers/helpers"
@@ -94,6 +94,14 @@ export default ({ children, locale, localizedPaths }) => {
           action={`${
             locale === "no" ? "/" : `/${locale.split("-")[0]}/`
           }search`}
+          onSubmit={(event) => {
+            event.preventDefault()
+            navigate(
+              `${
+                locale === "no" ? "/" : `/${locale.split("-")[0]}/`
+              }search?query=${query}`
+            )
+          }}
         >
           <input
             type="text"
@@ -104,15 +112,9 @@ export default ({ children, locale, localizedPaths }) => {
             placeholder={`${search}...`}
             onChange={(e) => setQuery(e.target.value)}
           />
-
-          <Link
-            id="search-button"
-            to={`${
-              locale === "no" ? "/" : `/${locale.split("-")[0]}/`
-            }search?query=${query}`}
-          >
+          <button type="submit" id="search-button" aria-label="search-button">
             <span id="search-button-word">{search}</span>
-          </Link>
+          </button>
         </form>
       </footer>
     </div>

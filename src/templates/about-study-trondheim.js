@@ -25,7 +25,7 @@ const ContactPerson = ({ person }) => {
         className={styles.profilePicture}
         fluid={person.picture[0].localFile.childImageSharp.fluid}
         alt="Profile picture"
-        imgStyle={{height: "auto"}}
+        imgStyle={{ height: "auto" }}
       />
       <h3 className={styles.personTitle}>{person.title}</h3>
       <p className={styles.personContactInfo}>{person.name}</p>
@@ -203,6 +203,7 @@ export default ({ data }) => {
             ? "Om study tronheim"
             : "About study study trondheim",
         ]}
+        pageID={data.flamelinkAboutStudyTrondheimContent.flamelink_id}
       />
       <HeaderImage
         headerImage={data.flamelinkAboutStudyTrondheimContent.bannerImage}
@@ -227,6 +228,7 @@ export const query = graphql`
     flamelinkAboutStudyTrondheimContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
+      flamelink_id
 
       localizedPaths {
         locale

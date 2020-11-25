@@ -6,12 +6,25 @@ import { Link, graphql } from "gatsby"
 import SortableArticleView from "../components/article-list"
 import SEO from "../components/seo"
 
-export default ({ data }) => {
-  const locale = data.flamelinkListingPageContent.flamelink_locale
+export default ({ data, pageContext }) => {
+  const childListingPages =
+    pageContext.schema === "studentListingPage"
+      ? data.childStudentListingPages.edges
+      : data.childListingPages.edges
+
+  const childArticles =
+    pageContext.schema === "studentListingPage"
+      ? data.childStudentArticles.edges
+      : data.childArticles.edges
+
+  const node =
+    pageContext.schema === "studentListingPage" ? data.studentNode : data.node
+
+  const locale = node.flamelink_locale
   const localization = data.flamelinkListingPageLocalizationContent.translations
 
   var tags = []
-  data.allFlamelinkArticleContent.edges
+  childArticles
     .map((node) => node.node)
     .forEach((node) => {
       if (node.tags) {
@@ -24,9 +37,9 @@ export default ({ data }) => {
     })
 
   const MapButton = () => {
-    if (data.flamelinkListingPageContent.hasMapPage) {
+    if (node.hasMapPage) {
       return (
-        <Link id="map-button" to={data.flamelinkListingPageContent.mapPath}>
+        <Link id="map-button" to={node.mapPath}>
           {getLocalWord(localization, "showOnMap", locale)}
         </Link>
       )
@@ -34,9 +47,7 @@ export default ({ data }) => {
   }
 
   const LanguageButton = () => {
-    const otherLang = data.flamelinkListingPageContent.localizedPaths.find(
-      (item) => item.locale !== locale
-    )
+    const otherLang = node.localizedPaths.find((item) => item.locale !== locale)
     return otherLang ? (
       <Link id="english-button" to={otherLang.path}>
         {getLocalWord(localization, "changeLanguage", locale)}
@@ -45,21 +56,19 @@ export default ({ data }) => {
   }
 
   return (
-    <Layout
-      locale={locale}
-      localizedPaths={data.flamelinkListingPageContent.localizedPaths}
-    >
+    <Layout locale={locale} localizedPaths={node.localizedPaths}>
       <SEO
-        title={data.flamelinkListingPageContent.localTitle}
-        locale={data.flamelinkListingPageContent.flamelink_locale}
-        keywords={[data.flamelinkListingPageContent.navigationTitle]}
+        title={node.localTitle}
+        locale={node.flamelink_locale}
+        keywords={[node.navigationTitle]}
+        pageID={node.flamelink_id}
       />
 
       <div id="outer-container">
         <div id="inner-container">
           <div id="articles-header">
-            <h2>{data.flamelinkListingPageContent.localTitle}</h2>
-            <p>{data.flamelinkListingPageContent.textOnPage}</p>
+            <h2>{node.localTitle}</h2>
+            <p>{node.textOnPage}</p>
             <MapButton />
             <LanguageButton />
           </div>
@@ -68,12 +77,8 @@ export default ({ data }) => {
             data={data}
             tags={tags}
             localization={localization}
-            articles={data.allFlamelinkArticleContent.edges.map(
-              (node) => node.node
-            )}
-            subListingPages={data.allFlamelinkListingPageContent.edges.map(
-              (node) => node.node
-            )}
+            articles={childArticles.map((node) => node.node)}
+            subListingPages={childListingPages.map((node) => node.node)}
             locale={locale}
             defaultThumbnails={data.flamelinkDefaultThumbnailsContent.imageDeck}
           />
@@ -93,7 +98,7 @@ export const query = graphql`
       ...LocalizationFragment
     }
 
-    flamelinkListingPageContent(id: { eq: $nodeId }) {
+    node: flamelinkListingPageContent(id: { eq: $nodeId }) {
       id
       flamelink_id
       flamelink_locale
@@ -109,8 +114,27 @@ export const query = graphql`
       }
     }
 
-    allFlamelinkListingPageContent(
-      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+    studentNode: flamelinkStudentListingPageContent(id: { eq: $nodeId }) {
+      id
+      flamelink_id
+      flamelink_locale
+      path
+      mapPath
+      slug
+      hasMapPage
+      localTitle
+      textOnPage
+      localizedPaths {
+        locale
+        path
+      }
+    }
+
+    childListingPages: allFlamelinkListingPageContent(
+      filter: {
+        parentListingPage: { id: { eq: $nodeId } }
+        flamelink_locale: { eq: $locale }
+      }
     ) {
       edges {
         node {
@@ -143,8 +167,88 @@ export const query = graphql`
       }
     }
 
-    allFlamelinkArticleContent(
-      filter: { parentListingPage: { id: { eq: $nodeFlamelinkId } } }
+    childStudentListingPages: allFlamelinkStudentListingPageContent(
+      filter: {
+        parentListingPage: { id: { eq: $nodeFlamelinkId } }
+        flamelink_locale: { eq: $locale }
+      }
+    ) {
+      edges {
+        node {
+          id
+          flamelink_id
+          flamelink_locale
+          path
+
+          localTitle
+          navigationTitle
+
+          thumbnail {
+            localFile {
+              name
+              childImageSharp {
+                fluid(maxWidth: 340, quality: 70) {
+                  base64
+                  aspectRatio
+                  src
+                  srcSet
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    childArticles: allFlamelinkArticleContent(
+      filter: {
+        parentListingPage: { id: { eq: $nodeFlamelinkId } }
+        flamelink_locale: { eq: $locale }
+      }
+    ) {
+      edges {
+        node {
+          id
+          flamelink_locale
+          slug
+          tags
+          title
+          path
+
+          parentListingPage {
+            id
+            localTitle
+          }
+
+          thumbnail {
+            localFile {
+              childImageSharp {
+                fluid(maxWidth: 340, quality: 70) {
+                  base64
+                  aspectRatio
+                  src
+                  srcSet
+                  sizes
+                  presentationWidth
+                  presentationHeight
+                  originalImg
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    childStudentArticles: allFlamelinkStudentArticleContent(
+      filter: {
+        parentListingPage: { id: { eq: $nodeFlamelinkId } }
+        flamelink_locale: { eq: $locale }
+      }
     ) {
       edges {
         node {

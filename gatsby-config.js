@@ -74,6 +74,13 @@ module.exports = {
             ],
           },
           {
+            schemaKey: "studentArticle",
+            populate: true,
+            filters: [
+              ["_fl_meta_.status", "==", process.env.GATSBY_FLAMELINK_STATUS],
+            ],
+          },
+          {
             schemaKey: "page",
             populate: true,
             filters: [
@@ -87,6 +94,7 @@ module.exports = {
           { schemaKey: "layoutLocalization", populate: true },
 
           { schemaKey: "listingPage", populate: true },
+          { schemaKey: "studentListingPage", populate: true },
           { schemaKey: "listingPageLocalization", populate: true },
           { schemaKey: "navbar", populate: true },
           { schemaKey: "seo", populate: true },
@@ -97,13 +105,6 @@ module.exports = {
         environment: "production",
         navigation: true,
         globals: true,
-      },
-    },
-    {
-      resolve: `gatsby-plugin-remote-images`,
-      options: {
-        nodeType: "file",
-        imagePath: "edges[].node.url",
       },
     },
     {

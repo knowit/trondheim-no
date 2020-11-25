@@ -1,12 +1,16 @@
 exports.createResolvers = ({ createResolvers }) => {
   const striptags = require("striptags")
-  const resolvePath = (source) => {
+
+  const resolvePath = (source, context) => {
     if (!source._fl_meta_) {
       return ""
     }
+
     if (
       source._fl_meta_.schema === "listingPage" ||
-      source._fl_meta_.schema === "article"
+      source._fl_meta_.schema === "article" ||
+      source._fl_meta_.schema === "studentListingPage" ||
+      source._fl_meta_.schema === "studentArticle"
     ) {
       const locale = source._fl_meta_.locale
       var path = source.slug
@@ -19,12 +23,32 @@ exports.createResolvers = ({ createResolvers }) => {
         parent = parent.parentListingPage
       }
 
-      path = `${locale === "no" ? "" : "/en"}/${path}`
-
-      return path
+      if (
+        source._fl_meta_.schema === "studentListingPage" ||
+        source._fl_meta_.schema === "studentArticle"
+      ) {
+        return context.nodeModel
+          .runQuery({
+            query: {
+              filter: {
+                flamelink_locale: {
+                  eq: locale,
+                },
+              },
+            },
+            type: "FlamelinkStudentPageContent",
+            firstOnly: true,
+          })
+          .then((result) => {
+            const slug = result.slug
+            path = `${locale === "no" ? `/${slug}` : `/en/${slug}`}/${path}`
+            return path
+          })
+      } else return `${locale === "no" ? "" : "/en"}/${path}`
     } else if (
       source._fl_meta_.schema === "page" ||
-      source._fl_meta_.schema === "aboutStudyTrondheim"
+      source._fl_meta_.schema === "aboutStudyTrondheim" ||
+      source._fl_meta_.schema === "studentPage"
     ) {
       return `${source._fl_meta_.locale === "no" ? "" : "/en"}/${source.slug}`
     } else if (source._fl_meta_.schema === "frontPage") {
@@ -111,7 +135,7 @@ exports.createResolvers = ({ createResolvers }) => {
       result.map((node) => {
         paths.push({
           locale: node.flamelink_locale,
-          path: resolvePath(node),
+          path: resolvePath(node, context),
         })
       })
 
@@ -147,8 +171,32 @@ exports.createResolvers = ({ createResolvers }) => {
       },
       parentListingPage: {
         async resolve(source, args, context, info) {
-          // Check if parentListingPage is not null
-          // And if it is an Array, that it contains at least one element
+          return !!source.parentListingPage &&
+            (!Array.isArray(source.parentListingPage) ||
+              !!source.parentListingPage.length)
+            ? source.parentListingPage
+            : null
+        },
+      },
+    },
+    FlamelinkStudentListingPageContent: {
+      path: {
+        resolve(source, args, context, info) {
+          return resolvePath(source, context)
+        },
+      },
+      mapPath: {
+        resolve(source, args, context, info) {
+          return resolveMapPath(source)
+        },
+      },
+      localizedPaths: {
+        resolve(source, args, context, info) {
+          return resolveLocalizedPaths(source, context)
+        },
+      },
+      parentListingPage: {
+        async resolve(source, args, context, info) {
           return !!source.parentListingPage &&
             (!Array.isArray(source.parentListingPage) ||
               !!source.parentListingPage.length)
@@ -160,16 +208,28 @@ exports.createResolvers = ({ createResolvers }) => {
     FlamelinkTextHtmlContentNode: {
       content: {
         async resolve(source) {
-          return source.content=="<p></p>" || source.content=="<p></p>\n"
+          return source.content == "<p></p>" || source.content == "<p></p>\n"
             ? null
             : source.content
-        }
-      }
+        },
+      },
     },
     FlamelinkArticleContent: {
       path: {
         resolve(source, args, context, info) {
           return resolvePath(source)
+        },
+      },
+      localizedPaths: {
+        resolve(source, args, context, info) {
+          return resolveLocalizedPaths(source, context)
+        },
+      },
+    },
+    FlamelinkStudentArticleContent: {
+      path: {
+        resolve(source, args, context, info) {
+          return resolvePath(source, context)
         },
       },
       localizedPaths: {
@@ -205,7 +265,7 @@ exports.createResolvers = ({ createResolvers }) => {
     FlamelinkStudentPageContent: {
       path: {
         resolve(source, args, context, info) {
-          return resolvePath(source)
+          return resolvePath(source, context)
         },
       },
       localizedPaths: {
