@@ -150,7 +150,7 @@ export const query = graphql`
             localFile {
               name
               childImageSharp {
-                fixed(width: 340, quality: 70) {
+                fixed(width: 150, quality: 70) {
                   ...GatsbyImageSharpFixed
                 }
               }
@@ -180,7 +180,7 @@ export const query = graphql`
             localFile {
               name
               childImageSharp {
-                fixed(width: 340, quality: 70) {
+                fixed(width: 150, quality: 70) {
                   ...GatsbyImageSharpFixed
                 }
               }
@@ -213,7 +213,7 @@ export const query = graphql`
           thumbnail {
             localFile {
               childImageSharp {
-                fixed(width: 340, quality: 70) {
+                fixed(width: 100, quality: 70) {
                   ...GatsbyImageSharpFixed
                 }
               }
@@ -246,7 +246,7 @@ export const query = graphql`
           thumbnail {
             localFile {
               childImageSharp {
-                fixed(width: 340, quality: 70) {
+                fixed(width: 150, quality: 70) {
                   ...GatsbyImageSharpFixed
                 }
               }
@@ -264,7 +264,7 @@ export const query = graphql`
         image {
           localFile {
             childImageSharp {
-              fixed(width: 340, quality: 70) {
+              fixed(width: 150, quality: 70) {
                 ...GatsbyImageSharpFixed
               }
             }
