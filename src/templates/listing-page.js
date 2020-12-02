@@ -67,7 +67,7 @@ export default ({ data, pageContext }) => {
       <div id="outer-container">
         <div id="inner-container">
           <div id="articles-header">
-            <h2>{node.localTitle}</h2>
+            <h1>{node.localTitle}</h1>
             <p>{node.textOnPage}</p>
             <MapButton />
             <LanguageButton />
