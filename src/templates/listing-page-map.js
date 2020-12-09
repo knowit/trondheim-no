@@ -130,7 +130,7 @@ export default ({ data }) => {
 
           <Offline>
             <div id="content-container">
-              <h2>{data.node.mapPageTitle}</h2>
+              <h1>{data.node.mapPageTitle}</h1>
               <p>
                 {getLocalWord(
                   data.localization.translations,
