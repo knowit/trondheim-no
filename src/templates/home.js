@@ -46,6 +46,7 @@ export default ({ data }) => {
               icon={props.icon.name}
               color={props.icon.color}
               size={"2x"}
+              role={"presentation"}
             />
           </div>
           <div className="frontpage-card-content">

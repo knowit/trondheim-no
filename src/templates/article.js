@@ -193,7 +193,7 @@ export default ({ data, pageContext }) => {
 
       <div id="outer-container">
         <div id="inner-container">
-          <h2 id="article-title">{node.title}</h2>
+          <h1 id="article-title">{node.title}</h1>
           <ParsedHTML />
           <ContactInfo
             node={node}
