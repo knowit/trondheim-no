@@ -25,7 +25,7 @@ export default ({ data }) => {
       <div id="outer-container">
         <div id="inner-container">
           <div id="articles-header">
-            <h2>{data.flamelinkListingPageContent.localTitle}</h2>
+            <h1>{data.flamelinkListingPageContent.localTitle}</h1>
             <p>{data.flamelinkListingPageContent.textOnPage}</p>
             <Link
               id="english-button"
