@@ -67,12 +67,6 @@ export default ({ data }) => {
             >
               <div className="home-text">{navbar.navbarText}</div>
             </Link>
-            <div className="home-logo">
-              <Img
-                fluid={navbar.logo[0].localFile.childImageSharp.fluid}
-                alt="Trondheim logo"
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -267,22 +261,6 @@ export const query = graphql`
           id
           flamelink_locale
           navbarText
-          logo {
-            localFile {
-              childImageSharp {
-                fluid(maxWidth: 120, quality: 70) {
-                  base64
-                  aspectRatio
-                  src
-                  srcSet
-                  sizes
-                  presentationWidth
-                  presentationHeight
-                  originalImg
-                }
-              }
-            }
-          }
         }
       }
     }

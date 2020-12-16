@@ -21,7 +21,7 @@
   display: flex;
   margin: auto 0;
   height: auto;
-  min-width: 150px;
+  min-width: 130px;
 }
 
 .language-item {
@@ -240,12 +240,6 @@
   font-size: 17px;
   color: #005aa7;
   font-weight: 400;
-}
-
-.home-logo{
-  display: block;
-  width: 55px;
-  margin: auto 0;
 }
 
 @media only screen and (max-width: 1300px) {
