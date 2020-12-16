@@ -87,9 +87,9 @@ const ContactInfo = (props) => {
   if (elements.length > 0)
     return (
       <div>
-        <h3 className={styles.subheading}>
+        <h2 className={styles.subheading}>
           {getLocalWord(props.localization, "contactInfo", props.locale)}
-        </h3>
+        </h2>
         <div>{elements}</div>
       </div>
     )
