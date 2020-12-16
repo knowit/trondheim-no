@@ -10,6 +10,7 @@
 #student-header-content {
   display: flex;
   flex-direction: row;
+  flex-flow: wrap;
   justify-content: center;
   width: 60%;
 }
@@ -20,6 +21,7 @@
   display: flex;
   margin: auto 0;
   height: auto;
+  min-width: 150px;
 }
 
 .language-item {
@@ -225,3 +227,58 @@
   max-width: 100%;
   word-wrap: break-word;
 }
+
+.home-container{
+  position: relative;
+  display: flex;
+  margin: auto 0;
+}
+
+.home-text{
+  margin-right: 5px;
+  padding-right: 5px;
+  font-size: 17px;
+  color: #005aa7;
+  font-weight: 400;
+}
+
+.home-logo{
+  display: block;
+  width: 55px;
+  margin: auto 0;
+}
+
+@media only screen and (max-width: 1300px) {
+  #student-header-content{
+    width:70%;
+  }
+}
+
+
+@media only screen and (max-width: 1100px) {
+  #student-header-content{
+    width:80%;
+  }
+} 
+
+@media only screen and (max-width: 990px) {
+  #student-header-content{
+    width:90%;
+  }
+}
+
+@media only screen and (max-width: 745px) {
+  #languages-container {
+    min-width: auto;
+  }
+  #student-header-content{
+    width: 400px;
+  }
+  #student-header-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: white;
+    height: 100px;
+  }
+} 
