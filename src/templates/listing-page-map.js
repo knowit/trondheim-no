@@ -92,7 +92,7 @@ export default ({ data }) => {
           <form className="map-checkbox-form">{items}</form>
         </div>
         <div id="content-container">
-          <h2>{data.node.mapPageTitle}</h2>
+          <h1>{data.node.mapPageTitle}</h1>
           <p>{data.node.mapPageDescription}</p>
           <Link to={data.node.path}>
             {getLocalWord(
