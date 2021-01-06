@@ -114,7 +114,7 @@ export default ({ data }) => {
         title="Student"
         locale={data.node.flamelink_locale}
         keywords={["Student"]}
-        pageID={data.node.flamelink_id}
+        pageID={data.node._fl_meta_.fl_id}
       />
       <Navigation />
       <HeaderImage bannerImage={data.node.bannerImage} />
@@ -161,7 +161,11 @@ export const query = graphql`
     node: flamelinkStudentPageContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
-      flamelink_id
+
+      _fl_meta_ {
+        fl_id
+      }
+
       navigationText
 
       localizedPaths {
