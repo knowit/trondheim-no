@@ -14,6 +14,7 @@ const LinkColumns = ({ linkColumns, columnsBackgroundImage, type }) => {
             tabIndex={tabable ? "0" : "-1"}
             className={`${type}-column-link`}
             href={node.link.path}
+            aria-label={node.link.path.replace('/', '')}
           >
             {children}
           </a>
@@ -24,6 +25,7 @@ const LinkColumns = ({ linkColumns, columnsBackgroundImage, type }) => {
             tabIndex={tabable ? "0" : "-1"}
             className={`${type}-column-link`}
             to={node.link.path}
+            aria-label={node.link.path.replace('/', '')}
           >
             {children}
           </Link>
