@@ -87,9 +87,9 @@ const ContactInfo = (props) => {
   if (elements.length > 0)
     return (
       <div>
-        <h3 className={styles.subheading}>
+        <h2 className={styles.subheading}>
           {getLocalWord(props.localization, "contactInfo", props.locale)}
-        </h3>
+        </h2>
         <div>{elements}</div>
       </div>
     )
@@ -188,7 +188,7 @@ export default ({ data, pageContext }) => {
         title={node.title}
         locale={node.flamelink_locale}
         keywords={[]}
-        pageID={node.flamelink_id}
+        pageID={node._fl_meta_.fl_id}
       />
 
       <div id="outer-container">
@@ -236,7 +236,6 @@ export const query = graphql`
     article: flamelinkArticleContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
-      flamelink_id
       slug
       path
       title

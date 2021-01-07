@@ -19,7 +19,7 @@ export default ({ data }) => {
         title={locale === "no" ? "Kart" : "Maps"}
         locale={locale}
         keywords={[locale === "no" ? "Kart" : "Maps"]}
-        pageID={data.flamelinkListingPageContent.flamelink_id}
+        pageID={data.flamelinkListingPageContent._fl_meta_.fl_id}
       />
 
       <div id="outer-container">
@@ -64,8 +64,12 @@ export const query = graphql`
 
     flamelinkListingPageContent(id: { eq: $nodeId }) {
       id
-      flamelink_id
       flamelink_locale
+
+      _fl_meta_ {
+        fl_id
+      }
+
       path
       slug
       localTitle

@@ -28,7 +28,7 @@ export default ({ data }) => {
       <SEO
         title={data.node.title}
         locale={data.node.flamelink_locale}
-        pageID={data.node.flamelink_id}
+        pageID={data.node._fl_meta_.fl_id}
       />
 
       <div id="outer-container">
@@ -48,7 +48,11 @@ export const query = graphql`
     node: flamelinkPageContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
-      flamelink_id
+
+      _fl_meta_ {
+        fl_id
+      }
+
       path
       title
 

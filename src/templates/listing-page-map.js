@@ -92,7 +92,7 @@ export default ({ data }) => {
           <form className="map-checkbox-form">{items}</form>
         </div>
         <div id="content-container">
-          <h2>{data.node.mapPageTitle}</h2>
+          <h1>{data.node.mapPageTitle}</h1>
           <p>{data.node.mapPageDescription}</p>
           <Link to={data.node.path}>
             {getLocalWord(
@@ -115,7 +115,7 @@ export default ({ data }) => {
         title={data.node.mapPageTitle}
         locale={data.node.flamelink_locale}
         keywords={[data.node.flamelink_locale === "no" ? "Kart" : "Map"]}
-        pageID={`MAP${data.node.flamelink_id}`}
+        pageID={`MAP${data.node._fl_meta_.fl_id}`}
       />
 
       <div id="outer-container">
@@ -158,7 +158,11 @@ export const query = graphql`
     node: flamelinkListingPageContent(id: { eq: $nodeId }) {
       id
       flamelink_locale
-      flamelink_id
+
+      _fl_meta_ {
+        fl_id
+      }
+
       mapPageTitle
       mapPageDescription
       path

@@ -14,36 +14,6 @@ import { request } from "graphql-request"
 
 library.add(fas)
 
-export const query = graphql`
-  query EventsPageQuery($nodeId: String) {
-    node: flamelinkListingPageContent(id: { eq: $nodeId }) {
-      id
-      flamelink_locale
-      flamelink_id
-      localTitle
-      textOnPage
-      path
-      localizedPaths {
-        locale
-        path
-      }
-    }
-
-    localization: flamelinkListingPageLocalizationContent(
-      flamelink_locale: { eq: "no" }
-    ) {
-      id
-      translations {
-        key
-        translations {
-          language
-          word
-        }
-      }
-    }
-  }
-`
-
 // Rendered at client
 
 const EVENTS_URL = "https://trdevents.no/graphQL"
@@ -326,13 +296,13 @@ export default ({ data }) => {
         keywords={[
           data.node.flamelink_locale === "no" ? "Arrangementer" : "Events",
         ]}
-        pageID={data.node.flamelink_id}
+        pageID={data.node._fl_meta_.fl_id}
       />
 
       <div id="outer-container">
         <div id="inner-container">
           <div id="articles-header">
-            <h2>{data.node.localTitle}</h2>
+            <h1>{data.node.localTitle}</h1>
             <p>{data.node.textOnPage}</p>
             <Link
               id="english-button"
@@ -363,3 +333,37 @@ export default ({ data }) => {
     </Layout>
   )
 }
+
+export const query = graphql`
+  query EventsPageQuery($nodeId: String) {
+    node: flamelinkListingPageContent(id: { eq: $nodeId }) {
+      id
+      flamelink_locale
+
+      _fl_meta_ {
+        fl_id
+      }
+
+      localTitle
+      textOnPage
+      path
+      localizedPaths {
+        locale
+        path
+      }
+    }
+
+    localization: flamelinkListingPageLocalizationContent(
+      flamelink_locale: { eq: "no" }
+    ) {
+      id
+      translations {
+        key
+        translations {
+          language
+          word
+        }
+      }
+    }
+  }
+`

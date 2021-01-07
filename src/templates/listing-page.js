@@ -61,7 +61,7 @@ export default ({ data, pageContext }) => {
         title={node.localTitle}
         locale={node.flamelink_locale}
         keywords={[node.navigationTitle]}
-        pageID={node.flamelink_id}
+        pageID={node._fl_meta_.fl_id}
       />
 
       <div id="outer-container">
@@ -100,8 +100,12 @@ export const query = graphql`
 
     node: flamelinkListingPageContent(id: { eq: $nodeId }) {
       id
-      flamelink_id
       flamelink_locale
+
+      _fl_meta_ {
+        fl_id
+      }
+
       path
       mapPath
       slug
@@ -116,7 +120,11 @@ export const query = graphql`
 
     studentNode: flamelinkStudentListingPageContent(id: { eq: $nodeId }) {
       id
-      flamelink_id
+
+      _fl_meta_ {
+        fl_id
+      }
+
       flamelink_locale
       path
       mapPath
