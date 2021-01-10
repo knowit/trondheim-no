@@ -81,6 +81,8 @@ const HTMLContent = ({
               display={props.display ? props.display : "initial"}
               position={props.position ? props.position : "relative"}
               frameBorder={props.frameBorder ? props.frameBorder : "0"}
+              title={props.title}
+              name={props.name}
             />
           </Online>
         </div>
