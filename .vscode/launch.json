@@ -18,6 +18,13 @@
       "args": ["build"],
       "runtimeArgs": ["--nolazy"],
       "console": "integratedTerminal"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome for Gatsby site",
+      "url": "http://localhost:8000",
+      "webRoot": "${workspaceFolder}"
     }
   ]
 }
