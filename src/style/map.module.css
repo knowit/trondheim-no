@@ -1,7 +1,8 @@
 .mapContainer {
     border: 1px solid gray;
     padding: 5px;
-    box-shadow: 5px 10px 5px grey;
+    box-shadow: 2px 4px 8px grey;
+    margin-top: 20px;
 }
 
 .containerElement {
