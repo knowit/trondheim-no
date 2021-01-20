@@ -1,4 +1,3 @@
-
 #student-header-container {
   display: flex;
   flex-direction: row;
@@ -10,6 +9,7 @@
 #student-header-content {
   display: flex;
   flex-direction: row;
+  flex-flow: wrap;
   justify-content: center;
   width: 60%;
 }
@@ -20,6 +20,7 @@
   display: flex;
   margin: auto 0;
   height: auto;
+  min-width: 130px;
 }
 
 .language-item {
@@ -33,7 +34,7 @@
   border-right: 0;
 }
 
-.language-item-link  {
+.language-item-link {
   color: #005aa7;
   font-weight: 400;
 }
@@ -51,7 +52,7 @@
   text-align: center;
 }
 
-#student-logo-image{
+#student-logo-image {
   display: inline-block;
   width: 55px;
   height: auto;
@@ -61,7 +62,7 @@
   height: 500px;
 }
 
-#student-listing-pages-container{
+#student-listing-pages-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -71,18 +72,18 @@
   text-align: center;
 }
 
-#student-listing-pages{
+#student-listing-pages {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-#student-listing-pages h1{
+#student-listing-pages h1 {
   text-align: center;
   font-size: 40px;
 }
 
-#student-listing-pages-grid-container{
+#student-listing-pages-grid-container {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
@@ -104,7 +105,7 @@
   color: #005aa7 !important;
 }
 
-.student-listing-page-card-thumbnail{
+.student-listing-page-card-thumbnail {
   width: 100%;
   height: 70%;
   display: block;
@@ -113,7 +114,7 @@
   background-position: center;
   overflow-y: hidden;
 }
-.student-listing-page-info-container{
+.student-listing-page-info-container {
   display: block;
   flex-grow: 1;
   justify-content: center;
@@ -125,7 +126,6 @@
   font-weight: 600;
   font-size: 26px;
   padding: 10px 0;
-  
 }
 .student-listing-page-info-container h3 a {
   text-decoration: none;
@@ -136,7 +136,7 @@
   font-size: 14px;
 }
 
-#student-custom-content-container{
+#student-custom-content-container {
   width: 50%;
   margin: auto;
   text-align: center;
@@ -164,7 +164,7 @@
 }
 
 #student-columns-overlay {
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0, 0, 0, 0.8);
   width: 100%;
   height: 100%;
   display: flex;
@@ -182,7 +182,7 @@
   margin: 0 30px;
 }
 
-.student-column-image-container{
+.student-column-image-container {
   display: flex;
   justify-content: center;
   padding: 0 0 20px 0;
@@ -196,11 +196,12 @@
   flex-grow: 1;
   padding: 0;
 }
-.student-column-link, .student-column-info-container a{
+.student-column-link,
+.student-column-info-container a {
   color: white;
 }
 
-.student-column-info-container h3{
+.student-column-info-container h3 {
   font-size: 13pt;
   font-weight: 400;
   color: white;
@@ -208,7 +209,7 @@
   top: 0;
   position: relative;
 }
-.student-column-info-container h4{
+.student-column-info-container h4 {
   display: flex;
   flex-wrap: wrap;
   flex-grow: 1;
@@ -224,4 +225,52 @@
 .student-column-info-container p {
   max-width: 100%;
   word-wrap: break-word;
+}
+
+.home-container {
+  position: relative;
+  display: flex;
+  margin: auto 0;
+}
+
+.home-text {
+  margin-right: 5px;
+  padding-right: 5px;
+  font-size: 17px;
+  color: #005aa7;
+  font-weight: 400;
+}
+
+@media only screen and (max-width: 1300px) {
+  #student-header-content {
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  #student-header-content {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 990px) {
+  #student-header-content {
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 745px) {
+  #languages-container {
+    min-width: auto;
+  }
+}
+
+@media only screen and (max-width: 585px) {
+  #student-header-content {
+    width: 60%;
+    flex-wrap: nowrap;
+  }
+  .home-container {
+    display: none;
+  }
 }

@@ -20,6 +20,9 @@ const HeaderImage = ({ bannerImage }) => {
 }
 
 export default ({ data }) => {
+  const navbar = data.navbar.edges
+    .map((node) => node.node)
+    .find((node) => node.flamelink_locale === data.node.flamelink_locale)
   const Navigation = () => {
     return (
       <div id="student-header-container">
@@ -52,6 +55,18 @@ export default ({ data }) => {
               id="student-logo-image"
               fixed={data.node.logoImage[0].localFile.childImageSharp.fixed}
             />
+          </div>
+          <div className="home-container">
+            <Link
+              id="trondheimno-link"
+              to={
+                data.node.flamelink_locale === "no"
+                  ? "/"
+                  : `/${data.node.flamelink_locale.split("-")[0]}/`
+              }
+            >
+              <div className="home-text">{navbar.navbarText}</div>
+            </Link>
           </div>
         </div>
       </div>
@@ -242,6 +257,15 @@ export const query = graphql`
 
       linkColumns {
         ...LinkColumnFragment
+      }
+    }
+    navbar: allFlamelinkNavbarContent {
+      edges {
+        node {
+          id
+          flamelink_locale
+          navbarText
+        }
       }
     }
   }
