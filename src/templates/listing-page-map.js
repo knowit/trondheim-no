@@ -77,7 +77,8 @@ export default ({ data }) => {
       )
     })
     return (
-      <span>
+      <div id="content-container">
+        <h1>{data.node.mapPageTitle}</h1>
         <GoogleMap
           locationMarker={defaultLocation}
           markers={markers.filter((marker) =>
@@ -91,8 +92,7 @@ export default ({ data }) => {
         <div>
           <form className="map-checkbox-form">{items}</form>
         </div>
-        <div id="content-container">
-          <h1>{data.node.mapPageTitle}</h1>
+        <div>
           <p>{data.node.mapPageDescription}</p>
           <Link to={data.node.path}>
             {getLocalWord(
@@ -102,7 +102,7 @@ export default ({ data }) => {
             )}
           </Link>
         </div>
-      </span>
+      </div>
     )
   }
 
