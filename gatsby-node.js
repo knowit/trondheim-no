@@ -19,6 +19,40 @@ exports.createSchemaCustomization = createSchemaCustomization
 const { onCreateNode } = require("./src/gatsby-helpers/on-create-node")
 exports.onCreateNode = onCreateNode
 
+const fs = require("fs")
+const yn = require("yn")
+exports.onPreInit = async () => {
+
+  const shouldDeleteCache = yn(process.env.GATSBY_DELETE_CACHE)
+
+  if (!shouldDeleteCache) {
+    return
+  }
+
+  const dir = ".cache/"
+
+  const deleteDir = (dir) => {
+    fs.readdir(dir, (err, files) => {
+      if (err) throw err
+
+      for (const file of files) {
+        p = path.join(dir, file)
+        if (fs.lstatSync(p).isDirectory()) {
+          deleteDir(p)
+        } else {
+          console.log("Deleting:" + p)
+          fs.unlinkSync(p)
+        }
+      }
+    })
+  }
+
+  if (fs.existsSync(dir)) {
+    console.log("Deleting cache")
+    deleteDir(dir)
+  }
+}
+
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
