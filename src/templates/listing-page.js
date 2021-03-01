@@ -140,7 +140,7 @@ export const query = graphql`
 
     childListingPages: allFlamelinkListingPageContent(
       filter: {
-        parentListingPage: { id: { eq: $nodeId } }
+        parentListingPage: { id: { eq: $nodeFlamelinkId } }
         flamelink_locale: { eq: $locale }
       }
     ) {

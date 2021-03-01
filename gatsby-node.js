@@ -186,6 +186,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           component: path.resolve(`./src/templates/events-page.js`),
           context: {
             nodeId: node.id,
+            nodeFlamelinkId: node.flamelink_id,
             locale: node.flamelink_locale,
           },
         })
@@ -195,6 +196,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           component: path.resolve(`./src/templates/map-page.js`),
           context: {
             nodeId: node.id,
+            nodeFlamelinkId: node.flamelink_id,
             locale: node.flamelink_locale,
           },
         })

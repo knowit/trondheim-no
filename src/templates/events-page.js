@@ -227,7 +227,7 @@ class EventsView extends React.Component {
               >
                 <div>
                   <img
-                    className="article-thumbnail"
+                    className="events-article-thumbnail"
                     alt={
                       event.images[0].alt ? event.images[0].alt : event.title_nb
                     }
