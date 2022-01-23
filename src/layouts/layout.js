@@ -85,6 +85,7 @@ export default ({ children, locale, localizedPaths }) => {
           name="description"
           content="The official website for Trondheim."
         />
+        <script async src="https://siteimproveanalytics.com/js/siteanalyze_6002236.js"></script>
       </Helmet>
       <Navigation id="navbar" />
       <main id="children-container">{children}</main>
