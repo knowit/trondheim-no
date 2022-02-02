@@ -1,14 +1,13 @@
-#layout-container{
+#layout-container {
   width: 100%;
   min-height: 100%;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  
 }
 
-#children-container{
+#children-container {
   display: flex;
   margin: 0;
   padding: 0;
@@ -16,11 +15,11 @@
   flex-grow: 1;
 }
 @media only screen and (max-width: 600px) {
-  #children-container{
+  #children-container {
     padding-top: 55px;
   }
 }
-#outer-container{
+#outer-container {
   background-color: rgb(228, 228, 228);
   width: 100%;
   justify-content: center;
@@ -28,7 +27,7 @@
   min-height: 100%;
 }
 
-#inner-container{
+#inner-container {
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -38,41 +37,63 @@
   margin: 0 15%;
 }
 @media only screen and (max-width: 1200px) {
-  #inner-container{
+  #inner-container {
     margin: 0 3em;
   }
 }
 
 @media only screen and (max-width: 600px) {
-  #inner-container{
+  #inner-container {
     margin: 0;
     padding: 20px 10px;
   }
 }
 
-#footer-container{
+#footer-container {
   position: relative;
   display: block;
-  width: 100%;
-  height: 115px;
+  width: 100vw;
+  min-height: 135px;
   background-color: #f09b24;
+  display: flex;
+  flex-wrap: wrap;
+  padding-right: 12%;
+  padding-left: 12%;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-content: center;
 }
 
-#search-container{
+#footer-links-container {
+  top: 50%;
+  margin: auto;
+  font-size: 20px;
+}
+
+#footer-links-container ul {
+  list-style-type: none;
+  text-align: center;
+}
+
+#footer-links-container a {
+  color: black;
+}
+
+#search-container {
+  margin: auto;
+  padding-top: 12px;
+}
+
+#search-form {
   display: flex;
   flex-direction: row;
-  float: right;
   margin: 0;
-  position: absolute;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  right: 12%;
-  padding: 2px 0;
   height: 36px;
 }
 
-#search-input{
+#search-input {
   display: block;
   width: 190px;
   margin: 0;
@@ -80,7 +101,7 @@
   font-size: 16px;
 }
 
-#search-button{
+#search-button {
   display: flex;
   justify-content: center;
   height: 100%;
@@ -88,7 +109,7 @@
   margin: 0;
   padding: 0;
   color: white;
-  
+
   font-weight: 100;
   background-color: #005aa7;
   border: 0 none;
@@ -96,18 +117,18 @@
   text-decoration: none;
 }
 
-#search-button-word{
+#search-button-word {
   margin: auto;
   font-size: 15px;
 }
 
-*{
-  font-family: 'PT Sans',Arial,'Arial Unicode MS',Helvetica,sans-serif;
+* {
+  font-family: "PT Sans", Arial, "Arial Unicode MS", Helvetica, sans-serif;
   margin: 0;
   padding: 0;
 }
 
-.navigation-container{
+.navigation-container {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -118,7 +139,7 @@
   z-index: 99999;
 }
 
-.navigation-content-container{
+.navigation-content-container {
   width: 100%;
   padding: 0 15%;
   display: flex;
@@ -127,23 +148,22 @@
 }
 
 @media only screen and (max-width: 1200px) {
-  .navigation-content-container{
-    padding:0 3em;
+  .navigation-content-container {
+    padding: 0 3em;
   }
 }
 
 @media only screen and (max-width: 600px) {
-  .navigation-content-container{
-    padding:0;
+  .navigation-content-container {
+    padding: 0;
   }
 
-  .navigation-container{
+  .navigation-container {
     position: fixed;
   }
-
 }
 
-.logo-container{
+.logo-container {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -161,7 +181,7 @@
   margin: 0;
   padding: 15px;
 }
-.logo{
+.logo {
   display: block;
   background-color: white;
   width: 55px;
@@ -171,7 +191,7 @@
   height: 100%;
   margin: 0;
 }
-#trondheimno-link{
+#trondheimno-link {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -182,7 +202,7 @@
   height: 100%;
 }
 
-.menu-container{
+.menu-container {
   position: relative;
   display: block;
   float: left;
@@ -192,14 +212,14 @@
   transform: translate(0, -50%);
   padding-top: 6px;
 }
-.menu-container:hover{
+.menu-container:hover {
   cursor: pointer;
 }
-.burger-container{
+.burger-container {
   position: absolute;
   display: block;
   margin: 0;
-  left: 50%;                        
+  left: 50%;
   transform: translate(-50%, 0);
   width: 34px;
   height: 32px;
@@ -211,18 +231,18 @@
   background-color: white;
   margin: 3px 0;
 }
-.menu-text-container{
+.menu-text-container {
   color: white;
   font-size: 13px;
   text-align: center;
   letter-spacing: 1px;
   position: absolute;
   bottom: 0;
-  left: 50%;                        
+  left: 50%;
   transform: translate(-50%, -2px);
   height: 20px;
 }
-.drop-menu-container{
+.drop-menu-container {
   display: block;
   position: absolute;
   top: 100%;
@@ -248,7 +268,7 @@
     max-height: 1000px;
   }
 }
-.drop-menu-item-container{
+.drop-menu-item-container {
   display: flex;
   border-bottom: 1px solid rgb(0, 183, 255);
   width: 80%;
@@ -263,41 +283,40 @@
   display: block;
   overflow: hidden;
 }
-.drop-menu-item-container:hover{
+.drop-menu-item-container:hover {
   background-color: black;
   color: white;
   animation-duration: 0.5s;
-  animation-name: hoverfade
+  animation-name: hoverfade;
 }
 @keyframes hoverfade {
-  from{
+  from {
     background-color: white;
     color: black;
   }
-  to{
+  to {
     background-color: black;
     color: white;
   }
 }
 
-.drop-menu-item-container{
+.drop-menu-item-container {
   color: inherit;
   text-decoration: none;
   display: block;
 }
 
-.drop-menu-item-flag{
+.drop-menu-item-flag {
   margin-right: 3px;
   padding-top: 2px;
 }
 
 @media only screen and (max-width: 600px) {
-
-  .logo-text{
+  .logo-text {
     display: none;
   }
 
-  .logo{
+  .logo {
     background-color: black;
     margin: auto 0;
     width: 50px;
@@ -311,18 +330,17 @@
     height: 50px;
     margin: auto;
   }
-  .menu-container{
+  .menu-container {
     margin-left: 10px;
   }
 
-  .drop-menu-container{
+  .drop-menu-container {
     left: -10px;
     margin: 0;
     height: 100vh;
   }
 
-
-  #menu-background-overlay{
+  #menu-background-overlay {
     display: block;
     position: absolute;
     background: rgba(0, 0, 0, 0.5);
@@ -335,11 +353,11 @@
     border: 0;
   }
 
-  @keyframes fadeout{
-    from{
+  @keyframes fadeout {
+    from {
       background: rgba(0, 0, 0, 0);
     }
-    to{
+    to {
       background: rgba(0, 0, 0, 0.5);
     }
   }
@@ -349,7 +367,7 @@
       max-height: 1000px;
       max-width: 0;
     }
-  
+
     to {
       max-height: 1000px;
       max-width: 1000px;
