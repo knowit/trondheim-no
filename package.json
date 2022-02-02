@@ -57,11 +57,11 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "gatsby build NODE_ENV=production",
-    "develop": "gatsby develop NODE_ENV=development",
+    "build": "NODE_ENV=production gatsby build",
+    "develop": "NODE_ENV=development gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "start": "npm run develop",
-    "serve": "gatsby serve NODE_ENV=production",
+    "serve": "NODE_ENV=production gatsby serve",
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
   },
