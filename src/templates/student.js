@@ -7,6 +7,7 @@ import HTMLContent from "../components/html-content"
 import ReactDOMHelper from "../helpers/react-dom-helper"
 import SEO from "../components/seo"
 import LinkColumns from "../components/link-columns"
+import { Helmet } from "react-helmet"
 
 const HeaderImage = ({ bannerImage }) => {
   return (
@@ -125,6 +126,9 @@ export default ({ data }) => {
 
   return (
     <div>
+      <Helmet>
+        <script async src="https://siteimproveanalytics.com/js/siteanalyze_6002236.js"></script>
+      </Helmet>
       <SEO
         title="Student"
         locale={data.node.flamelink_locale}

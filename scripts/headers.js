@@ -35,7 +35,7 @@ const main = async () => {
   for (const [entryId, value] of Object.entries(content)) {
     const oldContent = value.content
     const newContent = oldContent.replace(/<h3>|<\/h3>/g, (match) => {
-      return match.replace('3', '2')
+      return match.replace("3", "2")
     })
 
     if (newContent != oldContent) {
@@ -43,15 +43,16 @@ const main = async () => {
         schemaKey,
         entryId,
         data: {
-          content: newContent
-        }
+          content: newContent,
+        },
       })
     }
-    
   }
 }
 
-main().then(() => process.exit()).catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+main()
+  .then(() => process.exit())
+  .catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })

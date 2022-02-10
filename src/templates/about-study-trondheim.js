@@ -5,6 +5,7 @@ import { graphql } from "gatsby"
 import SEO from "../components/seo"
 import Image from "gatsby-image"
 import Img from "gatsby-image"
+import { Helmet } from "react-helmet"
 
 const HeaderImage = ({ headerImage }) => {
   return (
@@ -191,6 +192,9 @@ export default ({ data }) => {
   }
   return (
     <div id={styles.aboutStudyOuterContainer}>
+      <Helmet>
+        <script async src="https://siteimproveanalytics.com/js/siteanalyze_6002236.js"></script>
+      </Helmet>
       <SEO
         title={
           data.flamelinkAboutStudyTrondheimContent.flamelink_locale === "no"
