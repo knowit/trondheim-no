@@ -118,6 +118,15 @@
   height: 280px;
 }
 
+.events-article-thumbnail {
+  display: block;
+  width: 100%;
+  min-height: 280px;
+  margin-bottom: 20px;
+  object-fit: cover;
+  height: 280px;
+}
+
 .article-container h2{
   color: rgba(20, 70, 170, 1);
   text-decoration: none;

@@ -22,7 +22,6 @@ exports.onCreateNode = onCreateNode
 const fs = require("fs")
 const yn = require("yn")
 exports.onPreInit = async () => {
-
   const shouldDeleteCache = yn(process.env.GATSBY_DELETE_CACHE)
 
   if (!shouldDeleteCache) {

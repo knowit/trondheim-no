@@ -1,10 +1,10 @@
-import React, { useState } from "react"
+import React from "react"
 import "../style/layout.css"
 import { Helmet } from "react-helmet"
-import { Link, graphql, useStaticQuery, navigate } from "gatsby"
+import { Link, graphql, useStaticQuery } from "gatsby"
 import Img from "gatsby-image"
 import BurgerMenu from "../components/menu.js"
-import { getLocalWord } from "../helpers/helpers"
+import Footer from "../components/footer.js"
 
 export default ({ children, locale, localizedPaths }) => {
   const data = useStaticQuery(graphql`
@@ -43,14 +43,14 @@ export default ({ children, locale, localizedPaths }) => {
     }
   `)
 
-  const [query, setQuery] = useState("")
-  const localization = data.localization.translations
+  // const [query, setQuery] = useState("")
+  // const localization = data.localization.translations
   const navbar = data.navbar.edges
     .map((node) => node.node)
     .find((node) => node.flamelink_locale === locale)
 
-  const search = getLocalWord(localization, "search", locale)
-  const searchInput = getLocalWord(localization, "searchInput", locale)
+  // const search = getLocalWord(localization, "search", locale)
+  // const searchInput = getLocalWord(localization, "searchInput", locale)
   const Navigation = () => {
     return (
       <header className="navigation-container">
@@ -85,37 +85,15 @@ export default ({ children, locale, localizedPaths }) => {
           name="description"
           content="The official website for Trondheim."
         />
+        <script
+          async
+          src="https://siteimproveanalytics.com/js/siteanalyze_6002236.js"
+        ></script>
       </Helmet>
       <Navigation id="navbar" />
       <main id="children-container">{children}</main>
       <footer id="footer-container">
-        <form
-          id="search-container"
-          action={`${
-            locale === "no" ? "/" : `/${locale.split("-")[0]}/`
-          }search`}
-          onSubmit={(event) => {
-            event.preventDefault()
-            navigate(
-              `${
-                locale === "no" ? "/" : `/${locale.split("-")[0]}/`
-              }search?query=${query}`
-            )
-          }}
-        >
-          <input
-            type="text"
-            id="search-input"
-            name="query"
-            aria-label={searchInput}
-            value={query}
-            placeholder={`${search}...`}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <button type="submit" id="search-button" aria-label="search-button">
-            <span id="search-button-word">{search}</span>
-          </button>
-        </form>
+        <Footer locale={locale} localization={data.localization.translations} />
       </footer>
     </div>
   )
