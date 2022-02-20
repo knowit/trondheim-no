@@ -52,7 +52,7 @@
 #footer-container {
   position: relative;
   display: block;
-  width: 100vw;
+  width: 100%;
   min-height: 135px;
   background-color: #f09b24;
   display: flex;
