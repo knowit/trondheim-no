@@ -49,7 +49,7 @@ const InternalLink = ({ article }) => {
         }
       </h3>
       {article.childFlamelinkAboutStudyTrondheimContentFieldArticleArticleLink
-        .linkIcon ? (
+        .linkIcon.length ? (
         <img
           className={styles.linkIcon}
           src={
