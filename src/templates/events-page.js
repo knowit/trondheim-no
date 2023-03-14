@@ -273,8 +273,6 @@ class EventsView extends React.Component {
 
 // Rendered server side
 export default ({ data }) => {
-  const trdEventsUrl = process.env.GATSBY_TRD_EVENTS_URL
-
   return (
     <Layout
       locale={data.node.flamelink_locale}
@@ -315,7 +313,6 @@ export default ({ data }) => {
               path="/"
               localization={data.localization.translations}
               locale={data.node.flamelink_locale}
-              trdEventsUrl={trdEventsUrl}
             />
           </Router>
         </div>
