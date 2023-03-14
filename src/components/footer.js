@@ -21,13 +21,14 @@ export default ({ locale, localization }) => {
   const search = getLocalWord(localization, "search", locale)
   const searchInput = getLocalWord(localization, "searchInput", locale)
 
-  
   return (
     <>
       <StaticQuery
         query={gqlquery}
         render={(data) => {
-          const links = data.allFlamelinkPageContent.nodes.filter(n => n.flamelink_locale === locale)
+          const links = data.allFlamelinkPageContent.nodes.filter(
+            (n) => n.flamelink_locale === locale
+          )
           return (
             <div id="footer-links-container">
               <ul>
@@ -35,10 +36,11 @@ export default ({ locale, localization }) => {
                   const s = slug[0] === "/" ? slug : `/${slug}`
                   const localizedSlug = locale === "no" ? s : `/en${s}`
                   return (
-                  <li>
-                    <a href={localizedSlug}>{title}</a>
-                  </li>
-                )})}
+                    <li key={title}>
+                      <a href={localizedSlug}>{title}</a>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           )

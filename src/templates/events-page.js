@@ -14,45 +14,81 @@ import { request } from "graphql-request"
 
 library.add(fas)
 
-// Rendered at client
-
-const EVENTS_URL = "https://trdevents.no/graphQL"
-
-class EventsView extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      loading: true,
-      isLoadingMore: false,
-      loadError: false,
-      page: 1,
-      events: [],
+const EVENTS_URL = process.env.GATSBY_TRD_EVENTS_URL
+const EVENTS_QUERY_STRING = `
+  query EventsQuery($page: Int) {
+    events(page: $page) {
+      totalCount
+      hasMore
+      data {
+        id
+        mode
+        venue {
+          id
+          name
+          location {
+            longitude
+            latitude
+          }
+          address
+        }
+        title_nb
+        title_en
+        eventLink
+        startDate
+        startTime
+        endDate
+        regularPrice
+        reducedPrice
+        priceOption
+        categories
+        images {
+          urlSmall
+          caption
+          alt
+        }
+      }
     }
   }
+`
 
-  componentDidMount() {
-    this.loadData()
-  }
+const EventInfoRow = (props) => (
+  <div className="event-info-row">
+    <div className="event-icon">
+      <FontAwesomeIcon icon={props.icon} size="xs" />
+    </div>
+    <span className="event-info-text">{props.text}</span>
+  </div>
+)
 
-  categoriesString(event) {
-    return event.categories
-      .map((category) => this.singleCategoryString(category))
-      .join(",\t")
-  }
+const Location = ({ event }) => (
+  <EventInfoRow
+    icon="location-arrow"
+    text={event.venue ? event.venue.name : ""}
+  />
+)
 
-  singleCategoryString(fullText) {
-    return fullText
-      .split("_")
-      .map(
-        (word) =>
-          `${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`
+const Categories = ({ event }) => (
+  <EventInfoRow
+    icon="tags"
+    text={event.categories
+      .map((category) =>
+        category
+          .split("_")
+          .map(
+            (word) =>
+              `${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`
+          )
+          .join(" ")
       )
-      .join(" ")
-  }
+      .join(",\t")}
+  />
+)
 
-  monthName(month) {
-    const monthArray = [
-      "",
+const Time = ({ event, localization, locale }) => {
+  const date = new Date(event.startDate)
+  const dateString = `${date.getDate()}. ${
+    [
       "Jan",
       "Feb",
       "Mar",
@@ -64,76 +100,84 @@ class EventsView extends React.Component {
       "Okt",
       "Nov",
       "Des",
-    ]
-    return monthArray[month]
+    ][date.getMonth()]
+  }`
+
+  var priceString
+  if (
+    event.priceOption === "non-gratis" &&
+    (event.regularPrice != null || event.reducedPrice != null)
+  ) {
+    priceString = `CC: ${
+      event.regularPrice != null ? `${event.regularPrice},-` : ""
+    }${event.regularPrice != null && event.reducedPrice != null ? ` / ` : ""}${
+      event.reducedPrice != null ? `${event.reducedPrice},-` : ""
+    }`
+  } else {
+    priceString = getLocalWord(localization, "free", locale)
   }
 
-  timeString(event) {
-    const date = new Date(event.startDate)
-    const dateString = `${date.getDate()}. ${this.monthName(date.getMonth())}`
+  return (
+    <EventInfoRow
+      icon="clock"
+      text={`${dateString} @ ${event.startTime} | ${priceString}`}
+    />
+  )
+}
 
-    const ticketString = `CC: ${event.regularPrice},- ${
-      event.reducedPrice && event.reducedPrice.length !== 0
-        ? `/ ${event.reducedPrice},-`
-        : ""
-    }`
-    const freeString = getLocalWord(
-      this.props.localization,
-      "free",
-      this.props.locale
-    )
+const ErrorMessage = ({ locale }) => (
+  <p>
+    <Online>
+      {locale === "no"
+        ? "Noe gikk galt! Prøv igjen senere."
+        : "Something went wrong! Try again later."}
+    </Online>
+    <Offline>
+      {locale === "no"
+        ? "Noe gikk galt! Sørg for at du er koblet til internett og prøv igjen."
+        : "Something went wrong! Make sure you are connected to the internet and try again."}
+    </Offline>
+  </p>
+)
 
-    const priceString = `${
-      event.priceOption === "non-gratis" ? ticketString : freeString
-    }`
+const Loading = ({ locale, localization, loadError }) => (
+  <div id="events-loading-container">
+    {loadError ? null : (
+      <div id="events-loading-spinner">
+        <Loader />
+      </div>
+    )}
 
-    return `${dateString} @ ${event.startTime} | ${priceString}`
+    {loadError ? (
+      <ErrorMessage locale={locale} />
+    ) : (
+      <p>{getLocalWord(localization, "loading", locale)}</p>
+    )}
+  </div>
+)
+
+// Rendered client side
+class EventsView extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      loading: true,
+      isLoadingMore: false,
+      loadError: false,
+      page: 0,
+      events: [],
+    }
+  }
+
+  componentDidMount() {
+    this.loadData()
   }
 
   loadData() {
     this.setState({
       isLoadingMore: true,
     })
-    request(
-      EVENTS_URL,
-      `
-      query EventsQuery($page: Int) {
-        events(page: $page) {
-          totalCount
-          hasMore
-          data {
-            id
-            mode
-            venue {
-              id
-              name
-              location {
-                longitude
-                latitude
-              }
-              address
-            }
-            title_nb
-            title_en
-            eventLink
-            startDate
-            startTime
-            endDate
-            regularPrice
-            reducedPrice
-            priceOption
-            categories
-            images {
-              urlSmall
-              caption
-              alt
-            }
-          }
-        }
-      }
-    `,
-      { page: this.state.page }
-    )
+    request(EVENTS_URL, EVENTS_QUERY_STRING, { page: this.state.page })
       .then((data) => {
         this.setState({
           loading: false,
@@ -150,71 +194,14 @@ class EventsView extends React.Component {
   }
 
   render() {
-    const EventInfoRow = (props) => (
-      <div className="event-info-row">
-        <div className="event-icon">
-          <FontAwesomeIcon icon={props.icon} size="xs" />
-        </div>
-        <span className="event-info-text">{props.text}</span>
-      </div>
-    )
-
-    const Location = ({ event }) => (
-      <EventInfoRow
-        icon="location-arrow"
-        text={event.venue ? event.venue.name : ""}
-      />
-    )
-
-    const Categories = ({ event }) => (
-      <EventInfoRow icon="tags" text={this.categoriesString(event)} />
-    )
-
-    const Time = ({ event }) => (
-      <EventInfoRow icon="clock" text={this.timeString(event)} />
-    )
-
-    const ErrorMessage = () => (
-      <p>
-        <Online>
-          {this.props.locale === "no"
-            ? "Noe gikk galt! Prøv igjen senere."
-            : "Something went wrong! Try again later."}
-        </Online>
-        <Offline>
-          {this.props.locale === "no"
-            ? "Noe gikk galt! Sørg for at du er koblet til internett og prøv igjen."
-            : "Something went wrong! Make sure you are connected to the internet and try again."}
-        </Offline>
-      </p>
-    )
-
-    const Loading = () => (
-      <div id="events-loading-container">
-        {this.state.loadError ? null : (
-          <div id="events-loading-spinner">
-            <Loader />
-          </div>
-        )}
-
-        {this.state.loadError ? (
-          <ErrorMessage />
-        ) : (
-          <p>
-            {getLocalWord(
-              this.props.localization,
-              "loading",
-              this.props.locale
-            )}
-          </p>
-        )}
-      </div>
-    )
-
     const Content = () => {
       var i = 0
       return this.state.loading ? (
-        <Loading />
+        <Loading
+          locale={this.props.locale}
+          localization={this.props.localization}
+          loadError={this.state.loadError}
+        />
       ) : (
         <div id="articles-container">
           {this.state.events.map((event) => {
@@ -241,7 +228,11 @@ class EventsView extends React.Component {
                   <div className="event-info-container">
                     <Location event={event} />
                     <Categories event={event} />
-                    <Time event={event} />
+                    <Time
+                      event={event}
+                      localization={this.props.localization}
+                      locale={this.props.locale}
+                    />
                   </div>
                 </div>
               </a>
@@ -281,7 +272,6 @@ class EventsView extends React.Component {
 }
 
 // Rendered server side
-
 export default ({ data }) => {
   const trdEventsUrl = process.env.GATSBY_TRD_EVENTS_URL
 
