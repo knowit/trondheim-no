@@ -66,6 +66,7 @@ If you are a developer who wish to make changes to the code, start with the foll
    - GATSBY_FLAMELINK_STORAGE_BUCKET
    - GATSBY_GOOGLE_API
    - GATSBY_CONCURRENT_DOWNLOAD
+   - GATSBY_TRD_EVENTS_URL
    - GOOGLE_APPLICATION_CREDENTIALS
 
 #### Running locally
