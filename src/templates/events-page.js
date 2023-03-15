@@ -153,6 +153,11 @@ const Loading = ({ locale, localization, loadError }) => (
   </div>
 )
 
+const getEventTitle = (event, locale) =>
+  locale === "no" || event.title_en == null || event.title_en === ""
+    ? event.title_nb
+    : event.title_en
+
 const EventList = ({ events, loading, loadError, localization, locale }) =>
   loading ? (
     <Loading
@@ -163,6 +168,7 @@ const EventList = ({ events, loading, loadError, localization, locale }) =>
   ) : (
     <div id="articles-container">
       {events.map((event, i) => {
+        const eventTitle = getEventTitle(event)
         return (
           <a
             href={event.eventLink}
@@ -173,13 +179,13 @@ const EventList = ({ events, loading, loadError, localization, locale }) =>
             <div>
               <img
                 className="events-article-thumbnail"
-                alt={event.images[0].alt ? event.images[0].alt : event.title_nb}
+                alt={event.images[0].alt ? event.images[0].alt : eventTitle}
                 src={event.images[0].urlSmall}
               />
             </div>
             <div className="article-info-container">
               <h2>
-                <div>{event.title_nb}</div>
+                <div>{eventTitle}</div>
               </h2>
               <div className="event-info-container">
                 <Location event={event} />
