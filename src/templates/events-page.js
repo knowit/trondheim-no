@@ -85,6 +85,14 @@ const Categories = ({ event }) => (
   />
 )
 
+const getPriceString = (event, localization, locale) =>
+  event.priceOption === "non-gratis" &&
+  (event.regularPrice != null || event.reducedPrice != null)
+    ? `CC: ${event.regularPrice != null ? `${event.regularPrice},-` : ""}${
+        event.regularPrice != null && event.reducedPrice != null ? ` / ` : ""
+      }${event.reducedPrice != null ? `${event.reducedPrice},-` : ""}`
+    : getLocalWord(localization, "free", locale)
+
 const Time = ({ event, localization, locale }) => {
   const date = new Date(event.startDate)
   const dateString = `${date.getDate()}. ${
@@ -102,25 +110,14 @@ const Time = ({ event, localization, locale }) => {
       "Des",
     ][date.getMonth()]
   }`
-
-  var priceString
-  if (
-    event.priceOption === "non-gratis" &&
-    (event.regularPrice != null || event.reducedPrice != null)
-  ) {
-    priceString = `CC: ${
-      event.regularPrice != null ? `${event.regularPrice},-` : ""
-    }${event.regularPrice != null && event.reducedPrice != null ? ` / ` : ""}${
-      event.reducedPrice != null ? `${event.reducedPrice},-` : ""
-    }`
-  } else {
-    priceString = getLocalWord(localization, "free", locale)
-  }
-
   return (
     <EventInfoRow
       icon="clock"
-      text={`${dateString} @ ${event.startTime} | ${priceString}`}
+      text={`${dateString} @ ${event.startTime} | ${getPriceString(
+        event,
+        localization,
+        locale
+      )}`}
     />
   )
 }
@@ -156,7 +153,51 @@ const Loading = ({ locale, localization, loadError }) => (
   </div>
 )
 
-// Rendered client side
+const EventList = ({ events, loading, loadError, localization, locale }) =>
+  loading ? (
+    <Loading
+      locale={locale}
+      localization={localization}
+      loadError={loadError}
+    />
+  ) : (
+    <div id="articles-container">
+      {events.map((event, i) => {
+        return (
+          <a
+            href={event.eventLink}
+            key={i}
+            className="article-container"
+            aria-label={event.title_nb}
+          >
+            <div>
+              <img
+                className="events-article-thumbnail"
+                alt={event.images[0].alt ? event.images[0].alt : event.title_nb}
+                src={event.images[0].urlSmall}
+              />
+            </div>
+            <div className="article-info-container">
+              <h2>
+                <div>{event.title_nb}</div>
+              </h2>
+              <div className="event-info-container">
+                <Location event={event} />
+                <Categories event={event} />
+                <Time
+                  event={event}
+                  localization={localization}
+                  locale={locale}
+                />
+              </div>
+            </div>
+          </a>
+        )
+      })}
+    </div>
+  )
+
+// Dynamic content - Rendered client side
 class EventsView extends React.Component {
   constructor(props) {
     super(props)
@@ -188,63 +229,21 @@ class EventsView extends React.Component {
         })
       })
       .catch((err) => {
-        console.log(err)
+        console.error(err)
         this.setState({ loading: false, loadError: true })
       })
   }
 
   render() {
-    const Content = () => {
-      var i = 0
-      return this.state.loading ? (
-        <Loading
-          locale={this.props.locale}
-          localization={this.props.localization}
-          loadError={this.state.loadError}
-        />
-      ) : (
-        <div id="articles-container">
-          {this.state.events.map((event) => {
-            return (
-              <a
-                href={event.eventLink}
-                key={i++}
-                className="article-container"
-                aria-label={event.title_nb}
-              >
-                <div>
-                  <img
-                    className="events-article-thumbnail"
-                    alt={
-                      event.images[0].alt ? event.images[0].alt : event.title_nb
-                    }
-                    src={event.images[0].urlSmall}
-                  />
-                </div>
-                <div className="article-info-container">
-                  <h2>
-                    <div>{event.title_nb}</div>
-                  </h2>
-                  <div className="event-info-container">
-                    <Location event={event} />
-                    <Categories event={event} />
-                    <Time
-                      event={event}
-                      localization={this.props.localization}
-                      locale={this.props.locale}
-                    />
-                  </div>
-                </div>
-              </a>
-            )
-          })}
-        </div>
-      )
-    }
-
     return (
       <div id="events-content-container">
-        <Content />
+        <EventList
+          events={this.state.events}
+          loading={this.state.loading}
+          loadError={this.state.loadError}
+          localization={this.props.localization}
+          locale={this.props.locale}
+        />
         {this.state.loading ? null : (
           <div id="events-more-container">
             <button
@@ -271,7 +270,7 @@ class EventsView extends React.Component {
   }
 }
 
-// Rendered server side
+// Static content - Rendered server side
 export default ({ data }) => {
   return (
     <Layout
