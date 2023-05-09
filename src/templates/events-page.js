@@ -101,6 +101,7 @@ const Time = ({ event, localization, locale }) => {
       "Feb",
       "Mar",
       "Apr",
+      "Mai",
       "Jun",
       "Jul",
       "Aug",
