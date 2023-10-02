@@ -1,4 +1,4 @@
-exports.createSchemaCustomization = ({ actions }) => {
+exports.createSchemaCustomization = ({ actions, schema }) => {
   const { createTypes } = actions
 
   const typeDefs = `
@@ -74,6 +74,11 @@ exports.createSchemaCustomization = ({ actions }) => {
     path: String
     localizedPaths : [LocalizedPath]
     linkColumns: [LinkColumn]
+    bottomCards: [FlamelinkFrontPageContentBottomCards]
+  }
+  type FlamelinkFrontPageContentBottomCardsLinks {
+    text: String
+    url: String
   }
   type FlamelinkAboutStudyTrondheimContent implements Node {
     path: String
@@ -147,5 +152,23 @@ exports.createSchemaCustomization = ({ actions }) => {
   }
 
   `
-  createTypes(typeDefs)
+
+  // Custom resolver fordi når det ikke finnes noen links, så antar Gatsby String
+  const FlamelinkFrontPageContentBottomCardsObjectType = schema.buildObjectType({
+    name: "FlamelinkFrontPageContentBottomCards",
+    fields: {
+      links: {
+        type: "[FlamelinkFrontPageContentBottomCardsLinks]!",
+        resolve: source => {
+          const { links } = source
+          if (links == "") {
+            return []
+          }
+          return links
+        }
+      }
+    }
+  })
+
+  createTypes([typeDefs, FlamelinkFrontPageContentBottomCardsObjectType])
 }
